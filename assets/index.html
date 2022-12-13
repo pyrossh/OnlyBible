@@ -1,95 +1,9 @@
 <!DOCTYPE html>
 <html class="w-full h-full">
 
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
-  <meta http-equiv="encoding" content="utf-8">
-  <meta name="description" content="Indian Bible App">
-  <meta name="author" content="pyros2097">
-  <meta name="keywords" content="indian,bible,app,kannada">
-  <meta name="viewport"
-    content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0, viewport-fit=cover">
-  <title>Indian Bible App</title>
-  <link rel="icon" type="image/x-icon" href="/assets/logo.png">
-  <link rel="stylesheet" href="/assets/styles.css">
-  <script>
-    window.bibleJson = {'': [[]]};
-    fetch('/assets/kannada.json').then((res) => res.json()).then((data) => window.bibleJson = data);
-  </script>
-  <script src="/assets/alpine.js" defer></script>
-</head>
 
 <body class="w-full h-full">
   <script>
-    window.books = [
-      "Genesis",
-      "Exodus",
-      "Leviticus",
-      "Numbers",
-      "Deuteronomy",
-      "Joshua",
-      "Judges",
-      "Ruth",
-      "1 Samuel",
-      "2 Samuel",
-      "1 Kings",
-      "2 Kings",
-      "1 Chronicles",
-      "2 Chronicles",
-      "Ezra",
-      "Nehemiah",
-      "Esther",
-      "Job",
-      "Psalm",
-      "Proverbs",
-      "Ecclesiastes",
-      "Song of Solomon",
-      "Isaiah",
-      "Jeremiah",
-      "Lamentations",
-      "Ezekiel",
-      "Daniel",
-      "Hosea",
-      "Joel",
-      "Amos",
-      "Obadiah",
-      "Jonah",
-      "Micah",
-      "Nahum",
-      "Habakkuk",
-      "Zephaniah",
-      "Haggai",
-      "Zechariah",
-      "Malachi",
-      "Matthew",
-      "Mark",
-      "Luke",
-      "John",
-      "Acts",
-      "Romans",
-      "1 Corinthians",
-      "2 Corinthians",
-      "Galatians",
-      "Ephesians",
-      "Philippians",
-      "Colossians",
-      "1 Thessalonians",
-      "2 Thessalonians",
-      "1 Timothy",
-      "2 Timothy",
-      "Titus",
-      "Philemon",
-      "Hebrews",
-      "James",
-      "1 Peter",
-      "2 Peter",
-      "1 John",
-      "2 John",
-      "3 John",
-      "Jude",
-      "Revelation"
-    ]
     const isMobile = window.innerWidth < 600 ? true : false;
     function bibleApp() {
       return {

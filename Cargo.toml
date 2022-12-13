@@ -1,0 +1,15 @@
+[package]
+name = "bible-app"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+dioxus = { version = "0.2.4", features = ["desktop", "router"] }
+dioxus-desktop = { version = "0.2.3", features = ["fullscreen"] }
+im-rc = "15.1.0"
+image = "0.24.5"
+router = "0.6.0"
+serde_json = { version = "1.0.89", features = ["preserve_order"] }
+urlencoding = "2.1.2"
