@@ -1,0 +1,34 @@
+---
+import { Icon } from "astro-icon";
+---
+
+<style>
+  #play-btn:focus {
+    outline: none;
+  }
+
+  .hidden {
+    display: none;
+  }
+</style>
+<button id="play-btn">
+  <Icon id="play-icon" name="gridicons:play" size={36} />
+  <Icon id="pause-icon" name="gridicons:pause" size={36} class="hidden" />
+</button>
+<script>
+  const button = document.getElementById("play-btn");
+  const playIcon = document.getElementById("play-icon");
+  const pauseIcon = document.getElementById("pause-icon");
+  button.addEventListener("click", () => {
+    const state = store.get();
+    if (state.isPlaying) {
+      store.set({ ...state, isPlaying: false });
+      playIcon.classList.remove("hidden");
+      pauseIcon.classList.add("hidden");
+    } else {
+      store.set({ ...state, isPlaying: true });
+      playIcon.classList.add("hidden");
+      pauseIcon.classList.remove("hidden");
+    }
+  });
+</script>

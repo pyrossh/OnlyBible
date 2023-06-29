@@ -1,0 +1,270 @@
+---
+import { Icon } from "astro-icon";
+import times from "lodash/times";
+import Layout from "../../../../layouts/Layout.astro";
+import PlayButton from "../../../../components/PlayButton.astro";
+import kannada from "../../../../../public/kannada.json";
+
+export function getStaticPaths() {
+  return Object.keys(kannada).flatMap((k) =>
+    times(kannada[k].length).map((i) => ({
+      params: {
+        bible: "kannada",
+        book: k,
+        chapter: i + 1,
+      },
+    }))
+  );
+}
+
+const { bible, book, chapter } = Astro.params;
+const books = Object.keys(kannada);
+const chapters = kannada[book];
+const verses = kannada[book][parseInt(chapter) - 1];
+---
+
+<style>
+  .container {
+    height: 100%;
+  }
+
+  .full {
+    height: 100%;
+    width: 100%;
+  }
+
+  .row {
+    display: flex;
+  }
+
+  .titleContainer {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid rgb(221, 220, 218);
+    padding: 0.5rem;
+  }
+
+  .title {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+    font-weight: 400;
+  }
+
+  .menu {
+    flex: 1;
+  }
+
+  .actionsContainer {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: flex-end;
+    margin-right: 1.5rem;
+  }
+
+  h3 {
+    margin-right: 0.5rem;
+  }
+
+  select {
+    padding: 5px 20px;
+    padding-right: 40px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    background: url(/caret.svg) 96% / 40% no-repeat #eee;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+  }
+
+  /* select {
+    display: inline-block;
+    height: 30px;
+    width: 150px;
+    outline: none;
+    color: #74646e;
+    border: 1px solid #c8bfc4;
+    border-radius: 4px;
+    box-shadow: inset 1px 1px 2px #ddd8dc;
+    background: #fff;
+  } */
+
+  select {
+    -webkit-appearance: button;
+    -moz-appearance: button;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -webkit-padding-end: 20px;
+    -moz-padding-end: 20px;
+    -webkit-padding-start: 2px;
+    -moz-padding-start: 2px;
+    background-color: #f07575; /* Fallback color if gradients are not supported */
+    background-image: url(../images/select-arrow.png),
+      -webkit-linear-gradient(top, #e5e5e5, #f4f4f4); /* For Chrome and Safari */
+    background-image: url(../images/select-arrow.png),
+      -moz-linear-gradient(top, #e5e5e5, #f4f4f4); /* For old Firefox (3.6 to 15) */
+    background-image: url(../images/select-arrow.png),
+      -ms-linear-gradient(top, #e5e5e5, #f4f4f4); /* For pre-releases of Internet Explorer  10*/
+    background-image: url(../images/select-arrow.png),
+      -o-linear-gradient(top, #e5e5e5, #f4f4f4); /* For old Opera (11.1 to 12.0) */
+    background-image: url(../images/select-arrow.png),
+      linear-gradient(to bottom, #e5e5e5, #f4f4f4); /* Standard syntax; must be last */
+    background-position: center right;
+    background-repeat: no-repeat;
+    border: 1px solid #aaa;
+    border-radius: 2px;
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+    color: #555;
+    font-size: inherit;
+    margin: 0;
+    overflow: hidden;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  :root {
+    --radius: 2px;
+    --baseFg: dimgray;
+    --baseBg: white;
+    --accentFg: #006fc2;
+    --accentBg: #bae1ff;
+  }
+
+  .theme-pink {
+    --radius: 2em;
+    --baseFg: #c70062;
+    --baseBg: #ffe3f1;
+    --accentFg: #c70062;
+    --accentBg: #ffaad4;
+  }
+
+  .theme-construction {
+    --radius: 0;
+    --baseFg: white;
+    --baseBg: black;
+    --accentFg: black;
+    --accentBg: orange;
+  }
+
+  select {
+    font: 400 12px/1.3 sans-serif;
+    -webkit-appearance: none;
+    appearance: none;
+    color: var(--baseFg);
+    border: 1px solid var(--baseFg);
+    line-height: 1;
+    outline: 0;
+    padding: 0.65em 2.5em 0.55em 0.75em;
+    border-radius: var(--radius);
+    background-color: var(--baseBg);
+    background-image: linear-gradient(var(--baseFg), var(--baseFg)),
+      linear-gradient(-135deg, transparent 50%, var(--accentBg) 50%),
+      linear-gradient(-225deg, transparent 50%, var(--accentBg) 50%),
+      linear-gradient(var(--accentBg) 42%, var(--accentFg) 42%);
+    background-repeat: no-repeat, no-repeat, no-repeat, no-repeat;
+    background-size: 1px 100%, 20px 22px, 20px 22px, 20px 100%;
+    background-position: right 20px center, right bottom, right bottom,
+      right bottom;
+  }
+
+  select:hover {
+    background-image: linear-gradient(var(--accentFg), var(--accentFg)),
+      linear-gradient(-135deg, transparent 50%, var(--accentFg) 50%),
+      linear-gradient(-225deg, transparent 50%, var(--accentFg) 50%),
+      linear-gradient(var(--accentFg) 42%, var(--accentBg) 42%);
+  }
+
+  select:active {
+    background-image: linear-gradient(var(--accentFg), var(--accentFg)),
+      linear-gradient(-135deg, transparent 50%, var(--accentFg) 50%),
+      linear-gradient(-225deg, transparent 50%, var(--accentFg) 50%),
+      linear-gradient(var(--accentFg) 42%, var(--accentBg) 42%);
+    color: var(--accentBg);
+    border-color: var(--accentFg);
+    background-color: var(--accentFg);
+  }
+
+  /* select {
+    border: 0 none;
+    color: black;
+    background: #eee;
+    font-size: 20px;
+    font-weight: bold;
+    padding: 2px 10px;
+    width: 378px;
+    *width: 350px;
+    *background: #58b14c;
+  } */
+</style>
+<Layout title={`Bible App ${bible} - ${book}`}>
+  <div class="container">
+    <div class="full row">
+      <div
+        class="h-full overflow-y-auto w-5/6 sm:w-auto flex bg-gray-100 border-r border-bibleborder"
+      >
+        <div class="grid grid-cols-3 gap-2 ml-2">
+          {
+            books.map((b) => (
+              <a
+                class="text-md text-left p-1 hover:bg-gray-200"
+                href={`/bibles/kannada/${b}/1`}
+              >
+                {b}
+              </a>
+            ))
+          }
+        </div>
+      </div>
+      <div
+        class="w-1/6 sm:w-auto flex flex-1 flex-col p-0 ml-0 sm:px-4 sm:ml-2"
+      >
+        <div class="titleContainer">
+          <div class="menu">
+            <button class="sm:hidden mr-2" @click="openDrawer()">
+              <Icon name="mdi:hamburger-menu" size={36} />
+            </button>
+            <h1 class="title">{book} {chapter}</h1>
+          </div>
+          <div class="actionsContainer">
+            <PlayButton />
+          </div>
+          <h3>Chapter:</h3>
+          <select id="chapter-select">
+            {
+              chapters.map((_, i) => (
+                <option
+                  selected={
+                    parseInt(chapter) === i + 1 ? `selected` : undefined
+                  }
+                  value={`/bibles/${bible}/${book}/${i + 1}`}
+                >
+                  {i + 1}
+                </option>
+              ))
+            }
+          </select>
+          <script>
+            document
+              .getElementById("chapter-select")
+              .addEventListener("change", (e) => {
+                window.location = e.target.value;
+              });
+          </script>
+        </div>
+        <div class="h-full overflow-y-auto mb-2 ml-2 mr-2 sm:ml-0 sm:mr-0">
+          {
+            verses.map((v, i) => (
+              <div class="flex flex-1 flex-row mt-4 cursor-pointer items-baseline">
+                <p class="text-xs font-bold text-newred mr-2 ml-2">{i + 1}</p>
+                <p class="text-md text-black">{v}</p>
+              </div>
+            ))
+          }
+          <div class="pb-10 border-b border-bibleborder"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>
