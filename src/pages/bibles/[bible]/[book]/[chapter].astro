@@ -1,10 +1,10 @@
 ---
 import { Icon } from "astro-icon";
-import Layout from "../../../../layouts/Layout.astro";
-import PlayButton from "../../../../components/PlayButton.astro";
-import kannada from "../../../../data/kannada.json";
-import Select from "../../../../components/Select.astro";
-import VerseSection from "../../../../components/VerseSection.astro";
+import Layout from "@/layouts/Layout.astro";
+import PlayButton from "@/components/PlayButton.astro";
+import kannada from "@/data/kannada.json";
+import Select from "@/components/Select.astro";
+import VerseSection from "@/components/VerseSection.astro";
 
 export function getStaticPaths() {
   return kannada.flatMap((book) =>
