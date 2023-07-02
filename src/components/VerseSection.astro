@@ -1,0 +1,74 @@
+---
+const { verses } = Astro.props;
+---
+
+<style>
+  .verses-section {
+    height: 100%;
+    margin-left: 0px;
+    margin-right: 0px;
+    margin-bottom: 0.5rem;
+    /* margin-left: 0.5rem; mobile */
+    /* margin-right: 0.5rem; mobile */
+    overflow-y: auto;
+  }
+
+  .verse-item {
+    display: flex;
+    align-items: baseline;
+    flex: 1;
+    margin-top: 1rem;
+    cursor: pointer;
+  }
+
+  .verse-no {
+    color: rgba(163, 4, 0, 1);
+    font-weight: 700;
+    font-size: 0.75rem;
+    line-height: 1rem;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+  }
+
+  .selected {
+    background-color: yellow;
+  }
+
+  hr {
+    background-color: black;
+    height: 2px;
+    margin-top: 5rem;
+  }
+</style>
+<div class="verses-section">
+  {
+    verses.map((item, i) => (
+      <div class="verse-item">
+        <p class="verse-no">{i + 1}</p>
+        <p>{item.verse}</p>
+      </div>
+    ))
+  }
+  <hr />
+</div>
+<script>
+  const items = document.getElementsByClassName("verse-item");
+  Array.from(items).forEach((it, i) =>
+    it.addEventListener("click", () => {
+      const { selectedVerses = [], ...state } = store.get();
+      if (selectedVerses.includes(i)) {
+        it.classList.remove("selected");
+        store.set({
+          ...state,
+          selectedVerses: selectedVerses.filter((t) => t !== i),
+        });
+      } else {
+        it.classList.add("selected");
+        store.set({
+          ...state,
+          selectedVerses: selectedVerses.concat([i]),
+        });
+      }
+    })
+  );
+</script>

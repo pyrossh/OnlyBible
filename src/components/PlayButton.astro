@@ -1,5 +1,7 @@
 ---
 import { Icon } from "astro-icon";
+
+const { verses } = Astro.props;
 ---
 
 <style>
@@ -15,20 +17,41 @@ import { Icon } from "astro-icon";
   <Icon id="play-icon" name="gridicons:play" size={36} />
   <Icon id="pause-icon" name="gridicons:pause" size={36} class="hidden" />
 </button>
-<script>
-  const button = document.getElementById("play-btn");
+<script define:vars={{ verses }}>
+const button = document.getElementById("play-btn");
+button.addEventListener("click", async () => {
+  let currentAudio = null;
   const playIcon = document.getElementById("play-icon");
   const pauseIcon = document.getElementById("pause-icon");
-  button.addEventListener("click", () => {
-    const state = store.get();
-    if (state.isPlaying) {
-      store.set({ ...state, isPlaying: false });
-      playIcon.classList.remove("hidden");
-      pauseIcon.classList.add("hidden");
-    } else {
-      store.set({ ...state, isPlaying: true });
-      playIcon.classList.add("hidden");
-      pauseIcon.classList.remove("hidden");
+  const state = store.get();
+  const finish = () => {
+    store.set({ ...state, isPlaying: false });
+    playIcon.classList.remove("hidden");
+    pauseIcon.classList.add("hidden");
+    if (currentAudio) {
+      currentAudio.pause();
+      currentAudio = null;
     }
-  });
+  };
+  if (state.isPlaying) {
+    finish();
+  } else {
+    store.set({ ...state, isPlaying: true });
+    playIcon.classList.add("hidden");
+    pauseIcon.classList.remove("hidden");
+    for (const i of state.selectedVerses) {
+      await new Promise((resolve) => {
+        const { start, end } = verses[i];
+        const audio = new Audio(`/output.mp3#t=${start},${end}`);
+        audio.loop = false;
+        audio.play();
+        audio.addEventListener("ended", resolve);
+        audio.onended = resolve;
+        currentAudio = audio;
+        setTimeout(resolve, (end - start) * 1000);
+      });
+    }
+    finish();
+  }
+});
 </script>
