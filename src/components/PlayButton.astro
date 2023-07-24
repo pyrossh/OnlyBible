@@ -19,8 +19,8 @@ const { verses } = Astro.props;
 </button>
 <script define:vars={{ verses }}>
 const button = document.getElementById("play-btn");
+let audio = null;
 button.addEventListener("click", async () => {
-  let currentAudio = null;
   const playIcon = document.getElementById("play-icon");
   const pauseIcon = document.getElementById("pause-icon");
   const state = store.get();
@@ -28,9 +28,9 @@ button.addEventListener("click", async () => {
     store.set({ ...state, isPlaying: false });
     playIcon.classList.remove("hidden");
     pauseIcon.classList.add("hidden");
-    if (currentAudio) {
-      currentAudio.pause();
-      currentAudio = null;
+    if (audio) {
+      audio.pause();
+      audio = null;
     }
   };
   if (state.isPlaying) {
@@ -42,12 +42,11 @@ button.addEventListener("click", async () => {
     for (const i of state.selectedVerses) {
       await new Promise((resolve) => {
         const { start, end } = verses[i];
-        const audio = new Audio(`/output.mp3#t=${start},${end}`);
+        audio = new Audio(`/audio/kannada.mp3#t=${start},${end}`);
         audio.loop = false;
         audio.play();
         audio.addEventListener("ended", resolve);
         audio.onended = resolve;
-        currentAudio = audio;
         setTimeout(resolve, (end - start) * 1000);
       });
     }

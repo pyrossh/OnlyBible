@@ -1,4 +1,6 @@
 ---
+import { fade } from 'astro:transitions';
+
 const { verses } = Astro.props;
 ---
 
@@ -14,42 +16,39 @@ const { verses } = Astro.props;
   }
 
   .verse-item {
-    display: flex;
-    align-items: baseline;
-    flex: 1;
-    margin-top: 1rem;
+    font-size: 1.2rem;
+    font-weight: 400;
+    line-height: 2rem;
     cursor: pointer;
+    margin-top: 1rem;
+    color: #010101;
   }
 
   .verse-no {
-    color: rgba(163, 4, 0, 1);
+    display: inline;
+    vertical-align: text-top;
+    color: #a30400;
     font-weight: 700;
-    font-size: 0.75rem;
-    line-height: 1rem;
-    margin-left: 0.5rem;
-    margin-right: 0.5rem;
+    font-size: 0.8rem;
+    line-height: normal;
+    top: auto;
+    /* margin-left: 0.5rem; */
+    /* margin-right: 0.5rem; */
   }
 
   .selected {
     background-color: yellow;
   }
-
-  hr {
-    background-color: black;
-    height: 2px;
-    margin-top: 5rem;
-  }
 </style>
-<div class="verses-section">
+<div class="verses-section" transition:animate={fade({ duration: '0.4s' })}>
   {
     verses.map((item, i) => (
-      <div class="verse-item">
-        <p class="verse-no">{i + 1}</p>
-        <p>{item.verse}</p>
-      </div>
+      <p class="verse-item">
+        <sup class="verse-no">{i + 1}</sup>
+        {item.verse}
+      </p>
     ))
   }
-  <hr />
 </div>
 <script>
   const items = document.getElementsByClassName("verse-item");

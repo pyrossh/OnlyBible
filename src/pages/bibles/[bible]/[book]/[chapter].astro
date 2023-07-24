@@ -28,11 +28,22 @@ const verses = selectedBook.chapters[selectedChapter - 1];
 <style>
   .container {
     height: 100%;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+    background: white;
+  }
+
+  @media (min-width: 640px) {
+    .container {
+      margin-left: 18%;
+      margin-right: 18%;
+    }
   }
 
   .full {
     height: 100%;
-    width: 100%;
+    margin-left: 8px;
+    margin-right: 8px;
   }
 
   .row {
@@ -64,7 +75,7 @@ const verses = selectedBook.chapters[selectedChapter - 1];
   .title {
     font-size: 1.25rem;
     line-height: 1.75rem;
-    font-weight: 400;
+    font-weight: 500;
   }
 
   .menu {
@@ -79,62 +90,44 @@ const verses = selectedBook.chapters[selectedChapter - 1];
     margin-right: 1.5rem;
   }
 
-  h3 {
-    margin-right: 0.5rem;
-  }
-
-  hr {
+  hr.first {
     background-color: black;
     height: 2px;
+  }
+
+  hr.last {
+    background-color: black;
+    height: 2px;
+    margin-bottom: 0.4rem;
   }
 </style>
 <Layout title={`Bible App ${bible} - ${book}`}>
   <div class="container">
     <div class="full row">
-      <div
-        class="h-full overflow-y-auto w-5/6 sm:w-auto flex bg-gray-100 border-r border-bibleborder"
-      >
-        <div class="books-section">
+        <!-- <div class="books-section">
           {
             books.map((b) => (
-              <a class="book-item" href={`/bibles/kannada/${b.slug}/1`}>
+              <a class="book-item shadow" href={`/bibles/kannada/${b.slug}/1`}>
                 {b.name}
               </a>
             ))
           }
-        </div>
-      </div>
+        </div> -->
       <div
-        class="w-1/6 sm:w-auto flex flex-1 flex-col p-0 ml-0 sm:px-4 sm:ml-2"
+        class="w-auto flex flex-1 flex-col p-0 ml-0 sm:px-4 sm:ml-2"
       >
         <div class="title-container">
           <div class="menu">
-            <button class="sm:hidden mr-2" @click="openDrawer()">
-              <Icon name="mdi:hamburger-menu" size={36} />
-            </button>
-            <h1 class="title">{selectedBook.name} {selectedChapter}</h1>
+            <h1 class="title shadow">{selectedBook.name} {selectedChapter}</h1>
           </div>
           <div class="actionsContainer">
             <PlayButton verses={verses} />
           </div>
-          <h3>Chapter:</h3>
-          <Select>
-            {
-              selectedBook.chapters.map((_, i) => (
-                <option
-                  selected={
-                    parseInt(chapter) === i + 1 ? `selected` : undefined
-                  }
-                  value={`/bibles/${bible}/${selectedBook.slug}/${i + 1}`}
-                >
-                  {i + 1}
-                </option>
-              ))
-            }
-          </Select>
+          <Select index={parseInt(chapter)} size={selectedBook.chapters.length} />
         </div>
-        <hr />
+        <hr class="first" />
         <VerseSection verses={verses} />
+        <hr class="last" />
       </div>
     </div>
   </div>
