@@ -1,0 +1,964 @@
+---
+---
+<style>
+  .r-dropdown {
+    max-height: 500px;
+    white-space: normal;
+    position: absolute;
+    z-index: 1000;
+    /* overflow: auto hidden; */
+    box-shadow: rgba(173, 169, 164, 0.25) 3px 3px 6px 0px;
+    top: 21px;
+    left: 0px;
+    cursor: pointer;
+    /* transition: max-height .25s ease-out,bottom .25s ease-out; */
+  }
+
+  .bcv-dropdown {
+    cursor: default;
+    display: flex;
+    overflow: hidden;
+    white-space: nowrap;
+    transition: margin-left .25s ease-out;
+  }
+
+  .testaments {
+    height: 500px;
+    display: flex;
+    overflow: hidden auto;
+    padding: 0px;
+  }
+
+  .chapter-col {
+    width: 100%;
+    height: 500px;
+    overflow: hidden auto;
+    padding: 0px;
+  }
+</style>
+<div
+  class="r-dropdown"
+  tabindex="-1"
+  style="max-height: 500px; white-space: normal; position: absolute; z-index: 1000; overflow: auto hidden; box-shadow: rgba(173, 169, 164, 0.25) 3px 3px 6px 0px; top: 21px; left: 0px;"
+>
+  <div
+    style="background: rgb(255, 255, 255); border: 1px solid rgb(221, 220, 218); padding: 4px 0px 0px;"
+  >
+    <div style="position: relative;">
+      <div
+        class="bcv-dropdown"
+        style="cursor: default; display: flex; overflow: hidden; white-space: nowrap;"
+      >
+        <div class="testament-col" style="min-width: auto;">
+          <div
+            class="testaments"
+          >
+            <div>
+              <h3
+                style="font-size: 1.6rem; padding: 0px 16px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;"
+              >
+                Old Testament
+              </h3><ul style="list-style: none; padding: 0px; margin: 0px;">
+                <li class="go911112886 current" data-book="Gen">
+                  <span
+                    >Genesis <svg
+                      name="chevron-right"
+                      title="Genesis"
+                      class=""
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 320 512"
+                      style="height: 14px; top: 1.5px; position: relative;"
+                      ><title>Genesis</title><path
+                        d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"
+                      ></path><path></path></svg
+                    ></span
+                  >
+                </li><li class="go911112886" data-book="Exod">Exodus</li><li
+                  class="go911112886"
+                  data-book="Lev"
+                >
+                  Leviticus
+                </li><li class="go911112886" data-book="Num">Numbers</li><li
+                  class="go911112886"
+                  data-book="Deut"
+                >
+                  Deuteronomy
+                </li><li class="go911112886" data-book="Josh">Joshua</li><li
+                  class="go911112886"
+                  data-book="Judg"
+                >
+                  Judges
+                </li><li class="go911112886" data-book="Ruth">Ruth</li><li
+                  class="go911112886"
+                  data-book="1Sam"
+                >
+                  1 Samuel
+                </li><li class="go911112886" data-book="2Sam">2 Samuel</li><li
+                  class="go911112886"
+                  data-book="1Kgs"
+                >
+                  1 Kings
+                </li><li class="go911112886" data-book="2Kgs">2 Kings</li><li
+                  class="go911112886"
+                  data-book="1Chr"
+                >
+                  1 Chronicles
+                </li><li class="go911112886" data-book="2Chr">
+                  2 Chronicles
+                </li><li class="go911112886" data-book="Ezra">Ezra</li><li
+                  class="go911112886"
+                  data-book="Neh"
+                >
+                  Nehemiah
+                </li><li class="go911112886" data-book="Esth">Esther</li><li
+                  class="go911112886"
+                  data-book="Job"
+                >
+                  Job
+                </li><li class="go911112886" data-book="Ps">Psalm</li><li
+                  class="go911112886"
+                  data-book="Prov"
+                >
+                  Proverbs
+                </li><li class="go911112886" data-book="Eccl">
+                  Ecclesiastes
+                </li><li class="go911112886" data-book="Song">
+                  Song of Songs
+                </li><li class="go911112886" data-book="Isa">Isaiah</li><li
+                  class="go911112886"
+                  data-book="Jer"
+                >
+                  Jeremiah
+                </li><li class="go911112886" data-book="Lam">
+                  Lamentations
+                </li><li class="go911112886" data-book="Ezek">Ezekiel</li><li
+                  class="go911112886"
+                  data-book="Dan"
+                >
+                  Daniel
+                </li><li class="go911112886" data-book="Hos">Hosea</li><li
+                  class="go911112886"
+                  data-book="Joel"
+                >
+                  Joel
+                </li><li class="go911112886" data-book="Amos">Amos</li><li
+                  class="go911112886"
+                  data-book="Obad"
+                >
+                  Obadiah
+                </li><li class="go911112886" data-book="Jonah">Jonah</li><li
+                  class="go911112886"
+                  data-book="Mic"
+                >
+                  Micah
+                </li><li class="go911112886" data-book="Nah">Nahum</li><li
+                  class="go911112886"
+                  data-book="Hab"
+                >
+                  Habakkuk
+                </li><li class="go911112886" data-book="Zeph">Zephaniah</li><li
+                  class="go911112886"
+                  data-book="Hag"
+                >
+                  Haggai
+                </li><li class="go911112886" data-book="Zech">Zechariah</li><li
+                  class="go911112886"
+                  data-book="Mal"
+                >
+                  Malachi
+                </li>
+              </ul>
+            </div><div>
+              <div>
+                <h3
+                  style="font-size: 1.6rem; padding: 0px 16px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;"
+                >
+                  New Testament
+                </h3><ul style="list-style: none; padding: 0px; margin: 0px;">
+                  <li class="go911112886" data-book="Matt">Matthew</li><li
+                    class="go911112886"
+                    data-book="Mark"
+                  >
+                    Mark
+                  </li><li class="go911112886" data-book="Luke">Luke</li><li
+                    class="go911112886"
+                    data-book="John"
+                  >
+                    John
+                  </li><li class="go911112886" data-book="Acts">Acts</li><li
+                    class="go911112886"
+                    data-book="Rom"
+                  >
+                    Romans
+                  </li><li class="go911112886" data-book="1Cor">
+                    1 Corinthians
+                  </li><li class="go911112886" data-book="2Cor">
+                    2 Corinthians
+                  </li><li class="go911112886" data-book="Gal">Galatians</li><li
+                    class="go911112886"
+                    data-book="Eph"
+                  >
+                    Ephesians
+                  </li><li class="go911112886" data-book="Phil">
+                    Philippians
+                  </li><li class="go911112886" data-book="Col">
+                    Colossians
+                  </li><li class="go911112886" data-book="1Thess">
+                    1 Thessalonians
+                  </li><li class="go911112886" data-book="2Thess">
+                    2 Thessalonians
+                  </li><li class="go911112886" data-book="1Tim">
+                    1 Timothy
+                  </li><li class="go911112886" data-book="2Tim">
+                    2 Timothy
+                  </li><li class="go911112886" data-book="Titus">Titus</li><li
+                    class="go911112886"
+                    data-book="Phlm"
+                  >
+                    Philemon
+                  </li><li class="go911112886" data-book="Heb">Hebrews</li><li
+                    class="go911112886"
+                    data-book="Jas"
+                  >
+                    James
+                  </li><li class="go911112886" data-book="1Pet">1 Peter</li><li
+                    class="go911112886"
+                    data-book="2Pet"
+                  >
+                    2 Peter
+                  </li><li class="go911112886" data-book="1John">1 John</li><li
+                    class="go911112886"
+                    data-book="2John"
+                  >
+                    2 John
+                  </li><li class="go911112886" data-book="3John">3 John</li><li
+                    class="go911112886"
+                    data-book="Jude"
+                  >
+                    Jude
+                  </li><li class="go911112886" data-book="Rev">Revelation</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div><div
+          class="chapter-col"
+        >
+          <h3
+            style="font-size: 1.6rem; padding: 0px 16px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;"
+          >
+            Genesis
+          </h3><table style="border-collapse: collapse;">
+            <tr class="go441370079"
+              ><td style="padding: 4px 4px 4px 16px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%201&version=NIV"
+                  style="text-decoration: none; line-height: 1.2; display: block;"
+                  >1</a
+                ></td
+              ><td style="max-width: 402px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%201&version=NIV"
+                  style="display: block; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; text-decoration: none; max-width: 1423px;"
+                  >The Beginning</a
+                ></td
+              ></tr
+            ><tr class="go441370079"
+              ><td style="padding: 4px 4px 4px 16px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%202&version=NIV"
+                  style="text-decoration: none; line-height: 1.2; display: block;"
+                  >2</a
+                ></td
+              ><td style="max-width: 402px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%202&version=NIV"
+                  style="display: block; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; text-decoration: none; max-width: 1423px;"
+                  >Adam and Eve</a
+                ></td
+              ></tr
+            ><tr class="go441370079 current"
+              ><td style="padding: 4px 4px 4px 16px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%203&version=NIV"
+                  style="text-decoration: none; line-height: 1.2; display: block;"
+                  >3</a
+                ></td
+              ><td style="max-width: 402px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%203&version=NIV"
+                  style="display: block; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; text-decoration: none; max-width: 1423px;"
+                  >The Fall</a
+                ></td
+              ></tr
+            ><tr class="go441370079"
+              ><td style="padding: 4px 4px 4px 16px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%204&version=NIV"
+                  style="text-decoration: none; line-height: 1.2; display: block;"
+                  >4</a
+                ></td
+              ><td style="max-width: 402px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%204&version=NIV"
+                  style="display: block; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; text-decoration: none; max-width: 1423px;"
+                  >Cain and Abel</a
+                ></td
+              ></tr
+            ><tr class="go441370079"
+              ><td style="padding: 4px 4px 4px 16px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%205&version=NIV"
+                  style="text-decoration: none; line-height: 1.2; display: block;"
+                  >5</a
+                ></td
+              ><td style="max-width: 402px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%205&version=NIV"
+                  style="display: block; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; text-decoration: none; max-width: 1423px;"
+                  >From Adam to Noah</a
+                ></td
+              ></tr
+            ><tr class="go441370079"
+              ><td style="padding: 4px 4px 4px 16px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%206&version=NIV"
+                  style="text-decoration: none; line-height: 1.2; display: block;"
+                  >6</a
+                ></td
+              ><td style="max-width: 402px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%206&version=NIV"
+                  style="display: block; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; text-decoration: none; max-width: 1423px;"
+                  >Wickedness in the World · Noah and the Flood</a
+                ></td
+              ></tr
+            ><tr class="go441370079"
+              ><td style="padding: 4px 4px 4px 16px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%207&version=NIV"
+                  style="text-decoration: none; line-height: 1.2; display: block;"
+                  >7</a
+                ></td
+              ><td style="max-width: 402px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%207&version=NIV"
+                  style="display: block; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; text-decoration: none; font-style: italic; max-width: 1423px;"
+                  >The <span class="small-caps">Lord</span> then said to Noah, “Go
+                  into the ark,
+                </a></td
+              ></tr
+            ><tr class="go441370079"
+              ><td style="padding: 4px 4px 4px 16px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%208&version=NIV"
+                  style="text-decoration: none; line-height: 1.2; display: block;"
+                  >8</a
+                ></td
+              ><td style="max-width: 402px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%208&version=NIV"
+                  style="display: block; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; text-decoration: none; font-style: italic; max-width: 1423px;"
+                  >But God remembered Noah and all the wild animals and the
+                  livestock that were
+                </a></td
+              ></tr
+            ><tr class="go441370079"
+              ><td style="padding: 4px 4px 4px 16px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%209&version=NIV"
+                  style="text-decoration: none; line-height: 1.2; display: block;"
+                  >9</a
+                ></td
+              ><td style="max-width: 402px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%209&version=NIV"
+                  style="display: block; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; text-decoration: none; max-width: 1423px;"
+                  >God’s Covenant With Noah · The Sons of Noah</a
+                ></td
+              ></tr
+            ><tr class="go441370079"
+              ><td style="padding: 4px 4px 4px 16px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2010&version=NIV"
+                  style="text-decoration: none; line-height: 1.2; display: block;"
+                  >10</a
+                ></td
+              ><td style="max-width: 402px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2010&version=NIV"
+                  style="display: block; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; text-decoration: none; max-width: 1423px;"
+                  >The Table of Nations</a
+                ></td
+              ></tr
+            ><tr class="go441370079"
+              ><td style="padding: 4px 4px 4px 16px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2011&version=NIV"
+                  style="text-decoration: none; line-height: 1.2; display: block;"
+                  >11</a
+                ></td
+              ><td style="max-width: 402px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2011&version=NIV"
+                  style="display: block; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; text-decoration: none; max-width: 1423px;"
+                  >The Tower of Babel · From Shem to Abram · Abram’s Family</a
+                ></td
+              ></tr
+            ><tr class="go441370079"
+              ><td style="padding: 4px 4px 4px 16px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2012&version=NIV"
+                  style="text-decoration: none; line-height: 1.2; display: block;"
+                  >12</a
+                ></td
+              ><td style="max-width: 402px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2012&version=NIV"
+                  style="display: block; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; text-decoration: none; max-width: 1423px;"
+                  >The Call of Abram · Abram in Egypt</a
+                ></td
+              ></tr
+            ><tr class="go441370079"
+              ><td style="padding: 4px 4px 4px 16px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2013&version=NIV"
+                  style="text-decoration: none; line-height: 1.2; display: block;"
+                  >13</a
+                ></td
+              ><td style="max-width: 402px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2013&version=NIV"
+                  style="display: block; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; text-decoration: none; max-width: 1423px;"
+                  >Abram and Lot Separate</a
+                ></td
+              ></tr
+            ><tr class="go441370079"
+              ><td style="padding: 4px 4px 4px 16px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2014&version=NIV"
+                  style="text-decoration: none; line-height: 1.2; display: block;"
+                  >14</a
+                ></td
+              ><td style="max-width: 402px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2014&version=NIV"
+                  style="display: block; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; text-decoration: none; max-width: 1423px;"
+                  >Abram Rescues Lot</a
+                ></td
+              ></tr
+            ><tr class="go441370079"
+              ><td style="padding: 4px 4px 4px 16px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2015&version=NIV"
+                  style="text-decoration: none; line-height: 1.2; display: block;"
+                  >15</a
+                ></td
+              ><td style="max-width: 402px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2015&version=NIV"
+                  style="display: block; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; text-decoration: none; max-width: 1423px;"
+                  >The <span class="small-caps">Lord</span>’s Covenant With
+                  Abram</a
+                ></td
+              ></tr
+            ><tr class="go441370079"
+              ><td style="padding: 4px 4px 4px 16px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2016&version=NIV"
+                  style="text-decoration: none; line-height: 1.2; display: block;"
+                  >16</a
+                ></td
+              ><td style="max-width: 402px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2016&version=NIV"
+                  style="display: block; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; text-decoration: none; max-width: 1423px;"
+                  >Hagar and Ishmael</a
+                ></td
+              ></tr
+            ><tr class="go441370079"
+              ><td style="padding: 4px 4px 4px 16px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2017&version=NIV"
+                  style="text-decoration: none; line-height: 1.2; display: block;"
+                  >17</a
+                ></td
+              ><td style="max-width: 402px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2017&version=NIV"
+                  style="display: block; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; text-decoration: none; max-width: 1423px;"
+                  >The Covenant of Circumcision</a
+                ></td
+              ></tr
+            ><tr class="go441370079"
+              ><td style="padding: 4px 4px 4px 16px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2018&version=NIV"
+                  style="text-decoration: none; line-height: 1.2; display: block;"
+                  >18</a
+                ></td
+              ><td style="max-width: 402px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2018&version=NIV"
+                  style="display: block; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; text-decoration: none; max-width: 1423px;"
+                  >The Three Visitors · Abraham Pleads for Sodom</a
+                ></td
+              ></tr
+            ><tr class="go441370079"
+              ><td style="padding: 4px 4px 4px 16px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2019&version=NIV"
+                  style="text-decoration: none; line-height: 1.2; display: block;"
+                  >19</a
+                ></td
+              ><td style="max-width: 402px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2019&version=NIV"
+                  style="display: block; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; text-decoration: none; max-width: 1423px;"
+                  >Sodom and Gomorrah Destroyed · Lot and His Daughters</a
+                ></td
+              ></tr
+            ><tr class="go441370079"
+              ><td style="padding: 4px 4px 4px 16px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2020&version=NIV"
+                  style="text-decoration: none; line-height: 1.2; display: block;"
+                  >20</a
+                ></td
+              ><td style="max-width: 402px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2020&version=NIV"
+                  style="display: block; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; text-decoration: none; max-width: 1423px;"
+                  >Abraham and Abimelek</a
+                ></td
+              ></tr
+            ><tr class="go441370079"
+              ><td style="padding: 4px 4px 4px 16px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2021&version=NIV"
+                  style="text-decoration: none; line-height: 1.2; display: block;"
+                  >21</a
+                ></td
+              ><td style="max-width: 402px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2021&version=NIV"
+                  style="display: block; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; text-decoration: none; max-width: 1423px;"
+                  >The Birth of Isaac · Hagar and Ishmael Sent Away · The Treaty
+                  at Beersheba</a
+                ></td
+              ></tr
+            ><tr class="go441370079"
+              ><td style="padding: 4px 4px 4px 16px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2022&version=NIV"
+                  style="text-decoration: none; line-height: 1.2; display: block;"
+                  >22</a
+                ></td
+              ><td style="max-width: 402px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2022&version=NIV"
+                  style="display: block; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; text-decoration: none; max-width: 1423px;"
+                  >Abraham Tested · Nahor’s Sons</a
+                ></td
+              ></tr
+            ><tr class="go441370079"
+              ><td style="padding: 4px 4px 4px 16px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2023&version=NIV"
+                  style="text-decoration: none; line-height: 1.2; display: block;"
+                  >23</a
+                ></td
+              ><td style="max-width: 402px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2023&version=NIV"
+                  style="display: block; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; text-decoration: none; max-width: 1423px;"
+                  >The Death of Sarah</a
+                ></td
+              ></tr
+            ><tr class="go441370079"
+              ><td style="padding: 4px 4px 4px 16px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2024&version=NIV"
+                  style="text-decoration: none; line-height: 1.2; display: block;"
+                  >24</a
+                ></td
+              ><td style="max-width: 402px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2024&version=NIV"
+                  style="display: block; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; text-decoration: none; max-width: 1423px;"
+                  >Isaac and Rebekah</a
+                ></td
+              ></tr
+            ><tr class="go441370079"
+              ><td style="padding: 4px 4px 4px 16px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2025&version=NIV"
+                  style="text-decoration: none; line-height: 1.2; display: block;"
+                  >25</a
+                ></td
+              ><td style="max-width: 402px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2025&version=NIV"
+                  style="display: block; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; text-decoration: none; max-width: 1423px;"
+                  >The Death of Abraham · Ishmael’s Sons · Jacob and Esau</a
+                ></td
+              ></tr
+            ><tr class="go441370079"
+              ><td style="padding: 4px 4px 4px 16px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2026&version=NIV"
+                  style="text-decoration: none; line-height: 1.2; display: block;"
+                  >26</a
+                ></td
+              ><td style="max-width: 402px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2026&version=NIV"
+                  style="display: block; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; text-decoration: none; max-width: 1423px;"
+                  >Isaac and Abimelek · Jacob Takes Esau’s Blessing</a
+                ></td
+              ></tr
+            ><tr class="go441370079"
+              ><td style="padding: 4px 4px 4px 16px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2027&version=NIV"
+                  style="text-decoration: none; line-height: 1.2; display: block;"
+                  >27</a
+                ></td
+              ><td style="max-width: 402px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2027&version=NIV"
+                  style="display: block; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; text-decoration: none; font-style: italic; max-width: 1423px;"
+                  >When Isaac was old and his eyes were so weak that he could no
+                  longer see, he
+                </a></td
+              ></tr
+            ><tr class="go441370079"
+              ><td style="padding: 4px 4px 4px 16px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2028&version=NIV"
+                  style="text-decoration: none; line-height: 1.2; display: block;"
+                  >28</a
+                ></td
+              ><td style="max-width: 402px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2028&version=NIV"
+                  style="display: block; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; text-decoration: none; max-width: 1423px;"
+                  >Jacob’s Dream at Bethel</a
+                ></td
+              ></tr
+            ><tr class="go441370079"
+              ><td style="padding: 4px 4px 4px 16px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2029&version=NIV"
+                  style="text-decoration: none; line-height: 1.2; display: block;"
+                  >29</a
+                ></td
+              ><td style="max-width: 402px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2029&version=NIV"
+                  style="display: block; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; text-decoration: none; max-width: 1423px;"
+                  >Jacob Arrives in Paddan Aram · Jacob Marries Leah and Rachel
+                  · Jacob’s Children</a
+                ></td
+              ></tr
+            ><tr class="go441370079"
+              ><td style="padding: 4px 4px 4px 16px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2030&version=NIV"
+                  style="text-decoration: none; line-height: 1.2; display: block;"
+                  >30</a
+                ></td
+              ><td style="max-width: 402px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2030&version=NIV"
+                  style="display: block; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; text-decoration: none; max-width: 1423px;"
+                  >Jacob’s Flocks Increase</a
+                ></td
+              ></tr
+            ><tr class="go441370079"
+              ><td style="padding: 4px 4px 4px 16px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2031&version=NIV"
+                  style="text-decoration: none; line-height: 1.2; display: block;"
+                  >31</a
+                ></td
+              ><td style="max-width: 402px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2031&version=NIV"
+                  style="display: block; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; text-decoration: none; max-width: 1423px;"
+                  >Jacob Flees From Laban · Laban Pursues Jacob</a
+                ></td
+              ></tr
+            ><tr class="go441370079"
+              ><td style="padding: 4px 4px 4px 16px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2032&version=NIV"
+                  style="text-decoration: none; line-height: 1.2; display: block;"
+                  >32</a
+                ></td
+              ><td style="max-width: 402px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2032&version=NIV"
+                  style="display: block; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; text-decoration: none; max-width: 1423px;"
+                  >Jacob Prepares to Meet Esau · Jacob Wrestles With God</a
+                ></td
+              ></tr
+            ><tr class="go441370079"
+              ><td style="padding: 4px 4px 4px 16px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2033&version=NIV"
+                  style="text-decoration: none; line-height: 1.2; display: block;"
+                  >33</a
+                ></td
+              ><td style="max-width: 402px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2033&version=NIV"
+                  style="display: block; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; text-decoration: none; max-width: 1423px;"
+                  >Jacob Meets Esau</a
+                ></td
+              ></tr
+            ><tr class="go441370079"
+              ><td style="padding: 4px 4px 4px 16px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2034&version=NIV"
+                  style="text-decoration: none; line-height: 1.2; display: block;"
+                  >34</a
+                ></td
+              ><td style="max-width: 402px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2034&version=NIV"
+                  style="display: block; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; text-decoration: none; max-width: 1423px;"
+                  >Dinah and the Shechemites</a
+                ></td
+              ></tr
+            ><tr class="go441370079"
+              ><td style="padding: 4px 4px 4px 16px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2035&version=NIV"
+                  style="text-decoration: none; line-height: 1.2; display: block;"
+                  >35</a
+                ></td
+              ><td style="max-width: 402px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2035&version=NIV"
+                  style="display: block; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; text-decoration: none; max-width: 1423px;"
+                  >Jacob Returns to Bethel · The Deaths of Rachel and Isaac</a
+                ></td
+              ></tr
+            ><tr class="go441370079"
+              ><td style="padding: 4px 4px 4px 16px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2036&version=NIV"
+                  style="text-decoration: none; line-height: 1.2; display: block;"
+                  >36</a
+                ></td
+              ><td style="max-width: 402px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2036&version=NIV"
+                  style="display: block; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; text-decoration: none; max-width: 1423px;"
+                  >Esau’s Descendants · The Rulers of Edom</a
+                ></td
+              ></tr
+            ><tr class="go441370079"
+              ><td style="padding: 4px 4px 4px 16px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2037&version=NIV"
+                  style="text-decoration: none; line-height: 1.2; display: block;"
+                  >37</a
+                ></td
+              ><td style="max-width: 402px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2037&version=NIV"
+                  style="display: block; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; text-decoration: none; max-width: 1423px;"
+                  >Joseph’s Dreams · Joseph Sold by His Brothers</a
+                ></td
+              ></tr
+            ><tr class="go441370079"
+              ><td style="padding: 4px 4px 4px 16px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2038&version=NIV"
+                  style="text-decoration: none; line-height: 1.2; display: block;"
+                  >38</a
+                ></td
+              ><td style="max-width: 402px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2038&version=NIV"
+                  style="display: block; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; text-decoration: none; max-width: 1423px;"
+                  >Judah and Tamar</a
+                ></td
+              ></tr
+            ><tr class="go441370079"
+              ><td style="padding: 4px 4px 4px 16px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2039&version=NIV"
+                  style="text-decoration: none; line-height: 1.2; display: block;"
+                  >39</a
+                ></td
+              ><td style="max-width: 402px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2039&version=NIV"
+                  style="display: block; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; text-decoration: none; max-width: 1423px;"
+                  >Joseph and Potiphar’s Wife</a
+                ></td
+              ></tr
+            ><tr class="go441370079"
+              ><td style="padding: 4px 4px 4px 16px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2040&version=NIV"
+                  style="text-decoration: none; line-height: 1.2; display: block;"
+                  >40</a
+                ></td
+              ><td style="max-width: 402px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2040&version=NIV"
+                  style="display: block; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; text-decoration: none; max-width: 1423px;"
+                  >The Cupbearer and the Baker</a
+                ></td
+              ></tr
+            ><tr class="go441370079"
+              ><td style="padding: 4px 4px 4px 16px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2041&version=NIV"
+                  style="text-decoration: none; line-height: 1.2; display: block;"
+                  >41</a
+                ></td
+              ><td style="max-width: 402px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2041&version=NIV"
+                  style="display: block; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; text-decoration: none; max-width: 1423px;"
+                  >Pharaoh’s Dreams · Joseph in Charge of Egypt</a
+                ></td
+              ></tr
+            ><tr class="go441370079"
+              ><td style="padding: 4px 4px 4px 16px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2042&version=NIV"
+                  style="text-decoration: none; line-height: 1.2; display: block;"
+                  >42</a
+                ></td
+              ><td style="max-width: 402px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2042&version=NIV"
+                  style="display: block; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; text-decoration: none; max-width: 1423px;"
+                  >Joseph’s Brothers Go to Egypt</a
+                ></td
+              ></tr
+            ><tr class="go441370079"
+              ><td style="padding: 4px 4px 4px 16px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2043&version=NIV"
+                  style="text-decoration: none; line-height: 1.2; display: block;"
+                  >43</a
+                ></td
+              ><td style="max-width: 402px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2043&version=NIV"
+                  style="display: block; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; text-decoration: none; max-width: 1423px;"
+                  >The Second Journey to Egypt</a
+                ></td
+              ></tr
+            ><tr class="go441370079"
+              ><td style="padding: 4px 4px 4px 16px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2044&version=NIV"
+                  style="text-decoration: none; line-height: 1.2; display: block;"
+                  >44</a
+                ></td
+              ><td style="max-width: 402px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2044&version=NIV"
+                  style="display: block; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; text-decoration: none; max-width: 1423px;"
+                  >A Silver Cup in a Sack</a
+                ></td
+              ></tr
+            ><tr class="go441370079"
+              ><td style="padding: 4px 4px 4px 16px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2045&version=NIV"
+                  style="text-decoration: none; line-height: 1.2; display: block;"
+                  >45</a
+                ></td
+              ><td style="max-width: 402px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2045&version=NIV"
+                  style="display: block; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; text-decoration: none; max-width: 1423px;"
+                  >Joseph Makes Himself Known</a
+                ></td
+              ></tr
+            ><tr class="go441370079"
+              ><td style="padding: 4px 4px 4px 16px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2046&version=NIV"
+                  style="text-decoration: none; line-height: 1.2; display: block;"
+                  >46</a
+                ></td
+              ><td style="max-width: 402px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2046&version=NIV"
+                  style="display: block; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; text-decoration: none; max-width: 1423px;"
+                  >Jacob Goes to Egypt</a
+                ></td
+              ></tr
+            ><tr class="go441370079"
+              ><td style="padding: 4px 4px 4px 16px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2047&version=NIV"
+                  style="text-decoration: none; line-height: 1.2; display: block;"
+                  >47</a
+                ></td
+              ><td style="max-width: 402px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2047&version=NIV"
+                  style="display: block; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; text-decoration: none; max-width: 1423px;"
+                  >Joseph and the Famine</a
+                ></td
+              ></tr
+            ><tr class="go441370079"
+              ><td style="padding: 4px 4px 4px 16px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2048&version=NIV"
+                  style="text-decoration: none; line-height: 1.2; display: block;"
+                  >48</a
+                ></td
+              ><td style="max-width: 402px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2048&version=NIV"
+                  style="display: block; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; text-decoration: none; max-width: 1423px;"
+                  >Manasseh and Ephraim</a
+                ></td
+              ></tr
+            ><tr class="go441370079"
+              ><td style="padding: 4px 4px 4px 16px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2049&version=NIV"
+                  style="text-decoration: none; line-height: 1.2; display: block;"
+                  >49</a
+                ></td
+              ><td style="max-width: 402px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2049&version=NIV"
+                  style="display: block; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; text-decoration: none; max-width: 1423px;"
+                  >Jacob Blesses His Sons · The Death of Jacob</a
+                ></td
+              ></tr
+            ><tr class="go441370079"
+              ><td style="padding: 4px 4px 4px 16px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2050&version=NIV"
+                  style="text-decoration: none; line-height: 1.2; display: block;"
+                  >50</a
+                ></td
+              ><td style="max-width: 402px;"
+                ><a
+                  href="https://www.biblegateway.com/passage/?search=Genesis%2050&version=NIV"
+                  style="display: block; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; text-decoration: none; max-width: 1423px;"
+                  >Joseph Reassures His Brothers · The Death of Joseph</a
+                ></td
+              ></tr
+            >
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

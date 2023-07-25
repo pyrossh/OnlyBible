@@ -1,7 +1,7 @@
 ---
 import { fade } from 'astro:transitions';
 
-const { verses } = Astro.props;
+const { chapter, verses } = Astro.props;
 ---
 
 <style>
@@ -22,6 +22,23 @@ const { verses } = Astro.props;
     cursor: pointer;
     margin-top: 1rem;
     color: #010101;
+
+    @media (min-width: 640px) {
+      font-size: 1rem;
+      line-height: 1.5rem;
+    }
+  }
+
+  .chapter-no {
+    position: relative;
+    display: inline;
+    font-size: 1.5rem;
+    line-height: .8em;
+    bottom: -0.1em;
+    left: 0;
+    text-indent: 0;
+    font-weight: 700;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, Cantarell, "Noto Sans", sans-serif, Arial;
   }
 
   .verse-no {
@@ -37,14 +54,16 @@ const { verses } = Astro.props;
   }
 
   .selected {
-    background-color: yellow;
+    background-color: #f8d1dc;
   }
 </style>
 <div class="verses-section" transition:animate={fade({ duration: '0.4s' })}>
   {
     verses.map((item, i) => (
       <p class="verse-item">
-        <sup class="verse-no">{i + 1}</sup>
+        {i === 0 ? <span class="chapter-no">
+          {chapter}
+        </span> : <sup class="verse-no">{i + 1}</sup>}
         {item.verse}
       </p>
     ))

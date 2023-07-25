@@ -1,6 +1,8 @@
 ---
 import { Icon } from "astro-icon";
+import KanndaBible from "../../../../../public/images/kannada-bible.png"
 import Layout from "@/layouts/Layout.astro";
+import Menu from "@/components/Menu.astro";
 import PlayButton from "@/components/PlayButton.astro";
 import kannada from "@/data/kannada.json";
 import Select from "@/components/Select.astro";
@@ -27,27 +29,87 @@ const verses = selectedBook.chapters[selectedChapter - 1];
 
 <style>
   .container {
+    display: flex;
     height: 100%;
-    border-left: 1px solid black;
-    border-right: 1px solid black;
     background: white;
-  }
+    /* margin-left: 12%; */
+    /* margin-right: 12%; */
 
-  @media (min-width: 640px) {
-    .container {
-      margin-left: 18%;
-      margin-right: 18%;
+    @media (min-width: 640px) {
+      background: #FBF8F7;
     }
   }
 
-  .full {
-    height: 100%;
-    margin-left: 8px;
-    margin-right: 8px;
+  .img {
+    width: 400px;
   }
 
-  .row {
+  .bookmark {
     display: flex;
+    flex-direction: column;
+    width: 240px;
+    background: #4C2323;
+    border-left: 20px solid #3C1B1C;
+    /* border-radius: 50px; */
+    /* @media (min-width: 640px) {
+      padding: 40px 60px;
+      margin: 32px 0px 21px 32px;
+    } */
+  }
+
+  .streak {
+    background: #4C2323;
+    width: 10px;
+  }
+
+  .abbr {
+    /* position: absolute;
+    top: 50%;
+    left: 15%;
+    height: 15%;
+    width: 60%; */
+    margin-left: 10px;
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 5px;
+    word-break: break-all;
+    color: #A98B8B;
+    /* color: #FFB341; */
+    /* transform-origin: bottom left; */
+    /* transform: rotate(-90deg); */
+  }
+
+  .abbr:first-child {
+    margin-top: 10px;
+  }
+
+  .work {
+    display: flex;
+    flex: 1;
+    /* height: calc(100% - 7px); */
+    /* margin-left: 8px; */
+    /* margin-right: 8px; */
+    padding: 0px;
+    background: white;
+
+    @media (min-width: 640px) {
+      padding: 0px 20px;
+      /* padding: 40px 60px; */
+      /* margin: 32px 32px 21px 0px; */
+      border: 1px solid #dddcda;
+    }
+  }
+
+  .page {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    margin-left: 0.5rem;
+    padding: 0px;
+    height: 100%;
+    /* w-auto flex flex-1 flex-col p-0 ml-0 sm:px-4 sm:ml-2 */
   }
 
   .books-section {
@@ -69,7 +131,7 @@ const verses = selectedBook.chapters[selectedChapter - 1];
   .title-container {
     display: flex;
     align-items: center;
-    padding: 0.5rem;
+    padding: 0.5rem 0;
   }
 
   .title {
@@ -103,30 +165,22 @@ const verses = selectedBook.chapters[selectedChapter - 1];
 </style>
 <Layout title={`Bible App ${bible} - ${book}`}>
   <div class="container">
-    <div class="full row">
-        <!-- <div class="books-section">
-          {
-            books.map((b) => (
-              <a class="book-item shadow" href={`/bibles/kannada/${b.slug}/1`}>
-                {b.name}
-              </a>
-            ))
-          }
-        </div> -->
-      <div
-        class="w-auto flex flex-1 flex-col p-0 ml-0 sm:px-4 sm:ml-2"
-      >
+    <Icon name="skin" />
+    <!-- <div class="streak" />
+    <div class="bookmark">
+      <span class="abbr">KANNADA</span>
+      <span class="abbr">BIBLE</span>
+    </div> -->
+    <div class="work">
+      <div class="page">
         <div class="title-container">
-          <div class="menu">
-            <h1 class="title shadow">{selectedBook.name} {selectedChapter}</h1>
-          </div>
+            <Select book={selectedBook.name} chapter={parseInt(chapter)} />
           <div class="actionsContainer">
             <PlayButton verses={verses} />
           </div>
-          <Select index={parseInt(chapter)} size={selectedBook.chapters.length} />
         </div>
         <hr class="first" />
-        <VerseSection verses={verses} />
+        <VerseSection chapter={parseInt(chapter)} verses={verses} />
         <hr class="last" />
       </div>
     </div>
