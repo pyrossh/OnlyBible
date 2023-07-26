@@ -59,12 +59,12 @@ const { chapter, verses } = Astro.props;
 </style>
 <div class="verses-section" transition:animate={fade({ duration: '0.4s' })}>
   {
-    verses.map((item, i) => (
+    verses.map((v, i) => (
       <p class="verse-item">
         {i === 0 ? <span class="chapter-no">
           {chapter}
         </span> : <sup class="verse-no">{i + 1}</sup>}
-        {item.verse}
+        {v[0]}
       </p>
     ))
   }

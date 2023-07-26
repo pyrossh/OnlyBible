@@ -1,45 +1,95 @@
-import fs from 'fs';
-// import fetch from 'node-fetch';
-// import abtob from 'arraybuffer-to-buffer';
-const { getAudioDurationInSeconds } = await import('get-audio-duration');
+import fs from "fs";
+import sdk from "microsoft-cognitiveservices-speech-sdk";
 
-function sleep(ms) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, ms);
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+const speechConfig = sdk.SpeechConfig.fromSubscription(
+  "cbc860f2564b4869b922c17dfb100b1d",
+  "eastus"
+);
+speechConfig.speechSynthesisOutputFormat =
+  sdk.SpeechSynthesisOutputFormat.Audio48Khz96KBitRateMonoMp3;
+
+const createSSML = ({ voice, rate, text }) => {
+  return `<speak xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" version="1.0" xml:lang="en-GB">
+    <voice name="${voice}">
+      <prosody rate="${rate}">${text}</prosody>
+    </voice>
+    </speak>
+  `;
+};
+//kn-IN-SapnaNeural 0.85
+//kn-IN-GaganNeural 0.85
+
+//HemkalaNeural 0.9
+//SagarNeural 0.9
+const tts = (synthesizer, data) => {
+  return new Promise((resolve, reject) => {
+    synthesizer.speakSsmlAsync(
+      data,
+      function (result) {
+        if (result.reason === sdk.ResultReason.SynthesizingAudioCompleted) {
+          resolve(result);
+        } else {
+          reject(result.errorDetails);
+        }
+      },
+      function (err) {
+        reject(err);
+      }
+    );
   });
+};
+
+class PushAudioOutputStreamTestCallback extends sdk.PushAudioOutputStreamCallback {
+  constructor() {
+    super();
+    this.output = fs.createWriteStream("./scripts/output.mp3");
+    this.output.on("error", (error) => {
+      console.log("error", error);
+      throw error;
+    });
+  }
+
+  write(dataBuffer) {
+    this.output.write(new Uint8Array(dataBuffer));
+  }
+
+  close() {
+    this.output.close();
+  }
 }
 
 const main = async () => {
-  const file = fs.readFileSync('./public/kannada.json');
-  const json = JSON.parse(file.toString());
-  const books = [];
-  const files = [];
-  let acc = 0;
-  for (const key of Object.keys(json)) {
-    const newBook = {
-      name: key,
-      slug: key.replaceAll(" ", "-"),
-      chapters: [],
+  const pushStream = new PushAudioOutputStreamTestCallback();
+  const audioConfig = sdk.AudioConfig.fromStreamOutput(pushStream);
+  const synthesizer = new sdk.SpeechSynthesizer(speechConfig, audioConfig);
+  const arr = fs
+    .readFileSync("./scripts/kannada.csv", "utf-8")
+    .split("\n")
+    .map((v) => v.split("|"));
+  let durationAcc = 0;
+  for (const item of arr) {
+    const result = await tts(
+      synthesizer,
+      createSSML({
+        voice: "kn-IN-GaganNeural",
+        rate: 0.85,
+        text: item[3],
+      })
+    );
+    item.push(durationAcc.toFixed(4));
+    durationAcc += result.privAudioDuration / 10000000;
+    if (item[1] === "2") {
+      break;
     }
-    for (const [c, chapter] of json[key].entries()) {
-      const newChapter = []
-      for (const [v, verse] of chapter.entries()) {
-        const dir = `public/audio/kannada/${key}/chapter_${c + 1}`
-        const path = `${dir}/verse_${v + 1}.mp3`;
-        files.push(`file '${path}'`);
-        const res = await getAudioDurationInSeconds(path);
-        newChapter.push({
-          start: acc,
-          end: acc + res,
-          verse,
-        });
-        acc = acc + res;
-      }
-      newBook.chapters.push(newChapter);
-    }
-    books.push(newBook);
+    await sleep(20);
   }
-  fs.writeFileSync("list.txt", files.join("\n"));
-  fs.writeFileSync("./bible.json", JSON.stringify(books, 0, 0));
-}
+  synthesizer.close();
+  pushStream.close();
+  fs.writeFileSync(
+    "./src/data/new_kannada.csv",
+    arr.map((v) => v.join("|")).join("\n")
+  );
+};
 main();

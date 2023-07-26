@@ -1,30 +1,35 @@
 ---
+import fs from "fs";
 import { Icon } from "astro-icon";
-import KanndaBible from "../../../../../public/images/kannada-bible.png"
 import Layout from "@/layouts/Layout.astro";
-import Menu from "@/components/Menu.astro";
 import PlayButton from "@/components/PlayButton.astro";
-import kannada from "@/data/kannada.json";
+import books from "@/data/books.json";
 import Select from "@/components/Select.astro";
 import VerseSection from "@/components/VerseSection.astro";
 
 export function getStaticPaths() {
-  return kannada.flatMap((book) =>
-    book.chapters.map((_, i) => ({
-      params: {
-        bible: "kannada",
-        book: book.slug,
-        chapter: i + 1,
-      },
-    }))
-  );
+  const arr = fs.readFileSync("./src/data/new_kannada.csv", "utf-8").split("\n").map((v) => v.split("|"));
+  const data = arr.reduce((acc, item) => {
+    const book = parseInt(item[0]);
+    const chapter = parseInt(item[1]);
+    const index = book + (chapter-1);
+    if (!acc[index]) {
+      acc[index] = {
+        params: {
+          book,
+          chapter,
+          verses: [],
+        }
+      }
+    }
+    acc[index].params.verses.push([item[3], parseFloat(item[4])]);
+    return acc
+  }, {});
+  return Object.keys(data).map((k) => data[k])
 }
 
-const { bible, book, chapter } = Astro.params;
-const books = kannada;
-const selectedBook = books.find((b) => b.slug == book);
-const selectedChapter = parseInt(chapter);
-const verses = selectedBook.chapters[selectedChapter - 1];
+const { book, chapter, verses } = Astro.params;
+const bookName = books[book].name.en
 ---
 
 <style>
@@ -140,10 +145,6 @@ const verses = selectedBook.chapters[selectedChapter - 1];
     font-weight: 500;
   }
 
-  .menu {
-    flex: 1;
-  }
-
   .actionsContainer {
     display: flex;
     flex: 1;
@@ -163,7 +164,7 @@ const verses = selectedBook.chapters[selectedChapter - 1];
     margin-bottom: 0.4rem;
   }
 </style>
-<Layout title={`Bible App ${bible} - ${book}`}>
+<Layout title={`Bible App Kannada - ${book}`}>
   <div class="container">
     <Icon name="skin" />
     <!-- <div class="streak" />
@@ -174,13 +175,13 @@ const verses = selectedBook.chapters[selectedChapter - 1];
     <div class="work">
       <div class="page">
         <div class="title-container">
-            <Select book={selectedBook.name} chapter={parseInt(chapter)} />
+            <Select book={bookName} chapter={chapter} />
           <div class="actionsContainer">
             <PlayButton verses={verses} />
           </div>
         </div>
         <hr class="first" />
-        <VerseSection chapter={parseInt(chapter)} verses={verses} />
+        <VerseSection chapter={chapter} verses={verses} />
         <hr class="last" />
       </div>
     </div>
