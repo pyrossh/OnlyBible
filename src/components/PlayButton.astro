@@ -41,8 +41,8 @@ button.addEventListener("click", async () => {
     pauseIcon.classList.remove("hidden");
     for (const i of state.selectedVerses) {
       await new Promise((resolve) => {
-        const { start, end } = verses[i];
-        audio = new Audio(`/audio/kannada.mp3#t=${start},${end}`);
+        const [_, start, end ] = verses[i];
+        audio = new Audio(`/audio/output.mp3#t=${start},${end}`);
         audio.loop = false;
         audio.play();
         audio.addEventListener("ended", resolve);

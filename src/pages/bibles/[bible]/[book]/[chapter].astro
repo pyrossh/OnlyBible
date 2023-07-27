@@ -16,20 +16,28 @@ export function getStaticPaths() {
     if (!acc[index]) {
       acc[index] = {
         params: {
+          bible: "kannada",
           book,
           chapter,
-          verses: [],
         }
       }
     }
-    acc[index].params.verses.push([item[3], parseFloat(item[4])]);
     return acc
   }, {});
   return Object.keys(data).map((k) => data[k])
 }
 
-const { book, chapter, verses } = Astro.params;
-const bookName = books[book].name.en
+const { bible, book, chapter } = Astro.params;
+const bookName = books[book].en
+const arr = fs.readFileSync("./src/data/new_kannada.csv", "utf-8").split("\n").map((v) => v.split("|"));
+const verses = arr.reduce((acc, item) => {
+  const bookIdx = parseInt(item[0]);
+  const chapterIdx = parseInt(item[1]);
+  if (bookIdx === parseInt(book) && chapterIdx === parseInt(chapter)) {
+    acc.push([item[3], parseFloat(item[4]), parseFloat(item[5])]);
+  }
+  return acc
+}, []);
 ---
 
 <style>

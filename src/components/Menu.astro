@@ -1,4 +1,8 @@
 ---
+import books from "@/data/books.json";
+
+const oldTestament = books.filter((_, i) => i < 39)
+const newTestament = books.filter((_, i) => i >= 39)
 ---
 <style>
   .r-dropdown {
@@ -58,115 +62,13 @@
                 style="font-size: 1.6rem; padding: 0px 16px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;"
               >
                 Old Testament
-              </h3><ul style="list-style: none; padding: 0px; margin: 0px;">
-                <li class="go911112886 current" data-book="Gen">
-                  <span
-                    >Genesis <svg
-                      name="chevron-right"
-                      title="Genesis"
-                      class=""
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 320 512"
-                      style="height: 14px; top: 1.5px; position: relative;"
-                      ><title>Genesis</title><path
-                        d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"
-                      ></path><path></path></svg
-                    ></span
-                  >
-                </li><li class="go911112886" data-book="Exod">Exodus</li><li
-                  class="go911112886"
-                  data-book="Lev"
-                >
-                  Leviticus
-                </li><li class="go911112886" data-book="Num">Numbers</li><li
-                  class="go911112886"
-                  data-book="Deut"
-                >
-                  Deuteronomy
-                </li><li class="go911112886" data-book="Josh">Joshua</li><li
-                  class="go911112886"
-                  data-book="Judg"
-                >
-                  Judges
-                </li><li class="go911112886" data-book="Ruth">Ruth</li><li
-                  class="go911112886"
-                  data-book="1Sam"
-                >
-                  1 Samuel
-                </li><li class="go911112886" data-book="2Sam">2 Samuel</li><li
-                  class="go911112886"
-                  data-book="1Kgs"
-                >
-                  1 Kings
-                </li><li class="go911112886" data-book="2Kgs">2 Kings</li><li
-                  class="go911112886"
-                  data-book="1Chr"
-                >
-                  1 Chronicles
-                </li><li class="go911112886" data-book="2Chr">
-                  2 Chronicles
-                </li><li class="go911112886" data-book="Ezra">Ezra</li><li
-                  class="go911112886"
-                  data-book="Neh"
-                >
-                  Nehemiah
-                </li><li class="go911112886" data-book="Esth">Esther</li><li
-                  class="go911112886"
-                  data-book="Job"
-                >
-                  Job
-                </li><li class="go911112886" data-book="Ps">Psalm</li><li
-                  class="go911112886"
-                  data-book="Prov"
-                >
-                  Proverbs
-                </li><li class="go911112886" data-book="Eccl">
-                  Ecclesiastes
-                </li><li class="go911112886" data-book="Song">
-                  Song of Songs
-                </li><li class="go911112886" data-book="Isa">Isaiah</li><li
-                  class="go911112886"
-                  data-book="Jer"
-                >
-                  Jeremiah
-                </li><li class="go911112886" data-book="Lam">
-                  Lamentations
-                </li><li class="go911112886" data-book="Ezek">Ezekiel</li><li
-                  class="go911112886"
-                  data-book="Dan"
-                >
-                  Daniel
-                </li><li class="go911112886" data-book="Hos">Hosea</li><li
-                  class="go911112886"
-                  data-book="Joel"
-                >
-                  Joel
-                </li><li class="go911112886" data-book="Amos">Amos</li><li
-                  class="go911112886"
-                  data-book="Obad"
-                >
-                  Obadiah
-                </li><li class="go911112886" data-book="Jonah">Jonah</li><li
-                  class="go911112886"
-                  data-book="Mic"
-                >
-                  Micah
-                </li><li class="go911112886" data-book="Nah">Nahum</li><li
-                  class="go911112886"
-                  data-book="Hab"
-                >
-                  Habakkuk
-                </li><li class="go911112886" data-book="Zeph">Zephaniah</li><li
-                  class="go911112886"
-                  data-book="Hag"
-                >
-                  Haggai
-                </li><li class="go911112886" data-book="Zech">Zechariah</li><li
-                  class="go911112886"
-                  data-book="Mal"
-                >
-                  Malachi
-                </li>
+              </h3>
+              <ul style="list-style: none; padding: 0px; margin: 0px;">
+                {oldTestament.map((book) => (
+                  <li class="go911112886">
+                    {book.en}
+                  </li>
+                ))}
               </ul>
             </div><div>
               <div>
@@ -174,69 +76,13 @@
                   style="font-size: 1.6rem; padding: 0px 16px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;"
                 >
                   New Testament
-                </h3><ul style="list-style: none; padding: 0px; margin: 0px;">
-                  <li class="go911112886" data-book="Matt">Matthew</li><li
-                    class="go911112886"
-                    data-book="Mark"
-                  >
-                    Mark
-                  </li><li class="go911112886" data-book="Luke">Luke</li><li
-                    class="go911112886"
-                    data-book="John"
-                  >
-                    John
-                  </li><li class="go911112886" data-book="Acts">Acts</li><li
-                    class="go911112886"
-                    data-book="Rom"
-                  >
-                    Romans
-                  </li><li class="go911112886" data-book="1Cor">
-                    1 Corinthians
-                  </li><li class="go911112886" data-book="2Cor">
-                    2 Corinthians
-                  </li><li class="go911112886" data-book="Gal">Galatians</li><li
-                    class="go911112886"
-                    data-book="Eph"
-                  >
-                    Ephesians
-                  </li><li class="go911112886" data-book="Phil">
-                    Philippians
-                  </li><li class="go911112886" data-book="Col">
-                    Colossians
-                  </li><li class="go911112886" data-book="1Thess">
-                    1 Thessalonians
-                  </li><li class="go911112886" data-book="2Thess">
-                    2 Thessalonians
-                  </li><li class="go911112886" data-book="1Tim">
-                    1 Timothy
-                  </li><li class="go911112886" data-book="2Tim">
-                    2 Timothy
-                  </li><li class="go911112886" data-book="Titus">Titus</li><li
-                    class="go911112886"
-                    data-book="Phlm"
-                  >
-                    Philemon
-                  </li><li class="go911112886" data-book="Heb">Hebrews</li><li
-                    class="go911112886"
-                    data-book="Jas"
-                  >
-                    James
-                  </li><li class="go911112886" data-book="1Pet">1 Peter</li><li
-                    class="go911112886"
-                    data-book="2Pet"
-                  >
-                    2 Peter
-                  </li><li class="go911112886" data-book="1John">1 John</li><li
-                    class="go911112886"
-                    data-book="2John"
-                  >
-                    2 John
-                  </li><li class="go911112886" data-book="3John">3 John</li><li
-                    class="go911112886"
-                    data-book="Jude"
-                  >
-                    Jude
-                  </li><li class="go911112886" data-book="Rev">Revelation</li>
+                </h3>
+                <ul style="list-style: none; padding: 0px; margin: 0px;">
+                  {newTestament.map((book) => (
+                    <li class="go911112886">
+                      {book.en}
+                    </li>
+                  ))}
                 </ul>
               </div>
             </div>
