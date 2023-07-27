@@ -56,10 +56,11 @@
     "windows": [
       {
         "fullscreen": false,
+        "maximized": true,
         "height": 600,
         "resizable": true,
-        "title": "Bible App",
-        "width": 600
+        "title": "One Bible App",
+        "width": 800
       }
     ]
   }

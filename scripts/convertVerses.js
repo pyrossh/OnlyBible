@@ -78,8 +78,10 @@ const main = async () => {
         text: item[3],
       })
     );
-    item.push(durationAcc.toFixed(4));
-    durationAcc += result.privAudioDuration / 10000000;
+    const start = durationAcc;
+    const end = durationAcc + result.privAudioDuration / 10000000;
+    durationAcc = end;
+    item.push(start.toFixed(4), end.toFixed(4));
     if (item[1] === "2") {
       break;
     }
