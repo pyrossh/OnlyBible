@@ -69,22 +69,27 @@ const main = async () => {
     .split("\n")
     .map((v) => v.split("|"));
   let durationAcc = 0;
+  const books = {};
   for (const item of arr) {
-    const result = await tts(
-      synthesizer,
-      createSSML({
-        voice: "kn-IN-GaganNeural",
-        rate: 0.85,
-        text: item[3],
-      })
-    );
-    const start = durationAcc;
-    const end = durationAcc + result.privAudioDuration / 10000000;
-    durationAcc = end;
-    item.push(start.toFixed(4), end.toFixed(4));
-    if (item[1] === "2") {
-      break;
-    }
+    const book = item[0];
+    const chapter = parseInt(item[1]);
+    const verse = parseInt(item[2]);
+    books[book] = { chapters: [] }
+    // const result = await tts(
+    //   synthesizer,
+    //   createSSML({
+    //     voice: "kn-IN-GaganNeural",
+    //     rate: 0.85,
+    //     text: item[3],
+    //   })
+    // );
+    // const start = durationAcc;
+    // const end = durationAcc + result.privAudioDuration / 10000000;
+    // durationAcc = end;
+    // item.push(start.toFixed(4), end.toFixed(4));
+    // if (chapter === 2) {
+    //   break;
+    // }
     await sleep(20);
   }
   synthesizer.close();

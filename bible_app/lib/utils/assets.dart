@@ -7,7 +7,7 @@ import 'package:path_provider/path_provider.dart';
 class Utils {
   static Future<String> loadAsset(BuildContext context) async {
     return await DefaultAssetBundle.of(context)
-        .loadString('assets/new_kannada.csv');
+        .loadString('assets/kannada.csv');
   }
 
   Future<String> get _localPath async {
