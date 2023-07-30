@@ -1,5 +1,4 @@
 import "package:flutter/material.dart";
-import "package:flutter_solidart/flutter_solidart.dart";
 import "package:flutter_reactive_value/flutter_reactive_value.dart";
 import "../domain/book.dart";
 import "../domain/kannada_gen.dart";
@@ -13,19 +12,7 @@ onTabBookChange(int i) {
 }
 
 class BookSelector extends StatelessWidget {
-  BookSelector({super.key});
-
-  final counter = createSignal(0);
-
-  // @override
-  // Widget build(BuildContext context) {
-  //   return SignalBuilder(
-  //     signal: counter,
-  //     builder: (context, value, child) {
-  //       return Text('$value');
-  //     },
-  //   );
-  // }
+  const BookSelector({super.key});
 
   @override
   Widget build(BuildContext context) {

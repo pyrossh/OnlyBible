@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
-import "package:bible_app/screens/home.dart";
 import "package:flutter_persistent_value_notifier/flutter_persistent_value_notifier.dart";
+import "./screens/home.dart";
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

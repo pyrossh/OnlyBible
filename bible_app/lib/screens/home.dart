@@ -1,7 +1,7 @@
-import "package:bible_app/components/header.dart";
-import "package:bible_app/domain/kannada_gen.dart";
 import "package:flutter/material.dart";
 import "package:flutter_reactive_value/flutter_reactive_value.dart";
+import "../components/header.dart";
+import "../domain/kannada_gen.dart";
 import "../components/sidebar.dart";
 import "../components/verse.dart";
 import "../state.dart";
