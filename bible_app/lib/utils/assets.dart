@@ -1,12 +1,12 @@
-import 'dart:convert';
-import 'dart:io';
-import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
+import "dart:convert";
+import "dart:io";
+import "package:flutter/material.dart";
+import "package:path_provider/path_provider.dart";
 
 class Utils {
   static Future<String> loadAsset(BuildContext context) async {
     return await DefaultAssetBundle.of(context)
-        .loadString('assets/kannada.csv');
+        .loadString("assets/kannada.csv");
   }
 
   Future<String> get _localPath async {
@@ -17,7 +17,7 @@ class Utils {
 
   Future<File> get _localFile async {
     final path = await _localPath;
-    return File('$path/counter.txt');
+    return File("$path/counter.txt");
   }
 
   Future<List<String>> readCounter() async {

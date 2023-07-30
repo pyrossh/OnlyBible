@@ -1,28 +1,6 @@
-import 'package:flutter/material.dart';
-import '../state.dart';
-
-const highlightColor = Color(0xAAF8D0DC);
-
-class VerseNo extends StatelessWidget {
-  final int index;
-
-  const VerseNo({super.key, required this.index});
-
-  @override
-  Widget build(BuildContext context) {
-    return Transform.translate(
-      offset: const Offset(0, 2),
-      child: Text(
-        style: const TextStyle(
-          fontSize: 12,
-          fontWeight: FontWeight.w800,
-          color: Color(0xFF9A1111),
-        ),
-        "${index + 1}",
-      ),
-    );
-  }
-}
+import "package:flutter/material.dart";
+import "package:flutter_reactive_value/flutter_reactive_value.dart";
+import "../state.dart";
 
 class Verse extends StatelessWidget {
   final int index;
@@ -32,7 +10,7 @@ class Verse extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var selected = isVerseSelected(context, index);
+    var selected = selectedVerses.reactiveValue(context).contains(index);
     onTap() {
       onVerseSelected(index);
     }
@@ -42,26 +20,20 @@ class Verse extends StatelessWidget {
           onTap: onTap,
           child: Container(
             decoration: BoxDecoration(
-              color: selected ? highlightColor : Colors.white,
+              color: selected ? Theme.of(context).highlightColor : Colors.white,
             ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
                   margin: const EdgeInsets.only(right: 4),
-                  child: VerseNo(index: index),
+                  child:  Transform.translate(
+                    offset: const Offset(0, 2),
+                    child: Text("${index + 1}", style: Theme.of(context).textTheme.labelSmall),
+                  ),
                 ),
                 Flexible(
-                  child: Text(
-                    style: const TextStyle(
-                      color: Color(0xFF010101),
-                      fontSize: 16,
-                      // fontFamily: "SanFranciscoPro",
-                      fontWeight: FontWeight.w500,
-                      // letterSpacing: 0.5,
-                    ),
-                    text,
-                  ),
+                  child: Text(text, style: Theme.of(context).textTheme.bodyMedium),
                 )
               ],
             ),

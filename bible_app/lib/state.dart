@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_reactive_value/flutter_reactive_value.dart';
+import "package:flutter_persistent_value_notifier/flutter_persistent_value_notifier.dart";
 
-final bookIndex = ValueNotifier(0);
-final chapterIndex = ValueNotifier(0);
+final bookIndex = PersistentValueNotifier(
+  sharedPreferencesKey: "bookIndex",
+  initialValue: 0,
+);
+final chapterIndex = PersistentValueNotifier(
+  sharedPreferencesKey: "chapterIndex",
+  initialValue: 0,
+);
 final selectedVerses = ValueNotifier([]);
 
 onBookChange(int i) {
@@ -18,9 +25,9 @@ isVerseSelected(BuildContext context, int i) {
 }
 
 onVerseSelected(int i) {
-  if(selectedVerses.value.contains(i)) {
-    selectedVerses.value.remove(i);
+  if (selectedVerses.value.contains(i)) {
+    selectedVerses.value = [...selectedVerses.value.where((it) => it != i)];
   } else {
-    selectedVerses.value.add(i);
+    selectedVerses.value = [...selectedVerses.value, i];
   }
 }

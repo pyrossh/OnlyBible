@@ -1,10 +1,4 @@
-import 'package:flutter/material.dart';
-
-const logoStyle = TextStyle(
-  fontSize: 38,
-  fontWeight: FontWeight.w700,
-  color: Color(0xFFFFB441),
-);
+import "package:flutter/material.dart";
 
 class Sidebar extends StatelessWidget {
   const Sidebar({super.key});
@@ -33,15 +27,15 @@ class Sidebar extends StatelessWidget {
               height: height,
               child: Container(
                 margin: const EdgeInsets.only(bottom: 50),
-                child: const Column(
+                child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Flexible(
-                      child: Text("KANNADA", style: logoStyle),
+                      child: Text("KANNADA", style: Theme.of(context).textTheme.labelLarge),
                     ),
                     Flexible(
-                      child: Text("BIBLE", style: logoStyle),
+                      child: Text("BIBLE", style: Theme.of(context).textTheme.labelLarge),
                     ),
                   ],
                 ),
@@ -97,16 +91,17 @@ class Bookmark extends StatelessWidget {
             Container(
               width: 30.0,
               height: 80.0,
-              decoration: const BoxDecoration(
-                  color: Color(0xFFFFB341),
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(4),
-                    topRight: Radius.circular(4),
-                  )),
+              decoration: BoxDecoration(
+                color: Theme.of(context).secondaryHeaderColor,
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(4),
+                  topRight: Radius.circular(4),
+                ),
+              ),
             ),
             CustomPaint(
               painter: TrianglePainter(
-                color: Color(0xFFFFB341),
+                color: Theme.of(context).secondaryHeaderColor,
               ),
             ),
           ],

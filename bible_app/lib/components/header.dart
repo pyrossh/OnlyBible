@@ -1,15 +1,10 @@
-import 'package:bible_app/components/book_selector.dart';
-import 'package:bible_app/state.dart';
-import 'package:flutter/material.dart';
-import 'dart:math';
-
-import 'package:flutter_reactive_value/flutter_reactive_value.dart';
-
-const headingStyle = TextStyle(
-  fontSize: 20,
-  fontWeight: FontWeight.w500,
-  letterSpacing: 0.5,
-);
+import "dart:math";
+import "package:bible_app/components/book_selector.dart";
+import "package:bible_app/state.dart";
+import "package:flutter/material.dart";
+import "package:flutter/scheduler.dart";
+import "package:flutter_reactive_value/flutter_reactive_value.dart";
+import "../utils/dialog.dart";
 
 class Header extends StatelessWidget {
   final String bookName;
@@ -30,16 +25,21 @@ class Header extends StatelessWidget {
         children: [
           InkWell(
               onTap: () {
-                showDialog<void>(
-                    context: context,
-                    barrierDismissible: true,
-                    builder: (BuildContext context) {
-                      return const BookSelector();
+                tabBookIndex.value = 0;
+                showCustomDialog<(int, int)>(context, BookSelector()).then((rec) {
+                  if (rec != null) {
+                    selectedVerses.value.clear();
+                    onBookChange(rec.$1);
+                    onChapterChange(rec.$2);
+                    SchedulerBinding.instance.addPostFrameCallback((duration) {
+                      tabIndex.value = 0;
                     });
+                  }
+                });
               },
               child: Row(
                 children: [
-                  Text("${bookName} ${chapter+1}", style: headingStyle),
+                  Text("$bookName ${chapter+1}", style: Theme.of(context).textTheme.headlineLarge),
                   Container(
                     margin: const EdgeInsets.only(left: 3),
                     child: Transform.rotate(
