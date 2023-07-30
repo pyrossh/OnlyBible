@@ -33,7 +33,7 @@ class TimeRange {
   TimeRange({required this.start, required this.end});
 }
 
-final allBooks = [
+final oldTestament = [
   "Genesis",
   "Exodus",
   "Leviticus",
@@ -73,6 +73,9 @@ final allBooks = [
   "Haggai",
   "Zechariah",
   "Malachi",
+];
+
+final newTestament = [
   "Matthew",
   "Mark",
   "Luke",
@@ -101,3 +104,5 @@ final allBooks = [
   "Jude",
   "Revelation"
 ];
+
+final allBooks = oldTestament..addAll(newTestament);

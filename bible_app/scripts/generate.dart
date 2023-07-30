@@ -17,7 +17,7 @@ void main() {
       end = double.parse(item[5]);
     }
     if (books.length-1 < book) {
-      books.add(Book(index: book + 1, name: "Genesis", localeName: "Kannada", chapters: []));
+      books.add(Book(index: book + 1, name: allBooks[book], localeName: allBooks[book], chapters: []));
     }
     if (books[book].chapters.length < chapter) {
       books[book].chapters.add(Chapter(index: chapter, verses: []));
@@ -29,7 +29,7 @@ void main() {
     ));
   });
   var sb = StringBuffer();
-  sb.writeln('import "book.dart";');
+  sb.writeln('import "book.dart";\n');
   sb.writeln('final List<Book> kannadaBible = [');
   books.forEach((b) {
     sb.writeln('  Book(index: ${b.index}, name: "${b.name}", localeName: "${b.localeName}", chapters: [');

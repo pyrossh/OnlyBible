@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
+import '../state.dart';
 
 const highlightColor = Color(0xAAF8D0DC);
 
@@ -24,7 +24,7 @@ class VerseNo extends StatelessWidget {
   }
 }
 
-class Verse extends HookWidget {
+class Verse extends StatelessWidget {
   final int index;
   final String text;
 
@@ -32,15 +32,17 @@ class Verse extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    var selected = useState(false);
-    onTap() => selected.value = !selected.value;
+    var selected = isVerseSelected(context, index);
+    onTap() {
+      onVerseSelected(index);
+    }
     return MouseRegion(
         cursor: SystemMouseCursors.click,
         child: GestureDetector(
           onTap: onTap,
           child: Container(
             decoration: BoxDecoration(
-              color: selected.value ? highlightColor : Colors.white,
+              color: selected ? highlightColor : Colors.white,
             ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,

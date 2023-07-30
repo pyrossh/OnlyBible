@@ -1,6 +1,9 @@
 import 'package:bible_app/components/book_selector.dart';
+import 'package:bible_app/state.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
+
+import 'package:flutter_reactive_value/flutter_reactive_value.dart';
 
 const headingStyle = TextStyle(
   fontSize: 20,
@@ -10,12 +13,12 @@ const headingStyle = TextStyle(
 
 class Header extends StatelessWidget {
   final String bookName;
-  final Function(int i) onBookChange;
 
-  const Header({super.key, required this.bookName, required this.onBookChange});
+  const Header({super.key, required this.bookName});
 
   @override
   Widget build(BuildContext context) {
+    final chapter = chapterIndex.reactiveValue(context);
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 40),
       padding: const EdgeInsets.symmetric(vertical: 15),
@@ -31,12 +34,12 @@ class Header extends StatelessWidget {
                     context: context,
                     barrierDismissible: true,
                     builder: (BuildContext context) {
-                      return BookSelector(onBookChange: onBookChange);
+                      return const BookSelector();
                     });
               },
               child: Row(
                 children: [
-                  Text(bookName, style: headingStyle),
+                  Text("${bookName} ${chapter+1}", style: headingStyle),
                   Container(
                     margin: const EdgeInsets.only(left: 3),
                     child: Transform.rotate(
