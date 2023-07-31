@@ -139,9 +139,9 @@ class App extends StatelessWidget {
           ),
           labelMedium: TextStyle(
             fontFamily: "SanFrancisco",
-            fontSize: 20,
+            fontSize: 18,
             fontWeight: FontWeight.w600,
-            color: Color(0xFF9A1111),
+            color: Colors.black,
             letterSpacing: 0.5,
           ),
           labelSmall: TextStyle(

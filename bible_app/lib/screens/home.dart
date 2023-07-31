@@ -59,13 +59,15 @@ class SelectScreenRoute extends GoRouteData {
 
   @override
   Page buildPage(BuildContext context, GoRouterState state) {
+    final width = MediaQuery.of(context).size.width;
+    final right = width/10;
     return NoPageTransition(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Flexible(
             child: Container(
-              margin: const EdgeInsets.only(left: 40, top: 20, right: 300),
+              margin: EdgeInsets.only(left: 40, top: 20, right: right),
               child: const BookSelector(),
             ),
           ),
