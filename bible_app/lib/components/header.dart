@@ -1,22 +1,22 @@
 import "dart:math";
 import "package:flutter/material.dart";
-import "package:flutter/scheduler.dart";
-import "package:flutter_reactive_value/flutter_reactive_value.dart";
 import "package:just_audio/just_audio.dart";
+import "package:kannada_bible_app/screens/home.dart";
 import "../state.dart";
-import "../components/book_selector.dart";
-import "../utils/dialog.dart";
 import "../domain/kannada_gen.dart";
 
 class Header extends StatelessWidget {
   final String bookName;
+  final int chapter;
   final player = AudioPlayer();
 
-  Header({super.key, required this.bookName});
+  Header({super.key, required this.bookName, required this.chapter}) {
+    player.setUrl("https://github.com/pyrossh/bible-app/raw/master/public/audio/output.mp3");
+    player.setUrl("asset:output.mp3");
+  }
 
   @override
   Widget build(BuildContext context) {
-    final chapter = chapterIndex.reactiveValue(context);
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 40),
       padding: const EdgeInsets.symmetric(vertical: 15),
@@ -28,17 +28,7 @@ class Header extends StatelessWidget {
         children: [
           InkWell(
             onTap: () {
-              tabBookIndex.value = 0;
-              showCustomDialog<(int, int)>(context, const BookSelector()).then((rec) {
-                if (rec != null) {
-                  selectedVerses.value.clear();
-                  onBookChange(rec.$1);
-                  onChapterChange(rec.$2);
-                  SchedulerBinding.instance.addPostFrameCallback((duration) {
-                    tabIndex.value = 0;
-                  });
-                }
-              });
+              SelectScreenRoute().go(context);
             },
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -62,16 +52,19 @@ class Header extends StatelessWidget {
                   .chapters[chapterIndex.value]
                   .verses
                   .where((v) => selectedVerses.value.contains(v.index - 1));
+              // Todo: play/pause button
               for (final v in verses) {
-                await player.setUrl("asset:output.mp3");
-                await player.setClip(
-                  start: Duration(milliseconds: (v.audioRange.start * 1000).toInt()),
-                  end: Duration(milliseconds: (v.audioRange.end * 1000).toInt()),
-                );
-                await player.play();
-                await player.pause();
+                try {
+                  await player.setClip(
+                    start: Duration(milliseconds: (v.audioRange.start * 1000).toInt()),
+                    end: Duration(milliseconds: (v.audioRange.end * 1000).toInt()),
+                  );
+                  await player.play();
+                  await player.pause();
+                } catch (err) {
+                  // show
+                }
               }
-              // "https://github.com/pyrossh/bible-app/raw/master/public/audio/output.mp3"
             },
           ),
           const Spacer(flex: 1),

@@ -1,6 +1,10 @@
 import "package:flutter/material.dart";
+import 'package:go_router/go_router.dart';
 import "package:flutter_persistent_value_notifier/flutter_persistent_value_notifier.dart";
+import "package:kannada_bible_app/components/book_selector.dart";
 import "./screens/home.dart";
+import "components/header.dart";
+import "components/sidebar.dart";
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -8,18 +12,44 @@ void main() async {
   runApp(const App());
 }
 
+final _rootNavigatorKey = GlobalKey<NavigatorState>();
+final _shellNavigatorKey = GlobalKey<NavigatorState>();
+final _router = GoRouter(
+  navigatorKey: _rootNavigatorKey,
+  initialLocation: "/Genesis/1",
+  routes: [
+    ShellRoute(
+      navigatorKey: _shellNavigatorKey,
+      routes: $appRoutes,
+      builder: (context, state, child) {
+        return Scaffold(
+          backgroundColor: Colors.white,
+          body: Row(
+            children: [
+              const Sidebar(),
+              Flexible(
+                child: child,
+              ),
+            ],
+          ),
+        );
+      },
+    ),
+  ],
+);
+
 const lightColorScheme = ColorScheme(
-    brightness: Brightness.light,
-    primary: Color(0xFF4C2323),
-    onPrimary: Color(0xFF4C2323),
-    secondary: Colors.white,
-    onSecondary: Colors.white,
-    error: Colors.red,
-    onError: Colors.red,
-    background: Colors.white,
-    onBackground: Colors.white,
-    surface: Colors.white,
-    onSurface: Colors.white,
+  brightness: Brightness.light,
+  primary: Color(0xFF4C2323),
+  onPrimary: Color(0xFF4C2323),
+  secondary: Colors.white,
+  onSecondary: Colors.white,
+  error: Colors.red,
+  onError: Colors.red,
+  background: Colors.white,
+  onBackground: Colors.white,
+  surface: Colors.white,
+  onSurface: Colors.white,
 );
 
 class App extends StatelessWidget {
@@ -27,7 +57,8 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
+      routerConfig: _router,
       theme: ThemeData(
         brightness: Brightness.light,
         primaryColor: const Color(0xFF4C2323),
@@ -76,6 +107,11 @@ class App extends StatelessWidget {
         ),
       ),
       darkTheme: ThemeData(
+        pageTransitionsTheme: PageTransitionsTheme(
+          builders: {
+            TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),
+          },
+        ),
         brightness: Brightness.light,
         primaryColor: const Color(0xFF4C2323),
         secondaryHeaderColor: const Color(0xFFFFB341),
@@ -121,7 +157,6 @@ class App extends StatelessWidget {
           ),
         ),
       ),
-      home: const HomeScreen(),
     );
   }
 }

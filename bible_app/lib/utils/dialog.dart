@@ -133,3 +133,14 @@ void showSlideCustomDialog(BuildContext context) {
     },
   );
 }
+
+// showCustomDialog<(int, int)>(context, const BookSelector()).then((rec) {
+//   if (rec != null) {
+//     selectedVerses.value.clear();
+//     onBookChange(rec.$1);
+//     onChapterChange(rec.$2);
+//     SchedulerBinding.instance.addPostFrameCallback((duration) {
+//       tabIndex.value = 0;
+//     });
+//   }
+// });

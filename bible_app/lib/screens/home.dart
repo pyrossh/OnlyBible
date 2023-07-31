@@ -1,48 +1,108 @@
 import "package:flutter/material.dart";
-import "package:flutter_reactive_value/flutter_reactive_value.dart";
+import 'package:go_router/go_router.dart';
+import "../components/book_selector.dart";
 import "../components/header.dart";
 import "../domain/kannada_gen.dart";
-import "../components/sidebar.dart";
 import "../components/verse.dart";
 import "../state.dart";
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+part 'home.g.dart';
+
+@TypedGoRoute<HomeScreenRoute>(
+  path: "/:book/:chapter",
+)
+@immutable
+class HomeScreenRoute extends GoRouteData {
+  final String book;
+  final int chapter;
+
+  HomeScreenRoute({required this.book, required this.chapter}) {
+    selectedVerses.value.clear();
+  }
 
   @override
-  Widget build(BuildContext context) {
-    final book = kannadaBible[bookIndex.reactiveValue(context)];
-    final items = book.chapters[chapterIndex.reactiveValue(context)].verses;
+  Page buildPage(BuildContext context, GoRouterState state) {
+    final selectedBook = kannadaBible.firstWhere((it) => book == it.name);
+    final verses = selectedBook.chapters[chapter].verses;
 
-    return Scaffold(
-        backgroundColor: Colors.white,
-        body: Row(
-          children: [
-            const Sidebar(),
-            Flexible(
-              child: Column(
-                children: [
-                  Header(bookName: book.name),
-                  Flexible(
-                    child: ListView.builder(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 20,
-                        horizontal: 40,
-                      ),
-                      itemCount: items.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        final v = items[index];
-                        return Container(
-                          margin: const EdgeInsets.symmetric(vertical: 6),
-                          child: Verse(index: v.index - 1, text: v.text),
-                        );
-                      },
-                    ),
-                  )
-                ],
+    return NoPageTransition(
+      child: Column(
+        children: [
+          Header(bookName: selectedBook.name, chapter: chapter),
+          Flexible(
+            child: ListView.builder(
+              padding: const EdgeInsets.symmetric(
+                vertical: 20,
+                horizontal: 40,
               ),
-            )
-          ],
-        ));
+              itemCount: verses.length,
+              itemBuilder: (BuildContext context, int index) {
+                final v = verses[index];
+                return Container(
+                  margin: const EdgeInsets.symmetric(vertical: 6),
+                  child: Verse(index: v.index - 1, text: v.text),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
+
+@TypedGoRoute<SelectScreenRoute>(
+  path: "/select",
+)
+@immutable
+class SelectScreenRoute extends GoRouteData {
+  SelectScreenRoute() {
+    tabIndex.value = 0;
+  }
+
+  @override
+  Page buildPage(BuildContext context, GoRouterState state) {
+    return NoPageTransition(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Header(bookName: "", chapter: 1),
+          Flexible(
+            child: Container(
+              margin: const EdgeInsets.only(left: 40, top: 20, right: 300),
+              child: const BookSelector(),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class NoPageTransition extends CustomTransitionPage {
+  NoPageTransition({required super.child})
+      : super(
+            transitionDuration: const Duration(milliseconds: 0),
+            reverseTransitionDuration:  const Duration(milliseconds: 0),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              return FadeTransition(
+                opacity: animation,
+                child: child,
+              );
+            });
+}
+
+// key: state.pageKey,
+// barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
+// barrierDismissible: true,
+// barrierColor: Colors.black.withOpacity(0.7),
+// transitionDuration: const Duration(milliseconds: 0),
+// reverseTransitionDuration: const Duration(milliseconds: 0),
+// transitionsBuilder: (context, animation, secondaryAnimation, child) {
+// return FadeTransition(
+// opacity: animation,
+// child: child,
+// );
+// },
+// opaque: false,
+// fullscreenDialog: false,

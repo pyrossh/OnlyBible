@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:flutter_reactive_value/flutter_reactive_value.dart";
+import "package:kannada_bible_app/screens/home.dart";
 import "../domain/book.dart";
 import "../domain/kannada_gen.dart";
 
@@ -20,7 +21,7 @@ class BookSelector extends StatelessWidget {
     if (tab == 1) {
       final book = kannadaBible[tabBookIndex.reactiveValue(context)];
       return Container(
-        margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+        // margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
         color: Colors.white,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -35,7 +36,7 @@ class BookSelector extends StatelessWidget {
       );
     }
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+      // margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
       color: Colors.white,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -70,7 +71,7 @@ class BooksList extends StatelessWidget {
       maxCrossAxisExtent: 80.0,
       children: List.generate(books.length, (index) {
         final name = books[index].replaceAll(" ", "").substring(0, 3).toUpperCase();
-        return GestureDetector(
+        return InkWell(
           onTap: () {
             onTabBookChange(offset + index);
           },
@@ -107,9 +108,9 @@ class ChaptersList extends StatelessWidget {
       mainAxisSpacing: 10.0,
       maxCrossAxisExtent: 80.0,
       children: List.generate(book.chapters.length, (index) {
-        return GestureDetector(
+        return InkWell(
           onTap: () {
-            Navigator.of(context).pop((bookIndex, index));
+            HomeScreenRoute(book: book.name, chapter: index).go(context);
           },
           child: Container(
             margin: const EdgeInsets.all(3),
