@@ -1,9 +1,7 @@
 import "package:flutter/material.dart";
 import 'package:go_router/go_router.dart';
 import "package:flutter_persistent_value_notifier/flutter_persistent_value_notifier.dart";
-import "package:kannada_bible_app/components/book_selector.dart";
 import "./screens/home.dart";
-import "components/header.dart";
 import "components/sidebar.dart";
 
 void main() async {
@@ -60,9 +58,6 @@ class App extends StatelessWidget {
     return MaterialApp.router(
       routerConfig: _router,
       theme: ThemeData(
-        tabBarTheme: TabBarTheme(
-          dividerColor: Colors.white,
-        ),
         brightness: Brightness.light,
         primaryColor: const Color(0xFF4C2323),
         secondaryHeaderColor: const Color(0xFFFFB341),
@@ -110,9 +105,6 @@ class App extends StatelessWidget {
         ),
       ),
       darkTheme: ThemeData(
-        tabBarTheme: TabBarTheme(
-          dividerColor: Colors.white,
-        ),
         brightness: Brightness.light,
         primaryColor: const Color(0xFF4C2323),
         secondaryHeaderColor: const Color(0xFFFFB341),
