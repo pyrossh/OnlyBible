@@ -1,29 +1,22 @@
 class Book {
-  int index;
   String name;
   String localeName;
   List<Chapter> chapters;
 
-  Book(
-      {required this.index,
-      required this.name,
-      required this.localeName,
-      required this.chapters});
+  Book({required this.name, required this.localeName, required this.chapters});
 }
 
 class Chapter {
-  int index;
   List<Verse> verses;
 
-  Chapter({required this.index, required this.verses});
+  Chapter({required this.verses});
 }
 
 class Verse {
-  int index;
   String text;
   TimeRange audioRange;
 
-  Verse({required this.index, required this.text, required this.audioRange});
+  Verse({required this.text, required this.audioRange});
 }
 
 class TimeRange {

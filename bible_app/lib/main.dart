@@ -1,15 +1,16 @@
 import "package:flutter/material.dart";
 import 'package:go_router/go_router.dart';
-import "package:flutter_persistent_value_notifier/flutter_persistent_value_notifier.dart";
 import 'package:kannada_bible_app/domain/book.dart';
 import 'package:kannada_bible_app/state.dart';
 import 'routes/index.dart';
 import 'routes/select.dart';
 import "components/sidebar.dart";
 
+var loadedState = (0, 0);
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await initPersistentValueNotifier();
+  loadedState = await loadState();
   runApp(const App());
 }
 
@@ -17,7 +18,7 @@ final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final _shellNavigatorKey = GlobalKey<NavigatorState>();
 final _router = GoRouter(
   navigatorKey: _rootNavigatorKey,
-  initialLocation: "/${allBooks[bookIndex.value]}/${chapterIndex.value}",
+  initialLocation: "/${allBooks[loadedState.$1]}/${loadedState.$2}",
   routes: [
     ShellRoute(
       navigatorKey: _shellNavigatorKey,

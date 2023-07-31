@@ -13,7 +13,7 @@ class Header extends StatelessWidget {
 
   Header({super.key, required this.book, required this.chapter}) {
     player.setUrl("https://github.com/pyrossh/bible-app/raw/master/public/audio/output.mp3");
-    player.setUrl("asset:output.mp3");
+    // player.setUrl("asset:output.mp3");
   }
 
   @override
@@ -49,12 +49,11 @@ class Header extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.play_circle_fill, size: 36),
             onPressed: () async {
-              final verses = kannadaBible[book]
-                  .chapters[chapter]
-                  .verses
-                  .where((v) => selectedVerses.value.contains(v.index - 1));
+              final verses = kannadaBible[book].chapters[chapter].verses;
+              final filteredVerses =
+                  verses.asMap().keys.where((it) => selectedVerses.value.contains(it)).map((it) => verses[it]);
               // Todo: play/pause button
-              for (final v in verses) {
+              for (final v in filteredVerses) {
                 try {
                   await player.setClip(
                     start: Duration(milliseconds: (v.audioRange.start * 1000).toInt()),

@@ -1,24 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_reactive_value/flutter_reactive_value.dart';
-import "package:flutter_persistent_value_notifier/flutter_persistent_value_notifier.dart";
+import 'package:shared_preferences/shared_preferences.dart';
 
-final bookIndex = PersistentValueNotifier(
-  sharedPreferencesKey: "bookIndex",
-  initialValue: 0,
-);
-final chapterIndex = PersistentValueNotifier(
-  sharedPreferencesKey: "chapterIndex",
-  initialValue: 0,
-);
 final selectedVerses = ValueNotifier([]);
-
-onBookChange(int i) {
-  bookIndex.value = i;
-}
-
-onChapterChange(int i) {
-  chapterIndex.value = i;
-}
 
 isVerseSelected(BuildContext context, int i) {
   return selectedVerses.reactiveValue(context).contains(i);
@@ -36,4 +20,17 @@ final tabBookIndex = ValueNotifier(0);
 
 onTabBookChange(int i) {
   tabBookIndex.value = i;
+}
+
+Future<void> saveState(int bookIndex, int chapterIndex) async {
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.setInt("bookIndex", bookIndex);
+  await prefs.setInt("chapterIndex", chapterIndex);
+}
+
+Future<(int, int)> loadState() async {
+  final prefs = await SharedPreferences.getInstance();
+  final bookIndex = prefs.getInt("bookIndex") ?? 0;
+  final chapterIndex = prefs.getInt("chapterIndex") ?? 0;
+  return (bookIndex, chapterIndex);
 }
