@@ -1,8 +1,18 @@
+import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:flutter_reactive_value/flutter_reactive_value.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final selectedVerses = ValueNotifier([]);
+final isPlaying = ValueNotifier(false);
+
+onPlay() {
+  isPlaying.value = true;
+}
+
+onPause() {
+  isPlaying.value = false;
+}
 
 isVerseSelected(BuildContext context, int i) {
   return selectedVerses.reactiveValue(context).contains(i);
@@ -33,4 +43,8 @@ Future<(int, int)> loadState() async {
   final bookIndex = prefs.getInt("bookIndex") ?? 0;
   final chapterIndex = prefs.getInt("chapterIndex") ?? 0;
   return (bookIndex, chapterIndex);
+}
+
+bool isDesktop() {
+  return Platform.isMacOS || Platform.isLinux || Platform.isWindows;
 }

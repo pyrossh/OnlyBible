@@ -25,8 +25,8 @@ class ChaptersList extends StatelessWidget {
               saveState(bookIndex, index);
             },
             child: Container(
-              width: 90,
-              height: 50,
+              width: isDesktop() ? 90 : 50,
+              height: isDesktop() ? 50 : 40,
               margin: const EdgeInsets.all(8),
               child: Material(
                 elevation: 3,

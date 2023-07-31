@@ -32,9 +32,9 @@ class HomeScreenRoute extends GoRouteData {
           Header(book: allBooks.indexWhere((it) => it == book), chapter: chapter),
           Flexible(
             child: ListView.builder(
-              padding: const EdgeInsets.symmetric(
+              padding: EdgeInsets.symmetric(
                 vertical: 20,
-                horizontal: 40,
+                horizontal: isDesktop() ? 40 : 20,
               ),
               itemCount: verses.length,
               itemBuilder: (BuildContext context, int index) {

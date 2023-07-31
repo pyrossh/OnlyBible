@@ -1,10 +1,10 @@
 import "dart:math";
 import "package:flutter/material.dart";
 import "package:just_audio/just_audio.dart";
+import "package:kannada_bible_app/components/play_button.dart";
 import "package:kannada_bible_app/domain/book.dart";
 import "../routes/select.dart";
 import "../state.dart";
-import "../domain/kannada_gen.dart";
 
 class Header extends StatelessWidget {
   final int book;
@@ -19,8 +19,8 @@ class Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 40),
-      padding: const EdgeInsets.symmetric(vertical: 15),
+      margin: EdgeInsets.symmetric(horizontal: isDesktop() ? 40 : 20),
+      padding: EdgeInsets.symmetric(vertical: isDesktop() ? 15 : 0),
       decoration: const BoxDecoration(
         border: Border(bottom: BorderSide(width: 1.5)),
       ),
@@ -46,27 +46,7 @@ class Header extends StatelessWidget {
             ),
           ),
           const Spacer(flex: 8),
-          IconButton(
-            icon: const Icon(Icons.play_circle_fill, size: 36),
-            onPressed: () async {
-              final verses = kannadaBible[book].chapters[chapter].verses;
-              final filteredVerses =
-                  verses.asMap().keys.where((it) => selectedVerses.value.contains(it)).map((it) => verses[it]);
-              // Todo: play/pause button
-              for (final v in filteredVerses) {
-                try {
-                  await player.setClip(
-                    start: Duration(milliseconds: (v.audioRange.start * 1000).toInt()),
-                    end: Duration(milliseconds: (v.audioRange.end * 1000).toInt()),
-                  );
-                  await player.play();
-                  await player.pause();
-                } catch (err) {
-                  // show
-                }
-              }
-            },
-          ),
+          PlayButton(book: book, chapter: chapter),
           const Spacer(flex: 1),
         ],
       ),

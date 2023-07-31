@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kannada_bible_app/domain/book.dart';
 import 'package:kannada_bible_app/state.dart';
@@ -27,15 +28,24 @@ final _router = GoRouter(
         $selectScreenRoute,
       ],
       builder: (context, state, child) {
+        SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+          systemNavigationBarColor: Colors.white,
+          statusBarColor: Colors.white,
+          systemNavigationBarIconBrightness: Brightness.dark,
+          statusBarIconBrightness: Brightness.light,
+        ));
         return Scaffold(
           backgroundColor: Colors.white,
-          body: Row(
-            children: [
-              const Sidebar(),
-              Flexible(
-                child: child,
-              ),
-            ],
+          body: SafeArea(
+            // minimum: EdgeInsets.all(16),
+            child: Row(
+              children: [
+                isDesktop() ? const Sidebar() : Container(),
+                Flexible(
+                  child: child,
+                ),
+              ],
+            ),
           ),
         );
       },

@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../components/books_list.dart';
 import '../components/chapters_list.dart';
 import '../domain/book.dart';
+import '../state.dart';
 import '../utils/dialog.dart';
 
 part 'select.g.dart';
@@ -16,21 +17,22 @@ class SelectScreenRoute extends GoRouteData {
   @override
   Page buildPage(BuildContext context, GoRouterState state) {
     final width = MediaQuery.of(context).size.width;
-    final right = width / 10;
+    final right = isDesktop() ? width / 10 : 0.0;
+    final left = isDesktop() ? 40.0 : 10.0;
     return NoPageTransition(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Flexible(
             child: Container(
-              margin: EdgeInsets.only(left: 40, top: 20, right: right),
+              margin: EdgeInsets.only(left: left, top: 20, right: right),
               child: DefaultTabController(
                 length: 2,
                 // animationDuration: Platform.isMacOS ? Duration.zero: const Duration(milliseconds: 300),
                 child: Column(
                   children: [
                     SizedBox(
-                      width: 250,
+                      width: 350,
                       child: TabBar(
                         labelPadding: EdgeInsets.zero,
                         labelColor: Colors.black,
@@ -67,7 +69,7 @@ class SelectScreenRoute extends GoRouteData {
                       ),
                     ),
                     Container(
-                      margin: const EdgeInsets.symmetric(vertical: 20),
+                      margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
                       decoration: const BoxDecoration(
                         border: Border(bottom: BorderSide(width: 1.5)),
                       ),
