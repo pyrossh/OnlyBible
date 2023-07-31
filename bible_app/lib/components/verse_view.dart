@@ -2,11 +2,11 @@ import "package:flutter/material.dart";
 import "package:flutter_reactive_value/flutter_reactive_value.dart";
 import "../state.dart";
 
-class Verse extends StatelessWidget {
+class VerseText extends StatelessWidget {
   final int index;
   final String text;
 
-  const Verse({super.key, required this.index, required this.text});
+  const VerseText({super.key, required this.index, required this.text});
 
   @override
   Widget build(BuildContext context) {

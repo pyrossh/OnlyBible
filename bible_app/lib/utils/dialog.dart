@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:go_router/go_router.dart";
 
 Future<T?> showCustomDialog<T>(BuildContext context, Widget child) {
   return showGeneralDialog<T>(
@@ -144,3 +145,15 @@ void showSlideCustomDialog(BuildContext context) {
 //     });
 //   }
 // });
+class NoPageTransition extends CustomTransitionPage {
+  NoPageTransition({required super.child})
+      : super(
+      transitionDuration: const Duration(milliseconds: 0),
+      reverseTransitionDuration: const Duration(milliseconds: 0),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        return FadeTransition(
+          opacity: animation,
+          child: child,
+        );
+      });
+}

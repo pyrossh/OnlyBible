@@ -31,3 +31,9 @@ onVerseSelected(int i) {
     selectedVerses.value = [...selectedVerses.value, i];
   }
 }
+
+final tabBookIndex = ValueNotifier(0);
+
+onTabBookChange(int i) {
+  tabBookIndex.value = i;
+}

@@ -1,7 +1,10 @@
 import "package:flutter/material.dart";
 import 'package:go_router/go_router.dart';
 import "package:flutter_persistent_value_notifier/flutter_persistent_value_notifier.dart";
-import 'routes.dart' as routes2;
+import 'package:kannada_bible_app/domain/book.dart';
+import 'package:kannada_bible_app/state.dart';
+import 'routes/index.dart';
+import 'routes/select.dart';
 import "components/sidebar.dart";
 
 void main() async {
@@ -14,11 +17,14 @@ final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final _shellNavigatorKey = GlobalKey<NavigatorState>();
 final _router = GoRouter(
   navigatorKey: _rootNavigatorKey,
-  initialLocation: "/Genesis/1",
+  initialLocation: "/${allBooks[bookIndex.value]}/${chapterIndex.value}",
   routes: [
     ShellRoute(
       navigatorKey: _shellNavigatorKey,
-      routes: routes2.$appRoutes,
+      routes: [
+        $homeScreenRoute,
+        $selectScreenRoute,
+      ],
       builder: (context, state, child) {
         return Scaffold(
           backgroundColor: Colors.white,
