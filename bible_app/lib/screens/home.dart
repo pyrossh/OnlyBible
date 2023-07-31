@@ -56,9 +56,6 @@ class HomeScreenRoute extends GoRouteData {
 )
 @immutable
 class SelectScreenRoute extends GoRouteData {
-  SelectScreenRoute() {
-    tabIndex.value = 0;
-  }
 
   @override
   Page buildPage(BuildContext context, GoRouterState state) {
@@ -69,7 +66,7 @@ class SelectScreenRoute extends GoRouteData {
           Flexible(
             child: Container(
               margin: const EdgeInsets.only(left: 40, top: 20, right: 300),
-              child: const MyTabbedPage(),
+              child: const BookSelector(),
             ),
           ),
         ],

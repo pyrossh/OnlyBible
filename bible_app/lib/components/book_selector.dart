@@ -1,160 +1,107 @@
+import 'dart:io' show Platform;
 import "package:flutter/material.dart";
 import "package:flutter_reactive_value/flutter_reactive_value.dart";
 import "package:kannada_bible_app/screens/home.dart";
 import "../domain/book.dart";
 import "../domain/kannada_gen.dart";
 
-final tabIndex = ValueNotifier(0);
 final tabBookIndex = ValueNotifier(0);
 
 onTabBookChange(int i) {
-  tabIndex.value = 1;
   tabBookIndex.value = i;
 }
 
-// class BookSelector extends StatelessWidget {
-//   const BookSelector({super.key});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     final tab = tabIndex.reactiveValue(context);
-//     if (tab == 1) {
-//       final book = kannadaBible[tabBookIndex.reactiveValue(context)];
-//       return Container(
-//         // margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-//         color: Colors.white,
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             Container(
-//               margin: const EdgeInsets.only(bottom: 10),
-//               child: Text(book.name, style: Theme.of(context).textTheme.headlineMedium),
-//             ),
-//             const Expanded(child: ChaptersList()),
-//           ],
-//         ),
-//       );
-//     }
-//     return Container(
-//       // margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-//       color: Colors.white,
-//       child: Column(
-//         crossAxisAlignment: CrossAxisAlignment.start,
-//         children: [
-//           Container(
-//             margin: const EdgeInsets.only(bottom: 10),
-//             child: Text("Old Testament", style: Theme.of(context).textTheme.headlineMedium),
-//           ),
-//           Expanded(child: BooksList(offset: 0, books: oldTestament)),
-//           Container(
-//             margin: const EdgeInsets.symmetric(vertical: 15),
-//             child: Text("New Testament", style: Theme.of(context).textTheme.headlineMedium),
-//           ),
-//           Expanded(child: BooksList(offset: 39, books: newTestament)),
-//         ],
-//       ),
-//     );
-//   }
-// }
-
-class MyTabbedPage extends StatefulWidget {
-  const MyTabbedPage({super.key});
-
-  @override
-  State<MyTabbedPage> createState() => _MyTabbedPageState();
-}
-
-class _MyTabbedPageState extends State<MyTabbedPage> with SingleTickerProviderStateMixin {
-  late TabController _tabController;
-  int _selectedIndex = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(vsync: this, length: 2);
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
+class BookSelector extends StatelessWidget {
+  const BookSelector({super.key});
 
   @override
   Widget build(BuildContext context) {
     final book = kannadaBible[tabBookIndex.reactiveValue(context)];
-    onBookTap(i) {
-      _tabController.animateTo(1);
-    }
-    return Scaffold(
-      appBar: AppBar(
-        flexibleSpace: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            TabBar(
-              // overlayColor:
-              indicatorWeight: 10,
-              dividerColor: Colors.black,
+
+    return DefaultTabController(
+      length: 2,
+      animationDuration: Platform.isMacOS ? Duration.zero: const Duration(milliseconds: 300),
+      child: Column(
+        children: [
+          SizedBox(
+            width: 250,
+            child: TabBar(
+              labelPadding: EdgeInsets.zero,
               labelColor: Colors.black,
-              labelStyle: TextStyle(
-                fontSize: 22,
+              labelStyle: const TextStyle(
+                fontSize: 14,
                 fontWeight: FontWeight.w600,
               ),
               indicator: BoxDecoration(
+                border: Border.all(color: Colors.blue.shade700, width: 3),
                 borderRadius: BorderRadius.circular(50),
-                color: Colors.greenAccent,
               ),
-              controller: _tabController,
               tabs: const [
-                Tab(text: 'Book'),
-                Tab(text: 'Chapter'),
-              ],
-            ),
-          ],
-        ),
-      ),
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          Container(
-            // margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-            color: Colors.white,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  margin: const EdgeInsets.only(bottom: 10),
-                  child: Text("Old Testament", style: Theme
-                      .of(context)
-                      .textTheme
-                      .headlineMedium),
+                Tab(
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.book_outlined, color: Colors.red, size: 24),
+                      SizedBox(width: 8),
+                      Text('BOOK'),
+                    ],
+                  ),
                 ),
-                Expanded(child: BooksList(offset: 0, books: oldTestament, onBookTap: onBookTap)),
-                Container(
-                  margin: const EdgeInsets.symmetric(vertical: 15),
-                  child: Text("New Testament", style: Theme
-                      .of(context)
-                      .textTheme
-                      .headlineMedium),
+                Tab(
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.bookmark_outline, color: Colors.blue, size: 24),
+                      SizedBox(width: 8),
+                      Text('CHAPTER'),
+                    ],
+                  ),
                 ),
-                Expanded(child: BooksList(offset: 39, books: newTestament, onBookTap: onBookTap)),
               ],
             ),
           ),
           Container(
-            // margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-            color: Colors.white,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            margin: const EdgeInsets.symmetric(vertical: 20),
+            decoration: const BoxDecoration(
+              border: Border(bottom: BorderSide(width: 1.5)),
+            ),
+          ),
+          Flexible(
+            child: TabBarView(
               children: [
                 Container(
-                  margin: const EdgeInsets.only(bottom: 10),
-                  child: Text(book.name, style: Theme
-                      .of(context)
-                      .textTheme
-                      .headlineMedium),
+                  // margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+                  color: Colors.white,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(bottom: 10),
+                        child: Text("Old Testament", style: Theme.of(context).textTheme.headlineMedium),
+                      ),
+                      Expanded(child: BooksList(offset: 0, books: oldTestament)),
+                      Container(
+                        margin: const EdgeInsets.symmetric(vertical: 15),
+                        child: Text("New Testament", style: Theme.of(context).textTheme.headlineMedium),
+                      ),
+                      Expanded(child: BooksList(offset: 39, books: newTestament)),
+                    ],
+                  ),
                 ),
-                const Expanded(child: ChaptersList()),
+                Container(
+                  // margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+                  color: Colors.white,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(bottom: 10),
+                        child: Text(book.name, style: Theme.of(context).textTheme.headlineMedium),
+                      ),
+                      const Expanded(child: ChaptersList()),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
@@ -167,9 +114,8 @@ class _MyTabbedPageState extends State<MyTabbedPage> with SingleTickerProviderSt
 class BooksList extends StatelessWidget {
   final int offset;
   final List<String> books;
-  final Function(int) onBookTap;
 
-  const BooksList({super.key, required this.offset, required this.books, required this.onBookTap});
+  const BooksList({super.key, required this.offset, required this.books});
 
   @override
   Widget build(BuildContext context) {
@@ -181,7 +127,8 @@ class BooksList extends StatelessWidget {
         final name = books[index].replaceAll(" ", "").substring(0, 3).toUpperCase();
         return InkWell(
           onTap: () {
-            onBookTap(offset + index);
+            DefaultTabController.of(context).animateTo(1);
+            tabBookIndex.value = offset + index;
           },
           child: Container(
             margin: const EdgeInsets.all(3),
@@ -192,10 +139,7 @@ class BooksList extends StatelessWidget {
               child: Text(
                 name,
                 textAlign: TextAlign.center,
-                style: Theme
-                    .of(context)
-                    .textTheme
-                    .labelMedium,
+                style: Theme.of(context).textTheme.labelMedium,
               ),
             ),
           ),
@@ -232,10 +176,7 @@ class ChaptersList extends StatelessWidget {
               child: Text(
                 "${index + 1}",
                 textAlign: TextAlign.center,
-                style: Theme
-                    .of(context)
-                    .textTheme
-                    .labelMedium,
+                style: Theme.of(context).textTheme.labelMedium,
               ),
             ),
           ),
