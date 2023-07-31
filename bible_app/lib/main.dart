@@ -1,7 +1,7 @@
 import "package:flutter/material.dart";
 import 'package:go_router/go_router.dart';
 import "package:flutter_persistent_value_notifier/flutter_persistent_value_notifier.dart";
-import "./screens/home.dart";
+import 'routes.dart' as routes2;
 import "components/sidebar.dart";
 
 void main() async {
@@ -18,7 +18,7 @@ final _router = GoRouter(
   routes: [
     ShellRoute(
       navigatorKey: _shellNavigatorKey,
-      routes: $appRoutes,
+      routes: routes2.$appRoutes,
       builder: (context, state, child) {
         return Scaffold(
           backgroundColor: Colors.white,

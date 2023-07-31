@@ -1,12 +1,12 @@
 import "package:flutter/material.dart";
 import 'package:go_router/go_router.dart';
-import "../components/book_selector.dart";
-import "../components/header.dart";
-import "../domain/kannada_gen.dart";
-import "../components/verse.dart";
-import "../state.dart";
+import 'screens/book_selector.dart';
+import 'components/header.dart';
+import 'domain/kannada_gen.dart';
+import 'components/verse.dart';
+import 'state.dart';
 
-part 'home.g.dart';
+part 'routes.g.dart';
 
 @TypedGoRoute<HomeScreenRoute>(
   path: "/:book/:chapter",
@@ -68,7 +68,7 @@ class SelectScreenRoute extends GoRouteData {
           Flexible(
             child: Container(
               margin: EdgeInsets.only(left: 40, top: 20, right: right),
-              child: const BookSelector(),
+              child: const BookSelectorScreen(),
             ),
           ),
         ],

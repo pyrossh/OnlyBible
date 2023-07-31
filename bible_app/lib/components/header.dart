@@ -1,7 +1,7 @@
 import "dart:math";
 import "package:flutter/material.dart";
 import "package:just_audio/just_audio.dart";
-import "package:kannada_bible_app/screens/home.dart";
+import 'package:kannada_bible_app/routes.dart';
 import "../state.dart";
 import "../domain/kannada_gen.dart";
 

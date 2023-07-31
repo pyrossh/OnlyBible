@@ -1,9 +1,9 @@
 import 'dart:io' show Platform;
 import "package:flutter/material.dart";
 import "package:flutter_reactive_value/flutter_reactive_value.dart";
-import "package:kannada_bible_app/screens/home.dart";
-import "../domain/book.dart";
-import "../domain/kannada_gen.dart";
+import 'package:kannada_bible_app/routes.dart';
+import '../domain/book.dart';
+import '../domain/kannada_gen.dart';
 
 final tabBookIndex = ValueNotifier(0);
 
@@ -11,8 +11,8 @@ onTabBookChange(int i) {
   tabBookIndex.value = i;
 }
 
-class BookSelector extends StatelessWidget {
-  const BookSelector({super.key});
+class BookSelectorScreen extends StatelessWidget {
+  const BookSelectorScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
