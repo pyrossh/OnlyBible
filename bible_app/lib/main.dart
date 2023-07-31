@@ -60,6 +60,9 @@ class App extends StatelessWidget {
     return MaterialApp.router(
       routerConfig: _router,
       theme: ThemeData(
+        tabBarTheme: TabBarTheme(
+          dividerColor: Colors.white,
+        ),
         brightness: Brightness.light,
         primaryColor: const Color(0xFF4C2323),
         secondaryHeaderColor: const Color(0xFFFFB341),
@@ -107,10 +110,8 @@ class App extends StatelessWidget {
         ),
       ),
       darkTheme: ThemeData(
-        pageTransitionsTheme: PageTransitionsTheme(
-          builders: {
-            TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),
-          },
+        tabBarTheme: TabBarTheme(
+          dividerColor: Colors.white,
         ),
         brightness: Brightness.light,
         primaryColor: const Color(0xFF4C2323),

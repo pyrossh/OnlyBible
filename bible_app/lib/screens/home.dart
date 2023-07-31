@@ -66,11 +66,10 @@ class SelectScreenRoute extends GoRouteData {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Header(bookName: "", chapter: 1),
           Flexible(
             child: Container(
               margin: const EdgeInsets.only(left: 40, top: 20, right: 300),
-              child: const BookSelector(),
+              child: const MyTabbedPage(),
             ),
           ),
         ],
@@ -83,7 +82,7 @@ class NoPageTransition extends CustomTransitionPage {
   NoPageTransition({required super.child})
       : super(
             transitionDuration: const Duration(milliseconds: 0),
-            reverseTransitionDuration:  const Duration(milliseconds: 0),
+            reverseTransitionDuration: const Duration(milliseconds: 0),
             transitionsBuilder: (context, animation, secondaryAnimation, child) {
               return FadeTransition(
                 opacity: animation,
