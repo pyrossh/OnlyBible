@@ -26,7 +26,7 @@ class HomeScreenRoute extends GoRouteData {
     final selectedBook = kannadaBible.firstWhere((it) => book == it.name);
     final verses = selectedBook.chapters[chapter].verses;
 
-    return NoPageTransition(
+    return NoTransitionPage(
       child: Column(
         children: [
           Header(book: allBooks.indexWhere((it) => it == book), chapter: chapter),

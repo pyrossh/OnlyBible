@@ -1,3 +1,4 @@
+import "dart:ui";
 import "package:flutter/material.dart";
 import "package:go_router/go_router.dart";
 
@@ -30,19 +31,22 @@ showAlert(BuildContext context, String title, String message) {
   showDialog(
     context: context,
     builder: (_) {
-      return AlertDialog(
-        title: Text(title),
-        content: Text(message),
-        actionsAlignment: MainAxisAlignment.center,
-        actionsOverflowButtonSpacing: 8.0,
-        actions: <Widget>[
-          TextButton(
-            child: const Text("Ok"),
-            onPressed: () {
-              context.pop();
-            },
-          ),
-        ],
+      return BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
+        child: AlertDialog(
+          title: Text(title),
+          content: Text(message),
+          actionsAlignment: MainAxisAlignment.center,
+          actionsOverflowButtonSpacing: 8.0,
+          actions: <Widget>[
+            TextButton(
+              child: const Text("Ok"),
+              onPressed: () {
+                context.pop();
+              },
+            ),
+          ],
+        ),
       );
     },
   );
@@ -50,38 +54,4 @@ showAlert(BuildContext context, String title, String message) {
 
 showError(BuildContext context, String message) {
   showAlert(context, "Error", message);
-  // return BackdropFilter(
-  //     filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
-  //     child:  AlertDialog(
-  //       title: new Text(title,style: textStyle,),
-  //       content: new Text(content, style: textStyle,),
-  //       actions: <Widget>[
-  //         new FlatButton(
-  //           child: new Text("Continue"),
-  //           onPressed: () {
-  //             continueCallBack();
-  //           },
-  //         ),
-  //         new FlatButton(
-  //           child: Text("Cancel"),
-  //           onPressed: () {
-  //             Navigator.of(context).pop();
-  //           },
-  //         ),
-  //       ],
-  //     ));
-}
-
-
-class NoPageTransition extends CustomTransitionPage {
-  NoPageTransition({required super.child})
-      : super(
-            transitionDuration: const Duration(milliseconds: 0),
-            reverseTransitionDuration: const Duration(milliseconds: 0),
-            transitionsBuilder: (context, animation, secondaryAnimation, child) {
-              return FadeTransition(
-                opacity: animation,
-                child: child,
-              );
-            });
 }

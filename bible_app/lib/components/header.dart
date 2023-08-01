@@ -2,9 +2,11 @@ import "dart:math";
 import "package:flutter/material.dart";
 import "package:just_audio/just_audio.dart";
 import "package:kannada_bible_app/components/play_button.dart";
+import "package:kannada_bible_app/components/slide_page.dart";
 import "package:kannada_bible_app/domain/book.dart";
 import "../routes/select.dart";
 import "../state.dart";
+import "../utils/dialog.dart";
 
 class Header extends StatelessWidget {
   final int book;
@@ -29,7 +31,7 @@ class Header extends StatelessWidget {
         children: [
           InkWell(
             onTap: () {
-              SelectScreenRoute().go(context);
+              Navigator.of(context).push(SlidePage());
             },
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,

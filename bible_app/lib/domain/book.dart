@@ -98,4 +98,4 @@ final newTestament = [
   "Revelation"
 ];
 
-final allBooks = oldTestament..addAll(newTestament);
+final allBooks = List.from(oldTestament)..addAll(newTestament);
