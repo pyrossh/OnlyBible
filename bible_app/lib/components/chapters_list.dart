@@ -3,9 +3,8 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_reactive_value/flutter_reactive_value.dart';
 import 'package:go_router/go_router.dart';
 import '../domain/kannada_gen.dart';
-import '../routes/index.dart';
 import '../state.dart';
-import 'Title.dart';
+import 'tile.dart';
 
 class ChaptersList extends StatelessWidget {
   const ChaptersList({super.key});
@@ -25,7 +24,7 @@ class ChaptersList extends StatelessWidget {
             return InkWell(
               borderRadius: const BorderRadius.all(Radius.circular(30)),
               onTap: () {
-                HomeScreenRoute(book: book.name, chapter: index).go(context);
+                context.push("/${book.name}/$index");
                 saveState(bookIndex, index);
                 context.pop();
                 SchedulerBinding.instance.addPostFrameCallback((_) {

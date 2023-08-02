@@ -8,12 +8,8 @@ import "../utils/dialog.dart";
 class PlayButton extends StatelessWidget {
   final int book;
   final int chapter;
-  final player = AudioPlayer();
 
-  PlayButton({super.key, required this.book, required this.chapter}) {
-    player.setUrl("https://github.com/pyrossh/bible-app/raw/master/public/audio/output.mp3");
-    // player.setUrl("asset:output.mp3");
-  }
+  const PlayButton({super.key, required this.book, required this.chapter});
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +17,9 @@ class PlayButton extends StatelessWidget {
     return IconButton(
       icon: Icon(icon, size: 36),
       onPressed: () async {
+        final player = AudioPlayer();
+        player.setUrl("https://github.com/pyrossh/bible-app/raw/master/public/audio/output.mp3");
+        // player.setUrl("asset:output.mp3");
         if (isPlaying.value) {
           await player.pause();
           onPause();

@@ -1,5 +1,5 @@
 import "dart:io";
-import 'package:kannada_bible_app/domain/book.dart';
+import "package:only_bible_app/domain/book.dart";
 
 void main() {
   final lines = File("./scripts/bibles/kannada.csv").readAsLinesSync();

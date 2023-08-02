@@ -1,5 +1,5 @@
 import "package:flutter/material.dart";
-import "package:kannada_bible_app/components/book_selector.dart";
+import "./book_selector.dart";
 
 import "../state.dart";
 

@@ -1,10 +1,9 @@
 import "package:flutter/material.dart";
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
-import 'package:kannada_bible_app/domain/book.dart';
-import 'package:kannada_bible_app/state.dart';
+import 'domain/book.dart';
+import 'state.dart';
 import 'routes/index.dart';
-import 'routes/select.dart';
 import "components/sidebar.dart";
 
 var loadedState = (0, 0);
@@ -20,24 +19,20 @@ final _shellNavigatorKey = GlobalKey<NavigatorState>();
 final _router = GoRouter(
   navigatorKey: _rootNavigatorKey,
   initialLocation: "/${allBooks[loadedState.$1]}/${loadedState.$2}",
+  debugLogDiagnostics: true,
   routes: [
     ShellRoute(
       navigatorKey: _shellNavigatorKey,
-      routes: [
-        $homeScreenRoute,
-        $selectScreenRoute,
-      ],
       builder: (context, state, child) {
         SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
           systemNavigationBarColor: Colors.white,
-          statusBarColor: Colors.white,
           systemNavigationBarIconBrightness: Brightness.dark,
-          statusBarIconBrightness: Brightness.light,
+          statusBarColor: Colors.white,
+          statusBarIconBrightness: Brightness.dark,
         ));
         return Scaffold(
           backgroundColor: Colors.white,
           body: SafeArea(
-            // minimum: EdgeInsets.all(16),
             child: Row(
               children: [
                 isDesktop() ? const Sidebar() : Container(),
@@ -49,6 +44,15 @@ final _router = GoRouter(
           ),
         );
       },
+      routes: [
+        GoRouteData.$route(
+          path: '/:book/:chapter',
+          factory: (GoRouterState state) => HomeScreenRoute(
+            book: state.pathParameters['book']!,
+            chapter: int.parse(state.pathParameters['chapter']!),
+          ),
+        ),
+      ],
     ),
   ],
 );
@@ -73,6 +77,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
+      debugShowCheckedModeBanner: false,
       routerConfig: _router,
       theme: ThemeData(
         brightness: Brightness.light,

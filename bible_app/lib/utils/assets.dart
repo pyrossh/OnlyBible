@@ -4,9 +4,13 @@ import "package:flutter/material.dart";
 import "package:path_provider/path_provider.dart";
 
 class Utils {
-  static Future<String> loadAsset(BuildContext context) async {
-    return await DefaultAssetBundle.of(context)
-        .loadString("assets/kannada.csv");
+  static Future<String> loadGzAsset(BuildContext context, String file) async {
+    final bytes = await DefaultAssetBundle.of(context).load("assets/$file");
+    return utf8.decode(GZipCodec().decode(bytes.buffer.asUint8List()));
+  }
+
+  static Future<String> loadAsset(BuildContext context, String file) async {
+    return DefaultAssetBundle.of(context).loadString("assets/$file");
   }
 
   Future<String> get _localPath async {

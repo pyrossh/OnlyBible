@@ -1,18 +1,10 @@
-import 'dart:io' show Platform;
 import "package:flutter/material.dart";
 import 'package:go_router/go_router.dart';
 import '../components/books_list.dart';
 import '../components/chapters_list.dart';
 import '../domain/book.dart';
 import '../state.dart';
-import '../utils/dialog.dart';
 
-part 'select.g.dart';
-
-@TypedGoRoute<SelectScreenRoute>(
-  path: "/select",
-)
-@immutable
 class SelectScreenRoute extends GoRouteData {
   @override
   Page buildPage(BuildContext context, GoRouterState state) {

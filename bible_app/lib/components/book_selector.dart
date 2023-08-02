@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
 import "package:flutter_reactive_value/flutter_reactive_value.dart";
-import '../../../domain/book.dart';
+import '../domain/book.dart';
 import '../state.dart';
 import 'books_list.dart';
 import 'chapters_list.dart';

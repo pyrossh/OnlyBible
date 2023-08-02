@@ -1,8 +1,7 @@
 import "package:flutter/material.dart";
-import "package:kannada_bible_app/components/book_selector.dart";
-import "package:kannada_bible_app/utils/string.dart";
+import "../utils/string.dart";
 import "../state.dart";
-import "title.dart";
+import "tile.dart";
 
 class BooksList extends StatelessWidget {
   final String title;

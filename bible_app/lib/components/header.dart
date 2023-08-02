@@ -1,28 +1,23 @@
 import "dart:math";
 import "package:flutter/material.dart";
-import "package:just_audio/just_audio.dart";
-import "package:kannada_bible_app/components/play_button.dart";
-import "package:kannada_bible_app/components/slide_page.dart";
-import "package:kannada_bible_app/domain/book.dart";
-import "../routes/select.dart";
+import "./play_button.dart";
+import "./slide_page.dart";
+import "../domain/book.dart";
 import "../state.dart";
-import "../utils/dialog.dart";
 
 class Header extends StatelessWidget {
   final int book;
   final int chapter;
-  final player = AudioPlayer();
 
-  Header({super.key, required this.book, required this.chapter}) {
-    player.setUrl("https://github.com/pyrossh/bible-app/raw/master/public/audio/output.mp3");
-    // player.setUrl("asset:output.mp3");
-  }
+  const Header({super.key, required this.book, required this.chapter});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: isDesktop() ? 40 : 20),
-      padding: EdgeInsets.symmetric(vertical: isDesktop() ? 15 : 0),
+      padding: EdgeInsets.symmetric(
+          // horizontal: isDesktop() ? 40 : 20,
+          vertical: isDesktop() ? 15 : 0
+      ),
       decoration: const BoxDecoration(
         border: Border(bottom: BorderSide(width: 1.5)),
       ),
