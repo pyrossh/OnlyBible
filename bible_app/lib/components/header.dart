@@ -2,6 +2,7 @@ import "dart:math";
 import "package:flutter/material.dart";
 import "./play_button.dart";
 import "./side_menu_page.dart";
+import "./menu.dart";
 import '../models/book.dart';
 import "../state.dart";
 
@@ -45,6 +46,7 @@ class Header extends StatelessWidget {
           ),
           const Spacer(flex: 1),
           PlayButton(book: book, chapter: chapter, verses: verses),
+          Menu(),
           // const Spacer(flex: 1),
         ],
       ),

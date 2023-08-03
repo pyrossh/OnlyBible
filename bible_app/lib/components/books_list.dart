@@ -1,14 +1,13 @@
 import "package:flutter/material.dart";
-import "../utils/string.dart";
-import "../state.dart";
 import "tile.dart";
+import "../models/book.dart";
 
 class BooksList extends StatelessWidget {
   final String title;
-  final int offset;
-  final List<String> books;
+  final List<Book> books;
+  final Function(int) onTap;
 
-  const BooksList({super.key, required this.title, required this.offset, required this.books});
+  const BooksList({super.key, required this.title, required this.books, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -17,24 +16,20 @@ class BooksList extends StatelessWidget {
       children: [
         Container(
           margin: const EdgeInsets.only(bottom: 20),
-          child: Text(title, style: Theme
-              .of(context)
-              .textTheme
-              .headlineMedium,
+          child: Text(
+            title,
+            style: Theme.of(context).textTheme.headlineMedium,
           ),
         ),
         Wrap(
-          children: List.generate(books.length, (index) {
-            final name = books[index].bookShortName();
+          children: List.of(books.map((book) {
+            final name = book.shortName();
             return InkWell(
               borderRadius: const BorderRadius.all(Radius.circular(30)),
-              onTap: () {
-                tabBookIndex.value = offset + index;
-                tabIndex.value = 1;
-              },
+              onTap: () => onTap(book.index),
               child: Tile(name: name),
             );
-          }),
+          })),
         ),
       ],
     );

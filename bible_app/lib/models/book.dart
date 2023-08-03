@@ -9,6 +9,13 @@ class Book {
   bool isOldTestament() => index < 39;
 
   bool isNewTestament() => index >= 39;
+
+  String shortName() {
+    if (name[0] == "1" || name[0] == "2" || name[0] == "3") {
+      return "${name[0]}${name[2].toUpperCase()}${name.substring(3, 4).toLowerCase()}";
+    }
+    return "${name[0].toUpperCase()}${name.substring(1, 3).toLowerCase()}";
+  }
 }
 
 class Chapter {

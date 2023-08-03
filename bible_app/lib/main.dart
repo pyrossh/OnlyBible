@@ -12,11 +12,9 @@ void main() async {
   await initPersistentValueNotifier();
   await loadBible();
   runApp(MaterialApp.router(
-    debugShowCheckedModeBanner: false,
     routerConfig: GoRouter(
-      navigatorKey: GlobalKey<NavigatorState>(),
-      initialLocation: "/${selectedBible.value[bookIndex.value].name}/${chapterIndex.value}",
       debugLogDiagnostics: true,
+      initialLocation: "/${selectedBible.value[bookIndex.value].name}/${chapterIndex.value}",
       routes: [
         Shell(
           routes: [

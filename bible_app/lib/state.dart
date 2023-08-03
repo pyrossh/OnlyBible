@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io' show GZipCodec, Platform;
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_persistent_value_notifier/flutter_persistent_value_notifier.dart';
 import 'package:flutter_reactive_value/flutter_reactive_value.dart';
 import 'models/book.dart';
@@ -93,20 +92,6 @@ onVerseSelected(int i) {
   } else {
     selectedVerses.value = [...selectedVerses.value, i];
   }
-}
-
-final tabIndex = ValueNotifier(0);
-final tabBookIndex = ValueNotifier(0);
-
-onTabBookChange(int i) {
-  tabBookIndex.value = i;
-  tabIndex.value = 1;
-}
-
-resetTab() {
-  SchedulerBinding.instance.addPostFrameCallback((_) {
-    tabIndex.value = 0;
-  });
 }
 
 bool isDesktop() {
