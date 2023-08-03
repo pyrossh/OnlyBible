@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "../state.dart";
 import "tile.dart";
 import "../models/book.dart";
 
@@ -16,10 +17,7 @@ class BooksList extends StatelessWidget {
       children: [
         Container(
           margin: const EdgeInsets.only(bottom: 20),
-          child: Text(
-            title,
-            style: Theme.of(context).textTheme.headlineMedium,
-          ),
+          child: Text(title, style: theme.value.titleText),
         ),
         Wrap(
           children: List.of(books.map((book) {

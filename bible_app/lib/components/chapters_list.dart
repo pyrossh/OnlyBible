@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import '../state.dart';
 import 'tile.dart';
 
 class ChaptersList extends StatelessWidget {
@@ -14,7 +15,7 @@ class ChaptersList extends StatelessWidget {
       children: [
         Container(
           margin: const EdgeInsets.only(bottom: 20),
-          child: Text(title, style: Theme.of(context).textTheme.headlineMedium),
+          child: Text(title, style: theme.value.titleText),
         ),
         Wrap(
           children: List.generate(length, (index) {

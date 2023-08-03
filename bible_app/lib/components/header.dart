@@ -18,8 +18,7 @@ class Header extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(
           // horizontal: isDesktop() ? 40 : 20,
-          vertical: isDesktop() ? 15 : 0
-      ),
+          vertical: isDesktop() ? 15 : 0),
       decoration: const BoxDecoration(
         border: Border(bottom: BorderSide(width: 1.5)),
       ),
@@ -33,7 +32,7 @@ class Header extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text("${selectedBible.value[book].name} ${chapter + 1}", style: Theme.of(context).textTheme.headlineLarge),
+                Text("${selectedBible.value[book].name} ${chapter + 1}", style: theme.value.headerText),
                 Container(
                   margin: const EdgeInsets.only(left: 3),
                   child: Transform.rotate(

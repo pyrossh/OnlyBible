@@ -20,7 +20,7 @@ class VerseText extends StatelessWidget {
           onTap: onTap,
           child: Container(
             decoration: BoxDecoration(
-              color: selected ? Theme.of(context).highlightColor : Colors.white,
+              color: selected ? theme.value.highlightColor : Colors.white,
             ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -29,11 +29,11 @@ class VerseText extends StatelessWidget {
                   margin: const EdgeInsets.only(right: 4),
                   child:  Transform.translate(
                     offset: const Offset(0, 2),
-                    child: Text("${index + 1}", style: Theme.of(context).textTheme.labelSmall),
+                    child: Text("${index + 1}", style: theme.value.labelText),
                   ),
                 ),
                 Flexible(
-                  child: Text(text, style: Theme.of(context).textTheme.bodyMedium),
+                  child: Text(text, style: theme.value.bodyText),
                 )
               ],
             ),

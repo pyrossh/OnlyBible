@@ -31,7 +31,6 @@ class BookSelectorState extends State<BookSelector> {
   onChapterSelected(int index) {
     saveBookIndex(bookIndex, index);
     context.push("/${selectedBible.value[bookIndex].name}/$index");
-    context.pop();
   }
 
   @override

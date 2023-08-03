@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_persistent_value_notifier/flutter_persistent_value_notifier.dart';
 import 'package:flutter_reactive_value/flutter_reactive_value.dart';
 import 'models/book.dart';
+import 'models/theme.dart';
 
 final darkMode = PersistentValueNotifier<bool>(
   sharedPreferencesKey: 'darkMode',
@@ -29,7 +30,7 @@ final chapterIndex = PersistentValueNotifier<int>(
 final selectedBible = ValueNotifier<List<Book>>([]);
 final selectedVerses = ValueNotifier([]);
 final isPlaying = ValueNotifier(false);
-// final theme = ValueNotifier<ThemeData>();
+final theme = ValueNotifier<AppTheme>(lightTheme);
 
 saveBookIndex(int book, int chapter) {
   bookIndex.value = book;

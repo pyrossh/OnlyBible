@@ -1,5 +1,7 @@
 import "package:flutter/material.dart";
 
+import "../state.dart";
+
 class Sidebar extends StatelessWidget {
   const Sidebar({super.key});
 
@@ -32,10 +34,10 @@ class Sidebar extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Flexible(
-                      child: Text("KANNADA", style: Theme.of(context).textTheme.labelLarge),
+                      child: Text("KANNADA", style: theme.value.logoText),
                     ),
                     Flexible(
-                      child: Text("BIBLE", style: Theme.of(context).textTheme.labelLarge),
+                      child: Text("BIBLE", style: theme.value.logoText),
                     ),
                   ],
                 ),
@@ -92,7 +94,7 @@ class Bookmark extends StatelessWidget {
               width: 30.0,
               height: 80.0,
               decoration: BoxDecoration(
-                color: Theme.of(context).secondaryHeaderColor,
+                color: theme.value.secondaryColor,
                 borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(4),
                   topRight: Radius.circular(4),
@@ -101,7 +103,7 @@ class Bookmark extends StatelessWidget {
             ),
             CustomPaint(
               painter: TrianglePainter(
-                color: Theme.of(context).secondaryHeaderColor,
+                color: theme.value.secondaryColor,
               ),
             ),
           ],
