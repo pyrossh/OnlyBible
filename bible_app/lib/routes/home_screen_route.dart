@@ -1,11 +1,8 @@
 import "package:flutter/material.dart";
 import 'package:go_router/go_router.dart';
-import '../domain/book.dart';
 import '../components/header.dart';
-import '../domain/kannada_gen.dart';
 import '../components/verse_view.dart';
 import '../state.dart';
-import '../utils/assets.dart';
 
 class HomeScreenRoute extends GoRouteData {
   final String book;
@@ -17,11 +14,8 @@ class HomeScreenRoute extends GoRouteData {
 
   @override
   Page buildPage(BuildContext context, GoRouterState state) {
-    final selectedBook = kannadaBible.firstWhere((it) => book == it.name);
+    final selectedBook = selectedBible.value.firstWhere((it) => book == it.name);
     final verses = selectedBook.chapters[chapter].verses;
-    print("Build");
-    Stopwatch stopwatch = Stopwatch()..start();
-
     return NoTransitionPage(
       child: Container(
         margin: EdgeInsets.symmetric(
@@ -29,22 +23,7 @@ class HomeScreenRoute extends GoRouteData {
         ),
         child: Column(
           children: [
-            Header(book: allBooks.indexWhere((it) => it == book), chapter: chapter),
-            FutureBuilder(
-              future: Utils.loadGzAsset(context, "kannada.csv.gz"),
-              // future: Utils.loadAsset(context, "kannada.csv"),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  stopwatch.stop();
-                  print('time elapsed ${stopwatch.elapsed}');
-                  return Text("Loaded");
-                }
-                if (snapshot.hasError) {
-                  return Text("Error");
-                }
-                return Text("Loading....");
-              },
-            ),
+            Header(book: selectedBook.index, chapter: chapter, verses: verses),
             Flexible(
               child: ListView.builder(
                 padding: const EdgeInsets.symmetric(
@@ -60,15 +39,15 @@ class HomeScreenRoute extends GoRouteData {
                   );
                 },
               ),
-            ),
-            // Container(
-            //   margin: const EdgeInsets.only(top: 5),
-            //   decoration: const BoxDecoration(
-            //     border: Border(bottom: BorderSide(width: 1.5)),
-            //   ),
-            // ),
+            )
           ],
         ),
+        // Container(
+        //   margin: const EdgeInsets.only(top: 5),
+        //   decoration: const BoxDecoration(
+        //     border: Border(bottom: BorderSide(width: 1.5)),
+        //   ),
+        // ),
       ),
     );
   }
