@@ -1,29 +1,58 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_reactive_value/flutter_reactive_value.dart';
+import 'package:only_bible_app/state.dart';
 
 class Menu extends StatelessWidget {
   const Menu({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final moreIcon = isDesktopMode(context) ? Icons.more_vert : Icons.more_vert;
     return PopupMenuButton(
-      icon: const Icon(Icons.more_horiz, size: 32),
+      icon: Icon(moreIcon, size: 36),
       offset: const Offset(0.0, 70),
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(8.0),
-          bottomRight: Radius.circular(8.0),
-          topLeft: Radius.circular(8.0),
-          topRight: Radius.circular(8.0),
-        ),
-      ),
+
       itemBuilder: (BuildContext context) => [
+        PopupMenuItem(
+          value: 1,
+          padding: EdgeInsets.symmetric(vertical: 15, horizontal: isDesktop() ? 50 : 5),
+          onTap: toggleMode,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Container(margin: EdgeInsets.only(left: isDesktop() ? 10 : 25)),
+              Icon(darkMode.reactiveValue(context) ? Icons.dark_mode : Icons.light_mode, color: Colors.black, size: 30),
+              Text("   ${darkMode.reactiveValue(context) ? "Dark" : "Light"} Mode"),
+            ],
+          ),
+        ),
         const PopupMenuItem(
           value: 1,
+          padding: EdgeInsets.symmetric(vertical: 15),
           child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.add_circle, color: Colors.black, size: 32),
-              Text("    Font    "),
-              Icon(Icons.remove_circle, color: Colors.black, size: 32),
+              IconButton(
+                icon: Icon(Icons.add_circle, color: Colors.black, size: 30),
+                onPressed: increaseFont,
+              ),
+              Text("      Font      "),
+              IconButton(
+                icon: Icon(Icons.remove_circle, color: Colors.black, size: 30),
+                onPressed: decreaseFont,
+              ),
+            ],
+          ),
+        ),
+        const PopupMenuItem(
+          value: 1,
+          padding: EdgeInsets.symmetric(vertical: 10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Text("About"),
             ],
           ),
         ),

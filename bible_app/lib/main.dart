@@ -1,4 +1,4 @@
-import "package:flutter/material.dart";
+import 'package:flutter/material.dart';
 import 'package:flutter_persistent_value_notifier/flutter_persistent_value_notifier.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:go_router/go_router.dart';
@@ -12,6 +12,7 @@ void main() async {
   await initPersistentValueNotifier();
   await loadBible();
   runApp(MaterialApp.router(
+    debugShowCheckedModeBanner: false,
     routerConfig: GoRouter(
       debugLogDiagnostics: true,
       initialLocation: "/${selectedBible.value[bookIndex.value].name}/${chapterIndex.value}",

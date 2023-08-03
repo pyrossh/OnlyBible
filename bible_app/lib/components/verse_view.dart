@@ -10,10 +10,13 @@ class VerseText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var selected = selectedVerses.reactiveValue(context).contains(index);
+    final selected = selectedVerses.reactiveValue(context).contains(index);
+    final delta = fontSizeDelta.reactiveValue(context);
+    final bodySize = theme.value.bodyText.fontSize! + delta;
     onTap() {
       onVerseSelected(index);
     }
+
     return MouseRegion(
         cursor: SystemMouseCursors.click,
         child: GestureDetector(
@@ -27,13 +30,13 @@ class VerseText extends StatelessWidget {
               children: [
                 Container(
                   margin: const EdgeInsets.only(right: 4),
-                  child:  Transform.translate(
+                  child: Transform.translate(
                     offset: const Offset(0, 2),
                     child: Text("${index + 1}", style: theme.value.labelText),
                   ),
                 ),
                 Flexible(
-                  child: Text(text, style: theme.value.bodyText),
+                  child: Text(text, style: TextStyle(fontSize: bodySize)),
                 )
               ],
             ),

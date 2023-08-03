@@ -16,7 +16,6 @@ class PlayButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final icon = isPlaying.reactiveValue(context) ? Icons.pause_circle_filled : Icons.play_circle_fill;
     return IconButton(
-      padding: const EdgeInsets.symmetric(horizontal: 50),
       icon: Icon(icon, size: 36),
       onPressed: () async {
         final player = AudioPlayer();

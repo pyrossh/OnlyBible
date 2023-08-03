@@ -31,6 +31,20 @@ final selectedBible = ValueNotifier<List<Book>>([]);
 final selectedVerses = ValueNotifier([]);
 final isPlaying = ValueNotifier(false);
 final theme = ValueNotifier<AppTheme>(lightTheme);
+final fontSizeDelta = ValueNotifier(0);
+
+increaseFont() {
+  fontSizeDelta.value += 1;
+}
+
+decreaseFont() {
+  fontSizeDelta.value -= 1;
+}
+
+toggleMode() {
+  darkMode.value = !darkMode.value;
+  print(darkMode.value);
+}
 
 saveBookIndex(int book, int chapter) {
   bookIndex.value = book;

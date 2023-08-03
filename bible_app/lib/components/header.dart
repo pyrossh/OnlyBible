@@ -16,13 +16,16 @@ class Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(
-          // horizontal: isDesktop() ? 40 : 20,
-          vertical: isDesktop() ? 15 : 0),
+      padding: EdgeInsets.only(
+        // horizontal: isDesktop() ? 40 : 20,
+        top: isDesktop() ? 10 : 0,
+        bottom: isDesktop() ? 10 : 0,
+      ),
       decoration: const BoxDecoration(
         border: Border(bottom: BorderSide(width: 1.5)),
       ),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           InkWell(
@@ -30,23 +33,22 @@ class Header extends StatelessWidget {
               Navigator.of(context).push(SideMenuPage());
             },
             child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text("${selectedBible.value[book].name} ${chapter + 1}", style: theme.value.headerText),
-                Container(
-                  margin: const EdgeInsets.only(left: 3),
-                  child: Transform.rotate(
-                    angle: -pi / 2,
-                    child: const Icon(Icons.chevron_left, size: 28),
-                  ),
-                ),
+                const Icon(Icons.expand_more, size: 30),
               ],
             ),
           ),
-          const Spacer(flex: 1),
-          PlayButton(book: book, chapter: chapter, verses: verses),
-          Menu(),
-          // const Spacer(flex: 1),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                margin: EdgeInsets.only(right: isDesktop() ? 50 : 8),
+                child: PlayButton(book: book, chapter: chapter, verses: verses),
+              ),
+              Menu(),
+            ],
+          ),
         ],
       ),
     );

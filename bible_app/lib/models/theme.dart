@@ -33,7 +33,7 @@ const lightTheme = AppTheme(
   secondaryColor: lightSecondary,
   highlightColor: lightHighlightColor,
   labelText: TextStyle(
-    fontFamily: "SanFrancisco",
+    // fontFamily: "SanFrancisco",
     fontSize: 12,
     fontWeight: FontWeight.w800,
     color: lightLabel,
@@ -47,7 +47,7 @@ const lightTheme = AppTheme(
   bodyText: TextStyle(
     color: lightBody,
     fontSize: 16,
-    fontFamily: "SanFranciscoPro",
+    // fontFamily: "SanFranciscoPro",
     fontWeight: FontWeight.w400,
     // letterSpacing: 0.5,
   ),
