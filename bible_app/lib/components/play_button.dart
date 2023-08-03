@@ -1,15 +1,16 @@
 import "package:flutter/material.dart";
 import "package:flutter_reactive_value/flutter_reactive_value.dart";
 import "package:just_audio/just_audio.dart";
-import "../domain/kannada_gen.dart";
+import "../models/book.dart";
 import "../state.dart";
 import "../utils/dialog.dart";
 
 class PlayButton extends StatelessWidget {
   final int book;
   final int chapter;
+  final List<Verse> verses;
 
-  const PlayButton({super.key, required this.book, required this.chapter});
+  const PlayButton({super.key, required this.book, required this.chapter, required this.verses});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +27,6 @@ class PlayButton extends StatelessWidget {
         } else {
           try {
             onPlay();
-            final verses = kannadaBible[book].chapters[chapter].verses;
             final filteredVerses =
                 verses.asMap().keys.where((it) => selectedVerses.value.contains(it)).map((it) => verses[it]);
             for (final v in filteredVerses) {

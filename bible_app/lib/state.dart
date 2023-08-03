@@ -1,27 +1,79 @@
-import 'dart:io' show Platform;
-import 'package:flutter/widgets.dart';
+import 'dart:convert';
+import 'dart:io' show GZipCodec, Platform;
+import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_persistent_value_notifier/flutter_persistent_value_notifier.dart';
 import 'package:flutter_reactive_value/flutter_reactive_value.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'utils/dialog.dart';
-import 'components/book_selector.dart';
+import 'models/book.dart';
 
-Future<void> saveState(int bookIndex, int chapterIndex) async {
-  final prefs = await SharedPreferences.getInstance();
-  await prefs.setInt("bookIndex", bookIndex);
-  await prefs.setInt("chapterIndex", chapterIndex);
-}
+final darkMode = PersistentValueNotifier<bool>(
+  sharedPreferencesKey: 'darkMode',
+  initialValue: false,
+);
 
-Future<(int, int)> loadState() async {
-  final prefs = await SharedPreferences.getInstance();
-  final bookIndex = prefs.getInt("bookIndex") ?? 0;
-  final chapterIndex = prefs.getInt("chapterIndex") ?? 0;
-  return (bookIndex, chapterIndex);
-}
+final selectedBibleName = PersistentValueNotifier<String>(
+  sharedPreferencesKey: 'selectedBibleName',
+  initialValue: "kannada.csv.gz",
+);
 
+final bookIndex = PersistentValueNotifier<int>(
+  sharedPreferencesKey: 'bookIndex',
+  initialValue: 0,
+);
+
+final chapterIndex = PersistentValueNotifier<int>(
+  sharedPreferencesKey: 'chapterIndex',
+  initialValue: 0,
+);
+
+final selectedBible = ValueNotifier<List<Book>>([]);
 final selectedVerses = ValueNotifier([]);
 final isPlaying = ValueNotifier(false);
+// final theme = ValueNotifier<ThemeData>();
+
+saveBookIndex(int book, int chapter) {
+  bookIndex.value = book;
+  chapterIndex.value = chapter;
+}
+
+loadBible() async {
+  final value = await getBibleFromAsset(selectedBibleName.value);
+  selectedBible.value = value;
+}
+
+getBibleFromAsset(String file) async {
+  final bytes = await rootBundle.load("assets/$file");
+  final text = utf8.decode(GZipCodec().decode(bytes.buffer.asUint8List()));
+  return getBibleFromText(text);
+}
+
+getBibleFromText(String text) {
+  final List<Book> books = [];
+  final items = text.split("\n").map((line) => line.split("|"));
+  items.forEach((item) {
+    var book = int.parse(item[0]);
+    var chapter = int.parse(item[1]);
+    var verse = item[3];
+    double start = 0;
+    double end = 0;
+    if (item.length > 4) {
+      start = double.parse(item[4]);
+      end = double.parse(item[5]);
+    }
+    if (books.length - 1 < book) {
+      books.add(Book(index: book, name: bookNames[book], localeName: bookNames[book], chapters: []));
+    }
+    if (books[book].chapters.length < chapter) {
+      books[book].chapters.add(Chapter(verses: []));
+    }
+    books[book].chapters[chapter - 1].verses.add(Verse(
+          text: verse,
+          audioRange: TimeRange(start: start, end: end),
+        ));
+  });
+  return books;
+}
 
 onPlay() {
   isPlaying.value = true;
@@ -51,6 +103,12 @@ onTabBookChange(int i) {
   tabIndex.value = 1;
 }
 
+resetTab() {
+  SchedulerBinding.instance.addPostFrameCallback((_) {
+    tabIndex.value = 0;
+  });
+}
+
 bool isDesktop() {
   return Platform.isMacOS || Platform.isLinux || Platform.isWindows;
 }
@@ -61,18 +119,4 @@ bool isDesktopMode(BuildContext context) {
   }
   final width = MediaQuery.of(context).size.width;
   return width > 550;
-}
-
-showBookMenu(BuildContext context) {
-  tabBookIndex.value = 0;
-  showCustomDialog<(int, int)>(context, BookSelector()).then((rec) {
-    if (rec != null) {
-      // selectedVerses.value.clear();
-      // onBookChange(rec.$1);
-      // onChapterChange(rec.$2);
-      SchedulerBinding.instance.addPostFrameCallback((duration) {
-        tabIndex.value = 0;
-      });
-    }
-  });
 }

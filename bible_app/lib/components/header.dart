@@ -1,15 +1,16 @@
 import "dart:math";
 import "package:flutter/material.dart";
 import "./play_button.dart";
-import "./slide_page.dart";
-import "../domain/book.dart";
+import "./side_menu_page.dart";
+import '../models/book.dart';
 import "../state.dart";
 
 class Header extends StatelessWidget {
   final int book;
   final int chapter;
+  final List<Verse> verses;
 
-  const Header({super.key, required this.book, required this.chapter});
+  const Header({super.key, required this.book, required this.chapter, required this.verses});
 
   @override
   Widget build(BuildContext context) {
@@ -26,12 +27,12 @@ class Header extends StatelessWidget {
         children: [
           InkWell(
             onTap: () {
-              Navigator.of(context).push(SlidePage());
+              Navigator.of(context).push(SideMenuPage());
             },
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text("${allBooks[book]} ${chapter + 1}", style: Theme.of(context).textTheme.headlineLarge),
+                Text("${selectedBible.value[book].name} ${chapter + 1}", style: Theme.of(context).textTheme.headlineLarge),
                 Container(
                   margin: const EdgeInsets.only(left: 3),
                   child: Transform.rotate(
@@ -42,9 +43,9 @@ class Header extends StatelessWidget {
               ],
             ),
           ),
-          const Spacer(flex: 8),
-          PlayButton(book: book, chapter: chapter),
           const Spacer(flex: 1),
+          PlayButton(book: book, chapter: chapter, verses: verses),
+          // const Spacer(flex: 1),
         ],
       ),
     );

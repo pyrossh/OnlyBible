@@ -1,8 +1,6 @@
 import "package:flutter/material.dart";
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_reactive_value/flutter_reactive_value.dart';
 import 'package:go_router/go_router.dart';
-import '../domain/kannada_gen.dart';
 import '../state.dart';
 import 'tile.dart';
 
@@ -12,7 +10,7 @@ class ChaptersList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bookIndex = tabBookIndex.reactiveValue(context);
-    final book = kannadaBible[bookIndex];
+    final book = selectedBible.value[bookIndex];
     return ListView(
       children: [
         Container(
@@ -24,12 +22,10 @@ class ChaptersList extends StatelessWidget {
             return InkWell(
               borderRadius: const BorderRadius.all(Radius.circular(30)),
               onTap: () {
+                saveBookIndex(bookIndex, index);
                 context.push("/${book.name}/$index");
-                saveState(bookIndex, index);
                 context.pop();
-                SchedulerBinding.instance.addPostFrameCallback((_) {
-                  tabIndex.value = 0;
-                });
+                resetTab();
               },
               child: Tile(name: "${index + 1}"),
             );

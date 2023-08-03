@@ -29,7 +29,6 @@ class BooksList extends StatelessWidget {
             return InkWell(
               borderRadius: const BorderRadius.all(Radius.circular(30)),
               onTap: () {
-                // DefaultTabController.of(context).animateTo(1);
                 tabBookIndex.value = offset + index;
                 tabIndex.value = 1;
               },

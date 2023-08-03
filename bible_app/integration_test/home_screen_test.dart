@@ -7,6 +7,7 @@ void main() {
 
   group('Home screen', () {
     testWidgets('should render', (tester) async {
+      await load();
       await tester.pumpWidget(const App());
       await tester.pumpAndSettle();
       expect(find.text('Genesis 1'), findsOneWidget);
