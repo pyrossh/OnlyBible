@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:go_router/go_router.dart";
 import "./play_button.dart";
 import "./side_menu_page.dart";
 import "./menu.dart";
@@ -26,23 +27,23 @@ class Header extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          InkWell(
-            onTap: () {
+          TextButton.icon(
+            style: TextButton.styleFrom(
+              padding: EdgeInsets.zero,
+              foregroundColor: const Color(0xFF9A1111),
+            ),
+            label: Icon(Icons.expand_more, size: 28, color: theme.value.headerText.color),
+            icon: Text("${selectedBible.value[book].name} ${chapter + 1}", style: theme.value.headerText),
+            onPressed: () {
               Navigator.of(context).push(SideMenuPage());
             },
-            child: Row(
-              children: [
-                Text("${selectedBible.value[book].name} ${chapter + 1}", style: theme.value.headerText),
-                const Icon(Icons.expand_more, size: 30),
-              ],
-            ),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
-                margin: EdgeInsets.only(right: isWide(context) ? 50 : 8),
-                child: PlayButton(book: book, chapter: chapter, verses: verses),
+                margin: EdgeInsets.only(right: isWide(context) ? 10 : 8),
+                child: const PlayButton(),
               ),
               const Menu(),
             ],

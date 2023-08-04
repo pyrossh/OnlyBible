@@ -13,6 +13,8 @@ class VerseText extends StatelessWidget {
     final selected = selectedVerses.reactiveValue(context).contains(index);
     final delta = fontSizeDelta.reactiveValue(context);
     final bodySize = theme.value.bodyText.fontSize! + delta;
+    final weight =
+        fontBold.reactiveValue(context) ? FontWeight.w600 : FontWeight.w500;
     onTap() {
       onVerseSelected(index);
     }
@@ -36,7 +38,8 @@ class VerseText extends StatelessWidget {
                   ),
                 ),
                 Flexible(
-                  child: Text(text, style: TextStyle(fontSize: bodySize)),
+                  child: Text(text,
+                      style: TextStyle(fontSize: bodySize, fontWeight: weight)),
                 )
               ],
             ),

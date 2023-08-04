@@ -39,20 +39,31 @@ class BookSelectorState extends State<BookSelector> {
       final book = selectedBible.value[bookIndex];
       return Container(
         margin: const EdgeInsets.only(top: 15, left: 20),
-        child: ChaptersList(title: book.name, length: book.chapters.length, onTap: onChapterSelected),
+        child: ChaptersList(
+            title: book.name,
+            length: book.chapters.length,
+            onTap: onChapterSelected),
       );
     }
-    final oldTestament = selectedBible.value.where((it) => it.isOldTestament()).toList();
-    final newTestament = selectedBible.value.where((it) => it.isNewTestament()).toList();
+    final oldTestament =
+        selectedBible.value.where((it) => it.isOldTestament()).toList();
+    final newTestament =
+        selectedBible.value.where((it) => it.isNewTestament()).toList();
     return Container(
       margin: const EdgeInsets.only(top: 15, left: 20),
       child: ListView(
         children: [
-          BooksList(title: "Old Testament", books: oldTestament, onTap: onBookSelected),
+          BooksList(
+              title: "Old Testament",
+              books: oldTestament,
+              onTap: onBookSelected),
           Container(
             margin: const EdgeInsets.only(bottom: 10),
           ),
-          BooksList(title: "New Testament", books: newTestament, onTap: onBookSelected),
+          BooksList(
+              title: "New Testament",
+              books: newTestament,
+              onTap: onBookSelected),
         ],
       ),
     );

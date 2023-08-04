@@ -4,11 +4,20 @@ import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_persistent_value_notifier/flutter_persistent_value_notifier.dart';
 import 'package:flutter_reactive_value/flutter_reactive_value.dart';
+import 'package:just_audio/just_audio.dart';
+import 'package:one_context/one_context.dart';
+import 'package:only_bible_app/components/play_button.dart';
+import 'package:only_bible_app/utils/dialog.dart';
 import 'models/book.dart';
 import 'models/theme.dart';
 
 final darkMode = PersistentValueNotifier<bool>(
   sharedPreferencesKey: 'darkMode',
+  initialValue: false,
+);
+
+final fontBold = PersistentValueNotifier<bool>(
+  sharedPreferencesKey: 'fontBold',
   initialValue: false,
 );
 
@@ -33,17 +42,21 @@ final isPlaying = ValueNotifier(false);
 final theme = ValueNotifier<AppTheme>(lightTheme);
 final fontSizeDelta = ValueNotifier(0);
 
+toggleMode() {
+  darkMode.value = !darkMode.value;
+  updateStatusBar();
+}
+
+toggleBold() {
+  fontBold.value = !fontBold.value;
+}
+
 increaseFont() {
   fontSizeDelta.value += 1;
 }
 
 decreaseFont() {
   fontSizeDelta.value -= 1;
-}
-
-toggleMode() {
-  darkMode.value = !darkMode.value;
-  updateStatusBar();
 }
 
 updateStatusBar() {
@@ -84,7 +97,11 @@ getBibleFromText(String text) {
       end = double.parse(item[5]);
     }
     if (books.length - 1 < book) {
-      books.add(Book(index: book, name: bookNames[book], localeName: bookNames[book], chapters: []));
+      books.add(Book(
+          index: book,
+          name: bookNames[book],
+          localeName: bookNames[book],
+          chapters: []));
     }
     if (books[book].chapters.length < chapter) {
       books[book].chapters.add(Chapter(verses: []));
@@ -97,12 +114,39 @@ getBibleFromText(String text) {
   return books;
 }
 
-onPlay() {
-  isPlaying.value = true;
-}
-
-onPause() {
-  isPlaying.value = false;
+onPlay(BuildContext context) async {
+  final verses =
+      selectedBible.value[bookIndex.value].chapters[chapterIndex.value].verses;
+  final filteredVerses = verses
+      .asMap()
+      .keys
+      .where((it) => selectedVerses.value.contains(it))
+      .map((it) => verses[it]);
+  final player = AudioPlayer();
+  player.setUrl(
+      "https://github.com/pyrossh/bible-app/raw/master/public/audio/output.mp3");
+  // player.setUrl("asset:output.mp3");
+  if (isPlaying.value) {
+    await player.pause();
+    isPlaying.value = false;
+  } else {
+    try {
+      isPlaying.value = true;
+      for (final v in filteredVerses) {
+        await player.setClip(
+          start: Duration(milliseconds: (v.audioRange.start * 1000).toInt()),
+          end: Duration(milliseconds: (v.audioRange.end * 1000).toInt()),
+        );
+        await player.play();
+        await player.pause();
+      }
+    } catch (err) {
+      showError(context, "Could not play audio");
+    } finally {
+      await player.pause();
+      isPlaying.value = false;
+    }
+  }
 }
 
 isVerseSelected(BuildContext context, int i) {

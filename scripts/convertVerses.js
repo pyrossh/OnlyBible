@@ -87,9 +87,9 @@ const main = async () => {
     // const end = durationAcc + result.privAudioDuration / 10000000;
     // durationAcc = end;
     // item.push(start.toFixed(4), end.toFixed(4));
-    // if (chapter === 2) {
-    //   break;
-    // }
+    if (chapter === 2) {
+      break;
+    }
     await sleep(20);
   }
   synthesizer.close();

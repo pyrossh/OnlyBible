@@ -47,6 +47,7 @@ const lightTheme = AppTheme(
     // letterSpacing: 0.5,
   ),
   headerText: TextStyle(
+    // color: lightLabel,
     color: lightBody,
     fontSize: 20,
     fontWeight: FontWeight.w500,
@@ -57,6 +58,12 @@ const lightTheme = AppTheme(
     fontWeight: FontWeight.w600,
     fontSize: 20,
   ),
+  tileText: TextStyle(
+    fontSize: 18,
+    fontWeight: FontWeight.w500,
+    color: lightLabel,
+    letterSpacing: 0.5,
+  ),
 );
 
 class AppTheme {
@@ -66,6 +73,7 @@ class AppTheme {
     required this.bodyText,
     required this.headerText,
     required this.titleText,
+    required this.tileText,
     required this.secondaryColor,
     required this.highlightColor,
   });
@@ -75,6 +83,7 @@ class AppTheme {
   final TextStyle bodyText;
   final TextStyle headerText;
   final TextStyle titleText;
+  final TextStyle tileText;
   final Color secondaryColor;
   final Color highlightColor;
 }

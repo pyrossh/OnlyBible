@@ -14,7 +14,8 @@ class HomeScreen extends GoRouteData {
 
   @override
   Page buildPage(BuildContext context, GoRouterState state) {
-    final selectedBook = selectedBible.value.firstWhere((it) => book == it.name);
+    final selectedBook =
+        selectedBible.value.firstWhere((it) => book == it.name);
     final verses = selectedBook.chapters[chapter].verses;
     return NoTransitionPage(
       child: Container(

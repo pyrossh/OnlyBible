@@ -38,12 +38,10 @@ showAlert(BuildContext context, String title, String message) {
           content: Text(message),
           actionsAlignment: MainAxisAlignment.center,
           actionsOverflowButtonSpacing: 8.0,
-          actions: <Widget>[
+          actions: [
             TextButton(
-              child: const Text("Ok"),
-              onPressed: () {
-                context.pop();
-              },
+              onPressed: context.pop,
+              child: const Text("OK"),
             ),
           ],
         ),

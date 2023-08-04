@@ -33,6 +33,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.1.16"
+  back_button_interceptor:
+    dependency: transitive
+    description:
+      name: back_button_interceptor
+      sha256: e47660f2178a4392eb72001f9594d3fdcb5efde93e59d2819d61fda499e781c8
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.0.2"
   boolean_selector:
     dependency: transitive
     description:
@@ -303,6 +311,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.9.1"
+  one_context:
+    dependency: "direct main"
+    description:
+      name: one_context
+      sha256: db39c05e68a0f8dabb68072eab31e21912a5f4933db24eabc2b1af8a02d221e2
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.0"
   path:
     dependency: transitive
     description:

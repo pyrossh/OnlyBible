@@ -8,55 +8,48 @@ class Menu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final moreIcon = isWide(context) ? Icons.more_vert : Icons.more_vert;
+    const spacing = 25.0;
     return PopupMenuButton(
-      icon: Icon(moreIcon, size: 36),
-      offset: const Offset(0.0, 70),
-
-      itemBuilder: (BuildContext context) => [
-        PopupMenuItem(
-          value: 1,
-          padding: EdgeInsets.symmetric(vertical: 15, horizontal: isWide(context) ? 10 : 5),
-          onTap: toggleMode,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Container(margin: EdgeInsets.only(left: isWide(context) ? 10 : 25)),
-              Icon(darkMode.reactiveValue(context) ? Icons.dark_mode : Icons.light_mode, color: Colors.black, size: 30),
-              Text("   ${darkMode.reactiveValue(context) ? "Dark" : "Light"} Mode"),
-            ],
-          ),
-        ),
-        const PopupMenuItem(
-          value: 1,
-          padding: EdgeInsets.symmetric(vertical: 15),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              IconButton(
-                icon: Icon(Icons.add_circle, color: Colors.black, size: 30),
-                onPressed: increaseFont,
-              ),
-              Text("      Font      "),
-              IconButton(
-                icon: Icon(Icons.remove_circle, color: Colors.black, size: 30),
-                onPressed: decreaseFont,
-              ),
-            ],
-          ),
-        ),
-        const PopupMenuItem(
-          value: 1,
-          padding: EdgeInsets.symmetric(vertical: 10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Text("About"),
-            ],
-          ),
-        ),
-      ],
-    );
+        constraints: const BoxConstraints.tightFor(width: 80),
+        icon: Icon(moreIcon, size: 28),
+        offset: const Offset(0.0, 60),
+        itemBuilder: (BuildContext itemContext) {
+          final modeIcon = darkMode.reactiveValue(itemContext)
+              ? Icons.dark_mode
+              : Icons.light_mode;
+          final boldColor =
+              fontBold.reactiveValue(itemContext) ? Colors.red : Colors.grey;
+          return [
+            PopupMenuItem(
+                value: 1,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    IconButton(
+                      icon: Icon(modeIcon, color: Colors.black, size: 28),
+                      onPressed: toggleMode,
+                    ),
+                    Container(margin: const EdgeInsets.only(top: spacing)),
+                    IconButton(
+                      icon: Icon(Icons.format_bold, color: boldColor, size: 28),
+                      onPressed: toggleBold,
+                    ),
+                    Container(margin: const EdgeInsets.only(top: spacing)),
+                    const IconButton(
+                      icon:
+                          Icon(Icons.add_circle, color: Colors.black, size: 28),
+                      onPressed: increaseFont,
+                    ),
+                    Container(margin: const EdgeInsets.only(top: spacing)),
+                    const IconButton(
+                      icon: Icon(Icons.remove_circle,
+                          color: Colors.black, size: 28),
+                      onPressed: decreaseFont,
+                    ),
+                  ],
+                )),
+          ];
+        });
   }
 }

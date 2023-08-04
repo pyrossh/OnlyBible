@@ -7,7 +7,11 @@ class ChaptersList extends StatelessWidget {
   final int length;
   final Function(int) onTap;
 
-  const ChaptersList({super.key, required this.title, required this.length, required this.onTap});
+  const ChaptersList(
+      {super.key,
+      required this.title,
+      required this.length,
+      required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -19,10 +23,9 @@ class ChaptersList extends StatelessWidget {
         ),
         Wrap(
           children: List.generate(length, (index) {
-            return InkWell(
-              borderRadius: const BorderRadius.all(Radius.circular(30)),
-              onTap: () => onTap(index),
-              child: Tile(name: "${index + 1}"),
+            return Tile(
+              name: "${index + 1}",
+              onPressed: () => onTap(index),
             );
           }),
         )
