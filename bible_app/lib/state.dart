@@ -5,11 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_persistent_value_notifier/flutter_persistent_value_notifier.dart';
 import 'package:flutter_reactive_value/flutter_reactive_value.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:one_context/one_context.dart';
-import 'package:only_bible_app/components/play_button.dart';
 import 'package:only_bible_app/utils/dialog.dart';
-import 'models/book.dart';
-import 'models/theme.dart';
+import 'package:only_bible_app/models/book.dart';
+import 'package:only_bible_app/models/theme.dart';
 
 final darkMode = PersistentValueNotifier<bool>(
   sharedPreferencesKey: 'darkMode',
@@ -86,7 +84,7 @@ getBibleFromAsset(String file) async {
 getBibleFromText(String text) {
   final List<Book> books = [];
   final items = text.split("\n").map((line) => line.split("|"));
-  items.forEach((item) {
+  for (var item in items) {
     var book = int.parse(item[0]);
     var chapter = int.parse(item[1]);
     var verse = item[3];
@@ -97,20 +95,25 @@ getBibleFromText(String text) {
       end = double.parse(item[5]);
     }
     if (books.length - 1 < book) {
-      books.add(Book(
+      books.add(
+        Book(
           index: book,
           name: bookNames[book],
           localeName: bookNames[book],
-          chapters: []));
+          chapters: [],
+        ),
+      );
     }
     if (books[book].chapters.length < chapter) {
-      books[book].chapters.add(Chapter(verses: []));
+      books[book].chapters.add(const Chapter(verses: []));
     }
-    books[book].chapters[chapter - 1].verses.add(Verse(
-          text: verse,
-          audioRange: TimeRange(start: start, end: end),
-        ));
-  });
+    books[book].chapters[chapter - 1].verses.add(
+          Verse(
+            text: verse,
+            audioRange: TimeRange(start: start, end: end),
+          ),
+        );
+  }
   return books;
 }
 
@@ -124,7 +127,8 @@ onPlay(BuildContext context) async {
       .map((it) => verses[it]);
   final player = AudioPlayer();
   player.setUrl(
-      "https://github.com/pyrossh/bible-app/raw/master/public/audio/output.mp3");
+    "https://github.com/pyrossh/bible-app/raw/master/public/audio/output.mp3",
+  );
   // player.setUrl("asset:output.mp3");
   if (isPlaying.value) {
     await player.pause();

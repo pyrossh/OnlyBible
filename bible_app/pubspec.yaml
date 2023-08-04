@@ -10,8 +10,8 @@ dependencies:
   flutter:
     sdk: flutter
   path_provider: ^2.0.15
-  flutter_reactive_value: ^1.0.4
   flutter_persistent_value_notifier: ^1.0.2
+  flutter_reactive_value: ^1.0.4
   just_audio: ^0.9.34
   go_router: ^10.0.0
   shared_preferences: ^2.2.0

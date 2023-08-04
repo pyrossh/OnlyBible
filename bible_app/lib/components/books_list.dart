@@ -1,18 +1,19 @@
 import "package:flutter/material.dart";
-import "../state.dart";
-import "tile.dart";
-import "../models/book.dart";
+import 'package:only_bible_app/state.dart';
+import 'package:only_bible_app/components/tile.dart';
+import 'package:only_bible_app/models/book.dart';
 
 class BooksList extends StatelessWidget {
   final String title;
   final List<Book> books;
   final Function(int) onTap;
 
-  const BooksList(
-      {super.key,
-      required this.title,
-      required this.books,
-      required this.onTap});
+  const BooksList({
+    super.key,
+    required this.title,
+    required this.books,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -24,13 +25,15 @@ class BooksList extends StatelessWidget {
           child: Text(title, style: theme.value.titleText),
         ),
         Wrap(
-          children: List.of(books.map((book) {
-            final name = book.shortName();
-            return Tile(
-              name: name,
-              onPressed: () => onTap(book.index),
-            );
-          })),
+          children: List.of(
+            books.map((book) {
+              final name = book.shortName();
+              return Tile(
+                name: name,
+                onPressed: () => onTap(book.index),
+              );
+            }),
+          ),
         ),
       ],
     );

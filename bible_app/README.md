@@ -7,3 +7,9 @@ A new Flutter project.
 ```agsl
 brew install fluttter
 ```
+
+## Lint
+```agsl
+dart fix --apply
+dart format lib
+```

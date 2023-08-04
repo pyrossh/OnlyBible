@@ -4,11 +4,12 @@ class Book {
   final String localeName;
   final List<Chapter> chapters;
 
-  const Book(
-      {required this.index,
-      required this.name,
-      required this.localeName,
-      required this.chapters});
+  const Book({
+    required this.index,
+    required this.name,
+    required this.localeName,
+    required this.chapters,
+  });
 
   bool isOldTestament() => index < 39;
 

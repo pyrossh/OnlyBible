@@ -1,17 +1,18 @@
 import "package:flutter/material.dart";
-import '../state.dart';
-import 'tile.dart';
+import 'package:only_bible_app/state.dart';
+import 'package:only_bible_app/components/tile.dart';
 
 class ChaptersList extends StatelessWidget {
   final String title;
   final int length;
   final Function(int) onTap;
 
-  const ChaptersList(
-      {super.key,
-      required this.title,
-      required this.length,
-      required this.onTap});
+  const ChaptersList({
+    super.key,
+    required this.title,
+    required this.length,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {

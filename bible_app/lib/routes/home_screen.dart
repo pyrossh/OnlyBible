@@ -1,8 +1,8 @@
 import "package:flutter/material.dart";
 import 'package:go_router/go_router.dart';
-import '../components/header.dart';
-import '../components/verse_view.dart';
-import '../state.dart';
+import 'package:only_bible_app/components/header.dart';
+import 'package:only_bible_app/components/verse_view.dart';
+import 'package:only_bible_app/state.dart';
 
 class HomeScreen extends GoRouteData {
   final String book;

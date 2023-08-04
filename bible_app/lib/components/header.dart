@@ -1,17 +1,21 @@
 import "package:flutter/material.dart";
-import "package:go_router/go_router.dart";
-import "./play_button.dart";
-import "./side_menu_page.dart";
-import "./menu.dart";
-import '../models/book.dart';
-import "../state.dart";
+import 'package:only_bible_app/components/play_button.dart';
+import 'package:only_bible_app/components/side_menu_page.dart';
+import 'package:only_bible_app/components/menu.dart';
+import 'package:only_bible_app/models/book.dart';
+import 'package:only_bible_app/state.dart';
 
 class Header extends StatelessWidget {
   final int book;
   final int chapter;
   final List<Verse> verses;
 
-  const Header({super.key, required this.book, required this.chapter, required this.verses});
+  const Header({
+    super.key,
+    required this.book,
+    required this.chapter,
+    required this.verses,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -32,8 +36,15 @@ class Header extends StatelessWidget {
               padding: EdgeInsets.zero,
               foregroundColor: const Color(0xFF9A1111),
             ),
-            label: Icon(Icons.expand_more, size: 28, color: theme.value.headerText.color),
-            icon: Text("${selectedBible.value[book].name} ${chapter + 1}", style: theme.value.headerText),
+            label: Icon(
+              Icons.expand_more,
+              size: 28,
+              color: theme.value.headerText.color,
+            ),
+            icon: Text(
+              "${selectedBible.value[book].name} ${chapter + 1}",
+              style: theme.value.headerText,
+            ),
             onPressed: () {
               Navigator.of(context).push(SideMenuPage());
             },

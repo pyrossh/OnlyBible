@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../state.dart';
+import 'package:only_bible_app/state.dart';
 
 class Tile extends StatelessWidget {
   final String name;

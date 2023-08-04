@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
 
-import "../state.dart";
+import 'package:only_bible_app/state.dart';
 
 class Sidebar extends StatelessWidget {
   const Sidebar({super.key});
@@ -9,42 +9,43 @@ class Sidebar extends StatelessWidget {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     return Container(
-        color: const Color(0xFF4C2323),
-        child: Stack(
-          children: [
-            Positioned(
-              left: 0.0,
-              top: 0.0,
-              child: Container(
-                width: 40.0,
-                height: height,
-                decoration: const BoxDecoration(color: Color(0xFF3C1B1C)),
-              ),
-            ),
-            const Belt(top: 80),
-            Belt(top: height - 120),
-            const Bookmark(),
-            SizedBox(
-              width: 250,
+      color: const Color(0xFF4C2323),
+      child: Stack(
+        children: [
+          Positioned(
+            left: 0.0,
+            top: 0.0,
+            child: Container(
+              width: 40.0,
               height: height,
-              child: Container(
-                margin: const EdgeInsets.only(bottom: 50),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Flexible(
-                      child: Text("KANNADA", style: theme.value.logoText),
-                    ),
-                    Flexible(
-                      child: Text("BIBLE", style: theme.value.logoText),
-                    ),
-                  ],
-                ),
+              decoration: const BoxDecoration(color: Color(0xFF3C1B1C)),
+            ),
+          ),
+          const Belt(top: 80),
+          Belt(top: height - 120),
+          const Bookmark(),
+          SizedBox(
+            width: 250,
+            height: height,
+            child: Container(
+              margin: const EdgeInsets.only(bottom: 50),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Flexible(
+                    child: Text("KANNADA", style: theme.value.logoText),
+                  ),
+                  Flexible(
+                    child: Text("BIBLE", style: theme.value.logoText),
+                  ),
+                ],
               ),
             ),
-          ],
-        ));
+          ),
+        ],
+      ),
+    );
   }
 }
 
@@ -65,10 +66,11 @@ class TrianglePainter extends CustomPainter {
     path.lineTo(-15, 30);
     path.close();
     canvas.drawPath(
-        path,
-        Paint()
-          ..color = color
-          ..style = PaintingStyle.fill);
+      path,
+      Paint()
+        ..color = color
+        ..style = PaintingStyle.fill,
+    );
 
     canvas.save();
     canvas.restore();
@@ -86,28 +88,29 @@ class Bookmark extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Positioned(
-        left: 70.0,
-        top: 0.0,
-        child: Column(
-          children: [
-            Container(
-              width: 30.0,
-              height: 80.0,
-              decoration: BoxDecoration(
-                color: theme.value.secondaryColor,
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(4),
-                  topRight: Radius.circular(4),
-                ),
+      left: 70.0,
+      top: 0.0,
+      child: Column(
+        children: [
+          Container(
+            width: 30.0,
+            height: 80.0,
+            decoration: BoxDecoration(
+              color: theme.value.secondaryColor,
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(4),
+                topRight: Radius.circular(4),
               ),
             ),
-            CustomPaint(
-              painter: TrianglePainter(
-                color: theme.value.secondaryColor,
-              ),
+          ),
+          CustomPaint(
+            painter: TrianglePainter(
+              color: theme.value.secondaryColor,
             ),
-          ],
-        ));
+          ),
+        ],
+      ),
+    );
   }
 }
 
@@ -125,11 +128,12 @@ class Belt extends StatelessWidget {
         width: 60.0,
         height: 30.0,
         decoration: const BoxDecoration(
-            borderRadius: BorderRadius.only(
-              bottomRight: Radius.circular(25),
-              topRight: Radius.circular(25),
-            ),
-            color: Color(0xFF7F3D3C)),
+          borderRadius: BorderRadius.only(
+            bottomRight: Radius.circular(25),
+            topRight: Radius.circular(25),
+          ),
+          color: Color(0xFF7F3D3C),
+        ),
       ),
     );
   }
