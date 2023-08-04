@@ -13,3 +13,9 @@ brew install fluttter
 dart fix --apply
 dart format lib
 ```
+
+## Run
+```agsl
+flutter clean
+flutter run
+```

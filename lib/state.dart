@@ -105,7 +105,8 @@ getBibleFromText(String text) {
       );
     }
     if (books[book].chapters.length < chapter) {
-      books[book].chapters.add(const Chapter(verses: []));
+      // ignore: prefer_const_constructors
+      books[book].chapters.add(Chapter(verses: []));
     }
     books[book].chapters[chapter - 1].verses.add(
           Verse(
@@ -118,13 +119,8 @@ getBibleFromText(String text) {
 }
 
 onPlay(BuildContext context) async {
-  final verses =
-      selectedBible.value[bookIndex.value].chapters[chapterIndex.value].verses;
-  final filteredVerses = verses
-      .asMap()
-      .keys
-      .where((it) => selectedVerses.value.contains(it))
-      .map((it) => verses[it]);
+  final verses = selectedBible.value[bookIndex.value].chapters[chapterIndex.value].verses;
+  final filteredVerses = verses.asMap().keys.where((it) => selectedVerses.value.contains(it)).map((it) => verses[it]);
   final player = AudioPlayer();
   player.setUrl(
     "https://github.com/pyrossh/bible-app/raw/master/public/audio/output.mp3",
