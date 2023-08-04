@@ -1,5 +1,4 @@
 import "dart:io";
-import 'package:only_bible_app/models/book.dart';
 import 'package:only_bible_app/state.dart';
 
 void main() async {

@@ -34,7 +34,7 @@ class SideMenuPage extends ModalRoute<void> {
       type: MaterialType.transparency,
       child: Container(
         color: Colors.white,
-        margin: EdgeInsets.only(left: 0, right: isDesktop() ? 650 : 0),
+        margin: EdgeInsets.only(left: 0, right: isWide(context) ? 650 : 0),
         child: const BookSelector(),
       ),
     );

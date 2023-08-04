@@ -3,7 +3,7 @@ import 'package:flutter_persistent_value_notifier/flutter_persistent_value_notif
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:go_router/go_router.dart';
 import 'components/shell.dart';
-import 'routes/home_screen_route.dart';
+import 'routes/home_screen.dart';
 import 'state.dart';
 
 void main() async {
@@ -11,8 +11,12 @@ void main() async {
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await initPersistentValueNotifier();
   await loadBible();
+  await updateStatusBar();
   runApp(MaterialApp.router(
     debugShowCheckedModeBanner: false,
+    theme: ThemeData(
+      visualDensity: VisualDensity.adaptivePlatformDensity,
+    ),
     routerConfig: GoRouter(
       debugLogDiagnostics: true,
       initialLocation: "/${selectedBible.value[bookIndex.value].name}/${chapterIndex.value}",
@@ -21,7 +25,7 @@ void main() async {
           routes: [
             GoRouteData.$route(
               path: '/:book/:chapter',
-              factory: (GoRouterState state) => HomeScreenRoute(
+              factory: (GoRouterState state) => HomeScreen(
                 book: state.pathParameters['book']!,
                 chapter: int.parse(state.pathParameters['chapter']!),
               ),

@@ -1,4 +1,3 @@
-import "dart:math";
 import "package:flutter/material.dart";
 import "./play_button.dart";
 import "./side_menu_page.dart";
@@ -17,9 +16,8 @@ class Header extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.only(
-        // horizontal: isDesktop() ? 40 : 20,
-        top: isDesktop() ? 10 : 0,
-        bottom: isDesktop() ? 10 : 0,
+        top: isWide(context) ? 10 : 0,
+        bottom: isWide(context) ? 10 : 0,
       ),
       decoration: const BoxDecoration(
         border: Border(bottom: BorderSide(width: 1.5)),
@@ -43,10 +41,10 @@ class Header extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
-                margin: EdgeInsets.only(right: isDesktop() ? 50 : 8),
+                margin: EdgeInsets.only(right: isWide(context) ? 50 : 8),
                 child: PlayButton(book: book, chapter: chapter, verses: verses),
               ),
-              Menu(),
+              const Menu(),
             ],
           ),
         ],

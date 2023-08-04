@@ -7,7 +7,7 @@ class Menu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final moreIcon = isDesktopMode(context) ? Icons.more_vert : Icons.more_vert;
+    final moreIcon = isWide(context) ? Icons.more_vert : Icons.more_vert;
     return PopupMenuButton(
       icon: Icon(moreIcon, size: 36),
       offset: const Offset(0.0, 70),
@@ -15,13 +15,13 @@ class Menu extends StatelessWidget {
       itemBuilder: (BuildContext context) => [
         PopupMenuItem(
           value: 1,
-          padding: EdgeInsets.symmetric(vertical: 15, horizontal: isDesktop() ? 50 : 5),
+          padding: EdgeInsets.symmetric(vertical: 15, horizontal: isWide(context) ? 10 : 5),
           onTap: toggleMode,
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Container(margin: EdgeInsets.only(left: isDesktop() ? 10 : 25)),
+              Container(margin: EdgeInsets.only(left: isWide(context) ? 10 : 25)),
               Icon(darkMode.reactiveValue(context) ? Icons.dark_mode : Icons.light_mode, color: Colors.black, size: 30),
               Text("   ${darkMode.reactiveValue(context) ? "Dark" : "Light"} Mode"),
             ],

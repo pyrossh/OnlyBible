@@ -43,7 +43,15 @@ decreaseFont() {
 
 toggleMode() {
   darkMode.value = !darkMode.value;
-  print(darkMode.value);
+  updateStatusBar();
+}
+
+updateStatusBar() {
+  if (darkMode.value) {
+    SystemChrome.setSystemUIOverlayStyle(darkStatusBar);
+  } else {
+    SystemChrome.setSystemUIOverlayStyle(lightStatusBar);
+  }
 }
 
 saveBookIndex(int book, int chapter) {
@@ -58,8 +66,8 @@ loadBible() async {
 
 getBibleFromAsset(String file) async {
   final bytes = await rootBundle.load("assets/$file");
-  final text = utf8.decode(GZipCodec().decode(bytes.buffer.asUint8List()));
-  return getBibleFromText(text);
+  final decodedBytes = GZipCodec().decode(bytes.buffer.asUint8List());
+  return getBibleFromText(utf8.decode(decodedBytes, allowMalformed: false));
 }
 
 getBibleFromText(String text) {
@@ -109,14 +117,10 @@ onVerseSelected(int i) {
   }
 }
 
-bool isDesktop() {
-  return Platform.isMacOS || Platform.isLinux || Platform.isWindows;
-}
-
-bool isDesktopMode(BuildContext context) {
-  if (Platform.isMacOS || Platform.isLinux || Platform.isWindows) {
-    return true;
+bool isWide(BuildContext context) {
+  if (Platform.isIOS || Platform.isAndroid) {
+    return false;
   }
   final width = MediaQuery.of(context).size.width;
-  return width > 550;
+  return width > 600;
 }

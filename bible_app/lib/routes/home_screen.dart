@@ -4,11 +4,11 @@ import '../components/header.dart';
 import '../components/verse_view.dart';
 import '../state.dart';
 
-class HomeScreenRoute extends GoRouteData {
+class HomeScreen extends GoRouteData {
   final String book;
   final int chapter;
 
-  HomeScreenRoute({required this.book, required this.chapter}) {
+  HomeScreen({required this.book, required this.chapter}) {
     selectedVerses.value.clear();
   }
 
@@ -19,7 +19,7 @@ class HomeScreenRoute extends GoRouteData {
     return NoTransitionPage(
       child: Container(
         margin: EdgeInsets.symmetric(
-          horizontal: isDesktop() ? 40 : 20,
+          horizontal: isWide(context) ? 40 : 20,
         ),
         child: Column(
           children: [
@@ -39,15 +39,9 @@ class HomeScreenRoute extends GoRouteData {
                   );
                 },
               ),
-            )
+            ),
           ],
         ),
-        // Container(
-        //   margin: const EdgeInsets.only(top: 5),
-        //   decoration: const BoxDecoration(
-        //     border: Border(bottom: BorderSide(width: 1.5)),
-        //   ),
-        // ),
       ),
     );
   }

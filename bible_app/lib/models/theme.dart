@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:flutter/services.dart";
 
 const lightPrimary = Color(0xFF4C2323);
 const lightPrimaryLighter = Color(0xFF3C1B1C);
@@ -9,25 +10,19 @@ const lightLabel = Color(0xFF9A1111);
 const lightBody = Color(0xFF010101);
 const lightHighlightColor = Color(0xAAF8D0DC);
 
-class AppTheme {
-  const AppTheme({
-    required this.labelText,
-    required this.logoText,
-    required this.bodyText,
-    required this.headerText,
-    required this.titleText,
-    required this.secondaryColor,
-    required this.highlightColor,
-  });
+const lightStatusBar = SystemUiOverlayStyle(
+  systemNavigationBarColor: Colors.white,
+  systemNavigationBarIconBrightness: Brightness.dark,
+  statusBarColor: Colors.white,
+  statusBarIconBrightness: Brightness.dark,
+);
 
-  final TextStyle labelText;
-  final TextStyle logoText;
-  final TextStyle bodyText;
-  final TextStyle headerText;
-  final TextStyle titleText;
-  final Color secondaryColor;
-  final Color highlightColor;
-}
+const darkStatusBar = SystemUiOverlayStyle(
+  systemNavigationBarColor: Colors.black,
+  systemNavigationBarIconBrightness: Brightness.light,
+  statusBarColor: Colors.black,
+  statusBarIconBrightness: Brightness.light,
+);
 
 const lightTheme = AppTheme(
   secondaryColor: lightSecondary,
@@ -63,3 +58,23 @@ const lightTheme = AppTheme(
     fontSize: 20,
   ),
 );
+
+class AppTheme {
+  const AppTheme({
+    required this.labelText,
+    required this.logoText,
+    required this.bodyText,
+    required this.headerText,
+    required this.titleText,
+    required this.secondaryColor,
+    required this.highlightColor,
+  });
+
+  final TextStyle labelText;
+  final TextStyle logoText;
+  final TextStyle bodyText;
+  final TextStyle headerText;
+  final TextStyle titleText;
+  final Color secondaryColor;
+  final Color highlightColor;
+}
