@@ -7,7 +7,6 @@ import 'package:flutter_reactive_value/flutter_reactive_value.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:only_bible_app/utils/dialog.dart';
 import 'package:only_bible_app/models/book.dart';
-import 'package:only_bible_app/models/theme.dart';
 
 final darkMode = PersistentValueNotifier<bool>(
   sharedPreferencesKey: 'darkMode',
@@ -37,7 +36,6 @@ final chapterIndex = PersistentValueNotifier<int>(
 final selectedBible = ValueNotifier<List<Book>>([]);
 final selectedVerses = ValueNotifier([]);
 final isPlaying = ValueNotifier(false);
-final theme = ValueNotifier<AppTheme>(lightTheme);
 final fontSizeDelta = ValueNotifier(0);
 
 toggleMode() {
@@ -59,9 +57,19 @@ decreaseFont() {
 
 updateStatusBar() {
   if (darkMode.value) {
-    SystemChrome.setSystemUIOverlayStyle(darkStatusBar);
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      systemNavigationBarColor: Colors.black,
+      systemNavigationBarIconBrightness: Brightness.light,
+      statusBarColor: Colors.black,
+      statusBarIconBrightness: Brightness.light,
+    ));
   } else {
-    SystemChrome.setSystemUIOverlayStyle(lightStatusBar);
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      systemNavigationBarColor: Colors.white,
+      systemNavigationBarIconBrightness: Brightness.dark,
+      statusBarColor: Colors.white,
+      statusBarIconBrightness: Brightness.dark,
+    ));
   }
 }
 

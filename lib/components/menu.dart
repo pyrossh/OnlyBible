@@ -27,24 +27,23 @@ class Menu extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 IconButton(
-                  icon: Icon(modeIcon, color: Colors.black, size: 28),
+                  icon: Icon(modeIcon, size: 28),
                   onPressed: toggleMode,
                 ),
                 Container(margin: const EdgeInsets.only(top: spacing)),
                 IconButton(
-                  icon: Icon(Icons.format_bold, color: boldColor, size: 28),
+                  icon: Icon(Icons.format_bold, size: 28),
                   onPressed: toggleBold,
                 ),
                 Container(margin: const EdgeInsets.only(top: spacing)),
                 const IconButton(
-                  icon: Icon(Icons.add_circle, color: Colors.black, size: 28),
+                  icon: Icon(Icons.add_circle, size: 28),
                   onPressed: increaseFont,
                 ),
                 Container(margin: const EdgeInsets.only(top: spacing)),
                 const IconButton(
                   icon: Icon(
                     Icons.remove_circle,
-                    color: Colors.black,
                     size: 28,
                   ),
                   onPressed: decreaseFont,

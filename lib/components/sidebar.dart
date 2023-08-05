@@ -8,7 +8,7 @@ class Sidebar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
-    return Container(
+    return ColoredBox(
       color: const Color(0xFF4C2323),
       child: Stack(
         children: [
@@ -34,13 +34,13 @@ class Sidebar extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Flexible(
-                    child: Text("ONLY", style: theme.value.logoText),
+                    child: Text("ONLY", style: Theme.of(context).textTheme.headlineLarge),
                   ),
                   Flexible(
-                    child: Text("BIBLE", style: theme.value.logoText),
+                    child: Text("BIBLE", style: Theme.of(context).textTheme.headlineLarge),
                   ),
                   Flexible(
-                    child: Text("APP", style: theme.value.logoText),
+                    child: Text("APP", style: Theme.of(context).textTheme.headlineLarge),
                   ),
                 ],
               ),
@@ -99,7 +99,7 @@ class Bookmark extends StatelessWidget {
             width: 30.0,
             height: 80.0,
             decoration: BoxDecoration(
-              color: theme.value.secondaryColor,
+              color: Theme.of(context).secondaryHeaderColor,
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(4),
                 topRight: Radius.circular(4),
@@ -108,7 +108,7 @@ class Bookmark extends StatelessWidget {
           ),
           CustomPaint(
             painter: TrianglePainter(
-              color: theme.value.secondaryColor,
+              color: Theme.of(context).secondaryHeaderColor,
             ),
           ),
         ],

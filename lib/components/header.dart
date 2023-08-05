@@ -24,8 +24,13 @@ class Header extends StatelessWidget {
         top: isWide(context) ? 10 : 0,
         bottom: isWide(context) ? 10 : 0,
       ),
-      decoration: const BoxDecoration(
-        border: Border(bottom: BorderSide(width: 1.5)),
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(
+            width: 1.5,
+            color: Theme.of(context).dividerColor,
+          ),
+        ),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -34,16 +39,17 @@ class Header extends StatelessWidget {
           TextButton.icon(
             style: TextButton.styleFrom(
               padding: EdgeInsets.zero,
-              foregroundColor: const Color(0xFF9A1111),
+              backgroundColor: Theme.of(context).colorScheme.background,
+              elevation: 0,
             ),
             label: Icon(
               Icons.expand_more,
               size: 28,
-              color: theme.value.headerText.color,
+              color: Theme.of(context).textTheme.headlineMedium!.color,
             ),
             icon: Text(
               "${selectedBible.value[book].name} ${chapter + 1}",
-              style: theme.value.headerText,
+              style: Theme.of(context).textTheme.headlineMedium,
             ),
             onPressed: () {
               Navigator.of(context).push(SideMenuPage());

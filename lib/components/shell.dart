@@ -13,7 +13,7 @@ class Shell extends ShellRoute {
   @override
   ShellRouteBuilder? get builder => (context, state, child) {
         return Scaffold(
-          backgroundColor: Colors.white,
+          backgroundColor: Theme.of(context).colorScheme.background,
           body: SafeArea(
             child: isWide(context)
                 ? Row(

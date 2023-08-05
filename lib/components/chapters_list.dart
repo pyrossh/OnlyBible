@@ -20,7 +20,7 @@ class ChaptersList extends StatelessWidget {
       children: [
         Container(
           margin: const EdgeInsets.only(bottom: 20),
-          child: Text(title, style: theme.value.titleText),
+          child: Text(title, style: Theme.of(context).textTheme.headlineMedium),
         ),
         Wrap(
           children: List.generate(length, (index) {

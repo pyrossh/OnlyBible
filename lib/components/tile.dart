@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:only_bible_app/state.dart';
 
 class Tile extends StatelessWidget {
@@ -15,15 +14,6 @@ class Tile extends StatelessWidget {
       height: isWide(context) ? 60 : 40,
       margin: const EdgeInsets.only(right: 16, bottom: 16),
       child: TextButton(
-        style: TextButton.styleFrom(
-          padding: EdgeInsets.zero,
-          shape: const RoundedRectangleBorder(),
-          elevation: 1,
-          // backgroundColor: const Color(0xFFF6F6F6),
-          backgroundColor: const Color(0xFFEAE9E9),
-          foregroundColor: const Color(0xFF9A1111),
-          textStyle: theme.value.tileText,
-        ),
         onPressed: onPressed,
         child: Text(name),
       ),

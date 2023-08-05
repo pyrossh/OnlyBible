@@ -12,9 +12,8 @@ class VerseText extends StatelessWidget {
   Widget build(BuildContext context) {
     final selected = selectedVerses.reactiveValue(context).contains(index);
     final delta = fontSizeDelta.reactiveValue(context);
-    final bodySize = theme.value.bodyText.fontSize! + delta;
-    final weight =
-        fontBold.reactiveValue(context) ? FontWeight.w600 : FontWeight.w500;
+    final bodySize = Theme.of(context).textTheme.bodyMedium!.fontSize! + delta;
+    final weight = fontBold.reactiveValue(context) ? FontWeight.w600 : FontWeight.w500;
     onTap() {
       onVerseSelected(index);
     }
@@ -25,7 +24,7 @@ class VerseText extends StatelessWidget {
         onTap: onTap,
         child: DecoratedBox(
           decoration: BoxDecoration(
-            color: selected ? theme.value.highlightColor : Colors.white,
+            color: selected ? Theme.of(context).highlightColor : Theme.of(context).colorScheme.background,
           ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -34,7 +33,7 @@ class VerseText extends StatelessWidget {
                 margin: const EdgeInsets.only(right: 4),
                 child: Transform.translate(
                   offset: const Offset(0, 2),
-                  child: Text("${index + 1}", style: theme.value.labelText),
+                  child: Text("${index + 1}", style: Theme.of(context).textTheme.labelMedium),
                 ),
               ),
               Flexible(
