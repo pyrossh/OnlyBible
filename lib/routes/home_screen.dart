@@ -14,8 +14,7 @@ class HomeScreen extends GoRouteData {
 
   @override
   Page buildPage(BuildContext context, GoRouterState state) {
-    final selectedBook =
-        selectedBible.value.firstWhere((it) => book == it.name);
+    final selectedBook = selectedBible.value.firstWhere((it) => book == it.name);
     final verses = selectedBook.chapters[chapter].verses;
     return NoTransitionPage(
       child: Container(
@@ -27,10 +26,7 @@ class HomeScreen extends GoRouteData {
             Header(book: selectedBook.index, chapter: chapter, verses: verses),
             Flexible(
               child: ListView.builder(
-                padding: const EdgeInsets.symmetric(
-                  // horizontal: 20,
-                  vertical: 20,
-                ),
+                padding: const EdgeInsets.symmetric(vertical: 20),
                 itemCount: verses.length,
                 itemBuilder: (BuildContext context, int index) {
                   final v = verses[index];

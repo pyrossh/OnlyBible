@@ -28,16 +28,19 @@ class Sidebar extends StatelessWidget {
             width: 250,
             height: height,
             child: Container(
-              margin: const EdgeInsets.only(bottom: 50),
+              margin: const EdgeInsets.only(bottom: 50, right: 50),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Flexible(
-                    child: Text("KANNADA", style: theme.value.logoText),
+                    child: Text("ONLY", style: theme.value.logoText),
                   ),
                   Flexible(
                     child: Text("BIBLE", style: theme.value.logoText),
+                  ),
+                  Flexible(
+                    child: Text("APP", style: theme.value.logoText),
                   ),
                 ],
               ),

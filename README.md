@@ -1,4 +1,4 @@
-# bible_app
+# Only Bible App
 
 A new Flutter project.
 
