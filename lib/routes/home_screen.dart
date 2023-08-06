@@ -16,66 +16,80 @@ class HomeScreen extends GoRouteData {
   @override
   Page buildPage(BuildContext context, GoRouterState state) {
     if (slideTextDir.value == null) {
-      return NoTransitionPage(child: Home(book: book, chapter: chapter));
+      return NoTransitionPage(
+        child: SwipeDetector(
+          onSwipeLeft: (offset) {
+            onNext(context);
+          },
+          onSwipeRight: (offset) {
+            onPrevious(context);
+          },
+          child: const Column(
+            children: [
+              Header(),
+              Flexible(
+                child: VerseList(),
+              ),
+            ],
+          ),
+        ),
+      );
     }
     return CustomTransitionPage(
       barrierDismissible: false,
       barrierColor: Theme.of(context).colorScheme.background,
       transitionDuration: const Duration(milliseconds: 360),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        return SlideTransition(
-          textDirection: slideTextDir.value,
-          position: Tween(begin: const Offset(1, 0), end: Offset.zero)
-              .chain(CurveTween(curve: Curves.linear))
-              .animate(animation),
-          child: child,
+        return SwipeDetector(
+          onSwipeLeft: (offset) {
+            onNext(context);
+          },
+          onSwipeRight: (offset) {
+            onPrevious(context);
+          },
+          child: Column(
+            children: [
+              const Header(),
+              Flexible(
+                child: SlideTransition(
+                  textDirection: slideTextDir.value,
+                  position: Tween(begin: const Offset(1, 0), end: Offset.zero)
+                      .chain(CurveTween(curve: Curves.linear))
+                      .animate(animation),
+                  child: child,
+                ),
+              ),
+            ],
+          ),
         );
       },
-      child: Home(book: book, chapter: chapter),
+      child: const VerseList(),
     );
   }
 }
 
-class Home extends StatelessWidget {
-  final String book;
-  final int chapter;
-
-  const Home({required this.book, required this.chapter});
+class VerseList extends StatelessWidget {
+  const VerseList({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final selectedBook = selectedBible.value.firstWhere((it) => book == it.name);
-    final verses = selectedBook.chapters[chapter].verses;
-    return SwipeDetector(
-      onSwipeLeft: (offset) {
-        onNext(context);
-      },
-      onSwipeRight: (offset) {
-        onPrevious(context);
-      },
-      child: Column(
-        children: [
-          const Header(),
-          Flexible(
-            child: SelectionArea(
-              child: ListView.builder(
-                padding: const EdgeInsets.only(
-                  left: 20,
-                  right: 20,
-                  bottom: 20,
-                ),
-                itemCount: verses.length,
-                itemBuilder: (BuildContext context, int index) {
-                  final v = verses[index];
-                  return Container(
-                    margin: const EdgeInsets.symmetric(vertical: 6),
-                    child: VerseText(index: index, text: v.text),
-                  );
-                },
-              ),
-            ),
-          ),
-        ],
+    final selectedBook = selectedBible.value[bookIndex.value];
+    final verses = selectedBook.chapters[chapterIndex.value].verses;
+    return SelectionArea(
+      child: ListView.builder(
+        padding: const EdgeInsets.only(
+          left: 20,
+          right: 20,
+          bottom: 20,
+        ),
+        itemCount: verses.length,
+        itemBuilder: (BuildContext context, int index) {
+          final v = verses[index];
+          return Container(
+            margin: const EdgeInsets.symmetric(vertical: 6),
+            child: VerseText(index: index, text: v.text),
+          );
+        },
       ),
     );
   }
