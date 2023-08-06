@@ -10,7 +10,7 @@ class VerseText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final selected = selectedVerses.reactiveValue(context).contains(index);
+    final selected = isVerseSelected(context, index);
     final delta = fontSizeDelta.reactiveValue(context);
     final bodySize = Theme.of(context).textTheme.bodyMedium!.fontSize! + delta;
     final weight = fontBold.reactiveValue(context) ? FontWeight.w600 : FontWeight.w500;

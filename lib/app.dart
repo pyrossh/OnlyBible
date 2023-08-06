@@ -68,7 +68,7 @@ class App extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
         primaryColor: const Color(0xFF4C2323),
         secondaryHeaderColor: const Color(0xFFFFB341),
-        highlightColor: const Color(0xAAF8D0DC),
+        highlightColor: const Color(0xAA5D4979),
         dividerColor: Colors.white,
         shadowColor: Colors.white,
         colorScheme: const ColorScheme.dark(
@@ -78,9 +78,9 @@ class App extends StatelessWidget {
           style: TextButton.styleFrom(
             padding: EdgeInsets.zero,
             shape: const RoundedRectangleBorder(),
-            elevation: 1,
+            elevation: isWide(context) ? 1 : 0.5,
             backgroundColor: const Color(0xFF323232),
-            foregroundColor: const Color(0xFFBBBBBB),
+            foregroundColor: const Color(0xFFBC86FC),
             textStyle: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w500,
@@ -105,7 +105,7 @@ class App extends StatelessWidget {
             letterSpacing: 0.5,
           ),
           labelMedium: TextStyle(
-            color: Color(0xFFBBBBBB),
+            color: Color(0xFFBA50AB),
             fontSize: 12,
             fontWeight: FontWeight.w800,
             letterSpacing: 0.5,

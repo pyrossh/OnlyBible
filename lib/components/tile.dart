@@ -9,8 +9,9 @@ class Tile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final availableWidth = MediaQuery.of(context).size.width - 40; // width - margin
     return Container(
-      width: isWide(context) ? 60 : 55,
+      width: isWide(context) ? 60 : (availableWidth/5).round() - 13,
       height: isWide(context) ? 60 : 40,
       margin: const EdgeInsets.only(right: 16, bottom: 16),
       child: TextButton(

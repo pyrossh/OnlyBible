@@ -39,6 +39,14 @@ final selectedVerses = ValueNotifier([]);
 final isPlaying = ValueNotifier(false);
 final fontSizeDelta = ValueNotifier(0);
 
+bool isWide(BuildContext context) {
+  if (Platform.isIOS || Platform.isAndroid) {
+    return false;
+  }
+  final width = MediaQuery.of(context).size.width;
+  return width > 600;
+}
+
 toggleMode() {
   darkMode.value = !darkMode.value;
   updateStatusBar();
@@ -195,12 +203,4 @@ onVerseSelected(int i) {
   } else {
     selectedVerses.value = [...selectedVerses.value, i];
   }
-}
-
-bool isWide(BuildContext context) {
-  if (Platform.isIOS || Platform.isAndroid) {
-    return false;
-  }
-  final width = MediaQuery.of(context).size.width;
-  return width > 600;
 }
