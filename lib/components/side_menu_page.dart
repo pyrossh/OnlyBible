@@ -7,7 +7,7 @@ class SideMenuPage extends ModalRoute<void> {
   Duration get transitionDuration => const Duration(milliseconds: 300);
 
   @override
-  Duration get reverseTransitionDuration => const Duration(milliseconds: 300);
+  Duration get reverseTransitionDuration => Duration.zero;
 
   @override
   bool get opaque => false;
@@ -35,24 +35,13 @@ class SideMenuPage extends ModalRoute<void> {
       child: Container(
         color: Theme.of(context).colorScheme.background,
         margin: EdgeInsets.only(left: 0, right: isWide(context) ? 650 : 0),
-        child: const BookSelector(),
+        child: isWide(context)
+            ? const BookSelector()
+            : SlideTransition(
+                position: Tween(begin: const Offset(-1, 0), end: Offset.zero).animate(animation),
+                child: const BookSelector(),
+              ),
       ),
-    );
-  }
-
-  @override
-  Widget buildTransitions(
-    BuildContext context,
-    Animation<double> animation,
-    Animation<double> secondaryAnimation,
-    Widget child,
-  ) {
-    if (isWide(context)) {
-      return child;
-    }
-    return SlideTransition(
-      position: Tween(begin: const Offset(-1, 0), end: Offset.zero).animate(animation),
-      child: child,
     );
   }
 }

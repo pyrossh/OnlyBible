@@ -54,6 +54,7 @@ class BookSelectorState extends State<BookSelector> {
           BooksList(
             title: "Old Testament",
             books: oldTestament,
+            showClose: true,
             onTap: onBookSelected,
           ),
           Container(
@@ -62,6 +63,7 @@ class BookSelectorState extends State<BookSelector> {
           BooksList(
             title: "New Testament",
             books: newTestament,
+            showClose: false,
             onTap: onBookSelected,
           ),
         ],

@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import 'package:go_router/go_router.dart';
 import 'package:only_bible_app/state.dart';
 import 'package:only_bible_app/components/tile.dart';
 
@@ -20,7 +21,22 @@ class ChaptersList extends StatelessWidget {
       children: [
         Container(
           margin: const EdgeInsets.only(bottom: 20),
-          child: Text(title, style: Theme.of(context).textTheme.headlineMedium),
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(title, style: Theme.of(context).textTheme.headlineMedium),
+              ),
+              Container(
+                margin: const EdgeInsets.only(right: 30),
+                child: IconButton(
+                  icon: const Icon(Icons.close, size: 28),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              )
+            ],
+          ),
         ),
         Wrap(
           children: List.generate(length, (index) {
