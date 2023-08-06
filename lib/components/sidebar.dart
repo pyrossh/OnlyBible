@@ -14,7 +14,7 @@ class Sidebar extends StatelessWidget {
             left: 0.0,
             top: 0.0,
             child: Container(
-              width: 30.0,
+              width: 40.0,
               height: height,
               decoration: BoxDecoration(
                 color: Theme.of(context).primaryColorDark,
