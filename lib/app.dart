@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_reactive_value/flutter_reactive_value.dart';
 import 'package:go_router/go_router.dart';
 import 'package:one_context/one_context.dart';
-import 'package:only_bible_app/components/shell.dart';
 import 'package:only_bible_app/routes/home_screen.dart';
 import 'package:only_bible_app/state.dart';
+import 'package:only_bible_app/components/sidebar.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -116,7 +116,28 @@ class App extends StatelessWidget {
         debugLogDiagnostics: true,
         initialLocation: "/${selectedBible.value[bookIndex.value].name}/${chapterIndex.value}",
         routes: [
-          Shell(
+          ShellRoute(
+            builder: (context, state, child) {
+              if (isWide(context)) {
+                return Scaffold(
+                  backgroundColor: Theme.of(context).colorScheme.background,
+                  body: Row(
+                    children: [
+                      const Sidebar(),
+                      Flexible(
+                        child: child,
+                      ),
+                    ],
+                  ),
+                );
+              }
+              return Scaffold(
+                backgroundColor: Theme.of(context).colorScheme.background,
+                body: SafeArea(
+                  child: child,
+                ),
+              );
+            },
             routes: [
               GoRouteData.$route(
                 path: '/:book/:chapter',

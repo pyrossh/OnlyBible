@@ -37,7 +37,7 @@ final chapterIndex = PersistentValueNotifier<int>(
   initialValue: 0,
 );
 
-final slideTextDir = ValueNotifier<TextDirection>(TextDirection.ltr);
+final slideTextDir = ValueNotifier<TextDirection?>(null);
 final selectedBible = ValueNotifier<List<Book>>([]);
 final selectedVerses = ValueNotifier([]);
 final isPlaying = ValueNotifier(false);
@@ -71,8 +71,8 @@ decreaseFont() {
 updateStatusBar() {
   if (darkMode.value) {
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      systemNavigationBarColor: Colors.black,
-      statusBarColor: Colors.black,
+      systemNavigationBarColor: Color(0xFF1F1F22),
+      statusBarColor: Color(0xFF1F1F22),
       systemNavigationBarIconBrightness: Brightness.light,
       statusBarIconBrightness: Brightness.light,
     ));
@@ -86,23 +86,31 @@ updateStatusBar() {
   }
 }
 
-navigateBookChapter(BuildContext context, int book, int chapter) {
+navigateBookChapter(BuildContext context, int book, int chapter, bool noAnim) {
+  if (isWide(context) || noAnim) {
+    slideTextDir.value = null;
+  } else {
+    slideTextDir.value = bookIndex.value > book || chapterIndex.value > chapter ? TextDirection.rtl : TextDirection.ltr;
+    print(slideTextDir.value);
+  }
   bookIndex.value = book;
   chapterIndex.value = chapter;
   context.push("/${selectedBible.value[book].name}/$chapter");
-  context.pop();
+  // Use this or use navigatorKey once header moves scaffold
+  // if (!isWide(context)) {
+  //   context.pop();
+  // }
 }
 
 onNext(BuildContext context) {
   final selectedBook = selectedBible.value[bookIndex.value];
   final chapter = chapterIndex.value;
-  slideTextDir.value = TextDirection.ltr;
   if (selectedBook.chapters.length > chapter + 1) {
-    navigateBookChapter(context, selectedBook.index, chapter + 1);
+    navigateBookChapter(context, selectedBook.index, chapter + 1, false);
   } else {
     if (selectedBook.index + 1 < selectedBible.value.length) {
       final nextBook = selectedBible.value[selectedBook.index + 1];
-      navigateBookChapter(context, nextBook.index, 0);
+      navigateBookChapter(context, nextBook.index, 0, false);
     }
   }
 }
@@ -110,13 +118,12 @@ onNext(BuildContext context) {
 onPrevious(BuildContext context) {
   final selectedBook = selectedBible.value[bookIndex.value];
   final chapter = chapterIndex.value;
-  slideTextDir.value = TextDirection.rtl;
   if (chapter - 1 >= 0) {
-    navigateBookChapter(context, selectedBook.index, chapter - 1);
+    navigateBookChapter(context, selectedBook.index, chapter - 1, false);
   } else {
     if (selectedBook.index - 1 >= 0) {
       final prevBook = selectedBible.value[selectedBook.index - 1];
-      navigateBookChapter(context, prevBook.index, prevBook.chapters.length - 1);
+      navigateBookChapter(context, prevBook.index, prevBook.chapters.length - 1, false);
     }
   }
 }

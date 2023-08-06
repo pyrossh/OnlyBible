@@ -29,7 +29,7 @@ class BookSelectorState extends State<BookSelector> {
   }
 
   onChapterSelected(int index) {
-    navigateBookChapter(context, bookIndex, index);
+    navigateBookChapter(context, bookIndex, index, true);
   }
 
   @override
