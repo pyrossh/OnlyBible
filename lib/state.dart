@@ -9,6 +9,9 @@ import 'package:just_audio/just_audio.dart';
 import 'package:only_bible_app/utils/dialog.dart';
 import 'package:only_bible_app/models/book.dart';
 
+final shellNavigatorKey = GlobalKey<NavigatorState>();
+final routeNavigatorKey = GlobalKey<NavigatorState>();
+
 final darkMode = PersistentValueNotifier<bool>(
   sharedPreferencesKey: 'darkMode',
   initialValue: false,
@@ -34,6 +37,7 @@ final chapterIndex = PersistentValueNotifier<int>(
   initialValue: 0,
 );
 
+final slideTextDir = ValueNotifier<TextDirection>(TextDirection.ltr);
 final selectedBible = ValueNotifier<List<Book>>([]);
 final selectedVerses = ValueNotifier([]);
 final isPlaying = ValueNotifier(false);
@@ -68,15 +72,15 @@ updateStatusBar() {
   if (darkMode.value) {
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       systemNavigationBarColor: Colors.black,
-      systemNavigationBarIconBrightness: Brightness.light,
       statusBarColor: Colors.black,
+      systemNavigationBarIconBrightness: Brightness.light,
       statusBarIconBrightness: Brightness.light,
     ));
   } else {
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       systemNavigationBarColor: Colors.white,
-      systemNavigationBarIconBrightness: Brightness.dark,
       statusBarColor: Colors.white,
+      systemNavigationBarIconBrightness: Brightness.dark,
       statusBarIconBrightness: Brightness.dark,
     ));
   }
@@ -86,11 +90,13 @@ navigateBookChapter(BuildContext context, int book, int chapter) {
   bookIndex.value = book;
   chapterIndex.value = chapter;
   context.push("/${selectedBible.value[book].name}/$chapter");
+  context.pop();
 }
 
 onNext(BuildContext context) {
   final selectedBook = selectedBible.value[bookIndex.value];
   final chapter = chapterIndex.value;
+  slideTextDir.value = TextDirection.ltr;
   if (selectedBook.chapters.length > chapter + 1) {
     navigateBookChapter(context, selectedBook.index, chapter + 1);
   } else {
@@ -104,6 +110,7 @@ onNext(BuildContext context) {
 onPrevious(BuildContext context) {
   final selectedBook = selectedBible.value[bookIndex.value];
   final chapter = chapterIndex.value;
+  slideTextDir.value = TextDirection.rtl;
   if (chapter - 1 >= 0) {
     navigateBookChapter(context, selectedBook.index, chapter - 1);
   } else {
