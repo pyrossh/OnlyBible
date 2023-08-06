@@ -20,24 +20,10 @@ class HomeScreen extends GoRouteData {
     return NoTransitionPage(
       child: SwipeDetector(
         onSwipeLeft: (offset) {
-          if (selectedBook.chapters.length > chapter + 1) {
-            navigateBookChapter(context, selectedBook.index, chapter + 1);
-          } else {
-            if (selectedBook.index + 1 < selectedBible.value.length) {
-              final nextBook = selectedBible.value[selectedBook.index + 1];
-              navigateBookChapter(context, nextBook.index, 0);
-            }
-          }
+          onNext(context);
         },
         onSwipeRight: (offset) {
-          if (chapter - 1 >= 0) {
-            navigateBookChapter(context, selectedBook.index, chapter - 1);
-          } else {
-            if (selectedBook.index - 1 >= 0) {
-              final prevBook = selectedBible.value[selectedBook.index - 1];
-              navigateBookChapter(context, prevBook.index, prevBook.chapters.length - 1);
-            }
-          }
+          onPrevious(context);
         },
         child: Container(
           margin: EdgeInsets.symmetric(

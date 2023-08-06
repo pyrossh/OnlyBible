@@ -80,6 +80,32 @@ navigateBookChapter(BuildContext context, int book, int chapter) {
   context.push("/${selectedBible.value[book].name}/$chapter");
 }
 
+onNext(BuildContext context) {
+  final selectedBook = selectedBible.value[bookIndex.value];
+  final chapter = chapterIndex.value;
+  if (selectedBook.chapters.length > chapter + 1) {
+    navigateBookChapter(context, selectedBook.index, chapter + 1);
+  } else {
+    if (selectedBook.index + 1 < selectedBible.value.length) {
+      final nextBook = selectedBible.value[selectedBook.index + 1];
+      navigateBookChapter(context, nextBook.index, 0);
+    }
+  }
+}
+
+onPrevious(BuildContext context) {
+  final selectedBook = selectedBible.value[bookIndex.value];
+  final chapter = chapterIndex.value;
+  if (chapter - 1 >= 0) {
+    navigateBookChapter(context, selectedBook.index, chapter - 1);
+  } else {
+    if (selectedBook.index - 1 >= 0) {
+      final prevBook = selectedBible.value[selectedBook.index - 1];
+      navigateBookChapter(context, prevBook.index, prevBook.chapters.length - 1);
+    }
+  }
+}
+
 loadBible() async {
   final value = await getBibleFromAsset(selectedBibleName.value);
   selectedBible.value = value;
@@ -133,7 +159,7 @@ onPlay(BuildContext context) async {
   final filteredVerses = verses.asMap().keys.where((it) => selectedVerses.value.contains(it)).map((it) => verses[it]);
   final player = AudioPlayer();
   player.setUrl(
-    "https://github.com/pyrossh/bible-app/raw/master/public/audio/output.mp3",
+    "https://github.com/pyrossh/only-bible-app/raw/master/assets/output.mp3",
   );
   // player.setUrl("asset:output.mp3");
   if (isPlaying.value) {
