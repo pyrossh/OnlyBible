@@ -29,7 +29,7 @@ class App extends StatelessWidget {
           style: TextButton.styleFrom(
             padding: EdgeInsets.zero,
             shape: const RoundedRectangleBorder(),
-            elevation: 1,
+            elevation: isWide(context) ? 1 : 0.5,
             // backgroundColor: const Color(0xFFF6F6F6),
             backgroundColor: const Color(0xFFEAE9E9),
             foregroundColor: const Color(0xFF9A1111),

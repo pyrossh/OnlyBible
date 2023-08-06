@@ -29,8 +29,7 @@ class BookSelectorState extends State<BookSelector> {
   }
 
   onChapterSelected(int index) {
-    saveBookIndex(bookIndex, index);
-    context.push("/${selectedBible.value[bookIndex].name}/$index");
+    navigateBookChapter(context, bookIndex, index);
   }
 
   @override
@@ -46,10 +45,8 @@ class BookSelectorState extends State<BookSelector> {
         ),
       );
     }
-    final oldTestament =
-        selectedBible.value.where((it) => it.isOldTestament()).toList();
-    final newTestament =
-        selectedBible.value.where((it) => it.isNewTestament()).toList();
+    final oldTestament = selectedBible.value.where((it) => it.isOldTestament()).toList();
+    final newTestament = selectedBible.value.where((it) => it.isNewTestament()).toList();
     return Container(
       margin: const EdgeInsets.only(top: 15, left: 20),
       child: ListView(

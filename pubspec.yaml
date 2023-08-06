@@ -18,6 +18,7 @@ dependencies:
   flutter_native_splash: ^2.3.1
   flutter_charset_detector: ^1.0.2
   one_context: ^2.1.0
+  flutter_swipe_detector: ^2.0.0
 
 dev_dependencies:
   flutter_test:

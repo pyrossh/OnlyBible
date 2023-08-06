@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_persistent_value_notifier/flutter_persistent_value_notifier.dart';
 import 'package:flutter_reactive_value/flutter_reactive_value.dart';
+import 'package:go_router/go_router.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:only_bible_app/utils/dialog.dart';
 import 'package:only_bible_app/models/book.dart';
@@ -73,9 +74,10 @@ updateStatusBar() {
   }
 }
 
-saveBookIndex(int book, int chapter) {
+navigateBookChapter(BuildContext context, int book, int chapter) {
   bookIndex.value = book;
   chapterIndex.value = chapter;
+  context.push("/${selectedBible.value[book].name}/$chapter");
 }
 
 loadBible() async {
