@@ -47,9 +47,11 @@ class SideMenuPage extends ModalRoute<void> {
     Animation<double> secondaryAnimation,
     Widget child,
   ) {
+    if (isWide(context)) {
+      return child;
+    }
     return SlideTransition(
-      position: Tween(begin: const Offset(-1, 0), end: Offset.zero)
-          .animate(animation),
+      position: Tween(begin: const Offset(-1, 0), end: Offset.zero).animate(animation),
       child: child,
     );
   }

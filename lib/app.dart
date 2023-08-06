@@ -18,10 +18,15 @@ class App extends StatelessWidget {
       theme: ThemeData(
         visualDensity: VisualDensity.adaptivePlatformDensity,
         primaryColor: const Color(0xFF4C2323),
+        primaryColorDark: const Color(0xFF3C1B1C),
+        primaryColorLight: const Color(0xFF7F3D3C),
         secondaryHeaderColor: const Color(0xFFFFB341),
         highlightColor: const Color(0xAAF8D0DC),
         dividerColor: Colors.black,
         shadowColor: Colors.black,
+        popupMenuTheme: const PopupMenuThemeData(
+          elevation: 4,
+        ),
         colorScheme: const ColorScheme.light(
           background: Colors.white,
         ),
@@ -66,11 +71,16 @@ class App extends StatelessWidget {
       ),
       darkTheme: ThemeData(
         visualDensity: VisualDensity.adaptivePlatformDensity,
-        primaryColor: const Color(0xFF4C2323),
-        secondaryHeaderColor: const Color(0xFFFFB341),
+        primaryColor: const Color(0xFF2D0B0B),
+        primaryColorDark: const Color(0xFF260909),
+        primaryColorLight: const Color(0xFF481514),
+        secondaryHeaderColor: const Color(0xFFFFC351),
         highlightColor: const Color(0xAA5D4979),
         dividerColor: Colors.white,
         shadowColor: Colors.white,
+        popupMenuTheme: const PopupMenuThemeData(
+          elevation: 2,
+        ),
         colorScheme: const ColorScheme.dark(
           background: Color(0xFF1F1F22),
         ),
@@ -96,7 +106,7 @@ class App extends StatelessWidget {
           headlineLarge: TextStyle(
             fontSize: 38,
             fontWeight: FontWeight.w700,
-            color: Color(0xFFFFB341),
+            color: Color(0xFFFFC351),
           ),
           headlineMedium: TextStyle(
             color: Color(0xFFBCBEC4),

@@ -7,16 +7,18 @@ class Sidebar extends StatelessWidget {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     return ColoredBox(
-      color: const Color(0xFF4C2323),
+      color: Theme.of(context).primaryColor,
       child: Stack(
         children: [
           Positioned(
             left: 0.0,
             top: 0.0,
             child: Container(
-              width: 40.0,
+              width: 30.0,
               height: height,
-              decoration: const BoxDecoration(color: Color(0xFF3C1B1C)),
+              decoration: BoxDecoration(
+                color: Theme.of(context).primaryColorDark,
+              ),
             ),
           ),
           const Belt(top: 80),
@@ -128,12 +130,12 @@ class Belt extends StatelessWidget {
       child: Container(
         width: 60.0,
         height: 30.0,
-        decoration: const BoxDecoration(
-          borderRadius: BorderRadius.only(
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.only(
             bottomRight: Radius.circular(25),
             topRight: Radius.circular(25),
           ),
-          color: Color(0xFF7F3D3C),
+          color: Theme.of(context).primaryColorLight,
         ),
       ),
     );
