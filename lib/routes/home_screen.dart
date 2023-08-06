@@ -45,7 +45,7 @@ class HomeScreen extends GoRouteData {
           ),
           child: Column(
             children: [
-              Header(book: selectedBook.index, chapter: chapter, verses: verses),
+              const Header(),
               Flexible(
                 child: SelectionArea(
                   child: ListView.builder(

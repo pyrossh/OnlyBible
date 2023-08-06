@@ -1,24 +1,18 @@
 import "package:flutter/material.dart";
+import 'package:flutter_reactive_value/flutter_reactive_value.dart';
 import 'package:only_bible_app/components/play_button.dart';
 import 'package:only_bible_app/components/side_menu_page.dart';
 import 'package:only_bible_app/components/menu.dart';
-import 'package:only_bible_app/models/book.dart';
 import 'package:only_bible_app/state.dart';
 
 class Header extends StatelessWidget {
-  final int book;
-  final int chapter;
-  final List<Verse> verses;
-
-  const Header({
-    super.key,
-    required this.book,
-    required this.chapter,
-    required this.verses,
-  });
+  const Header({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final book = bookIndex.reactiveValue(context);
+    final chapter = chapterIndex.reactiveValue(context);
+    final selectedBook = selectedBible.value[book];
     return Container(
       padding: EdgeInsets.only(
         top: isWide(context) ? 10 : 0,
@@ -48,7 +42,7 @@ class Header extends StatelessWidget {
               color: Theme.of(context).textTheme.headlineMedium!.color,
             ),
             icon: Text(
-              "${selectedBible.value[book].name} ${chapter + 1}",
+              "${selectedBook.name} ${chapter + 1}",
               style: Theme.of(context).textTheme.headlineMedium,
             ),
             onPressed: () {
