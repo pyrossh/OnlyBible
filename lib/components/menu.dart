@@ -30,7 +30,8 @@ class Menu extends StatelessWidget {
                       onPressed: toggleMode,
                     ),
                     Container(margin: const EdgeInsets.only(top: spacing)),
-                    IconButton(
+                    // TODO: figure out bold active/inactive color
+                    const IconButton(
                       icon: Icon(Icons.format_bold, size: 28),
                       onPressed: toggleBold,
                     ),

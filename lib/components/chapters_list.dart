@@ -27,7 +27,7 @@ class ChaptersList extends StatelessWidget {
                 child: Text(title, style: Theme.of(context).textTheme.headlineMedium),
               ),
               Container(
-                margin: const EdgeInsets.only(right: 30),
+                margin: EdgeInsets.only(right: isWide(context) ? 30 : 10),
                 child: IconButton(
                   icon: const Icon(Icons.close, size: 28),
                   onPressed: () {

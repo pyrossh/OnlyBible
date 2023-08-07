@@ -37,7 +37,7 @@ class BookSelectorState extends State<BookSelector> {
     if (tab == 1) {
       final book = selectedBible.value[bookIndex];
       return Container(
-        margin: const EdgeInsets.only(top: 15, left: 20),
+        margin: EdgeInsets.only(top: isWide(context) ? 5 : 0, left: 20),
         child: ChaptersList(
           title: book.name,
           length: book.chapters.length,
@@ -48,7 +48,7 @@ class BookSelectorState extends State<BookSelector> {
     final oldTestament = selectedBible.value.where((it) => it.isOldTestament()).toList();
     final newTestament = selectedBible.value.where((it) => it.isNewTestament()).toList();
     return Container(
-      margin: const EdgeInsets.only(top: 15, left: 20),
+      margin: EdgeInsets.only(top: isWide(context) ? 5 : 0, left: 20),
       child: ListView(
         children: [
           BooksList(

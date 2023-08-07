@@ -16,22 +16,28 @@ class App extends StatelessWidget {
       builder: OneContext().builder,
       themeMode: darkMode.reactiveValue(context) ? ThemeMode.dark : ThemeMode.light,
       theme: ThemeData(
+        useMaterial3: true,
         visualDensity: VisualDensity.adaptivePlatformDensity,
         primaryColor: const Color(0xFF4C2323),
         primaryColorDark: const Color(0xFF3C1B1C),
         primaryColorLight: const Color(0xFF7F3D3C),
         secondaryHeaderColor: const Color(0xFFFFB341),
         highlightColor: const Color(0xAAF8D0DC),
+        hoverColor: const Color(0xAAF8D0DC),
         dividerColor: Colors.black,
         shadowColor: Colors.black,
         popupMenuTheme: const PopupMenuThemeData(
           elevation: 4,
+          color: Colors.white,
+          shadowColor: Colors.black,
+          surfaceTintColor: Color(0xAAF8D0DC),
         ),
         colorScheme: const ColorScheme.light(
           background: Colors.white,
         ),
         textButtonTheme: TextButtonThemeData(
           style: TextButton.styleFrom(
+            enableFeedback: true,
             padding: EdgeInsets.zero,
             shape: const RoundedRectangleBorder(),
             elevation: isWide(context) ? 1 : 0.5,
@@ -70,22 +76,27 @@ class App extends StatelessWidget {
         ),
       ),
       darkTheme: ThemeData(
+        useMaterial3: true,
         visualDensity: VisualDensity.adaptivePlatformDensity,
         primaryColor: const Color(0xFF2D0B0B),
         primaryColorDark: const Color(0xFF260909),
         primaryColorLight: const Color(0xFF481514),
         secondaryHeaderColor: const Color(0xFFFFC351),
         highlightColor: const Color(0xAA5D4979),
+        hoverColor: const Color(0xAA5D4979),
         dividerColor: Colors.white,
         shadowColor: Colors.white,
         popupMenuTheme: const PopupMenuThemeData(
-          elevation: 2,
+          elevation: 4,
+          color: Colors.black,
+          surfaceTintColor: Color(0xAA5D4979),
         ),
         colorScheme: const ColorScheme.dark(
           background: Color(0xFF1F1F22),
         ),
         textButtonTheme: TextButtonThemeData(
           style: TextButton.styleFrom(
+            enableFeedback: true,
             padding: EdgeInsets.zero,
             shape: const RoundedRectangleBorder(),
             elevation: isWide(context) ? 1 : 0.5,

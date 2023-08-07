@@ -77,6 +77,7 @@ class VerseList extends StatelessWidget {
     final verses = selectedBook.chapters[chapterIndex.value].verses;
     return SelectionArea(
       child: ListView.builder(
+        shrinkWrap: false,
         padding: const EdgeInsets.only(
           left: 20,
           right: 20,

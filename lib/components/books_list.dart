@@ -33,7 +33,7 @@ class BooksList extends StatelessWidget {
               ),
               if (showClose)
                 Container(
-                  margin: const EdgeInsets.only(right: 30),
+                  margin: EdgeInsets.only(right: isWide(context) ? 30 : 10),
                   child: IconButton(
                     icon: const Icon(Icons.close, size: 28),
                     onPressed: () {
