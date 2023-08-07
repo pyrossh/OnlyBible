@@ -86,6 +86,7 @@ class App extends StatelessWidget {
         ),
       ),
       darkTheme: ThemeData(
+        fontFamily: "Roboto",
         useMaterial3: true,
         visualDensity: VisualDensity.adaptivePlatformDensity,
         primaryColor: const Color(0xFF2D0B0B),
@@ -129,8 +130,8 @@ class App extends StatelessWidget {
           bodyMedium: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w400,
-            wordSpacing: 0.5,
-            letterSpacing: 0.01,
+            wordSpacing: 0,
+            letterSpacing: 0,
             color: Color(0xFFBCBEC4),
           ),
           headlineLarge: TextStyle(
