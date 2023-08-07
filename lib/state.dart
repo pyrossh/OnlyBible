@@ -24,7 +24,7 @@ final fontBold = PersistentValueNotifier<bool>(
 
 final selectedBibleName = PersistentValueNotifier<String>(
   sharedPreferencesKey: 'selectedBibleName',
-  initialValue: "kannada.csv.gz",
+  initialValue: "kn.csv.gz",
 );
 
 final bookIndex = PersistentValueNotifier<int>(
@@ -129,7 +129,7 @@ onPrevious(BuildContext context) {
 
 loadBible() async {
   // selectedBibleName.value
-  final value = await getBibleFromAsset("kj.csv.gz");
+  final value = await getBibleFromAsset("kn.csv.gz");
   selectedBible.value = value;
 }
 

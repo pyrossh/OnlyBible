@@ -75,11 +75,11 @@ List<Book> getBibleFromText(String text) {
 
 final recognisedClasses = ["place", "person", "word"];
 
-Future<List<String>> fetchPage(int bookIndex, int chapterIndex) async {
+Future<List<String>> fetchPage(String bibleName, int bookIndex, int chapterIndex) async {
   final wordbookNo = bookIndex.toString().padLeft(2, "0");
   final wordChapterNo = chapterIndex.toString().padLeft(3, "0");
   print("getting book: $wordbookNo chapter: $chapterIndex");
-  var bytes = await File("./scripts/bibles/kj_new/$wordbookNo/$chapterIndex.htm").readAsBytes();
+  var bytes = await File("./scripts/bibles/${bibleName}_new/$wordbookNo/$chapterIndex.htm").readAsBytes();
   var document = parse(utf8.decode(bytes, allowMalformed: true));
   List<String> lines = [];
   var verseIndex = 0;
@@ -120,7 +120,8 @@ Future<List<String>> fetchPage(int bookIndex, int chapterIndex) async {
 
 void main() async {
   print("starting");
-  const outputFilename = "./assets/bibles/kj.csv";
+  const bibleName = "kn";
+  const outputFilename = "./assets/bibles/${bibleName}.csv";
   if (File(outputFilename).existsSync()) {
     File(outputFilename).deleteSync();
   }
@@ -132,8 +133,8 @@ void main() async {
     book.chapters.indexed
         // .where((it) => book.index == 16 && it.$1 == 7) todo check ethiopia
         // .where((it) => book.index == 39 && it.$1 == 7) todo check clean
-    .forEach((it) {
-      futures.add(fetchPage(book.index + 1, it.$1 + 1));
+        .forEach((it) {
+      futures.add(fetchPage(bibleName, book.index + 1, it.$1 + 1));
     });
   });
   var chaps = await Future.wait(futures);
@@ -143,7 +144,7 @@ void main() async {
         throw Exception("Line empty");
       }
       // dont write last newline
-      if (cindex == chaps.length-1 && lindex == chapters.length-1) {
+      if (cindex == chaps.length - 1 && lindex == chapters.length - 1) {
         outputFile.write(line);
       } else {
         outputFile.writeln(line);
