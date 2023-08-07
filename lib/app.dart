@@ -35,6 +35,11 @@ class App extends StatelessWidget {
         colorScheme: const ColorScheme.light(
           background: Colors.white,
         ),
+        iconButtonTheme: IconButtonThemeData(
+          style: IconButton.styleFrom(
+            enableFeedback: true,
+          ),
+        ),
         textButtonTheme: TextButtonThemeData(
           style: TextButton.styleFrom(
             enableFeedback: true,
@@ -93,6 +98,11 @@ class App extends StatelessWidget {
         ),
         colorScheme: const ColorScheme.dark(
           background: Color(0xFF1F1F22),
+        ),
+        iconButtonTheme: IconButtonThemeData(
+          style: IconButton.styleFrom(
+            enableFeedback: true,
+          ),
         ),
         textButtonTheme: TextButtonThemeData(
           style: TextButton.styleFrom(
