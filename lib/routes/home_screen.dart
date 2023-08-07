@@ -1,8 +1,8 @@
 import "package:flutter/material.dart";
 import 'package:flutter_swipe_detector/flutter_swipe_detector.dart';
 import 'package:go_router/go_router.dart';
-import 'package:only_bible_app/components/header.dart';
-import 'package:only_bible_app/components/verse_view.dart';
+import 'package:only_bible_app/widgets/header.dart';
+import 'package:only_bible_app/widgets/verse_view.dart';
 import 'package:only_bible_app/state.dart';
 
 class HomeScreen extends GoRouteData {

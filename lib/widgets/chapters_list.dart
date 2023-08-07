@@ -1,7 +1,7 @@
 import "package:flutter/material.dart";
 import 'package:go_router/go_router.dart';
 import 'package:only_bible_app/state.dart';
-import 'package:only_bible_app/components/tile.dart';
+import 'package:only_bible_app/widgets/tile.dart';
 
 class ChaptersList extends StatelessWidget {
   final String title;

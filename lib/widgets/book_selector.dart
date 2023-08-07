@@ -1,7 +1,7 @@
 import "package:flutter/material.dart";
 import 'package:go_router/go_router.dart';
-import 'package:only_bible_app/components/books_list.dart';
-import 'package:only_bible_app/components/chapters_list.dart';
+import 'package:only_bible_app/widgets/books_list.dart';
+import 'package:only_bible_app/widgets/chapters_list.dart';
 import 'package:only_bible_app/state.dart';
 
 class BookSelector extends StatefulWidget {

@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:one_context/one_context.dart';
 import 'package:only_bible_app/routes/home_screen.dart';
 import 'package:only_bible_app/state.dart';
-import 'package:only_bible_app/components/sidebar.dart';
+import 'package:only_bible_app/widgets/sidebar.dart';
 import 'package:only_bible_app/theme.dart';
 
 class App extends StatelessWidget {

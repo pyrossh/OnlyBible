@@ -1,8 +1,8 @@
 import "package:flutter/material.dart";
 import 'package:flutter_reactive_value/flutter_reactive_value.dart';
-import 'package:only_bible_app/components/play_button.dart';
-import 'package:only_bible_app/components/side_menu_page.dart';
-import 'package:only_bible_app/components/menu.dart';
+import 'package:only_bible_app/widgets/play_button.dart';
+import 'package:only_bible_app/widgets/side_menu_page.dart';
+import 'package:only_bible_app/widgets/menu.dart';
 import 'package:only_bible_app/state.dart';
 
 class Header extends StatelessWidget {

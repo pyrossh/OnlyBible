@@ -1,5 +1,5 @@
 import "package:flutter/material.dart";
-import 'package:only_bible_app/components/book_selector.dart';
+import 'package:only_bible_app/widgets/book_selector.dart';
 import 'package:only_bible_app/state.dart';
 
 class SideMenuPage extends ModalRoute<void> {
