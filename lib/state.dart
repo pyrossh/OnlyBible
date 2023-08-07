@@ -91,7 +91,6 @@ navigateBookChapter(BuildContext context, int book, int chapter, bool noAnim) {
     slideTextDir.value = null;
   } else {
     slideTextDir.value = bookIndex.value > book || chapterIndex.value > chapter ? TextDirection.rtl : TextDirection.ltr;
-    print(slideTextDir.value);
   }
   bookIndex.value = book;
   chapterIndex.value = chapter;
@@ -129,21 +128,22 @@ onPrevious(BuildContext context) {
 }
 
 loadBible() async {
-  final value = await getBibleFromAsset(selectedBibleName.value);
+  // selectedBibleName.value
+  final value = await getBibleFromAsset("kj.csv.gz");
   selectedBible.value = value;
 }
 
 getBibleFromAsset(String file) async {
-  final bytes = await rootBundle.load("assets/$file");
+  final bytes = await rootBundle.load("assets/bibles/$file");
   final decodedBytes = GZipCodec().decode(bytes.buffer.asUint8List());
   return getBibleFromText(utf8.decode(decodedBytes, allowMalformed: false));
 }
 
-getBibleFromText(String text) {
+List<Book> getBibleFromText(String text) {
   final List<Book> books = [];
   final items = text.split("\n").map((line) => line.split("|"));
   for (var item in items) {
-    var book = int.parse(item[0]);
+    var book = int.parse(item[0]) - 1;
     var chapter = int.parse(item[1]);
     var verse = item[3];
     double start = 0;
