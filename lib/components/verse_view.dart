@@ -13,7 +13,8 @@ class VerseText extends StatelessWidget {
     final selected = isVerseSelected(context, index);
     final delta = fontSizeDelta.reactiveValue(context);
     final bodySize = Theme.of(context).textTheme.bodyMedium!.fontSize! + delta;
-    final weight = fontBold.reactiveValue(context) ? FontWeight.w600 : FontWeight.w500;
+    final weight =
+        fontBold.reactiveValue(context) ? FontWeight.w600 : Theme.of(context).textTheme.bodyMedium!.fontWeight;
 
     onTap() {
       onVerseSelected(index);

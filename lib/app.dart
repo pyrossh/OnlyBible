@@ -17,6 +17,7 @@ class App extends StatelessWidget {
       themeMode: darkMode.reactiveValue(context) ? ThemeMode.dark : ThemeMode.light,
       theme: ThemeData(
         useMaterial3: true,
+        fontFamily: "Roboto",
         visualDensity: VisualDensity.adaptivePlatformDensity,
         primaryColor: const Color(0xFF4C2323),
         primaryColorDark: const Color(0xFF3C1B1C),
@@ -59,6 +60,10 @@ class App extends StatelessWidget {
         ),
         textTheme: const TextTheme(
           bodyMedium: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w400,
+            wordSpacing: 0,
+            letterSpacing: 0,
             color: Color(0xFF010101),
           ),
           headlineLarge: TextStyle(
@@ -74,9 +79,9 @@ class App extends StatelessWidget {
           ),
           labelMedium: TextStyle(
             fontSize: 12,
-            fontWeight: FontWeight.w800,
+            fontWeight: FontWeight.w700,
             color: Color(0xFF9A1111),
-            letterSpacing: 0.5,
+            letterSpacing: 0,
           ),
         ),
       ),
@@ -122,6 +127,10 @@ class App extends StatelessWidget {
         ),
         textTheme: const TextTheme(
           bodyMedium: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w400,
+            wordSpacing: 0.5,
+            letterSpacing: 0.01,
             color: Color(0xFFBCBEC4),
           ),
           headlineLarge: TextStyle(
@@ -136,10 +145,10 @@ class App extends StatelessWidget {
             letterSpacing: 0.5,
           ),
           labelMedium: TextStyle(
-            color: Color(0xFFBA50AB),
+            color: Color(0xFFBA50AB), //E24DE2
             fontSize: 12,
-            fontWeight: FontWeight.w800,
-            letterSpacing: 0.5,
+            fontWeight: FontWeight.w700,
+            letterSpacing: 0,
           ),
         ),
       ),

@@ -39,10 +39,14 @@ flutter:
     - assets/
     - assets/bibles/
   fonts:
-    - family: SanFranciscoPro
+    - family: Roboto
       fonts:
-        - asset: assets/fonts/SanFranciscoPro.ttf
+        - asset: assets/fonts/Roboto/Roboto-Regular.ttf
           weight: 400
+        - asset: assets/fonts/Roboto/Roboto-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Roboto/Roboto-Bold.ttf
+          weight: 700
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 

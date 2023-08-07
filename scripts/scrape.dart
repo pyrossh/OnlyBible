@@ -101,6 +101,9 @@ Future<List<String>> fetchPage(int bookIndex, int chapterIndex) async {
       }
       if (recognisedClasses.contains(node.attributes["class"])) {
         // ex: verse 1 On that day // we don't want to add a leading space
+        final text = node.text!.trim();
+        // TODO: find if next character is , then remove space
+        // ex: GEN 10
         line += "${line.endsWith("|") ? "" : " "}${node.text!.trim()} ";
       }
     }
