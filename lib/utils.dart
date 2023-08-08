@@ -8,10 +8,9 @@ List<Book> getBibleFromText(String text) {
     if (lines.length - 1 == index) {
       continue;
     }
-    print(line.substring(0, 2));
     var book = int.parse(line.substring(0, 2));
     var chapter = int.parse(line.substring(3, 6));
-    var verseNo = line.substring(7, 10);
+    // var verseNo = line.substring(7, 10);
     var verseText = line.substring(11);
     double start = 0;
     double end = 0;
