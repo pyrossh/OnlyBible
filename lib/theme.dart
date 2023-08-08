@@ -15,9 +15,7 @@ final lightTheme = ThemeData(
   popupMenuTheme: const PopupMenuThemeData(
     enableFeedback: true,
     elevation: 4,
-    // color: Colors.white,
-    // shadowColor: Colors.black,
-    // surfaceTintColor: Color(0xAAF8D0DC),
+    surfaceTintColor: Colors.transparent,
   ),
   colorScheme: const ColorScheme.light(
     background: Colors.white,
@@ -88,10 +86,7 @@ final darkTheme = ThemeData(
   hoverColor: const Color(0xAA5D4979),
   dividerColor: Colors.white,
   shadowColor: Colors.white,
-  // popupMenuTheme: lightTheme.popupMenuTheme.copyWith(
-  //   color: Colors.black,
-  //   surfaceTintColor: const Color(0xAA5D4979),
-  // ),
+  popupMenuTheme: lightTheme.popupMenuTheme,
   colorScheme: const ColorScheme.dark(
     background: Color(0xFF1F1F22),
   ),

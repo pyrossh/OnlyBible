@@ -10,7 +10,7 @@ class Menu extends StatelessWidget {
     final moreIcon = isWide(context) ? Icons.more_vert : Icons.more_vert;
     const spacing = 25.0;
     return PopupMenuButton(
-      constraints: const BoxConstraints.tightFor(width: 80),
+      constraints: const BoxConstraints.tightFor(width: 90),
       icon: Icon(moreIcon, size: 28),
       offset: const Offset(0.0, 60),
       itemBuilder: (BuildContext itemContext) {

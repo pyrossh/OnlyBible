@@ -23,7 +23,7 @@ class Sidebar extends StatelessWidget {
           ),
           const Belt(top: 80),
           Belt(top: height - 120),
-          const Bookmark(),
+          const Bookmark(left: 70),
           SizedBox(
             width: 250,
             height: height,
@@ -95,12 +95,14 @@ class TrianglePainter extends CustomPainter {
 }
 
 class Bookmark extends StatelessWidget {
-  const Bookmark({super.key});
+  final double left;
+
+  const Bookmark({super.key, required this.left});
 
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      left: 70.0,
+      left: left,
       top: 0.0,
       child: Column(
         children: [

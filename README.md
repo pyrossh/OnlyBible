@@ -6,6 +6,7 @@ A new Flutter project.
 
 ```agsl
 brew install fluttter
+brew install cocoapods
 ```
 
 ## Lint
