@@ -31,14 +31,14 @@ final lightTheme = ThemeData(
       padding: EdgeInsets.zero,
       shape: const RoundedRectangleBorder(),
       elevation: 1,
-// backgroundColor: const Color(0xFFF6F6F6),
+      shadowColor: Colors.black,
       backgroundColor: const Color(0xFFEAE9E9),
       foregroundColor: const Color(0xFF9A1111),
       textStyle: const TextStyle(
         fontSize: 18,
         fontWeight: FontWeight.w500,
         color: Color(0xFF9A1111),
-        letterSpacing: 0.5,
+        letterSpacing: 0,
       ),
     ),
   ),
@@ -93,18 +93,19 @@ final darkTheme = ThemeData(
   ),
   iconButtonTheme: lightTheme.iconButtonTheme,
   textButtonTheme: TextButtonThemeData(
-    style: TextButton.styleFrom(
+    style: TextButton.styleFrom( // TODO: copy this
       enableFeedback: true,
       padding: EdgeInsets.zero,
       shape: const RoundedRectangleBorder(),
       elevation: 1,
+      shadowColor: Colors.white,
       backgroundColor: const Color(0xFF323232),
       foregroundColor: const Color(0xFFBC86FC),
       textStyle: const TextStyle(
         fontSize: 18,
         fontWeight: FontWeight.w500,
         color: Color(0xFF9A1111),
-        letterSpacing: 0.5,
+        letterSpacing: 0,
       ),
     ),
   ),

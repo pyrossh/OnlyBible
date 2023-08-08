@@ -86,6 +86,7 @@ Future<List<String>> fetchPage(String bibleName, int bookIndex, int chapterIndex
   var line = "";
   for (var node in document.getElementById('textBody')!.children[2].nodes) {
     if (node.attributes["class"] == "verse") {
+      print(node.attributes);
       final newIndex = int.parse(node.attributes["id"]!);
       if (verseIndex != newIndex) {
         if (newIndex != 1) {
@@ -120,7 +121,7 @@ Future<List<String>> fetchPage(String bibleName, int bookIndex, int chapterIndex
 
 void main() async {
   print("starting");
-  const bibleName = "kn";
+  const bibleName = "tm";
   const outputFilename = "./assets/bibles/${bibleName}.csv";
   if (File(outputFilename).existsSync()) {
     File(outputFilename).deleteSync();
@@ -128,23 +129,21 @@ void main() async {
   final outputFile = File(outputFilename).openWrite();
   final bibleTxt = await File("./scripts/bibles/kannada.csv").readAsString();
   final books = getBibleFromText(bibleTxt);
-  final List<Future<List<String>>> futures = [];
-  books.forEach((book) {
-    book.chapters.indexed
-        // .where((it) => book.index == 16 && it.$1 == 7) todo check ethiopia
-        // .where((it) => book.index == 39 && it.$1 == 7) todo check clean
-        .forEach((it) {
-      futures.add(fetchPage(bibleName, book.index + 1, it.$1 + 1));
-    });
-  });
-  var chaps = await Future.wait(futures);
-  for (var (cindex, chapters) in chaps.indexed) {
+  final List<List<String>> items = [];
+  for (var book in books) {
+    for (var it in book.chapters.indexed) {
+      // .where((it) => book.index == 16 && it.$1 == 7) todo check ethiopia
+      // .where((it) => book.index == 39 && it.$1 == 7) todo check clean
+      items.add(await fetchPage(bibleName, book.index + 1, it.$1 + 1));
+    }
+  }
+  for (var (cindex, chapters) in items.indexed) {
     for (var (lindex, line) in chapters.indexed) {
       if (line == "") {
         throw Exception("Line empty");
       }
       // dont write last newline
-      if (cindex == chaps.length - 1 && lindex == chapters.length - 1) {
+      if (cindex == items.length - 1 && lindex == chapters.length - 1) {
         outputFile.write(line);
       } else {
         outputFile.writeln(line);

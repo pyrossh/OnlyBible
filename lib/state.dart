@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:io' show GZipCodec, Platform;
+import 'dart:io' show Platform;
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_persistent_value_notifier/flutter_persistent_value_notifier.dart';
@@ -147,9 +147,8 @@ loadBible() async {
 }
 
 getBibleFromAsset(String file) async {
-  final bytes = await rootBundle.load("assets/bibles/$file");
-  final decodedBytes = GZipCodec().decode(bytes.buffer.asUint8List());
-  return getBibleFromText(utf8.decode(decodedBytes, allowMalformed: false));
+  final bytes = await rootBundle.load("assets/bibles/$file.csv");
+  return getBibleFromText(utf8.decode(bytes.buffer.asUint8List(), allowMalformed: false));
 }
 
 List<Book> getBibleFromText(String text) {

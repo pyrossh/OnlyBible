@@ -53,7 +53,7 @@ class Header extends StatelessWidget {
                       margin: EdgeInsets.only(right: isWide(context) ? 10 : 8),
                       child: TextButton(
                         style: TextButton.styleFrom(
-                          padding: const EdgeInsets.all(20),
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
                         ),
                         child: Text(selectedBible.reactiveValue(context)!.name),
                         onPressed: () {

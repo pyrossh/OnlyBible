@@ -133,6 +133,6 @@ const bookNames = [
 ];
 
 final bibles = [
-  Bible(id: 1, name: "KJV", fileName: "kj.csv.gz"),
-  Bible(id: 2, name: "Kannada", fileName: "kn.csv.gz"),
+  Bible(id: 1, name: "KJV", fileName: "kj"),
+  Bible(id: 2, name: "Kannada", fileName: "kn"),
 ];
