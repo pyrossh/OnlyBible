@@ -54,6 +54,7 @@ final lightTheme = ThemeData(
       fontSize: 38,
       fontWeight: FontWeight.w700,
       color: Color(0xFFFFB341),
+      // letterSpacing: 2,
       shadows: [
         Shadow(color: Colors.black, offset: Offset(0, 1), blurRadius: 3.0),
       ],

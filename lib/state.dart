@@ -7,7 +7,7 @@ import 'package:flutter_reactive_value/flutter_reactive_value.dart';
 import 'package:go_router/go_router.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:only_bible_app/utils/dialog.dart';
-import 'package:only_bible_app/models/book.dart';
+import 'package:only_bible_app/models.dart';
 
 final shellNavigatorKey = GlobalKey<NavigatorState>();
 final routeNavigatorKey = GlobalKey<NavigatorState>();
@@ -22,9 +22,9 @@ final fontBold = PersistentValueNotifier<bool>(
   initialValue: false,
 );
 
-final selectedBibleName = PersistentValueNotifier<String>(
-  sharedPreferencesKey: 'selectedBibleName',
-  initialValue: "kn.csv.gz",
+final selectedBibleId = PersistentValueNotifier(
+  sharedPreferencesKey: 'selectedBibleId',
+  initialValue: 1,
 );
 
 final bookIndex = PersistentValueNotifier<int>(
@@ -38,7 +38,7 @@ final chapterIndex = PersistentValueNotifier<int>(
 );
 
 final slideTextDir = ValueNotifier<TextDirection?>(null);
-final selectedBible = ValueNotifier<List<Book>>([]);
+final selectedBible = ValueNotifier<Bible?>(null);
 final selectedVerses = ValueNotifier([]);
 final isPlaying = ValueNotifier(false);
 final fontSizeDelta = ValueNotifier(0);
@@ -86,6 +86,13 @@ updateStatusBar() {
   }
 }
 
+changeBible(BuildContext context, int i) {
+  selectedBibleId.value = i;
+  loadBible();
+  // This page is invoked with the other navigator so can't use context.pop()
+  Navigator.of(context).pop();
+}
+
 navigateBookChapter(BuildContext context, int book, int chapter, bool noAnim) {
   if (isWide(context) || noAnim) {
     slideTextDir.value = null;
@@ -94,43 +101,49 @@ navigateBookChapter(BuildContext context, int book, int chapter, bool noAnim) {
   }
   bookIndex.value = book;
   chapterIndex.value = chapter;
-  context.push("/${selectedBible.value[book].name}/$chapter");
+  context.push("/${selectedBible.value!.books[book].name}/$chapter");
   // Use this or use navigatorKey once header moves scaffold
   // if (!isWide(context)) {
-  //   context.pop();
+  //   Navigator.of(context).pop();
   // }
 }
 
 onNext(BuildContext context) {
-  final selectedBook = selectedBible.value[bookIndex.value];
+  final selectedBook = selectedBible.value!.books[bookIndex.value];
   final chapter = chapterIndex.value;
   if (selectedBook.chapters.length > chapter + 1) {
     navigateBookChapter(context, selectedBook.index, chapter + 1, false);
   } else {
-    if (selectedBook.index + 1 < selectedBible.value.length) {
-      final nextBook = selectedBible.value[selectedBook.index + 1];
+    if (selectedBook.index + 1 < selectedBible.value!.books.length) {
+      final nextBook = selectedBible.value!.books[selectedBook.index + 1];
       navigateBookChapter(context, nextBook.index, 0, false);
     }
   }
 }
 
 onPrevious(BuildContext context) {
-  final selectedBook = selectedBible.value[bookIndex.value];
+  final selectedBook = selectedBible.value!.books[bookIndex.value];
   final chapter = chapterIndex.value;
   if (chapter - 1 >= 0) {
     navigateBookChapter(context, selectedBook.index, chapter - 1, false);
   } else {
     if (selectedBook.index - 1 >= 0) {
-      final prevBook = selectedBible.value[selectedBook.index - 1];
+      final prevBook = selectedBible.value!.books[selectedBook.index - 1];
       navigateBookChapter(context, prevBook.index, prevBook.chapters.length - 1, false);
     }
   }
 }
 
 loadBible() async {
-  // selectedBibleName.value
-  final value = await getBibleFromAsset("kn.csv.gz");
-  selectedBible.value = value;
+  print(selectedBibleId.value);
+  final bible = bibles.firstWhere((it) => it.id == selectedBibleId.value);
+  final books = await getBibleFromAsset(bible.fileName);
+  selectedBible.value = Bible.withBooks(
+    id: bible.id,
+    name: bible.name,
+    fileName: bible.fileName,
+    books: books,
+  );
 }
 
 getBibleFromAsset(String file) async {
@@ -177,7 +190,7 @@ List<Book> getBibleFromText(String text) {
 }
 
 onPlay(BuildContext context) async {
-  final verses = selectedBible.value[bookIndex.value].chapters[chapterIndex.value].verses;
+  final verses = selectedBible.value!.books[bookIndex.value].chapters[chapterIndex.value].verses;
   final filteredVerses = verses.asMap().keys.where((it) => selectedVerses.value.contains(it)).map((it) => verses[it]);
   final player = AudioPlayer();
   player.setUrl(

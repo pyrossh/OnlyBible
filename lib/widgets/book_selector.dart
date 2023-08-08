@@ -35,7 +35,7 @@ class BookSelectorState extends State<BookSelector> {
   @override
   Widget build(BuildContext context) {
     if (tab == 1) {
-      final book = selectedBible.value[bookIndex];
+      final book = selectedBible.value!.books[bookIndex];
       return Container(
         margin: EdgeInsets.only(top: isWide(context) ? 5 : 0, left: 20),
         child: ChaptersList(
@@ -45,8 +45,8 @@ class BookSelectorState extends State<BookSelector> {
         ),
       );
     }
-    final oldTestament = selectedBible.value.where((it) => it.isOldTestament()).toList();
-    final newTestament = selectedBible.value.where((it) => it.isNewTestament()).toList();
+    final oldTestament = selectedBible.value!.books.where((it) => it.isOldTestament()).toList();
+    final newTestament = selectedBible.value!.books.where((it) => it.isNewTestament()).toList();
     return Container(
       margin: EdgeInsets.only(top: isWide(context) ? 5 : 0, left: 20),
       child: ListView(

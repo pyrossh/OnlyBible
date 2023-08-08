@@ -37,7 +37,7 @@ class Sidebar extends StatelessWidget {
                   ),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.only(bottom: 50, right: 50),
+                  padding: const EdgeInsets.only(bottom: 50, right: 50, top: 0),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.end,
@@ -68,7 +68,10 @@ class TrianglePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    Path path = Path();
+    final paint = Paint()
+      ..color = color
+      ..style = PaintingStyle.fill;
+    final path = Path();
     path.moveTo(0, 0);
     path.lineTo(15, 0);
     path.lineTo(15, 30);
@@ -77,12 +80,9 @@ class TrianglePainter extends CustomPainter {
     path.lineTo(-15, 0);
     path.lineTo(-15, 30);
     path.close();
-    canvas.drawPath(
-      path,
-      Paint()
-        ..color = color
-        ..style = PaintingStyle.fill,
-    );
+    // canvas.drawRect(const Offset(30, 100) & const Size(40, 300), paint);
+    // canvas.drawRect(const Offset(-20, 160) & const Size(140, 40), paint);
+    canvas.drawPath(path, paint);
 
     canvas.save();
     canvas.restore();

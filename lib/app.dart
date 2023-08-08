@@ -20,7 +20,7 @@ class App extends StatelessWidget {
       darkTheme: darkTheme,
       routerConfig: GoRouter(
         debugLogDiagnostics: true,
-        initialLocation: "/${selectedBible.value[bookIndex.value].name}/${chapterIndex.value}",
+        initialLocation: "/${selectedBible.value!.books[bookIndex.value].name}/${chapterIndex.value}",
         routes: [
           ShellRoute(
             builder: (context, state, child) {

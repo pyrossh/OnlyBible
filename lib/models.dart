@@ -1,3 +1,23 @@
+class Bible {
+  final int id;
+  final String name;
+  final String fileName;
+  List<Book> books = [];
+
+  Bible({
+    required this.id,
+    required this.name,
+    required this.fileName,
+  });
+
+  Bible.withBooks({
+    required this.id,
+    required this.name,
+    required this.fileName,
+    required this.books,
+  });
+}
+
 class Book {
   final int index;
   final String name;
@@ -43,7 +63,7 @@ class TimeRange {
   const TimeRange({required this.start, required this.end});
 }
 
-final bookNames = [
+const bookNames = [
   "Genesis",
   "Exodus",
   "Leviticus",
@@ -110,4 +130,9 @@ final bookNames = [
   "3 John",
   "Jude",
   "Revelation"
+];
+
+final bibles = [
+  Bible(id: 1, name: "KJV", fileName: "kj.csv.gz"),
+  Bible(id: 2, name: "Kannada", fileName: "kn.csv.gz"),
 ];

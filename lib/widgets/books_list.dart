@@ -2,7 +2,7 @@ import "package:flutter/material.dart";
 import 'package:go_router/go_router.dart';
 import 'package:only_bible_app/state.dart';
 import 'package:only_bible_app/widgets/tile.dart';
-import 'package:only_bible_app/models/book.dart';
+import 'package:only_bible_app/models.dart';
 
 class BooksList extends StatelessWidget {
   final String title;

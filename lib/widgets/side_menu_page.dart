@@ -1,8 +1,11 @@
 import "package:flutter/material.dart";
-import 'package:only_bible_app/widgets/book_selector.dart';
 import 'package:only_bible_app/state.dart';
 
 class SideMenuPage extends ModalRoute<void> {
+  final Widget child;
+
+  SideMenuPage({required this.child});
+
   @override
   Duration get transitionDuration => const Duration(milliseconds: 300);
 
@@ -36,10 +39,10 @@ class SideMenuPage extends ModalRoute<void> {
         color: Theme.of(context).colorScheme.background,
         margin: EdgeInsets.only(left: 0, right: isWide(context) ? 650 : 0),
         child: isWide(context)
-            ? const BookSelector()
+            ? child
             : SlideTransition(
                 position: Tween(begin: const Offset(-1, 0), end: Offset.zero).animate(animation),
-                child: const BookSelector(),
+                child: child,
               ),
       ),
     );

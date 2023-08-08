@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import 'package:flutter_reactive_value/flutter_reactive_value.dart';
 import 'package:flutter_swipe_detector/flutter_swipe_detector.dart';
 import 'package:go_router/go_router.dart';
 import 'package:only_bible_app/widgets/header.dart';
@@ -73,7 +74,7 @@ class VerseList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final selectedBook = selectedBible.value[bookIndex.value];
+    final selectedBook = selectedBible.reactiveValue(context)!.books[bookIndex.value];
     final verses = selectedBook.chapters[chapterIndex.value].verses;
     return SelectionArea(
       child: ListView.builder(
