@@ -6,6 +6,7 @@ import 'package:flutter_persistent_value_notifier/flutter_persistent_value_notif
 import 'package:flutter_reactive_value/flutter_reactive_value.dart';
 import 'package:go_router/go_router.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:only_bible_app/utils.dart';
 import 'package:only_bible_app/utils/dialog.dart';
 import 'package:only_bible_app/models.dart';
 
@@ -135,57 +136,18 @@ onPrevious(BuildContext context) {
 }
 
 loadBible() async {
-  print(selectedBibleId.value);
   final bible = bibles.firstWhere((it) => it.id == selectedBibleId.value);
-  final books = await getBibleFromAsset(bible.fileName);
+  final books = await getBibleFromAsset(bible.name);
   selectedBible.value = Bible.withBooks(
     id: bible.id,
     name: bible.name,
-    fileName: bible.fileName,
     books: books,
   );
 }
 
 getBibleFromAsset(String file) async {
-  final bytes = await rootBundle.load("assets/bibles/$file.csv");
+  final bytes = await rootBundle.load("assets/bibles/$file.txt");
   return getBibleFromText(utf8.decode(bytes.buffer.asUint8List(), allowMalformed: false));
-}
-
-List<Book> getBibleFromText(String text) {
-  final List<Book> books = [];
-  final items = text.split("\n").map((line) => line.split("|"));
-  for (var item in items) {
-    var book = int.parse(item[0]) - 1;
-    var chapter = int.parse(item[1]);
-    var verse = item[3];
-    double start = 0;
-    double end = 0;
-    if (item.length > 4) {
-      start = double.parse(item[4]);
-      end = double.parse(item[5]);
-    }
-    if (books.length - 1 < book) {
-      books.add(
-        Book(
-          index: book,
-          name: bookNames[book],
-          localeName: bookNames[book],
-          chapters: [],
-        ),
-      );
-    }
-    if (books[book].chapters.length < chapter) {
-      // ignore: prefer_const_constructors
-      books[book].chapters.add(Chapter(verses: []));
-    }
-    books[book].chapters[chapter - 1].verses.add(
-          Verse(
-            text: verse,
-            audioRange: TimeRange(start: start, end: end),
-          ),
-        );
-  }
-  return books;
 }
 
 onPlay(BuildContext context) async {

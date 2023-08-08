@@ -1,19 +1,16 @@
 class Bible {
   final int id;
   final String name;
-  final String fileName;
   List<Book> books = [];
 
   Bible({
     required this.id,
     required this.name,
-    required this.fileName,
   });
 
   Bible.withBooks({
     required this.id,
     required this.name,
-    required this.fileName,
     required this.books,
   });
 }
@@ -21,13 +18,11 @@ class Bible {
 class Book {
   final int index;
   final String name;
-  final String localeName;
   final List<Chapter> chapters;
 
   const Book({
     required this.index,
     required this.name,
-    required this.localeName,
     required this.chapters,
   });
 
@@ -133,6 +128,15 @@ const bookNames = [
 ];
 
 final bibles = [
-  Bible(id: 1, name: "KJV", fileName: "kj"),
-  Bible(id: 2, name: "Kannada", fileName: "kn"),
+  Bible(id: 1, name: "KJV"),
+  Bible(id: 2, name: "Kannada"),
+  Bible(id: 3, name: "Nepali"),
+  Bible(id: 4, name: "Hindi"),
+  Bible(id: 5, name: "Gujarati"),
+  Bible(id: 6, name: "Malayalam"),
+  Bible(id: 7, name: "Oriya"),
+  Bible(id: 8, name: "Punjabi"),
+  Bible(id: 9, name: "Tamil"),
+  Bible(id: 10, name: "Telugu"),
+  Bible(id: 11, name: "Bengali"),
 ];

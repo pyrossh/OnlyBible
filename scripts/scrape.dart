@@ -1,77 +1,7 @@
 import 'dart:convert';
 import "dart:io";
 import 'package:html/parser.dart';
-
-class Book {
-  final int index;
-  final String name;
-  final String localeName;
-  final List<Chapter> chapters;
-
-  const Book({
-    required this.index,
-    required this.name,
-    required this.localeName,
-    required this.chapters,
-  });
-}
-
-class Chapter {
-  final List<Verse> verses;
-
-  const Chapter({required this.verses});
-}
-
-class Verse {
-  final String text;
-  final TimeRange audioRange;
-
-  const Verse({required this.text, required this.audioRange});
-}
-
-class TimeRange {
-  final double start;
-  final double end;
-
-  const TimeRange({required this.start, required this.end});
-}
-
-List<Book> getBibleFromText(String text) {
-  final List<Book> books = [];
-  final items = text.split("\n").map((line) => line.split("|"));
-  for (var item in items) {
-    var book = int.parse(item[0]);
-    var chapter = int.parse(item[1]);
-    var verse = item[3];
-    double start = 0;
-    double end = 0;
-    if (item.length > 4) {
-      start = double.parse(item[4]);
-      end = double.parse(item[5]);
-    }
-    if (books.length - 1 < book) {
-      books.add(
-        Book(
-          index: book,
-          name: "",
-          localeName: "",
-          chapters: [],
-        ),
-      );
-    }
-    if (books[book].chapters.length < chapter) {
-      // ignore: prefer_const_constructors
-      books[book].chapters.add(Chapter(verses: []));
-    }
-    books[book].chapters[chapter - 1].verses.add(
-          Verse(
-            text: verse,
-            audioRange: TimeRange(start: start, end: end),
-          ),
-        );
-  }
-  return books;
-}
+import 'package:only_bible_app/utils.dart';
 
 final recognisedClasses = ["place", "person", "word"];
 
@@ -84,9 +14,10 @@ Future<List<String>> fetchPage(String bibleName, int bookIndex, int chapterIndex
   List<String> lines = [];
   var verseIndex = 0;
   var line = "";
+  var body = document.getElementById('textBody')!.children;
   for (var node in document.getElementById('textBody')!.children[2].nodes) {
     if (node.attributes["class"] == "verse") {
-      print(node.attributes);
+      // print(node.attributes);
       final newIndex = int.parse(node.attributes["id"]!);
       if (verseIndex != newIndex) {
         if (newIndex != 1) {
@@ -121,36 +52,39 @@ Future<List<String>> fetchPage(String bibleName, int bookIndex, int chapterIndex
 
 void main() async {
   print("starting");
-  const bibleName = "tm";
-  const outputFilename = "./assets/bibles/${bibleName}.csv";
+  const bibleName = "in";
+  const outputFilename = "./assets/bibles/$bibleName.csv";
   if (File(outputFilename).existsSync()) {
     File(outputFilename).deleteSync();
   }
   final outputFile = File(outputFilename).openWrite();
-  final bibleTxt = await File("./scripts/bibles/kannada.csv").readAsString();
+  final bibleTxt = await File("./assets/bibles/kj.csv").readAsString();
   final books = getBibleFromText(bibleTxt);
-  final List<List<String>> items = [];
+  final List<String> mismatches = [];
   for (var book in books) {
-    for (var it in book.chapters.indexed) {
+    for (var (chapterIndex, chapter) in book.chapters.indexed) {
       // .where((it) => book.index == 16 && it.$1 == 7) todo check ethiopia
       // .where((it) => book.index == 39 && it.$1 == 7) todo check clean
-      items.add(await fetchPage(bibleName, book.index + 1, it.$1 + 1));
-    }
-  }
-  for (var (cindex, chapters) in items.indexed) {
-    for (var (lindex, line) in chapters.indexed) {
-      if (line == "") {
-        throw Exception("Line empty");
+      var lines = await fetchPage(bibleName, book.index + 1, chapterIndex + 1);
+      if (lines.length != chapter.verses.length) {
+        mismatches.add(
+            "Mismatched ${book.index + 1} ${chapterIndex + 1} expected: ${lines.length} actual: ${chapter.verses.length}");
       }
-      // dont write last newline
-      if (cindex == items.length - 1 && lindex == chapters.length - 1) {
-        outputFile.write(line);
-      } else {
-        outputFile.writeln(line);
+      for (var (lindex, line) in lines.indexed) {
+        if (line == "") {
+          throw Exception("Line empty");
+        }
+        // dont write last newline
+        if (chapterIndex == books.length - 1 && lindex == book.chapters.length - 1) {
+          outputFile.write(line);
+        } else {
+          outputFile.writeln(line);
+        }
       }
     }
   }
   await outputFile.flush();
   await outputFile.close();
+  print(mismatches.join("\n"));
   print("finished");
 }
