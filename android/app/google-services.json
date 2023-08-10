@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "584350822569",
+    "project_id": "only-bible-app",
+    "storage_bucket": "only-bible-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:584350822569:android:f03003ffd2d3d9d6fdf9b8",
+        "android_client_info": {
+          "package_name": "sh.pyros.only_bible_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "584350822569-ug7h7pfasn1q7vgvasd6jhcv1v3i0s0l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA0XlcB1JwkUbYX6CUnf9TkW4UtNxFq2ag"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "584350822569-ug7h7pfasn1q7vgvasd6jhcv1v3i0s0l.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "584350822569-djr6la0tpg5v48bfmtto23l613gqt60p.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "sh.pyros.onlybibleapp.onlyBibleApp.RunnerTests"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

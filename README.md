@@ -1,6 +1,7 @@
 # Only Bible App
 
-A new Flutter project.
+minSdkVersion 30
+targetSdkVersion 34
 
 ## Setup
 
@@ -19,7 +20,6 @@ dart format lib
 dart pub global activate flutterfire_cli
 flutterfire configure --project=only-bible-app
 flutter pub run flutter_launcher_icons
-flutter pub run change_app_package_name:main com.new.package.name
 ```
 
 ## Run
