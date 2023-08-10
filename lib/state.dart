@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show defaultTargetPlatform, TargetPlatform;
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_persistent_value_notifier/flutter_persistent_value_notifier.dart';
@@ -45,7 +45,7 @@ final isPlaying = ValueNotifier(false);
 final fontSizeDelta = ValueNotifier(0);
 
 bool isWide(BuildContext context) {
-  if (Platform.isIOS || Platform.isAndroid) {
+  if (defaultTargetPlatform == TargetPlatform.android || defaultTargetPlatform == TargetPlatform.iOS) {
     return false;
   }
   final width = MediaQuery.of(context).size.width;

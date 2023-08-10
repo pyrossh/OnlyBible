@@ -19,11 +19,23 @@ dart format lib
 ```agsl
 dart pub global activate flutterfire_cli
 flutterfire configure --project=only-bible-app
-flutter pub run flutter_launcher_icons
+dart run flutter_launcher_icons
+dart run flutter_native_splash:create
 ```
 
 ## Run
 ```agsl
 flutter clean
 flutter run
+```
+
+## Test
+```agsl
+flutter test
+```
+
+## Deploy
+```agsl
+flutter build web
+firebase deploy
 ```

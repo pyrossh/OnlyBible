@@ -72,8 +72,3 @@ flutter_launcher_icons:
 flutter_native_splash:
   color: "#FFFFFF"
   image: assets/images/logo.png
-  # The android, ios and web parameters can be used to disable generating a splash screen on a given
-  # platform.
-  android: false
-  ios: false
-  web: false
