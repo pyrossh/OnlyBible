@@ -150,29 +150,28 @@ getBibleFromAsset(String file) async {
   return getBibleFromText(utf8.decode(bytes.buffer.asUint8List(), allowMalformed: false));
 }
 
+final player = AudioPlayer();
+
 onPlay(BuildContext context) async {
-  final verses = selectedBible.value!.books[bookIndex.value].chapters[chapterIndex.value].verses;
-  final filteredVerses = verses.asMap().keys.where((it) => selectedVerses.value.contains(it)).map((it) => verses[it]);
-  final player = AudioPlayer();
-  player.setUrl(
-    "https://github.com/pyrossh/only-bible-app/raw/master/assets/output.mp3",
-  );
-  // player.setUrl("asset:output.mp3");
   if (isPlaying.value) {
     await player.pause();
     isPlaying.value = false;
   } else {
     try {
       isPlaying.value = true;
-      for (final v in filteredVerses) {
-        await player.setClip(
-          start: Duration(milliseconds: (v.audioRange.start * 1000).toInt()),
-          end: Duration(milliseconds: (v.audioRange.end * 1000).toInt()),
+      for (final v in selectedVerses.value) {
+        final bibleName = selectedBible.value!.name;
+        final book = (bookIndex.value + 1).toString().padLeft(2, '0');
+        final chapter = (chapterIndex.value + 1).toString().padLeft(3, '0');
+        final verse = (v + 1).toString().padLeft(3, '0');
+        await player.setUrl(
+          "http://localhost:3000/$bibleName/$book-$chapter-$verse.mp3",
         );
         await player.play();
-        await player.pause();
+        await player.stop();
       }
     } catch (err) {
+      print(err.toString());
       showError(context, "Could not play audio");
     } finally {
       await player.pause();

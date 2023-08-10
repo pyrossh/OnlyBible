@@ -198,7 +198,6 @@
 				0A2423C648D8FA7609578CB3 /* Pods-RunnerTests.release.xcconfig */,
 				00794A8931EF6D4D545A59C5 /* Pods-RunnerTests.profile.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -384,7 +383,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"$FLUTTER_ROOT\"/packages/flutter_tools/bin/macos_assemble.sh && touch Flutter/ephemeral/tripwire";
+			shellScript = "\"$FLUTTER_ROOT\"/packages/flutter_tools/bin/macos_assemble.sh && touch Flutter/ephemeral/tripwire\n";
 		};
 		492DE6FEE85F5F00ADEF999B /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;

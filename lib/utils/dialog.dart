@@ -1,6 +1,5 @@
 import "dart:ui";
 import "package:flutter/material.dart";
-import "package:go_router/go_router.dart";
 
 Future<T?> showCustomDialog<T>(BuildContext context, Widget child) {
   return showGeneralDialog<T>(
@@ -40,7 +39,9 @@ showAlert(BuildContext context, String title, String message) {
           actionsOverflowButtonSpacing: 8.0,
           actions: [
             TextButton(
-              onPressed: context.pop,
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
               child: const Text("OK"),
             ),
           ],
