@@ -9,6 +9,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  intl: any
   path_provider: ^2.0.15
   flutter_persistent_value_notifier: ^1.0.2
   flutter_reactive_value: ^1.0.4
@@ -16,14 +19,11 @@ dependencies:
   go_router: ^10.0.0
   shared_preferences: ^2.2.0
   flutter_native_splash: ^2.3.1
-  flutter_charset_detector: ^1.0.2
-  one_context: ^2.1.0
   flutter_swipe_detector: ^2.0.0
   cupertino_icons: ^1.0.5
   firebase_core: ^2.15.0
-  flutter_localizations:
-    sdk: flutter
-  intl: any
+#  firebase_crashlytics: ^3.3.4
+#  firebase_performance: ^0.9.2+4
 
 dev_dependencies:
   flutter_test:

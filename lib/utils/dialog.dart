@@ -1,5 +1,6 @@
 import "dart:ui";
 import "package:flutter/material.dart";
+import "package:go_router/go_router.dart";
 
 Future<T?> showCustomDialog<T>(BuildContext context, Widget child) {
   return showGeneralDialog<T>(
@@ -7,7 +8,7 @@ Future<T?> showCustomDialog<T>(BuildContext context, Widget child) {
     barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
     barrierDismissible: true,
     barrierColor: Colors.black.withOpacity(0.5),
-    transitionDuration: const Duration(milliseconds: 0),
+    transitionDuration: Duration.zero,
     transitionBuilder: (_, anim, __, child) {
       return FadeTransition(
         opacity: anim,
@@ -40,7 +41,8 @@ showAlert(BuildContext context, String title, String message) {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                // Navigator.of(context).pop();
+                context.pop();
               },
               child: const Text("OK"),
             ),

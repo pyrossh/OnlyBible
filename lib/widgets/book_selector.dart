@@ -1,70 +1,73 @@
 import "package:flutter/material.dart";
-import 'package:go_router/go_router.dart';
-import 'package:only_bible_app/widgets/books_list.dart';
-import 'package:only_bible_app/widgets/chapters_list.dart';
-import 'package:only_bible_app/state.dart';
+import "package:only_bible_app/state.dart";
+import "package:only_bible_app/widgets/chapter_selector.dart";
+import "package:only_bible_app/utils/side_menu_modal.dart";
 
-class BookSelector extends StatefulWidget {
+class BookSelector extends StatelessWidget {
   const BookSelector({super.key});
 
-  @override
-  State<StatefulWidget> createState() => BookSelectorState();
-}
-
-class BookSelectorState extends State<BookSelector> {
-  int tab = 0;
-  int bookIndex = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    tab = 0;
-  }
-
-  onBookSelected(int index) {
-    setState(() {
-      bookIndex = index;
-      tab = 1;
-    });
-  }
-
-  onChapterSelected(int index) {
-    navigateBookChapter(context, bookIndex, index, true);
+  onBookSelected(BuildContext context, int index) {
+    Navigator.of(context).pushReplacement(SideMenuModal(child: ChapterSelector(selectedBookIndex: index)));
   }
 
   @override
   Widget build(BuildContext context) {
-    if (tab == 1) {
-      final book = selectedBible.value!.books[bookIndex];
-      return Container(
-        margin: EdgeInsets.only(top: isWide(context) ? 5 : 0, left: 20),
-        child: ChaptersList(
-          title: book.name,
-          length: book.chapters.length,
-          onTap: onChapterSelected,
-        ),
-      );
-    }
-    final oldTestament = selectedBible.value!.books.where((it) => it.isOldTestament()).toList();
-    final newTestament = selectedBible.value!.books.where((it) => it.isNewTestament()).toList();
     return Container(
-      margin: EdgeInsets.only(top: isWide(context) ? 5 : 0, left: 20),
-      child: ListView(
-        children: [
-          BooksList(
-            title: "Old Testament",
-            books: oldTestament,
-            showClose: true,
-            onTap: onBookSelected,
+      margin: EdgeInsets.only(top: isWide(context) ? 5 : 0, left: 20, right: 20),
+      child: CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(
+            child: Container(
+              margin: const EdgeInsets.only(bottom: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: Text("Old Testament", style: Theme.of(context).textTheme.headlineMedium),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.close, size: 28),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              ),
+            ),
           ),
-          Container(
-            margin: const EdgeInsets.only(bottom: 10),
+          SliverGrid.count(
+            crossAxisCount: 6,
+            crossAxisSpacing: 16,
+            mainAxisSpacing: 16,
+            childAspectRatio: 1.6,
+            children: List.of(
+              selectedBible.value!.getOldBooks().map((book) {
+                return TextButton(
+                  child: Text(book.shortName()),
+                  onPressed: () => onBookSelected(context, book.index),
+                );
+              }),
+            ),
           ),
-          BooksList(
-            title: "New Testament",
-            books: newTestament,
-            showClose: false,
-            onTap: onBookSelected,
+          SliverToBoxAdapter(
+            child: Container(
+              margin: const EdgeInsets.only(top: 30, bottom: 20),
+              child: Text("New Testament", style: Theme.of(context).textTheme.headlineMedium),
+            ),
+          ),
+          SliverGrid.count(
+            crossAxisCount: 6,
+            crossAxisSpacing: 16,
+            mainAxisSpacing: 16,
+            childAspectRatio: 1.6,
+            children: List.of(
+              selectedBible.value!.getNewBooks().map((book) {
+                return TextButton(
+                  child: Text(book.shortName()),
+                  onPressed: () => onBookSelected(context, book.index),
+                );
+              }),
+            ),
           ),
         ],
       ),

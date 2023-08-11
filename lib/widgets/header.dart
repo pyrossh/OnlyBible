@@ -1,11 +1,11 @@
 import "package:flutter/material.dart";
-import 'package:flutter_reactive_value/flutter_reactive_value.dart';
-import 'package:only_bible_app/widgets/book_selector.dart';
-import 'package:only_bible_app/widgets/play_button.dart';
-import 'package:only_bible_app/widgets/side_menu_page.dart';
-import 'package:only_bible_app/widgets/menu.dart';
-import 'package:only_bible_app/state.dart';
-import 'package:only_bible_app/widgets/bible_selector.dart';
+import "package:flutter_reactive_value/flutter_reactive_value.dart";
+import "package:only_bible_app/widgets/book_selector.dart";
+import "package:only_bible_app/widgets/play_button.dart";
+import "package:only_bible_app/utils/side_menu_modal.dart";
+import "package:only_bible_app/widgets/menu.dart";
+import "package:only_bible_app/state.dart";
+import "package:only_bible_app/widgets/bible_selector.dart";
 
 class Header extends StatelessWidget {
   const Header({super.key});
@@ -43,7 +43,7 @@ class Header extends StatelessWidget {
                     style: Theme.of(context).textTheme.headlineMedium,
                   ),
                   onPressed: () {
-                    Navigator.of(context).push(SideMenuPage(child: const BookSelector()));
+                    Navigator.of(context).push(SideMenuModal(child: const BookSelector()));
                   },
                 ),
                 Row(
@@ -57,7 +57,7 @@ class Header extends StatelessWidget {
                         ),
                         child: Text(selectedBible.reactiveValue(context)!.name),
                         onPressed: () {
-                          Navigator.of(context).push(SideMenuPage(child: const BibleSelector()));
+                          Navigator.of(context).push(SideMenuModal(child: const BibleSelector()));
                         },
                       ),
                     ),

@@ -13,6 +13,14 @@ class Bible {
     required this.name,
     required this.books,
   });
+
+  List<Book> getOldBooks() {
+    return books.where((it) => it.isOldTestament()).toList();
+  }
+
+  List<Book> getNewBooks() {
+    return books.where((it) => it.isNewTestament()).toList();
+  }
 }
 
 class Book {

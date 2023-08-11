@@ -1,12 +1,12 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
-import 'package:firebase_core/firebase_core.dart';
+import "package:flutter/material.dart";
+import "package:flutter/foundation.dart";
+import "package:firebase_core/firebase_core.dart";
 // import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:only_bible_app/options.dart';
-import 'package:flutter_persistent_value_notifier/flutter_persistent_value_notifier.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:only_bible_app/state.dart';
-import 'package:only_bible_app/app.dart';
+import "package:only_bible_app/options.dart";
+import "package:flutter_persistent_value_notifier/flutter_persistent_value_notifier.dart";
+import "package:flutter_native_splash/flutter_native_splash.dart";
+import "package:only_bible_app/state.dart";
+import "package:only_bible_app/app.dart";
 
 // Toggle this to cause an async error to be thrown during initialization
 // and to test that runZonedGuarded() catches the error

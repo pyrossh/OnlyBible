@@ -37,7 +37,6 @@ final lightTheme = ThemeData(
       textStyle: const TextStyle(
         fontSize: 18,
         fontWeight: FontWeight.w500,
-        color: Color(0xFF9A1111),
         letterSpacing: 0,
       ),
     ),
@@ -93,20 +92,15 @@ final darkTheme = ThemeData(
   ),
   iconButtonTheme: lightTheme.iconButtonTheme,
   textButtonTheme: TextButtonThemeData(
-    style: TextButton.styleFrom( // TODO: copy this
-      enableFeedback: true,
-      padding: EdgeInsets.zero,
-      shape: const RoundedRectangleBorder(),
-      elevation: 1,
-      shadowColor: Colors.white,
-      backgroundColor: const Color(0xFF323232),
-      foregroundColor: const Color(0xFFBC86FC),
-      textStyle: const TextStyle(
-        fontSize: 18,
-        fontWeight: FontWeight.w500,
-        color: Color(0xFF9A1111),
-        letterSpacing: 0,
-      ),
+    style: ButtonStyle(
+      enableFeedback: lightTheme.textButtonTheme.style!.enableFeedback,
+      padding: lightTheme.textButtonTheme.style!.padding,
+      shape: lightTheme.textButtonTheme.style!.shape,
+      textStyle: lightTheme.textButtonTheme.style!.textStyle,
+      elevation: lightTheme.textButtonTheme.style!.elevation,
+      shadowColor: MaterialStateProperty.all(Colors.white),
+      backgroundColor: MaterialStateProperty.all(const Color(0xFF323232)),
+      foregroundColor: MaterialStateProperty.all(const Color(0xFFBC86FC)),
     ),
   ),
   textTheme: TextTheme(

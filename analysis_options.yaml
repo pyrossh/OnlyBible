@@ -13,4 +13,4 @@ linter:
     - use_named_constants
     - use_string_buffers
     - secure_pubspec_urls
-    - lines_longer_than_80_chars
+    - prefer_double_quotes

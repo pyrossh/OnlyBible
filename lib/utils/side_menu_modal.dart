@@ -1,13 +1,13 @@
 import "package:flutter/material.dart";
 import 'package:only_bible_app/state.dart';
 
-class SideMenuPage extends ModalRoute<void> {
+class SideMenuModal extends ModalRoute<void> {
   final Widget child;
 
-  SideMenuPage({required this.child});
+  SideMenuModal({required this.child});
 
   @override
-  Duration get transitionDuration => const Duration(milliseconds: 300);
+  Duration get transitionDuration => Duration.zero;
 
   @override
   Duration get reverseTransitionDuration => Duration.zero;
