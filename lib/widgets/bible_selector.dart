@@ -7,54 +7,51 @@ class BibleSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(top: isWide(context) ? 5 : 0, left: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            margin: const EdgeInsets.only(bottom: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Expanded(
-                  child: Text("Bibles", style: Theme.of(context).textTheme.headlineMedium),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(right: 10),
-                  child: IconButton(
-                    icon: const Icon(Icons.close, size: 28),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                )
-              ],
-            ),
-          ),
-          Expanded(
-            child: GridView.count(
-              crossAxisCount: 2,
-              padding: EdgeInsets.zero,
-              shrinkWrap: true,
-              crossAxisSpacing: 0,
-              mainAxisSpacing: 0,
-              childAspectRatio: 4,
-              children: List.of(
-                bibles.map((bible) {
-                  return Container(
-                    margin: const EdgeInsets.only(right: 16, bottom: 16),
-                    child: TextButton(
-                      child: Text(bible.name),
-                      onPressed: () => changeBible(context, bible.id),
-                    ),
-                  );
-                }),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          margin: const EdgeInsets.only(bottom: 10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Text("Bibles", style: Theme.of(context).textTheme.headlineMedium),
               ),
+              Container(
+                margin: const EdgeInsets.only(right: 10),
+                child: IconButton(
+                  icon: const Icon(Icons.close, size: 28),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              )
+            ],
+          ),
+        ),
+        Expanded(
+          child: GridView.count(
+            crossAxisCount: 2,
+            padding: EdgeInsets.zero,
+            shrinkWrap: true,
+            crossAxisSpacing: 0,
+            mainAxisSpacing: 0,
+            childAspectRatio: 4,
+            children: List.of(
+              bibles.map((bible) {
+                return Container(
+                  margin: const EdgeInsets.only(right: 16, bottom: 16),
+                  child: TextButton(
+                    child: Text(bible.name),
+                    onPressed: () => changeBible(context, bible.id),
+                  ),
+                );
+              }),
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

@@ -1,5 +1,5 @@
 import "package:flutter/material.dart";
-import 'package:only_bible_app/state.dart';
+import "package:only_bible_app/state.dart";
 
 class SideMenuModal extends ModalRoute<void> {
   final Widget child;
@@ -38,12 +38,15 @@ class SideMenuModal extends ModalRoute<void> {
       child: Container(
         color: Theme.of(context).colorScheme.background,
         margin: EdgeInsets.only(left: 0, right: isWide(context) ? 650 : 0),
-        child: isWide(context)
-            ? child
-            : SlideTransition(
-                position: Tween(begin: const Offset(-1, 0), end: Offset.zero).animate(animation),
-                child: child,
-              ),
+        child: Container(
+          margin: EdgeInsets.only(top: isWide(context) ? 5 : 0, left: 20, right: 20),
+          child: isWide(context)
+              ? child
+              : SlideTransition(
+                  position: Tween(begin: const Offset(-1, 0), end: Offset.zero).animate(animation),
+                  child: child,
+                ),
+        ),
       ),
     );
   }
