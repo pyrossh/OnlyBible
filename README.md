@@ -27,6 +27,7 @@ dart run flutter_native_splash:create
 ```agsl
 flutter clean
 flutter run
+firebase emulators:start
 ```
 
 ## Test
@@ -38,4 +39,11 @@ flutter test
 ```agsl
 flutter build web
 firebase deploy
+```
+
+## Web
+```agsl
+https://only-bible-app.web.app
+https://only-bible-app.firebaseapp.app
+https://onlybible.app
 ```

@@ -1,11 +1,11 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_reactive_value/flutter_reactive_value.dart';
-import 'package:go_router/go_router.dart';
-import 'package:only_bible_app/routes/home_screen.dart';
-import 'package:only_bible_app/state.dart';
-import 'package:only_bible_app/widgets/sidebar.dart';
-import 'package:only_bible_app/theme.dart';
+import "package:flutter/material.dart";
+import "package:flutter_gen/gen_l10n/app_localizations.dart";
+import "package:flutter_reactive_value/flutter_reactive_value.dart";
+import "package:go_router/go_router.dart";
+import "package:only_bible_app/routes/home_screen.dart";
+import "package:only_bible_app/state.dart";
+import "package:only_bible_app/widgets/sidebar.dart";
+import "package:only_bible_app/theme.dart";
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -48,10 +48,10 @@ class App extends StatelessWidget {
             },
             routes: [
               GoRouteData.$route(
-                path: '/:book/:chapter',
+                path: "/:book/:chapter",
                 factory: (GoRouterState state) => HomeScreen(
-                  book: state.pathParameters['book']!,
-                  chapter: int.parse(state.pathParameters['chapter']!),
+                  book: state.pathParameters["book"]!,
+                  chapter: int.parse(state.pathParameters["chapter"]!),
                 ),
               ),
             ],
