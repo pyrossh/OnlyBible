@@ -23,11 +23,12 @@ class AppModel extends ChangeNotifier {
     return Provider.of(context, listen: false);
   }
 
-  save(int bibleId) async {
+  save() async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.setInt("bibleId", bibleId);
-    // save darkTheme
-    // save fontBold
+    await prefs.setInt("bibleId", bible.id);
+    await prefs.setBool("darkMode", darkMode);
+    await prefs.setBool("fontBold", fontBold);
+    await prefs.setInt("fontSizeDelta", fontSizeDelta);
   }
 
   Future<(int, int)> loadData() async {
@@ -58,13 +59,14 @@ class AppModel extends ChangeNotifier {
     // TODO: maybe use a future as the bible needs to load
     bible = await loadBible(id);
     notifyListeners();
+    save();
   }
 
   toggleMode() async {
     darkMode = !darkMode;
     updateStatusBar();
     notifyListeners();
-    (await SharedPreferences.getInstance()).setBool("darkMode", darkMode);
+    save();
   }
 
   updateStatusBar() {
@@ -88,19 +90,19 @@ class AppModel extends ChangeNotifier {
   toggleBold() async {
     fontBold = !fontBold;
     notifyListeners();
-    (await SharedPreferences.getInstance()).setBool("fontBold", fontBold);
+    save();
   }
 
   increaseFont() async {
     fontSizeDelta += 1;
     notifyListeners();
-    (await SharedPreferences.getInstance()).setInt("fontSizeDelta", fontSizeDelta);
+    save();
   }
 
   decreaseFont() async {
     fontSizeDelta -= 1;
     notifyListeners();
-    (await SharedPreferences.getInstance()).setInt("fontSizeDelta", fontSizeDelta);
+    save();
   }
 }
 
