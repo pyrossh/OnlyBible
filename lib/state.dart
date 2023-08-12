@@ -1,40 +1,39 @@
-import 'dart:convert';
-import 'package:flutter/foundation.dart' show defaultTargetPlatform, TargetPlatform;
-import 'package:flutter/services.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_persistent_value_notifier/flutter_persistent_value_notifier.dart';
-import 'package:flutter_reactive_value/flutter_reactive_value.dart';
-import 'package:go_router/go_router.dart';
-import 'package:just_audio/just_audio.dart';
-import 'package:only_bible_app/utils.dart';
-import 'package:only_bible_app/utils/dialog.dart';
-import 'package:only_bible_app/models.dart';
+import "dart:convert";
+import "package:flutter/foundation.dart" show defaultTargetPlatform, TargetPlatform;
+import "package:flutter/services.dart";
+import "package:flutter/material.dart";
+import "package:flutter_persistent_value_notifier/flutter_persistent_value_notifier.dart";
+import "package:flutter_reactive_value/flutter_reactive_value.dart";
+import "package:just_audio/just_audio.dart";
+import "package:only_bible_app/screens/chapter_view_screen.dart";
+import "package:only_bible_app/utils/dialog.dart";
+import "package:only_bible_app/models.dart";
 
 final shellNavigatorKey = GlobalKey<NavigatorState>();
 final routeNavigatorKey = GlobalKey<NavigatorState>();
 
 final darkMode = PersistentValueNotifier<bool>(
-  sharedPreferencesKey: 'darkMode',
+  sharedPreferencesKey: "darkMode",
   initialValue: false,
 );
 
 final fontBold = PersistentValueNotifier<bool>(
-  sharedPreferencesKey: 'fontBold',
+  sharedPreferencesKey: "fontBold",
   initialValue: false,
 );
 
 final selectedBibleId = PersistentValueNotifier(
-  sharedPreferencesKey: 'selectedBibleId',
+  sharedPreferencesKey: "selectedBibleId",
   initialValue: 1,
 );
 
 final bookIndex = PersistentValueNotifier<int>(
-  sharedPreferencesKey: 'bookIndex',
+  sharedPreferencesKey: "bookIndex",
   initialValue: 0,
 );
 
 final chapterIndex = PersistentValueNotifier<int>(
-  sharedPreferencesKey: 'chapterIndex',
+  sharedPreferencesKey: "chapterIndex",
   initialValue: 0,
 );
 
@@ -94,19 +93,44 @@ changeBible(BuildContext context, int i) {
   Navigator.of(context).pop();
 }
 
-navigateBookChapter(BuildContext context, int book, int chapter, bool noAnim) {
-  if (isWide(context) || noAnim) {
-    slideTextDir.value = null;
-  } else {
-    slideTextDir.value = bookIndex.value > book || chapterIndex.value > chapter ? TextDirection.rtl : TextDirection.ltr;
+createSlideRoute({required BuildContext context, TextDirection? slideDir, required Widget page}) {
+  if (isWide(context) || slideDir == null) {
+    return PageRouteBuilder(
+      pageBuilder: (context, _, __) {
+        return page;
+      },
+    );
   }
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => page,
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      const begin = Offset(1.0, 0.0);
+      const end = Offset.zero;
+      const curve = Curves.ease;
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+      return SlideTransition(
+        textDirection: slideDir,
+        position: animation.drive(tween),
+        child: child,
+      );
+    },
+  );
+}
+
+navigateBookChapter(BuildContext context, int book, int chapter, bool noAnim) {
+  final slideDir = bookIndex.value > book || chapterIndex.value > chapter ? TextDirection.rtl : TextDirection.ltr;
+  // TODO: add bible param here maybe
+  // route: /bible/book/chapter
   bookIndex.value = book;
   chapterIndex.value = chapter;
-  context.push("/${selectedBible.value!.books[book].name}/$chapter");
-  // Use this or use navigatorKey once header moves scaffold
-  // if (!isWide(context)) {
-  //   Navigator.of(context).pop();
-  // }
+  selectedVerses.value.clear();
+  Navigator.of(context).push(
+    createSlideRoute(
+      context: context,
+      slideDir: noAnim ? null : slideDir,
+      page: ChapterViewScreen(book: book, chapter: chapter),
+    ),
+  );
 }
 
 onNext(BuildContext context) {
@@ -161,9 +185,9 @@ onPlay(BuildContext context) async {
       isPlaying.value = true;
       for (final v in selectedVerses.value) {
         final bibleName = selectedBible.value!.name;
-        final book = (bookIndex.value + 1).toString().padLeft(2, '0');
-        final chapter = (chapterIndex.value + 1).toString().padLeft(3, '0');
-        final verse = (v + 1).toString().padLeft(3, '0');
+        final book = (bookIndex.value + 1).toString().padLeft(2, "0");
+        final chapter = (chapterIndex.value + 1).toString().padLeft(3, "0");
+        final verse = (v + 1).toString().padLeft(3, "0");
         await player.setUrl(
           "http://localhost:3000/$bibleName/$book-$chapter-$verse.mp3",
         );

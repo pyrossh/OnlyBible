@@ -7,11 +7,10 @@ class PlayButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final icon = isPlaying.reactiveValue(context)
-        ? Icons.pause_circle_filled
-        : Icons.play_circle_fill;
+    final icon = isPlaying.reactiveValue(context) ? Icons.pause_circle_filled : Icons.play_circle_fill;
+    final size = isWide(context) ? 28.0 : 42.0;
     return IconButton(
-      icon: Icon(icon, size: 28),
+      icon: Icon(icon, size: size),
       onPressed: () {
         onPlay(context);
       },

@@ -1,7 +1,6 @@
 # Only Bible App
 
-minSdkVersion 30
-targetSdkVersion 34
+Fix dialog theme
 
 ## Setup
 
@@ -44,6 +43,5 @@ firebase deploy
 ## Web
 ```agsl
 https://only-bible-app.web.app
-https://only-bible-app.firebaseapp.app
 https://onlybible.app
 ```

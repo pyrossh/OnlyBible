@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import "package:flutter/material.dart";
 
 final lightTheme = ThemeData(
   brightness: Brightness.light,
@@ -12,6 +12,31 @@ final lightTheme = ThemeData(
   hoverColor: const Color(0xAAF8D0DC),
   dividerColor: Colors.black,
   shadowColor: Colors.black,
+  bottomSheetTheme: const BottomSheetThemeData(
+    elevation: 10,
+    shadowColor: Colors.black,
+    backgroundColor: Colors.white,
+    surfaceTintColor: Colors.white,
+    shape: Border(
+      top: BorderSide(
+        width: 1.5,
+        color: Colors.black,
+      ),
+    ),
+  ),
+  dialogTheme: const DialogTheme(
+    elevation: 10,
+    // TODO: get this to inherit from top like darkTheme does
+    shadowColor: Colors.black,
+    backgroundColor: Colors.white,
+    surfaceTintColor: Colors.white,
+    shape: Border(
+      top: BorderSide(
+        width: 1.5,
+        color: Colors.black,
+      ),
+    ),
+  ),
   popupMenuTheme: const PopupMenuThemeData(
     enableFeedback: true,
     elevation: 4,
@@ -86,6 +111,24 @@ final darkTheme = ThemeData(
   hoverColor: const Color(0xAA5D4979),
   dividerColor: Colors.white,
   shadowColor: Colors.white,
+  bottomSheetTheme: const BottomSheetThemeData(
+    elevation: 1,
+    shape: Border(
+      top: BorderSide(
+        width: 1.5,
+        color: Color(0xAA5D4979),
+      ),
+    ),
+  ),
+  dialogTheme: const DialogTheme(
+    elevation: 1,
+    shape: Border(
+      top: BorderSide(
+        width: 1.5,
+        color: Color(0xAA5D4979),
+      ),
+    ),
+  ),
   popupMenuTheme: lightTheme.popupMenuTheme,
   colorScheme: const ColorScheme.dark(
     background: Color(0xFF1F1F22),
