@@ -37,8 +37,8 @@ class ChapterViewScreen extends StatelessWidget {
       chapter: chapter,
       selectedVerses: [],
     );
-    return ChangeNotifierProvider(
-      create: (context) => model,
+    return ChangeNotifierProvider.value(
+      value: model,
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.background,
         bottomSheet: const ActionsBar(),

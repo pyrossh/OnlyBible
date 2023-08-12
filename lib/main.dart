@@ -32,8 +32,8 @@ void main() async {
   final model = AppModel();
   final (book, chapter) = await model.loadData();
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => model,
+    ChangeNotifierProvider.value(
+      value: model,
       child: App(initialBook: book, initialChapter: chapter),
     ),
   );
