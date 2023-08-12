@@ -118,7 +118,16 @@ createSlideRoute({required BuildContext context, TextDirection? slideDir, requir
 }
 
 navigateBookChapter(BuildContext context, int book, int chapter, bool noAnim) {
-  final slideDir = bookIndex.value > book || chapterIndex.value > chapter ? TextDirection.rtl : TextDirection.ltr;
+  print("${bookIndex.value} ${book} ${chapterIndex.value} ${chapter}");
+  var slideDir = TextDirection.ltr;
+  if (book > bookIndex.value) {
+    slideDir = TextDirection.ltr;
+  } else if (bookIndex.value > book) {
+    slideDir = TextDirection.rtl;
+  } else if (chapterIndex.value > chapter) {
+    slideDir = TextDirection.rtl;
+  }
+  // final slideDir = book > bookIndex.value ||  ? TextDirection.rtl : TextDirection.ltr;
   // TODO: add bible param here maybe
   // route: /bible/book/chapter
   bookIndex.value = book;

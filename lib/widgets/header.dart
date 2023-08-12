@@ -89,7 +89,7 @@ class Header extends StatelessWidget {
                 ),
               ],
             ),
-            const Divider(height: 0),
+            const Divider(height: 0, endIndent: 5),
           ],
         ));
   }
