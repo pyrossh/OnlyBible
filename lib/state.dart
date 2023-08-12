@@ -132,6 +132,42 @@ class ChapterViewModel extends ChangeNotifier {
     prefs.setInt("chapter", chapter);
   }
 
+  navigateBookChapter(BuildContext context, int book, int chapter, TextDirection? dir) {
+    Navigator.of(context).push(
+      createSlideRoute(
+        context: context,
+        slideDir: dir,
+        page: ChapterViewScreen(book: book, chapter: chapter),
+      ),
+    );
+  }
+
+  onNext(BuildContext context, int book, int chapter) {
+    final selectedBible = AppModel.ofEvent(context).bible;
+    final selectedBook = selectedBible.books[book];
+    if (selectedBook.chapters.length > chapter + 1) {
+      navigateBookChapter(context, selectedBook.index, chapter + 1, TextDirection.ltr);
+    } else {
+      if (selectedBook.index + 1 < selectedBible.books.length) {
+        final nextBook = selectedBible.books[selectedBook.index + 1];
+        navigateBookChapter(context, nextBook.index, 0, TextDirection.ltr);
+      }
+    }
+  }
+
+  onPrevious(BuildContext context, int book, int chapter) {
+    final selectedBible = AppModel.ofEvent(context).bible;
+    final selectedBook = selectedBible.books[book];
+    if (chapter - 1 >= 0) {
+      navigateBookChapter(context, selectedBook.index, chapter - 1, TextDirection.rtl);
+    } else {
+      if (selectedBook.index - 1 >= 0) {
+        final prevBook = selectedBible.books[selectedBook.index - 1];
+        navigateBookChapter(context, prevBook.index, prevBook.chapters.length - 1, TextDirection.rtl);
+      }
+    }
+  }
+
   bool hasSelectedVerses() {
     return selectedVerses.isNotEmpty;
   }
@@ -222,44 +258,6 @@ createSlideRoute({required BuildContext context, TextDirection? slideDir, requir
       );
     },
   );
-}
-
-navigateBookChapter(BuildContext context, int book, int chapter, TextDirection? dir) {
-  // TODO: add bible param here maybe
-  // route: /bible/book/chapter
-  Navigator.of(context).push(
-    createSlideRoute(
-      context: context,
-      slideDir: dir,
-      page: ChapterViewScreen(book: book, chapter: chapter),
-    ),
-  );
-}
-
-onNext(BuildContext context, int book, int chapter) {
-  final selectedBible = AppModel.of(context).bible;
-  final selectedBook = selectedBible.books[book];
-  if (selectedBook.chapters.length > chapter + 1) {
-    navigateBookChapter(context, selectedBook.index, chapter + 1, TextDirection.ltr);
-  } else {
-    if (selectedBook.index + 1 < selectedBible.books.length) {
-      final nextBook = selectedBible.books[selectedBook.index + 1];
-      navigateBookChapter(context, nextBook.index, 0, TextDirection.ltr);
-    }
-  }
-}
-
-onPrevious(BuildContext context, int book, int chapter) {
-  final selectedBible = AppModel.of(context).bible;
-  final selectedBook = selectedBible.books[book];
-  if (chapter - 1 >= 0) {
-    navigateBookChapter(context, selectedBook.index, chapter - 1, TextDirection.rtl);
-  } else {
-    if (selectedBook.index - 1 >= 0) {
-      final prevBook = selectedBible.books[selectedBook.index - 1];
-      navigateBookChapter(context, prevBook.index, prevBook.chapters.length - 1, TextDirection.rtl);
-    }
-  }
 }
 
 getBibleFromAsset(String file) async {

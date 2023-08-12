@@ -32,22 +32,23 @@ class ChapterViewScreen extends StatelessWidget {
     //     );
     //   },
     // ),
+    final model = ChapterViewModel(
+      book: book,
+      chapter: chapter,
+      selectedVerses: [],
+    );
     return ChangeNotifierProvider(
-      create: (context) => ChapterViewModel(
-        book: book,
-        chapter: chapter,
-        selectedVerses: [],
-      ),
+      create: (context) => model,
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.background,
         bottomSheet: const ActionsBar(),
         body: SafeArea(
           child: SwipeDetector(
             onSwipeLeft: (offset) {
-              onNext(context, book, chapter);
+              model.onNext(context, book, chapter);
             },
             onSwipeRight: (offset) {
-              onPrevious(context, book, chapter);
+              model.onPrevious(context, book, chapter);
             },
             child: Row(
               children: [
