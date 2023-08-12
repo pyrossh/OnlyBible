@@ -195,6 +195,7 @@ onPlay(BuildContext context) async {
         await player.stop();
       }
     } catch (err) {
+      // TODO: log this error
       print(err.toString());
       showError(context, "Could not play audio");
     } finally {

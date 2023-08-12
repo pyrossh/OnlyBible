@@ -20,6 +20,7 @@ class Header extends StatelessWidget {
           left: 20,
           right: 20,
           top: isWide(context) ? 10 : 0,
+          bottom: 0,
         ),
         child: Column(
           children: [
@@ -43,6 +44,7 @@ class Header extends StatelessWidget {
                     style: Theme.of(context).textTheme.headlineMedium,
                   ),
                   onPressed: () {
+                    // TODO: move this to state
                     Navigator.of(context).push(
                       PageRouteBuilder(
                         opaque: false,
@@ -53,6 +55,7 @@ class Header extends StatelessWidget {
                     );
                   },
                 ),
+                // TODO: show this in more menu in mobile
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -86,7 +89,7 @@ class Header extends StatelessWidget {
                 ),
               ],
             ),
-            const Divider(thickness: 1.5, endIndent: 10),
+            const Divider(height: 0),
           ],
         ));
   }

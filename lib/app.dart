@@ -19,44 +19,6 @@ class App extends StatelessWidget {
       theme: lightTheme,
       darkTheme: darkTheme,
       home: ChapterViewScreen(book: bookIndex.value, chapter: chapterIndex.value),
-      // routerConfig: GoRouter(
-      //   debugLogDiagnostics: true,
-      //   initialLocation: "/${selectedBible.value!.books[bookIndex.value].name}/${chapterIndex.value}",
-      //   screens: [
-      //     ShellRoute(
-      //       builder: (context, state, child) {
-      //         if (isWide(context)) {
-      //           return Scaffold(
-      //             backgroundColor: Theme.of(context).colorScheme.background,
-      //             body: Row(
-      //               children: [
-      //                 const Sidebar(),
-      //                 Flexible(
-      //                   child: child,
-      //                 ),
-      //               ],
-      //             ),
-      //           );
-      //         }
-      //         return Scaffold(
-      //           backgroundColor: Theme.of(context).colorScheme.background,
-      //           body: SafeArea(
-      //             child: child,
-      //           ),
-      //         );
-      //       },
-      //       screens: [
-      //         GoRouteData.$route(
-      //           path: "/:book/:chapter",
-      //           factory: (GoRouterState state) => HomeScreen(
-      //             book: state.pathParameters["book"]!,
-      //             chapter: int.parse(state.pathParameters["chapter"]!),
-      //           ),
-      //         ),
-      //       ],
-      //     ),
-      //   ],
-      // ),
     );
   }
 }

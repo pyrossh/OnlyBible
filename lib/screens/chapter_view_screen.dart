@@ -24,7 +24,8 @@ class ChapterViewScreen extends StatelessWidget {
               enableDrag: false,
               onClosing: () {},
               builder: (BuildContext ctx) => Container(
-                padding: const EdgeInsets.only(bottom: 40),
+                // TODO: check if this is needed
+                // padding: const EdgeInsets.only(bottom: 0),
                 child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
