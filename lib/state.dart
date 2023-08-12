@@ -2,7 +2,6 @@ import "dart:convert";
 import "package:flutter/foundation.dart" show defaultTargetPlatform, TargetPlatform;
 import "package:flutter/services.dart";
 import "package:flutter/material.dart";
-import "package:flutter_persistent_value_notifier/flutter_persistent_value_notifier.dart";
 import "package:just_audio/just_audio.dart";
 import "package:only_bible_app/screens/chapter_view_screen.dart";
 import "package:only_bible_app/utils/dialog.dart";
@@ -11,13 +10,10 @@ import "package:provider/provider.dart";
 import "package:shared_preferences/shared_preferences.dart";
 
 class AppModel extends ChangeNotifier {
-  final Bible bible;
-  bool darkMode;
-  bool fontBold;
-  bool isPlaying = false;
+  Bible bible = bibles.first;
+  bool darkMode = false;
+  bool fontBold = false;
   int fontSizeDelta = 0;
-
-  AppModel({required this.bible, this.darkMode = false, this.fontBold = false});
 
   static AppModel of(BuildContext context) {
     return Provider.of(context, listen: true);
@@ -34,6 +30,26 @@ class AppModel extends ChangeNotifier {
     // save fontBold
   }
 
+  Future<(int, int)> loadData() async {
+    final prefs = await SharedPreferences.getInstance();
+    final bibleId = prefs.getInt("bibleId") ?? 1;
+    darkMode = prefs.getBool("darkMode") ?? false;
+    fontBold = prefs.getBool("fontBold") ?? false;
+    fontSizeDelta = prefs.getInt("fontSizeDelta") ?? 0;
+    final selectedBible = bibles.firstWhere((it) => it.id == bibleId);
+    final books = await getBibleFromAsset(selectedBible.name);
+    bible = Bible.withBooks(
+      id: selectedBible.id,
+      name: selectedBible.name,
+      books: books,
+    );
+    // await Future.delayed(Duration(seconds: 3));
+    final book = prefs.getInt("book") ?? 0;
+    final chapter = prefs.getInt("chapter") ?? 0;
+    updateStatusBar();
+    return (book, chapter);
+  }
+
   // changeBible() {
   //   save();
   // }
@@ -41,6 +57,49 @@ class AppModel extends ChangeNotifier {
   // final Future<Bible>
   // load() {
   // }
+
+  toggleMode() async {
+    darkMode = !darkMode;
+    updateStatusBar();
+    notifyListeners();
+    (await SharedPreferences.getInstance()).setBool("darkMode", darkMode);
+  }
+
+  updateStatusBar() {
+    if (darkMode) {
+      SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+        systemNavigationBarColor: Color(0xFF1F1F22),
+        statusBarColor: Color(0xFF1F1F22),
+        systemNavigationBarIconBrightness: Brightness.light,
+        statusBarIconBrightness: Brightness.light,
+      ));
+    } else {
+      SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+        systemNavigationBarColor: Colors.white,
+        statusBarColor: Colors.white,
+        systemNavigationBarIconBrightness: Brightness.dark,
+        statusBarIconBrightness: Brightness.dark,
+      ));
+    }
+  }
+
+  toggleBold() async {
+    fontBold = !fontBold;
+    notifyListeners();
+    (await SharedPreferences.getInstance()).setBool("fontBold", fontBold);
+  }
+
+  increaseFont() async {
+    fontSizeDelta += 1;
+    notifyListeners();
+    (await SharedPreferences.getInstance()).setInt("fontSizeDelta", fontSizeDelta);
+  }
+
+  decreaseFont() async {
+    fontSizeDelta -= 1;
+    notifyListeners();
+    (await SharedPreferences.getInstance()).setInt("fontSizeDelta", fontSizeDelta);
+  }
 }
 
 class ChapterViewModel extends ChangeNotifier {
@@ -48,6 +107,7 @@ class ChapterViewModel extends ChangeNotifier {
   final int chapter;
   final List<int> selectedVerses;
   final player = AudioPlayer();
+  bool isPlaying = false;
 
   static ChapterViewModel of(BuildContext context) {
     return Provider.of(context, listen: true);
@@ -88,12 +148,14 @@ class ChapterViewModel extends ChangeNotifier {
   onPlay(BuildContext context) async {
     final bibleModel = AppModel.ofEvent(context);
     final model = ChapterViewModel.ofEvent(context);
-    if (isPlaying.value) {
+    if (isPlaying) {
       await player.pause();
-      isPlaying.value = false;
+      isPlaying = false;
+      notifyListeners();
     } else {
       try {
-        isPlaying.value = true;
+        isPlaying = true;
+        notifyListeners();
         for (final v in selectedVerses) {
           final bibleName = bibleModel.bible.name;
           final book = (model.book + 1).toString().padLeft(2, "0");
@@ -111,42 +173,12 @@ class ChapterViewModel extends ChangeNotifier {
         showError(context, "Could not play audio");
       } finally {
         await player.pause();
-        isPlaying.value = false;
+        isPlaying = false;
+        notifyListeners();
       }
     }
   }
 }
-
-Future<(Bible, int, int, bool, bool)> loadData() async {
-  final prefs = await SharedPreferences.getInstance();
-  final bibleId = prefs.getInt("bibleId") ?? 1;
-  final book = prefs.getInt("book") ?? 0;
-  final chapter = prefs.getInt("chapter") ?? 0;
-  final darkMode = prefs.getBool("darkMode") ?? false;
-  final fontBold = prefs.getBool("fontBold") ?? false;
-  final selectedBible = bibles.firstWhere((it) => it.id == bibleId);
-  final books = await getBibleFromAsset(selectedBible.name);
-  final loadedBible = Bible.withBooks(
-    id: selectedBible.id,
-    name: selectedBible.name,
-    books: books,
-  );
-  // await Future.delayed(Duration(seconds: 3));
-  return (loadedBible, book, chapter, darkMode, fontBold);
-}
-
-final darkMode = PersistentValueNotifier<bool>(
-  sharedPreferencesKey: "darkMode",
-  initialValue: false,
-);
-
-final fontBold = PersistentValueNotifier<bool>(
-  sharedPreferencesKey: "fontBold",
-  initialValue: false,
-);
-
-final isPlaying = ValueNotifier(false);
-final fontSizeDelta = ValueNotifier(0);
 
 bool isWide(BuildContext context) {
   if (defaultTargetPlatform == TargetPlatform.android || defaultTargetPlatform == TargetPlatform.iOS) {
@@ -154,41 +186,6 @@ bool isWide(BuildContext context) {
   }
   final width = MediaQuery.of(context).size.width;
   return width > 600;
-}
-
-toggleMode() {
-  darkMode.value = !darkMode.value;
-  updateStatusBar();
-}
-
-toggleBold() {
-  fontBold.value = !fontBold.value;
-}
-
-increaseFont() {
-  fontSizeDelta.value += 1;
-}
-
-decreaseFont() {
-  fontSizeDelta.value -= 1;
-}
-
-updateStatusBar() {
-  if (darkMode.value) {
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      systemNavigationBarColor: Color(0xFF1F1F22),
-      statusBarColor: Color(0xFF1F1F22),
-      systemNavigationBarIconBrightness: Brightness.light,
-      statusBarIconBrightness: Brightness.light,
-    ));
-  } else {
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      systemNavigationBarColor: Colors.white,
-      statusBarColor: Colors.white,
-      systemNavigationBarIconBrightness: Brightness.dark,
-      statusBarIconBrightness: Brightness.dark,
-    ));
-  }
 }
 
 changeBible(BuildContext context, int i) {

@@ -4,7 +4,6 @@ import "package:firebase_core/firebase_core.dart";
 
 // import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import "package:only_bible_app/options.dart";
-import "package:flutter_persistent_value_notifier/flutter_persistent_value_notifier.dart";
 import "package:flutter_native_splash/flutter_native_splash.dart";
 import "package:only_bible_app/state.dart";
 import "package:only_bible_app/app.dart";
@@ -30,12 +29,11 @@ void main() async {
   //   return true;
   // };
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-  await initPersistentValueNotifier();
-  final (bible, book, chapter, darkMode, fontBold) = await loadData();
-  await updateStatusBar();
+  final model = AppModel();
+  final (book, chapter) = await model.loadData();
   runApp(
     ChangeNotifierProvider(
-      create: (context) => AppModel(bible: bible, darkMode: darkMode, fontBold: fontBold),
+      create: (context) => model,
       child: App(initialBook: book, initialChapter: chapter),
     ),
   );

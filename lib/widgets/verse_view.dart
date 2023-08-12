@@ -1,6 +1,5 @@
 import "package:flutter/material.dart";
-import "package:flutter_reactive_value/flutter_reactive_value.dart";
-import 'package:only_bible_app/state.dart';
+import "package:only_bible_app/state.dart";
 
 class VerseText extends StatelessWidget {
   final int index;
@@ -10,18 +9,15 @@ class VerseText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final model = AppModel.of(context);
     final selected = ChapterViewModel.of(context).isVerseSelected(index);
-    final delta = fontSizeDelta.reactiveValue(context);
-    final bodySize = Theme.of(context).textTheme.bodyMedium!.fontSize! + delta;
-    final weight =
-        fontBold.reactiveValue(context) ? FontWeight.w600 : Theme.of(context).textTheme.bodyMedium!.fontWeight;
-
-    onTap() {
-      ChapterViewModel.ofEvent(context).onVerseSelected(index);
-    }
+    final bodySize = Theme.of(context).textTheme.bodyMedium!.fontSize! + model.fontSizeDelta;
+    final weight = model.fontBold ? FontWeight.w600 : Theme.of(context).textTheme.bodyMedium!.fontWeight;
 
     return GestureDetector(
-      onTap: onTap,
+      onTap: () {
+        ChapterViewModel.ofEvent(context).onVerseSelected(index);
+      },
       child: DecoratedBox(
         decoration: BoxDecoration(
           color: selected ? Theme.of(context).highlightColor : Theme.of(context).colorScheme.background,

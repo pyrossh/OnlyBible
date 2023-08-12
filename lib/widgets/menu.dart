@@ -1,5 +1,4 @@
 import "package:flutter/material.dart";
-import "package:flutter_reactive_value/flutter_reactive_value.dart";
 import "package:only_bible_app/state.dart";
 
 class Menu extends StatelessWidget {
@@ -19,34 +18,32 @@ class Menu extends StatelessWidget {
             value: 1,
             child: StatefulBuilder(
               builder: (BuildContext menuContext, StateSetter setState) {
-                final modeIcon = darkMode.reactiveValue(menuContext) ? Icons.dark_mode : Icons.light_mode;
-                final boldColor = fontBold.reactiveValue(menuContext) ? Colors.red : Colors.grey;
+                final model = AppModel.of(context);
+                final modeIcon = model.darkMode ? Icons.dark_mode : Icons.light_mode;
+                final boldColor = model.fontBold ? Colors.red : Colors.grey;
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     IconButton(
                       icon: Icon(modeIcon, size: 28),
-                      onPressed: toggleMode,
+                      onPressed: model.toggleMode,
                     ),
                     Container(margin: const EdgeInsets.only(top: spacing)),
                     // TODO: figure out bold active/inactive color
-                    const IconButton(
-                      icon: Icon(Icons.format_bold, size: 28),
-                      onPressed: toggleBold,
+                    IconButton(
+                      icon: const Icon(Icons.format_bold, size: 28),
+                      onPressed: model.toggleBold,
                     ),
                     Container(margin: const EdgeInsets.only(top: spacing)),
-                    const IconButton(
-                      icon: Icon(Icons.add_circle, size: 28),
-                      onPressed: increaseFont,
+                    IconButton(
+                      icon: const Icon(Icons.add_circle, size: 28),
+                      onPressed: model.increaseFont,
                     ),
                     Container(margin: const EdgeInsets.only(top: spacing)),
-                    const IconButton(
-                      icon: Icon(
-                        Icons.remove_circle,
-                        size: 28,
-                      ),
-                      onPressed: decreaseFont,
+                    IconButton(
+                      icon: const Icon(Icons.remove_circle, size: 28),
+                      onPressed: model.decreaseFont,
                     ),
                   ],
                 );

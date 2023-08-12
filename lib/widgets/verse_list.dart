@@ -1,5 +1,4 @@
 import "package:flutter/material.dart";
-import "package:flutter_reactive_value/flutter_reactive_value.dart";
 import "package:only_bible_app/widgets/verse_view.dart";
 import "package:only_bible_app/state.dart";
 
