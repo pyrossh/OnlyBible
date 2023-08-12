@@ -16,6 +16,23 @@ class ChapterViewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // FutureBuilder(
+    //   future: loadData(), // This reloads everytime theme changes
+    //   builder: (context, snapshot) {
+    //     if (snapshot.hasData && snapshot.data != null && snapshot.connectionState == ConnectionState.done) {
+    //       return ChangeNotifierProvider(
+    //         create: (_) => BibleViewModel(bible: snapshot.data!.$1),
+    //         child: ChapterViewScreen(book: snapshot.data!.$2, chapter: snapshot.data!.$3),
+    //       );
+    //     }
+    //     return ColoredBox(
+    //       color: Theme.of(context).colorScheme.background,
+    //       child: const Center(
+    //         child: CircularProgressIndicator(),
+    //       ),
+    //     );
+    //   },
+    // ),
     return ChangeNotifierProvider(
       create: (context) => ChapterViewModel(
         book: book,

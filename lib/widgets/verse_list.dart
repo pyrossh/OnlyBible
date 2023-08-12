@@ -8,10 +8,9 @@ class VerseList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final book = ChapterViewModel.of(context).book;
-    final chapter = ChapterViewModel.of(context).chapter;
-    final selectedBook = selectedBible.reactiveValue(context)!.books[book];
-    final verses = selectedBook.chapters[chapter].verses;
+    final selectedBible = AppModel.of(context).bible;
+    final model = ChapterViewModel.of(context);
+    final verses = selectedBible.books[model.book].chapters[model.chapter].verses;
     return SelectionArea(
       child: ListView.builder(
         shrinkWrap: false,

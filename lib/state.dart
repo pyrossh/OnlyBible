@@ -10,6 +10,39 @@ import "package:only_bible_app/models.dart";
 import "package:provider/provider.dart";
 import "package:shared_preferences/shared_preferences.dart";
 
+class AppModel extends ChangeNotifier {
+  final Bible bible;
+  bool darkMode;
+  bool fontBold;
+  bool isPlaying = false;
+  int fontSizeDelta = 0;
+
+  AppModel({required this.bible, this.darkMode = false, this.fontBold = false});
+
+  static AppModel of(BuildContext context) {
+    return Provider.of(context, listen: true);
+  }
+
+  static AppModel ofEvent(BuildContext context) {
+    return Provider.of(context, listen: false);
+  }
+
+  save(int bibleId) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setInt("bibleId", bibleId);
+    // save darkTheme
+    // save fontBold
+  }
+
+  // changeBible() {
+  //   save();
+  // }
+
+  // final Future<Bible>
+  // load() {
+  // }
+}
+
 class ChapterViewModel extends ChangeNotifier {
   final int book;
   final int chapter;
@@ -17,15 +50,22 @@ class ChapterViewModel extends ChangeNotifier {
   final player = AudioPlayer();
 
   static ChapterViewModel of(BuildContext context) {
-    return Provider.of<ChapterViewModel>(context, listen: true);
+    return Provider.of(context, listen: true);
   }
 
   static ChapterViewModel ofEvent(BuildContext context) {
-    return Provider.of<ChapterViewModel>(context, listen: false);
+    return Provider.of(context, listen: false);
   }
 
   ChapterViewModel({required this.book, required this.chapter, required this.selectedVerses}) {
-    savePrefs(book, chapter);
+    save(book, chapter);
+  }
+
+  save(int book, int chapter) async {
+    final prefs = await SharedPreferences.getInstance();
+    // prefs.setInt("bibleId", bibleId);
+    prefs.setInt("book", book);
+    prefs.setInt("chapter", chapter);
   }
 
   bool hasSelectedVerses() {
@@ -46,6 +86,7 @@ class ChapterViewModel extends ChangeNotifier {
   }
 
   onPlay(BuildContext context) async {
+    final bibleModel = AppModel.ofEvent(context);
     final model = ChapterViewModel.ofEvent(context);
     if (isPlaying.value) {
       await player.pause();
@@ -54,7 +95,7 @@ class ChapterViewModel extends ChangeNotifier {
       try {
         isPlaying.value = true;
         for (final v in selectedVerses) {
-          final bibleName = selectedBible.value!.name;
+          final bibleName = bibleModel.bible.name;
           final book = (model.book + 1).toString().padLeft(2, "0");
           final chapter = (model.chapter + 1).toString().padLeft(3, "0");
           final verse = (v + 1).toString().padLeft(3, "0");
@@ -76,17 +117,22 @@ class ChapterViewModel extends ChangeNotifier {
   }
 }
 
-Future<(int, int)> loadPrefs() async {
+Future<(Bible, int, int, bool, bool)> loadData() async {
   final prefs = await SharedPreferences.getInstance();
+  final bibleId = prefs.getInt("bibleId") ?? 1;
+  final book = prefs.getInt("book") ?? 0;
+  final chapter = prefs.getInt("chapter") ?? 0;
+  final darkMode = prefs.getBool("darkMode") ?? false;
+  final fontBold = prefs.getBool("fontBold") ?? false;
+  final selectedBible = bibles.firstWhere((it) => it.id == bibleId);
+  final books = await getBibleFromAsset(selectedBible.name);
+  final loadedBible = Bible.withBooks(
+    id: selectedBible.id,
+    name: selectedBible.name,
+    books: books,
+  );
   // await Future.delayed(Duration(seconds: 3));
-  return (prefs.getInt("book") ?? 0, prefs.getInt("chapter") ?? 0);
-}
-
-savePrefs(int book, int chapter) async {
-  final prefs = await SharedPreferences.getInstance();
-  // prefs.setInt("bibleId", selectedBibleId.value);
-  prefs.setInt("book", book);
-  prefs.setInt("chapter", chapter);
+  return (loadedBible, book, chapter, darkMode, fontBold);
 }
 
 final darkMode = PersistentValueNotifier<bool>(
@@ -99,12 +145,6 @@ final fontBold = PersistentValueNotifier<bool>(
   initialValue: false,
 );
 
-final selectedBibleId = PersistentValueNotifier(
-  sharedPreferencesKey: "selectedBibleId",
-  initialValue: 1,
-);
-
-final selectedBible = ValueNotifier<Bible?>(null);
 final isPlaying = ValueNotifier(false);
 final fontSizeDelta = ValueNotifier(0);
 
@@ -152,9 +192,8 @@ updateStatusBar() {
 }
 
 changeBible(BuildContext context, int i) {
-  selectedBibleId.value = i;
   // TODO: maybe use a future as the bible needs to load
-  loadBible();
+  // loadBible();
   Navigator.of(context).pop();
 }
 
@@ -203,37 +242,29 @@ navigateBookChapter(BuildContext context, int book, int chapter, TextDirection? 
 }
 
 onNext(BuildContext context, int book, int chapter) {
-  final selectedBook = selectedBible.value!.books[book];
+  final selectedBible = AppModel.of(context).bible;
+  final selectedBook = selectedBible.books[book];
   if (selectedBook.chapters.length > chapter + 1) {
     navigateBookChapter(context, selectedBook.index, chapter + 1, TextDirection.ltr);
   } else {
-    if (selectedBook.index + 1 < selectedBible.value!.books.length) {
-      final nextBook = selectedBible.value!.books[selectedBook.index + 1];
+    if (selectedBook.index + 1 < selectedBible.books.length) {
+      final nextBook = selectedBible.books[selectedBook.index + 1];
       navigateBookChapter(context, nextBook.index, 0, TextDirection.ltr);
     }
   }
 }
 
 onPrevious(BuildContext context, int book, int chapter) {
-  final selectedBook = selectedBible.value!.books[book];
+  final selectedBible = AppModel.of(context).bible;
+  final selectedBook = selectedBible.books[book];
   if (chapter - 1 >= 0) {
     navigateBookChapter(context, selectedBook.index, chapter - 1, TextDirection.rtl);
   } else {
     if (selectedBook.index - 1 >= 0) {
-      final prevBook = selectedBible.value!.books[selectedBook.index - 1];
+      final prevBook = selectedBible.books[selectedBook.index - 1];
       navigateBookChapter(context, prevBook.index, prevBook.chapters.length - 1, TextDirection.rtl);
     }
   }
-}
-
-loadBible() async {
-  final bible = bibles.firstWhere((it) => it.id == selectedBibleId.value);
-  final books = await getBibleFromAsset(bible.name);
-  selectedBible.value = Bible.withBooks(
-    id: bible.id,
-    name: bible.name,
-    books: books,
-  );
 }
 
 getBibleFromAsset(String file) async {

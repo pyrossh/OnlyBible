@@ -1,5 +1,4 @@
 import "package:flutter/material.dart";
-import "package:flutter_reactive_value/flutter_reactive_value.dart";
 import "package:only_bible_app/screens/bible_select_screen.dart";
 import "package:only_bible_app/screens/book_select_screen.dart";
 import "package:only_bible_app/widgets/play_button.dart";
@@ -11,9 +10,9 @@ class Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final book = ChapterViewModel.of(context).book;
-    final chapter = ChapterViewModel.of(context).chapter;
-    final selectedBook = selectedBible.value!.books[book];
+    final selectedBible = AppModel.of(context).bible;
+    final model = ChapterViewModel.of(context);
+    final selectedBook = selectedBible.books[model.book];
     final isDesktop = isWide(context);
     return Container(
       padding: EdgeInsets.only(
@@ -40,7 +39,7 @@ class Header extends StatelessWidget {
                   color: Theme.of(context).textTheme.headlineMedium!.color,
                 ),
                 icon: Text(
-                  "${selectedBook.name} ${chapter + 1}",
+                  "${selectedBook.name} ${model.chapter + 1}",
                   style: Theme.of(context).textTheme.headlineMedium,
                 ),
                 onPressed: () {
@@ -50,7 +49,7 @@ class Header extends StatelessWidget {
                       opaque: false,
                       transitionDuration: Duration.zero,
                       reverseTransitionDuration: Duration.zero,
-                      pageBuilder: (context, _, __) => const BookSelectScreen(),
+                      pageBuilder: (context, _, __) => BookSelectScreen(bible: selectedBible),
                     ),
                   );
                 },
@@ -66,7 +65,7 @@ class Header extends StatelessWidget {
                         style: TextButton.styleFrom(
                           padding: const EdgeInsets.symmetric(horizontal: 20),
                         ),
-                        child: Text(selectedBible.reactiveValue(context)!.name),
+                        child: Text(selectedBible.name),
                         onPressed: () {
                           Navigator.of(context).push(
                             PageRouteBuilder(
