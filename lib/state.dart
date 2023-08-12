@@ -36,13 +36,7 @@ class AppModel extends ChangeNotifier {
     darkMode = prefs.getBool("darkMode") ?? false;
     fontBold = prefs.getBool("fontBold") ?? false;
     fontSizeDelta = prefs.getInt("fontSizeDelta") ?? 0;
-    final selectedBible = bibles.firstWhere((it) => it.id == bibleId);
-    final books = await getBibleFromAsset(selectedBible.name);
-    bible = Bible.withBooks(
-      id: selectedBible.id,
-      name: selectedBible.name,
-      books: books,
-    );
+    bible = await loadBible(bibleId);
     // await Future.delayed(Duration(seconds: 3));
     final book = prefs.getInt("book") ?? 0;
     final chapter = prefs.getInt("chapter") ?? 0;
@@ -50,13 +44,21 @@ class AppModel extends ChangeNotifier {
     return (book, chapter);
   }
 
-  // changeBible() {
-  //   save();
-  // }
+  Future<Bible> loadBible(int id) async {
+    final selectedBible = bibles.firstWhere((it) => it.id == id);
+    final books = await getBibleFromAsset(selectedBible.name);
+    return Bible.withBooks(
+      id: selectedBible.id,
+      name: selectedBible.name,
+      books: books,
+    );
+  }
 
-  // final Future<Bible>
-  // load() {
-  // }
+  changeBible(BuildContext context, int id) async {
+    // TODO: maybe use a future as the bible needs to load
+    bible = await loadBible(id);
+    notifyListeners();
+  }
 
   toggleMode() async {
     darkMode = !darkMode;
@@ -186,12 +188,6 @@ bool isWide(BuildContext context) {
   }
   final width = MediaQuery.of(context).size.width;
   return width > 600;
-}
-
-changeBible(BuildContext context, int i) {
-  // TODO: maybe use a future as the bible needs to load
-  // loadBible();
-  Navigator.of(context).pop();
 }
 
 createNoTransitionPageRoute(Widget page) {

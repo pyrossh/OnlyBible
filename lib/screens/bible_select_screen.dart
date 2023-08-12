@@ -10,6 +10,7 @@ class BibleSelectScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final model = AppModel.of(context);
     return ScaffoldMenu(
       child: CustomScrollView(
         slivers: [
@@ -20,7 +21,10 @@ class BibleSelectScreen extends StatelessWidget {
               bibles.map((bible) {
                 return TextButton(
                   child: Text(bible.name),
-                  onPressed: () => changeBible(context, bible.id),
+                  onPressed: () {
+                    model.changeBible(context, bible.id);
+                    Navigator.of(context).pop();
+                  },
                 );
               }),
             ),
