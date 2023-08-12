@@ -11,19 +11,21 @@ class SliverTileGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDesktop = isWide(context);
+    final spacing = isDesktop ? 16.0 : 12.0;
     return SliverPadding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       sliver: SliverGrid.count(
         crossAxisCount: listType == ListType.large
             ? 2
-            : isWide(context)
+            : isDesktop
                 ? 6
                 : 5,
-        crossAxisSpacing: 16,
-        mainAxisSpacing: 16,
+        crossAxisSpacing: spacing,
+        mainAxisSpacing: spacing,
         childAspectRatio: listType == ListType.large
             ? 4
-            : isWide(context)
+            : isDesktop
                 ? 1.6
                 : 1.5,
         children: children,

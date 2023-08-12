@@ -30,6 +30,7 @@ void main() async {
   // };
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await initPersistentValueNotifier();
+  await loadPrefs();
   await loadBible();
   await updateStatusBar();
   runApp(const App());

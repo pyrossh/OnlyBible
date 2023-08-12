@@ -10,14 +10,14 @@ class VerseText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final selected = isVerseSelected(context, index);
+    final selected = ChapterViewModel.of(context).isVerseSelected(index);
     final delta = fontSizeDelta.reactiveValue(context);
     final bodySize = Theme.of(context).textTheme.bodyMedium!.fontSize! + delta;
     final weight =
         fontBold.reactiveValue(context) ? FontWeight.w600 : Theme.of(context).textTheme.bodyMedium!.fontWeight;
 
     onTap() {
-      onVerseSelected(index);
+      ChapterViewModel.ofEvent(context).onVerseSelected(index);
     }
 
     return GestureDetector(

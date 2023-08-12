@@ -3,6 +3,7 @@ import "package:only_bible_app/state.dart";
 import "package:only_bible_app/widgets/scaffold_menu.dart";
 import "package:only_bible_app/widgets/sliver_tile_grid.dart";
 import "package:only_bible_app/widgets/sliver_heading.dart";
+import "package:only_bible_app/screens/chapter_view_screen.dart";
 
 class ChapterSelectScreen extends StatelessWidget {
   final int selectedBookIndex;
@@ -10,7 +11,11 @@ class ChapterSelectScreen extends StatelessWidget {
   const ChapterSelectScreen({super.key, required this.selectedBookIndex});
 
   onChapterSelected(BuildContext context, int index) {
-    navigateBookChapter(context, selectedBookIndex, index, true);
+    Navigator.of(context).pushReplacement(
+      createNoTransitionPageRoute(
+        ChapterViewScreen(book: selectedBookIndex, chapter: index),
+      ),
+    );
   }
 
   @override

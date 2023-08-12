@@ -1,11 +1,12 @@
 import "package:flutter/material.dart";
 import "package:flutter_reactive_value/flutter_reactive_value.dart";
 import "package:flutter_swipe_detector/flutter_swipe_detector.dart";
+import "package:only_bible_app/widgets/actions_bar.dart";
 import "package:only_bible_app/widgets/header.dart";
 import "package:only_bible_app/state.dart";
-import "package:only_bible_app/widgets/play_button.dart";
 import "package:only_bible_app/widgets/sidebar.dart";
 import "package:only_bible_app/widgets/verse_list.dart";
+import "package:provider/provider.dart";
 
 class ChapterViewScreen extends StatelessWidget {
   final int book;
@@ -15,48 +16,42 @@ class ChapterViewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDesktop = isWide(context);
-    final showPlay = selectedVerses.reactiveValue(context).isNotEmpty;
-    return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
-      bottomSheet: !isDesktop && showPlay
-          ? BottomSheet(
-              enableDrag: false,
-              onClosing: () {},
-              builder: (BuildContext ctx) => Container(
-                // TODO: check if this is needed
-                // padding: const EdgeInsets.only(bottom: 0),
-                child: const Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    PlayButton(),
-                  ],
+    return ChangeNotifierProvider(
+      create: (context) => ChapterViewModel(
+        book: book,
+        chapter: chapter,
+        selectedVerses: [],
+      ),
+      child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.background,
+        bottomSheet: const ActionsBar(),
+        body: SafeArea(
+          child: SwipeDetector(
+            onSwipeLeft: (offset) {
+              onNext(context, book, chapter);
+            },
+            onSwipeRight: (offset) {
+              onPrevious(context, book, chapter);
+            },
+            child: Row(
+              children: [
+                if (isWide(context)) const Sidebar(),
+                const Flexible(
+                  child: Column(
+                    children: [
+                      Header(),
+                      Flexible(
+                        child: VerseList(),
+                      ),
+                      // TODO: add padding only if bottom sheet is shown
+                      // Padding(
+                      //   padding: EdgeInsets.only(bottom: 40),
+                      // )
+                    ],
+                  ),
                 ),
-              ),
-            )
-          : null,
-      body: SafeArea(
-        child: SwipeDetector(
-          onSwipeLeft: (offset) {
-            onNext(context);
-          },
-          onSwipeRight: (offset) {
-            onPrevious(context);
-          },
-          child: Row(
-            children: [
-              if (isWide(context)) const Sidebar(),
-              const Flexible(
-                child: Column(
-                  children: [
-                    Header(),
-                    Flexible(
-                      child: VerseList(),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
