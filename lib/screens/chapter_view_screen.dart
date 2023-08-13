@@ -1,6 +1,5 @@
 import "package:flutter/material.dart";
 import "package:flutter_swipe_detector/flutter_swipe_detector.dart";
-import "package:only_bible_app/widgets/actions_bar.dart";
 import "package:only_bible_app/widgets/header.dart";
 import "package:only_bible_app/state.dart";
 import "package:only_bible_app/widgets/sidebar.dart";
