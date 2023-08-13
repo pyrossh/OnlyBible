@@ -43,7 +43,13 @@ class Menu extends StatelessWidget {
               child: Container(
                 alignment: Alignment.center,
                 margin: const EdgeInsets.symmetric(vertical: 15),
-                child: const Icon(Icons.abc, size: 42),
+                child: Text(
+                  model.bible.shortName(),
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ),
           PopupMenuItem(

@@ -14,6 +14,10 @@ class Bible {
     required this.books,
   });
 
+  String shortName() {
+    return name.substring(0, 3).toUpperCase();
+  }
+
   List<Book> getOldBooks() {
     return books.where((it) => it.isOldTestament()).toList();
   }
