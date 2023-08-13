@@ -15,6 +15,8 @@ class App extends StatelessWidget {
     final model = AppModel.of(context);
     return MaterialApp(
       title: "Only Bible App",
+      // onGenerateTitle: (context) =>
+      //   DemoLocalizations.of(context).title,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       debugShowCheckedModeBanner: false,

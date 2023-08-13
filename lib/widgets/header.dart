@@ -14,6 +14,8 @@ class Header extends StatelessWidget {
     final model = ChapterViewModel.of(context);
     final selectedBook = selectedBible.books[model.book];
     final isDesktop = isWide(context);
+    final bookName = selectedBook.name;
+    // Localizations.localeOf(context).languageCode
     return Container(
       padding: EdgeInsets.only(
         left: 20,
@@ -39,7 +41,7 @@ class Header extends StatelessWidget {
                   color: Theme.of(context).textTheme.headlineMedium!.color,
                 ),
                 icon: Text(
-                  "${selectedBook.name} ${model.chapter + 1}",
+                  "$bookName ${model.chapter + 1}",
                   style: Theme.of(context).textTheme.headlineMedium,
                 ),
                 onPressed: () {
@@ -67,14 +69,7 @@ class Header extends StatelessWidget {
                         ),
                         child: Text(selectedBible.name),
                         onPressed: () {
-                          Navigator.of(context).push(
-                            PageRouteBuilder(
-                              opaque: false,
-                              transitionDuration: Duration.zero,
-                              reverseTransitionDuration: Duration.zero,
-                              pageBuilder: (context, _, __) => const BibleSelectScreen(),
-                            ),
-                          );
+                          Navigator.of(context).push(createNoTransitionPageRoute(const BibleSelectScreen()));
                         },
                       ),
                     ),

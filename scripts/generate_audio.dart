@@ -1,5 +1,5 @@
 import "dart:io";
-import 'package:flutter_azure_tts/flutter_azure_tts.dart';
+import "package:flutter_azure_tts/flutter_azure_tts.dart";
 
 Future<void> convertText(Voice v, String fileName, String text) async {
   final ttsResponse = await AzureTts.getTts(TtsParams(
@@ -42,9 +42,6 @@ void main() async {
       continue;
     }
     await convertText(voice, outputFilename, verseText);
-    if (chapter == "002") {
-      break;
-    }
   }
   print("finished");
 }

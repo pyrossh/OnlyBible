@@ -1,6 +1,7 @@
 import "dart:convert";
 import "dart:developer";
 import "package:firebase_crashlytics/firebase_crashlytics.dart";
+import "package:firebase_storage/firebase_storage.dart";
 // import "package:firebase_performance/firebase_performance.dart";
 import "package:flutter/foundation.dart" show defaultTargetPlatform, TargetPlatform;
 import "package:flutter/services.dart";
@@ -14,6 +15,7 @@ import "package:provider/provider.dart";
 import "package:shared_preferences/shared_preferences.dart";
 
 class AppModel extends ChangeNotifier {
+  String languageCode = "en";
   Bible bible = bibles.first;
   bool darkMode = false;
   bool fontBold = false;
@@ -56,7 +58,7 @@ class AppModel extends ChangeNotifier {
     //   customTrace = FirebasePerformance.instance.newTrace("loadBible");
     //   await customTrace.start();
     // }
-    final books = await getBibleFromAsset(selectedBible.name);
+    final books = await getBibleFromAsset(languageCode, selectedBible.name);
     // if (!isDesktop()) {
     //   await customTrace.stop();
     // }
@@ -222,14 +224,15 @@ class ChapterViewModel extends ChangeNotifier {
         final book = (model.book + 1).toString().padLeft(2, "0");
         final chapter = (model.chapter + 1).toString().padLeft(3, "0");
         final verse = (v + 1).toString().padLeft(3, "0");
-        final url = "http://localhost:3000/$bibleName/$book-$chapter-$verse.mp3";
+        final pathname = "$bibleName/$book-$chapter-$verse.mp3";
         try {
+          final url = await FirebaseStorage.instance.ref(pathname).getDownloadURL();
           await player.setUrl(url);
           await player.play();
           await player.stop();
-        } on PlayerException catch (err) {
-          log("Could not play audio", name: "play", error: (err.toString(), url));
-          FirebaseCrashlytics.instance.recordFlutterError(FlutterErrorDetails(exception: (err.toString(), url)));
+        } catch (err) {
+          log("Could not play audio", name: "play", error: (err.toString(), pathname));
+          FirebaseCrashlytics.instance.recordFlutterError(FlutterErrorDetails(exception: (err.toString(), pathname)));
           showError(context, "Could not play audio");
           return;
         } finally {
@@ -292,7 +295,7 @@ createSlideRoute({required BuildContext context, TextDirection? slideDir, requir
   );
 }
 
-getBibleFromAsset(String file) async {
+getBibleFromAsset(String languageCode, String file) async {
   final bytes = await rootBundle.load("assets/bibles/$file.txt");
-  return getBibleFromText(utf8.decode(bytes.buffer.asUint8List(), allowMalformed: false));
+  return getBibleFromText(languageCode, utf8.decode(bytes.buffer.asUint8List(), allowMalformed: false));
 }

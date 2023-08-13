@@ -1,53 +1,76 @@
 import "package:flutter/material.dart";
 import "package:only_bible_app/state.dart";
+import "package:only_bible_app/screens/bible_select_screen.dart";
 
 class Menu extends StatelessWidget {
   const Menu({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final moreIcon = isWide(context) ? Icons.more_vert : Icons.more_vert;
-    const spacing = 25.0;
+    final isDesktop = isWide(context);
+    final model = AppModel.of(context);
+    final modeIcon = model.darkMode ? Icons.dark_mode : Icons.light_mode;
     return PopupMenuButton(
-      constraints: const BoxConstraints.tightFor(width: 90),
-      icon: Icon(moreIcon, size: 28),
-      offset: const Offset(0.0, 60),
+      icon: const Icon(Icons.more_vert, size: 28),
+      offset: const Offset(0.0, 50),
+      onSelected: (int v) {
+        if (v == 1) {
+          Navigator.of(context).push(createNoTransitionPageRoute(const BibleSelectScreen()));
+        }
+        if (v == 2) {
+          model.toggleMode();
+        }
+        if (v == 3) {
+          model.toggleBold();
+        }
+        if (v == 4) {
+          model.increaseFont();
+        }
+        if (v == 5) {
+          model.decreaseFont();
+        }
+      },
       itemBuilder: (BuildContext itemContext) {
         return [
+          if (!isDesktop)
+            PopupMenuItem(
+              value: 1,
+              child: Container(
+                alignment: Alignment.center,
+                margin: const EdgeInsets.symmetric(vertical: 15),
+                child: const Icon(Icons.abc, size: 28),
+              ),
+            ),
           PopupMenuItem(
-            value: 1,
-            child: StatefulBuilder(
-              builder: (BuildContext menuContext, StateSetter setState) {
-                final model = AppModel.of(context);
-                final modeIcon = model.darkMode ? Icons.dark_mode : Icons.light_mode;
-                final boldColor = model.fontBold ? Colors.red : Colors.grey;
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    IconButton(
-                      icon: Icon(modeIcon, size: 28),
-                      onPressed: model.toggleMode,
-                    ),
-                    Container(margin: const EdgeInsets.only(top: spacing)),
-                    // TODO: figure out bold active/inactive color
-                    IconButton(
-                      icon: const Icon(Icons.format_bold, size: 28),
-                      onPressed: model.toggleBold,
-                    ),
-                    Container(margin: const EdgeInsets.only(top: spacing)),
-                    IconButton(
-                      icon: const Icon(Icons.add_circle, size: 28),
-                      onPressed: model.increaseFont,
-                    ),
-                    Container(margin: const EdgeInsets.only(top: spacing)),
-                    IconButton(
-                      icon: const Icon(Icons.remove_circle, size: 28),
-                      onPressed: model.decreaseFont,
-                    ),
-                  ],
-                );
-              },
+            value: 2,
+            child: Container(
+              alignment: Alignment.center,
+              margin: const EdgeInsets.symmetric(vertical: 15),
+              child: Icon(modeIcon, size: 28),
+            ),
+          ),
+          PopupMenuItem(
+            value: 3,
+            child: Container(
+              alignment: Alignment.center,
+              margin: const EdgeInsets.symmetric(vertical: 15),
+              child: const Icon(Icons.format_bold, size: 28),
+            ),
+          ),
+          PopupMenuItem(
+            value: 4,
+            child: Container(
+              alignment: Alignment.center,
+              margin: const EdgeInsets.symmetric(vertical: 15),
+              child: const Icon(Icons.add_circle, size: 28),
+            ),
+          ),
+          PopupMenuItem(
+            value: 5,
+            child: Container(
+              alignment: Alignment.center,
+              margin: const EdgeInsets.symmetric(vertical: 15),
+              child: const Icon(Icons.remove_circle, size: 28),
             ),
           ),
         ];

@@ -43,7 +43,13 @@ firebase deploy
 ## Web
 ```agsl
 https://only-bible-app.web.app
+https://only-bible-app.firebaseapp.com/
 https://onlybible.app
+```
+
+## Sync audio files
+```agsl
+gsutil -m cp -r scripts/audio/Kannada gs://only-bible-app.appspot.com/
 ```
 
 Note:
