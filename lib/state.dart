@@ -1,4 +1,6 @@
 import "dart:convert";
+import "dart:developer";
+import "package:firebase_crashlytics/firebase_crashlytics.dart";
 import "package:flutter/foundation.dart" show defaultTargetPlatform, TargetPlatform;
 import "package:flutter/services.dart";
 import "package:flutter/material.dart";
@@ -193,28 +195,27 @@ class ChapterViewModel extends ChangeNotifier {
       isPlaying = false;
       notifyListeners();
     } else {
-      try {
-        isPlaying = true;
-        notifyListeners();
-        for (final v in selectedVerses) {
-          final bibleName = bibleModel.bible.name;
-          final book = (model.book + 1).toString().padLeft(2, "0");
-          final chapter = (model.chapter + 1).toString().padLeft(3, "0");
-          final verse = (v + 1).toString().padLeft(3, "0");
-          await player.setUrl(
-            "http://localhost:3000/$bibleName/$book-$chapter-$verse.mp3",
-          );
+      isPlaying = true;
+      notifyListeners();
+      for (final v in selectedVerses) {
+        final bibleName = bibleModel.bible.name;
+        final book = (model.book + 1).toString().padLeft(2, "0");
+        final chapter = (model.chapter + 1).toString().padLeft(3, "0");
+        final verse = (v + 1).toString().padLeft(3, "0");
+        final url = "http://localhost:3000/$bibleName/$book-$chapter-$verse.mp3";
+        try {
+          await player.setUrl(url);
           await player.play();
           await player.stop();
+        } on PlayerException catch (err) {
+          log("Could not play audio", name: "play", error: (err.toString(), url));
+          FirebaseCrashlytics.instance.recordFlutterError(FlutterErrorDetails(exception: (err.toString(), url)));
+          showError(context, "Could not play audio");
+        } finally {
+          await player.pause();
+          isPlaying = false;
+          notifyListeners();
         }
-      } catch (err) {
-        // TODO: log this error
-        print(err.toString());
-        showError(context, "Could not play audio");
-      } finally {
-        await player.pause();
-        isPlaying = false;
-        notifyListeners();
       }
     }
   }

@@ -45,3 +45,6 @@ firebase deploy
 https://only-bible-app.web.app
 https://onlybible.app
 ```
+
+Note:
+> For crashanalytics to work in dev/debug mode in macos this has to be set DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
