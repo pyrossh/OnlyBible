@@ -10,12 +10,17 @@ class Menu extends StatelessWidget {
     final isDesktop = isWide(context);
     final model = AppModel.of(context);
     final modeIcon = model.darkMode ? Icons.dark_mode : Icons.light_mode;
+    final boldColor = model.fontBold ? Theme.of(context).shadowColor : Colors.grey;
     return PopupMenuButton(
       icon: const Icon(Icons.more_vert, size: 28),
       offset: const Offset(0.0, 50),
       onSelected: (int v) {
         if (v == 1) {
-          Navigator.of(context).push(createNoTransitionPageRoute(const BibleSelectScreen()));
+          Navigator.of(context).push(
+            createNoTransitionPageRoute(
+              const BibleSelectScreen(),
+            ),
+          );
         }
         if (v == 2) {
           model.toggleMode();
@@ -38,7 +43,7 @@ class Menu extends StatelessWidget {
               child: Container(
                 alignment: Alignment.center,
                 margin: const EdgeInsets.symmetric(vertical: 15),
-                child: const Icon(Icons.abc, size: 28),
+                child: const Icon(Icons.abc, size: 42),
               ),
             ),
           PopupMenuItem(
@@ -54,7 +59,7 @@ class Menu extends StatelessWidget {
             child: Container(
               alignment: Alignment.center,
               margin: const EdgeInsets.symmetric(vertical: 15),
-              child: const Icon(Icons.format_bold, size: 28),
+              child: Icon(Icons.format_bold, size: 28, color: boldColor),
             ),
           ),
           PopupMenuItem(

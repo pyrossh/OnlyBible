@@ -2,6 +2,7 @@ import "dart:convert";
 import "dart:developer";
 import "package:firebase_crashlytics/firebase_crashlytics.dart";
 import "package:firebase_storage/firebase_storage.dart";
+
 // import "package:firebase_performance/firebase_performance.dart";
 import "package:flutter/foundation.dart" show defaultTargetPlatform, TargetPlatform;
 import "package:flutter/services.dart";
@@ -265,9 +266,10 @@ bool isWide(BuildContext context) {
 
 createNoTransitionPageRoute(Widget page) {
   return PageRouteBuilder(
-    pageBuilder: (context, _, __) {
-      return page;
-    },
+    opaque: false,
+    transitionDuration: Duration.zero,
+    reverseTransitionDuration: Duration.zero,
+    pageBuilder: (context, _, __) => page,
   );
 }
 

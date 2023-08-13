@@ -45,13 +45,9 @@ class Header extends StatelessWidget {
                   style: Theme.of(context).textTheme.headlineMedium,
                 ),
                 onPressed: () {
-                  // TODO: move this to state
                   Navigator.of(context).push(
-                    PageRouteBuilder(
-                      opaque: false,
-                      transitionDuration: Duration.zero,
-                      reverseTransitionDuration: Duration.zero,
-                      pageBuilder: (context, _, __) => BookSelectScreen(bible: selectedBible),
+                    createNoTransitionPageRoute(
+                      BookSelectScreen(bible: selectedBible),
                     ),
                   );
                 },
@@ -69,7 +65,11 @@ class Header extends StatelessWidget {
                         ),
                         child: Text(selectedBible.name),
                         onPressed: () {
-                          Navigator.of(context).push(createNoTransitionPageRoute(const BibleSelectScreen()));
+                          Navigator.of(context).push(
+                            createNoTransitionPageRoute(
+                              const BibleSelectScreen(),
+                            ),
+                          );
                         },
                       ),
                     ),
@@ -83,7 +83,7 @@ class Header extends StatelessWidget {
               ),
             ],
           ),
-          Divider(height: isDesktop ? 10 : 0, endIndent: 5, thickness: 1.5),
+          Divider(height: isDesktop ? 10 : 0, endIndent: 10, thickness: isDesktop ? 1.5 : 1),
         ],
       ),
     );
