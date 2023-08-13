@@ -17,8 +17,7 @@ class ActionsBar extends StatelessWidget {
       enableDrag: false,
       onClosing: () {},
       builder: (BuildContext ctx) => Container(
-        // TODO: check if this is needed
-        // padding: const EdgeInsets.only(bottom: 0),
+        padding: EdgeInsets.only(bottom: isIOS() ? 20 : 0),
         child: const Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

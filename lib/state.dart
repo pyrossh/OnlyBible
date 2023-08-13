@@ -221,6 +221,10 @@ class ChapterViewModel extends ChangeNotifier {
   }
 }
 
+bool isIOS() {
+  return defaultTargetPlatform == TargetPlatform.iOS;
+}
+
 bool isWide(BuildContext context) {
   if (defaultTargetPlatform == TargetPlatform.android || defaultTargetPlatform == TargetPlatform.iOS) {
     return false;
