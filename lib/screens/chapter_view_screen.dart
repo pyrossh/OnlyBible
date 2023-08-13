@@ -41,7 +41,7 @@ class ChapterViewScreen extends StatelessWidget {
       value: model,
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.background,
-        bottomSheet: const ActionsBar(),
+        // bottomSheet: const ActionsBar(),
         body: SafeArea(
           child: SwipeDetector(
             onSwipeLeft: (offset) {

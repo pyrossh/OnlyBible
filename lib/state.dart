@@ -8,6 +8,7 @@ import "package:just_audio/just_audio.dart";
 import "package:only_bible_app/screens/chapter_view_screen.dart";
 import "package:only_bible_app/utils/dialog.dart";
 import "package:only_bible_app/models.dart";
+import "package:only_bible_app/widgets/actions_bar.dart";
 import "package:provider/provider.dart";
 import "package:shared_preferences/shared_preferences.dart";
 
@@ -178,11 +179,21 @@ class ChapterViewModel extends ChangeNotifier {
     return selectedVerses.contains(i);
   }
 
-  void onVerseSelected(int i) {
+  void onVerseSelected(BuildContext context, int i) {
+    if (!isWide(context)) {
+      if (selectedVerses.isEmpty) {
+        Scaffold.of(context).showBottomSheet((context) => const ActionsBar());
+      }
+    }
     if (selectedVerses.contains(i)) {
       selectedVerses.remove(i);
     } else {
       selectedVerses.add(i);
+    }
+    if (!isWide(context)) {
+      if (selectedVerses.isEmpty) {
+        Navigator.of(context).pop();
+      }
     }
     notifyListeners();
   }
@@ -211,6 +222,7 @@ class ChapterViewModel extends ChangeNotifier {
           log("Could not play audio", name: "play", error: (err.toString(), url));
           FirebaseCrashlytics.instance.recordFlutterError(FlutterErrorDetails(exception: (err.toString(), url)));
           showError(context, "Could not play audio");
+          return;
         } finally {
           await player.pause();
           isPlaying = false;

@@ -7,12 +7,6 @@ class ActionsBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDesktop = isWide(context);
-    final showPlay = ChapterViewModel.of(context).hasSelectedVerses();
-    if (isDesktop || !showPlay) {
-      // TODO: hack fix this
-      return const ColoredBox(color: Colors.transparent);
-    }
     return BottomSheet(
       enableDrag: false,
       onClosing: () {},

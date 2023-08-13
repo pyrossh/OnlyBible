@@ -16,7 +16,7 @@ class VerseText extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        ChapterViewModel.ofEvent(context).onVerseSelected(index);
+        ChapterViewModel.ofEvent(context).onVerseSelected(context, index);
       },
       child: DecoratedBox(
         decoration: BoxDecoration(
