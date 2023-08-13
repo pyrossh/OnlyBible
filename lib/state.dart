@@ -1,6 +1,7 @@
 import "dart:convert";
 import "dart:developer";
 import "package:firebase_crashlytics/firebase_crashlytics.dart";
+// import "package:firebase_performance/firebase_performance.dart";
 import "package:flutter/foundation.dart" show defaultTargetPlatform, TargetPlatform;
 import "package:flutter/services.dart";
 import "package:flutter/material.dart";
@@ -50,7 +51,15 @@ class AppModel extends ChangeNotifier {
 
   Future<Bible> loadBible(int id) async {
     final selectedBible = bibles.firstWhere((it) => it.id == id);
+    // Trace customTrace;
+    // if (!isDesktop()) {
+    //   customTrace = FirebasePerformance.instance.newTrace("loadBible");
+    //   await customTrace.start();
+    // }
     final books = await getBibleFromAsset(selectedBible.name);
+    // if (!isDesktop()) {
+    //   await customTrace.stop();
+    // }
     return Bible.withBooks(
       id: selectedBible.id,
       name: selectedBible.name,
@@ -231,6 +240,12 @@ class ChapterViewModel extends ChangeNotifier {
       }
     }
   }
+}
+
+bool isDesktop() {
+  return defaultTargetPlatform == TargetPlatform.macOS ||
+      defaultTargetPlatform == TargetPlatform.windows ||
+      defaultTargetPlatform == TargetPlatform.linux;
 }
 
 bool isIOS() {

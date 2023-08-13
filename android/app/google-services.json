@@ -31,10 +31,10 @@
               "client_type": 3
             },
             {
-              "client_id": "584350822569-djr6la0tpg5v48bfmtto23l613gqt60p.apps.googleusercontent.com",
+              "client_id": "584350822569-93bboqrirsb1q4mm697qm6ja58mnnakg.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "sh.pyros.onlybibleapp.onlyBibleApp.RunnerTests"
+                "bundle_id": "sh.pyros.onlyBibleApp"
               }
             }
           ]
