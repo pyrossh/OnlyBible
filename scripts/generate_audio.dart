@@ -4,7 +4,7 @@ import "package:flutter_azure_tts/flutter_azure_tts.dart";
 Future<void> convertText(Voice v, String fileName, String text) async {
   final ttsResponse = await AzureTts.getTts(TtsParams(
     voice: v,
-    audioFormat: AudioOutputFormat.audio24khz48kBitrateMonoMp3,
+    audioFormat: AudioOutputFormat.audio48khz96kBitrateMonoMp3,
     rate: 0.90,
     text: text,
   ));
@@ -18,10 +18,10 @@ void main() async {
     name: "",
     displayName: "",
     localName: "",
-    shortName: "ne-NP-SagarNeural",
-    gender: "Male",
+    shortName: "ne-NP-HemkalaNeural",
+    gender: "",
     locale: "ne-NP",
-    sampleRateHertz: AudioOutputFormat.audio24khz48kBitrateMonoMp3,
+    sampleRateHertz: AudioOutputFormat.audio48khz96kBitrateMonoMp3,
     voiceType: "",
     status: "",
   );
