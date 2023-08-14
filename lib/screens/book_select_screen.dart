@@ -28,6 +28,7 @@ class BookSelectScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScaffoldMenu(
       child: CustomScrollView(
+        physics: const BouncingScrollPhysics(),
         slivers: [
           const SliverHeading(title: "Old Testament", showClose: true),
           SliverTileGrid(

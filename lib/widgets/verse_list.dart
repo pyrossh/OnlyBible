@@ -12,11 +12,12 @@ class VerseList extends StatelessWidget {
     final verses = selectedBible.books[model.book].chapters[model.chapter].verses;
     return SelectionArea(
       child: ListView.builder(
+        physics: const BouncingScrollPhysics(),
         shrinkWrap: false,
         padding: const EdgeInsets.only(
           left: 20,
           right: 20,
-          bottom: 20,
+          bottom: 55, // TODO: maybe make this 55 only when actions bar is show else 20
         ),
         itemCount: verses.length,
         itemBuilder: (BuildContext context, int index) {

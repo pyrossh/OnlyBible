@@ -62,10 +62,6 @@ class ChapterViewScreen extends StatelessWidget {
                             Flexible(
                               child: VerseList(),
                             ),
-                            // TODO: add padding only if bottom sheet is shown
-                            // Padding(
-                            //   padding: EdgeInsets.only(bottom: 40),
-                            // )
                           ],
                         ),
                       ),

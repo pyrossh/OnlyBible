@@ -14,8 +14,7 @@ class BibleSelectScreen extends StatelessWidget {
     final model = AppModel.of(context);
     return ScaffoldMenu(
       child: CustomScrollView(
-        // scrollBehavior: CupertinoScrollBehavior(),
-        // physics: BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         slivers: [
           const SliverHeading(title: "Bibles", showClose: true),
           SliverTileGrid(
