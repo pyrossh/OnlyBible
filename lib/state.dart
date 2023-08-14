@@ -194,7 +194,7 @@ class ChapterViewModel extends ChangeNotifier {
   void onVerseSelected(BuildContext context, int i) {
     if (!isWide(context)) {
       if (selectedVerses.isEmpty) {
-        Scaffold.of(context).showBottomSheet((context) => const ActionsBar());
+        Scaffold.of(context).showBottomSheet((context) => const ActionsSheet());
       }
     }
     if (selectedVerses.contains(i)) {

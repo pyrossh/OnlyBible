@@ -1,7 +1,7 @@
 import "package:flutter/material.dart";
 import "package:only_bible_app/screens/book_select_screen.dart";
 import "package:only_bible_app/state.dart";
-import "package:only_bible_app/widgets/menu.dart";
+import "package:only_bible_app/widgets/more_button.dart";
 
 class ChapterAppBar extends StatelessWidget implements PreferredSizeWidget {
   const ChapterAppBar({super.key});
@@ -49,12 +49,7 @@ class ChapterAppBar extends StatelessWidget implements PreferredSizeWidget {
       leading: null,
       automaticallyImplyLeading: false,
       actions: const [
-        Menu(),
-        // IconButton(
-        //   padding: EdgeInsets.zero,
-        //   onPressed: () {},
-        //   icon: const Icon(Icons.more_vert),
-        // ),
+        MoreButton(),
       ],
     );
   }

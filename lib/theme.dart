@@ -22,6 +22,7 @@ final lightTheme = ThemeData(
     elevation: 10,
     shadowColor: Colors.black,
     backgroundColor: Colors.white,
+    // backgroundColor: Color(0xFFF2F2F7),
     surfaceTintColor: Colors.white,
     shape: Border(
       top: BorderSide(
