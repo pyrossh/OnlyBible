@@ -1,3 +1,4 @@
+import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
 import "package:only_bible_app/state.dart";
 import "package:only_bible_app/models.dart";
@@ -13,6 +14,8 @@ class BibleSelectScreen extends StatelessWidget {
     final model = AppModel.of(context);
     return ScaffoldMenu(
       child: CustomScrollView(
+        // scrollBehavior: CupertinoScrollBehavior(),
+        // physics: BouncingScrollPhysics(),
         slivers: [
           const SliverHeading(title: "Bibles", showClose: true),
           SliverTileGrid(

@@ -9,6 +9,7 @@ class ActionsSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     return BottomSheet(
       onClosing: () {},
+      shape: Theme.of(context).dialogTheme.shape,
       builder: (BuildContext ctx) => Container(
         padding: EdgeInsets.only(bottom: isIOS() ? 20 : 0),
         child: const Row(

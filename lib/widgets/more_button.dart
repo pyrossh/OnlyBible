@@ -58,17 +58,9 @@ class _MoreButtonState extends State<MoreButton> {
           context: context,
           isDismissible: true,
           enableDrag: true,
-          // showDragHandle: true,
           useSafeArea: true,
-          // clipBehavior: Clip.antiAliasWithSaveLayer,
           builder: (context) => const SettingsSheet(),
         );
-        // Scaffold.of(context).showBottomSheet(
-        //   (context) => const SettingsSheet(),
-        //   constraints: const BoxConstraints(
-        //     maxHeight: 400,
-        //   ),
-        // );
       },
       icon: const Icon(Icons.more_vert),
     );

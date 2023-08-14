@@ -22,12 +22,11 @@ final lightTheme = ThemeData(
     elevation: 10,
     shadowColor: Colors.black,
     backgroundColor: Colors.white,
-    // backgroundColor: Color(0xFFF2F2F7),
     surfaceTintColor: Colors.white,
-    shape: Border(
-      top: BorderSide(
-        width: 1.5,
-        color: Colors.black,
+    clipBehavior: Clip.antiAliasWithSaveLayer,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(
+        top: Radius.circular(25.0),
       ),
     ),
   ),
@@ -121,14 +120,10 @@ final darkTheme = ThemeData(
   appBarTheme: lightTheme.appBarTheme.copyWith(
     backgroundColor: const Color(0xFF1F1F22),
   ),
-  bottomSheetTheme: const BottomSheetThemeData(
-    elevation: 1,
-    shape: Border(
-      top: BorderSide(
-        width: 1.5,
-        color: Color(0xAA5D4979),
-      ),
-    ),
+  bottomSheetTheme: lightTheme.bottomSheetTheme.copyWith(
+    shadowColor: const Color(0xFF4B3D60),
+    backgroundColor: const Color(0xFF26242C),
+    surfaceTintColor: const Color(0xAA5D4979),
   ),
   dialogTheme: const DialogTheme(
     elevation: 1,
