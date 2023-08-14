@@ -13,8 +13,8 @@ class Header extends StatelessWidget {
     final selectedBible = AppModel.of(context).bible;
     final model = ChapterViewModel.of(context);
     final selectedBook = selectedBible.books[model.book];
-    final isDesktop = isWide(context);
     final bookName = selectedBook.name;
+    final isDesktop = isWide(context);
     // Localizations.localeOf(context).languageCode
     return Container(
       padding: EdgeInsets.only(

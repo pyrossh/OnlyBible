@@ -12,8 +12,9 @@ class Menu extends StatelessWidget {
     final modeIcon = model.darkMode ? Icons.dark_mode : Icons.light_mode;
     final boldColor = model.fontBold ? Theme.of(context).shadowColor : Colors.grey;
     return PopupMenuButton(
-      icon: const Icon(Icons.more_vert, size: 28),
-      offset: const Offset(0.0, 50),
+      padding: EdgeInsets.zero,
+      icon: Icon(Icons.more_vert, size: isDesktop ? 28 : 22),
+      offset: Offset(0.0, isDesktop ? 60 : 30),
       onSelected: (int v) {
         if (v == 1) {
           Navigator.of(context).push(

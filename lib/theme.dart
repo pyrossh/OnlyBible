@@ -12,6 +12,12 @@ final lightTheme = ThemeData(
   hoverColor: const Color(0xAAF8D0DC),
   dividerColor: Colors.black,
   shadowColor: Colors.black,
+  appBarTheme: const AppBarTheme(
+    backgroundColor: Colors.white,
+    toolbarHeight: 30,
+    elevation: 0,
+    scrolledUnderElevation: 0,
+  ),
   bottomSheetTheme: const BottomSheetThemeData(
     elevation: 10,
     shadowColor: Colors.black,
@@ -111,6 +117,9 @@ final darkTheme = ThemeData(
   hoverColor: const Color(0xAA5D4979),
   dividerColor: Colors.white,
   shadowColor: Colors.white,
+  appBarTheme: lightTheme.appBarTheme.copyWith(
+    backgroundColor: const Color(0xFF1F1F22),
+  ),
   bottomSheetTheme: const BottomSheetThemeData(
     elevation: 1,
     shape: Border(

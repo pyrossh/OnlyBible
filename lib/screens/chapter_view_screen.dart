@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:flutter_swipe_detector/flutter_swipe_detector.dart";
+import "package:only_bible_app/widgets/chapter_app_bar.dart";
 import "package:only_bible_app/widgets/header.dart";
 import "package:only_bible_app/state.dart";
 import "package:only_bible_app/widgets/sidebar.dart";
@@ -31,6 +32,7 @@ class ChapterViewScreen extends StatelessWidget {
     //     );
     //   },
     // ),
+    final isDesktop = isWide(context);
     final model = ChapterViewModel(
       book: book,
       chapter: chapter,
@@ -39,8 +41,8 @@ class ChapterViewScreen extends StatelessWidget {
     return ChangeNotifierProvider.value(
       value: model,
       child: Scaffold(
+        appBar: isDesktop ? null : const ChapterAppBar(),
         backgroundColor: Theme.of(context).colorScheme.background,
-        // bottomSheet: const ActionsBar(),
         body: SafeArea(
           child: SwipeDetector(
             onSwipeLeft: (offset) {
@@ -49,25 +51,27 @@ class ChapterViewScreen extends StatelessWidget {
             onSwipeRight: (offset) {
               model.onPrevious(context, book, chapter);
             },
-            child: Row(
-              children: [
-                if (isWide(context)) const Sidebar(),
-                const Flexible(
-                  child: Column(
+            child: isDesktop
+                ? const Row(
                     children: [
-                      Header(),
+                      Sidebar(),
                       Flexible(
-                        child: VerseList(),
+                        child: Column(
+                          children: [
+                            Header(),
+                            Flexible(
+                              child: VerseList(),
+                            ),
+                            // TODO: add padding only if bottom sheet is shown
+                            // Padding(
+                            //   padding: EdgeInsets.only(bottom: 40),
+                            // )
+                          ],
+                        ),
                       ),
-                      // TODO: add padding only if bottom sheet is shown
-                      // Padding(
-                      //   padding: EdgeInsets.only(bottom: 40),
-                      // )
                     ],
-                  ),
-                ),
-              ],
-            ),
+                  )
+                : const VerseList(),
           ),
         ),
       ),
