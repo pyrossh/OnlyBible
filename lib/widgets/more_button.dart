@@ -58,6 +58,7 @@ class _MoreButtonState extends State<MoreButton> {
           context: context,
           isDismissible: true,
           enableDrag: true,
+          showDragHandle: true,
           useSafeArea: true,
           builder: (context) => const SettingsSheet(),
         );

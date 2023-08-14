@@ -20,8 +20,8 @@ final lightTheme = ThemeData(
   ),
   bottomSheetTheme: const BottomSheetThemeData(
     elevation: 10,
+    backgroundColor: Color(0xFFF2F2F7),
     shadowColor: Colors.black,
-    backgroundColor: Colors.white,
     surfaceTintColor: Colors.white,
     clipBehavior: Clip.antiAliasWithSaveLayer,
     shape: RoundedRectangleBorder(
@@ -121,9 +121,9 @@ final darkTheme = ThemeData(
     backgroundColor: const Color(0xFF1F1F22),
   ),
   bottomSheetTheme: lightTheme.bottomSheetTheme.copyWith(
-    shadowColor: const Color(0xFF4B3D60),
-    backgroundColor: const Color(0xFF26242C),
-    surfaceTintColor: const Color(0xAA5D4979),
+    backgroundColor: const Color(0xFF141415),
+    shadowColor: Colors.white,
+    surfaceTintColor: const Color(0xFF141415),
   ),
   dialogTheme: const DialogTheme(
     elevation: 1,
