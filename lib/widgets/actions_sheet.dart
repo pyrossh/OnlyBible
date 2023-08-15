@@ -8,12 +8,14 @@ class ActionsSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final iconColor = AppModel.of(context).darkMode ? Colors.white.withOpacity(0.9) : Colors.black.withOpacity(0.9);
+    final app = AppModel.of(context);
+    final iconColor = app.darkMode ? Colors.white.withOpacity(0.9) : Colors.black.withOpacity(0.9);
     final bodySmall = Theme.of(context).textTheme.bodySmall;
     final model = ChapterViewModel.of(context);
     final audioIcon = model.isPlaying ? Icons.pause_circle_outline : Icons.play_circle_outline;
+    final audioText = model.isPlaying ? "Pause" : "Play";
     return Container(
-      height: 140,
+      height: 160,
       color: Theme.of(context).colorScheme.background,
       padding: EdgeInsets.only(bottom: isIOS() ? 20 : 0, left: 20, right: 20, top: 10),
       child: Column(
@@ -52,9 +54,29 @@ class ActionsSheet extends StatelessWidget {
                 leading: IconButton(
                   padding: EdgeInsets.zero,
                   onPressed: () {},
-                  icon: Icon(Icons.copy, size: 28, color: iconColor),
+                  icon: Icon(Icons.cancel_outlined, size: 24, color: iconColor),
+                ),
+                trailing: Text("Clear", style: bodySmall),
+              ),
+              IconButtonText(
+                leading: IconButton(
+                  padding: EdgeInsets.zero,
+                  onPressed: () {},
+                  icon: Icon(Icons.copy, size: 24, color: iconColor),
                 ),
                 trailing: Text("Copy", style: bodySmall),
+              ),
+              IconButtonText(
+                leading: IconButton(
+                  padding: EdgeInsets.zero,
+                  onPressed: () {
+                    if (app.bible.hasAudio) {
+                      model.onPlay(context);
+                    }
+                  },
+                  icon: Icon(audioIcon, size: 32, color: app.bible.hasAudio ? iconColor : Colors.grey),
+                ),
+                trailing: Text(audioText, style: bodySmall),
               ),
               IconButtonText(
                 leading: IconButton(
@@ -63,14 +85,6 @@ class ActionsSheet extends StatelessWidget {
                   icon: Icon(Icons.post_add_outlined, size: 32, color: iconColor),
                 ),
                 trailing: Text("Note", style: bodySmall),
-              ),
-              IconButtonText(
-                leading: IconButton(
-                  padding: EdgeInsets.zero,
-                  onPressed: () => model.onPlay(context),
-                  icon: Icon(audioIcon, size: 40, color: iconColor),
-                ),
-                trailing: Text("Play", style: bodySmall),
               ),
               IconButtonText(
                 leading: IconButton(

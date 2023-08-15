@@ -17,10 +17,6 @@ class ChapterAppBar extends StatelessWidget implements PreferredSizeWidget {
     final bookName = selectedBook.name;
     return AppBar(
       excludeHeaderSemantics: true,
-      // bottom: const PreferredSize(
-      //   preferredSize: Size.fromHeight(1),
-      //   child: Divider(height: 0, thickness: 1, indent: 18, endIndent: 20),
-      // ),
       title: TextButton.icon(
         style: TextButton.styleFrom(
           padding: EdgeInsets.zero,

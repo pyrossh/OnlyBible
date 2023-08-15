@@ -181,7 +181,6 @@ class ChapterViewModel extends ChangeNotifier {
 
   save(int book, int chapter) async {
     final prefs = await SharedPreferences.getInstance();
-    // prefs.setInt("bibleId", bibleId);
     prefs.setInt("book", book);
     prefs.setInt("chapter", chapter);
   }
@@ -250,8 +249,12 @@ class ChapterViewModel extends ChangeNotifier {
   }
 
   onPlay(BuildContext context) async {
-    final bibleModel = AppModel.ofEvent(context);
+    final bible = AppModel.ofEvent(context).bible;
     final model = ChapterViewModel.ofEvent(context);
+    // if (!bible.hasAudio) {
+    //   showError(context, "This bible version doesn't support ");
+    //   return;
+    // }
     if (isPlaying) {
       await player.pause();
       isPlaying = false;
@@ -260,7 +263,7 @@ class ChapterViewModel extends ChangeNotifier {
       isPlaying = true;
       notifyListeners();
       for (final v in selectedVerses) {
-        final bibleName = bibleModel.bible.name;
+        final bibleName = bible.name;
         final book = (model.book + 1).toString().padLeft(2, "0");
         final chapter = (model.chapter + 1).toString().padLeft(3, "0");
         final verse = (v + 1).toString().padLeft(3, "0");
