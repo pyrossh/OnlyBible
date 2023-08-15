@@ -8,7 +8,7 @@ class ActionsSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final iconColor = Colors.black.withOpacity(0.9); //Theme.of(context).secondaryHeaderColor;
+    final iconColor = AppModel.of(context).darkMode ? Colors.white.withOpacity(0.9) : Colors.black.withOpacity(0.9);
     final bodySmall = Theme.of(context).textTheme.bodySmall;
     final model = ChapterViewModel.of(context);
     final audioIcon = model.isPlaying ? Icons.pause_circle_outline : Icons.play_circle_outline;
