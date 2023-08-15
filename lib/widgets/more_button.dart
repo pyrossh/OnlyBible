@@ -1,27 +1,8 @@
 import "package:flutter/material.dart";
-import "package:only_bible_app/widgets/settings_sheet.dart";
+import "package:only_bible_app/state.dart";
 
-class MoreButton extends StatefulWidget {
+class MoreButton extends StatelessWidget {
   const MoreButton({super.key});
-
-  @override
-  State<MoreButton> createState() => _MoreButtonState();
-}
-
-class _MoreButtonState extends State<MoreButton> {
-  var isOpen = false;
-
-  setIsOpen() {
-    setState(() {
-      isOpen = true;
-    });
-  }
-
-  setIsClosed() {
-    setState(() {
-      isOpen = true;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,16 +34,7 @@ class _MoreButtonState extends State<MoreButton> {
     // );
     return IconButton(
       padding: EdgeInsets.zero,
-      onPressed: () {
-        showModalBottomSheet(
-          context: context,
-          isDismissible: true,
-          enableDrag: true,
-          showDragHandle: true,
-          useSafeArea: true,
-          builder: (context) => const SettingsSheet(),
-        );
-      },
+      onPressed: () => AppModel.ofEvent(context).showSettings(context),
       icon: const Icon(Icons.more_vert),
     );
   }

@@ -12,6 +12,7 @@ import "package:only_bible_app/screens/chapter_view_screen.dart";
 import "package:only_bible_app/utils/dialog.dart";
 import "package:only_bible_app/models.dart";
 import "package:only_bible_app/widgets/actions_sheet.dart";
+import "package:only_bible_app/widgets/settings_sheet.dart";
 import "package:provider/provider.dart";
 import "package:shared_preferences/shared_preferences.dart";
 
@@ -21,6 +22,7 @@ class AppModel extends ChangeNotifier {
   bool darkMode = false;
   bool fontBold = false;
   double textScaleFactor = 0;
+  bool actionsShown = false;
 
   static AppModel of(BuildContext context) {
     return Provider.of(context, listen: true);
@@ -66,6 +68,7 @@ class AppModel extends ChangeNotifier {
     return Bible.withBooks(
       id: selectedBible.id,
       name: selectedBible.name,
+      hasAudio: selectedBible.hasAudio,
       books: books,
     );
   }
@@ -118,6 +121,32 @@ class AppModel extends ChangeNotifier {
     textScaleFactor -= 0.1;
     notifyListeners();
     save();
+  }
+
+  showSettings(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isDismissible: true,
+      enableDrag: true,
+      showDragHandle: true,
+      useSafeArea: true,
+      builder: (context) => const SettingsSheet(),
+    );
+  }
+
+  showActions(BuildContext context) {
+    actionsShown = true;
+    Scaffold.of(context).showBottomSheet(
+      enableDrag: false,
+      (context) => const ActionsSheet(),
+    );
+    notifyListeners();
+  }
+
+  hideActions(BuildContext context) {
+    actionsShown = false;
+    Navigator.of(context).pop();
+    notifyListeners();
   }
 }
 
@@ -204,10 +233,7 @@ class ChapterViewModel extends ChangeNotifier {
   void onVerseSelected(BuildContext context, int i) {
     if (!isWide(context)) {
       if (selectedVerses.isEmpty) {
-        Scaffold.of(context).showBottomSheet(
-          // clipBehavior: Clip.none,
-          (context) => const ActionsSheet(),
-        );
+        AppModel.ofEvent(context).showActions(context);
       }
     }
     if (selectedVerses.contains(i)) {
@@ -217,7 +243,7 @@ class ChapterViewModel extends ChangeNotifier {
     }
     if (!isWide(context)) {
       if (selectedVerses.isEmpty) {
-        Navigator.of(context).pop();
+        AppModel.ofEvent(context).hideActions(context);
       }
     }
     notifyListeners();

@@ -32,8 +32,12 @@ final lightTheme = ThemeData(
     dragHandleSize: Size(50, 3),
     clipBehavior: Clip.antiAliasWithSaveLayer,
     shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(
-        top: Radius.circular(25.0),
+      side: BorderSide(
+        color: Color(0xFFAFA8A8),
+      ),
+      borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(25.0),
+        topRight: Radius.circular(25.0),
       ),
     ),
   ),
@@ -68,7 +72,7 @@ final lightTheme = ThemeData(
       enableFeedback: true,
       padding: EdgeInsets.zero,
       shape: const RoundedRectangleBorder(),
-      elevation: 1,
+      elevation: 0,
       shadowColor: Colors.black,
       backgroundColor: const Color(0xFFEAE9E9),
       foregroundColor: const Color(0xFF9A1111),
@@ -82,6 +86,13 @@ final lightTheme = ThemeData(
   textTheme: const TextTheme(
     bodyMedium: TextStyle(
       fontSize: 16,
+      fontWeight: FontWeight.w400,
+      wordSpacing: 0,
+      letterSpacing: 0,
+      color: Color(0xFF010101),
+    ),
+    bodySmall: TextStyle(
+      fontSize: 14,
       fontWeight: FontWeight.w400,
       wordSpacing: 0,
       letterSpacing: 0,
@@ -156,6 +167,9 @@ final darkTheme = ThemeData(
   ),
   textTheme: TextTheme(
     bodyMedium: lightTheme.textTheme.bodyMedium!.copyWith(
+      color: const Color(0xFFBCBEC4),
+    ),
+    bodySmall: lightTheme.textTheme.bodyMedium!.copyWith(
       color: const Color(0xFFBCBEC4),
     ),
     headlineLarge: lightTheme.textTheme.headlineLarge!.copyWith(

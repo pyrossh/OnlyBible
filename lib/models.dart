@@ -1,16 +1,19 @@
 class Bible {
   final int id;
   final String name;
+  final bool hasAudio;
   List<Book> books = [];
 
   Bible({
     required this.id,
     required this.name,
+    required this.hasAudio,
   });
 
   Bible.withBooks({
     required this.id,
     required this.name,
+    required this.hasAudio,
     required this.books,
   });
 
@@ -278,17 +281,17 @@ const bookNames = <String, List<String>>{
 };
 
 final bibles = [
-  Bible(id: 1, name: "KJV"),
-  Bible(id: 2, name: "Kannada"),
-  Bible(id: 3, name: "Nepali"),
-  Bible(id: 4, name: "Hindi"),
-  Bible(id: 5, name: "Gujarati"),
-  Bible(id: 6, name: "Malayalam"),
-  Bible(id: 7, name: "Oriya"),
-  Bible(id: 8, name: "Punjabi"),
-  Bible(id: 9, name: "Tamil"),
-  Bible(id: 10, name: "Telugu"),
-  Bible(id: 11, name: "Bengali"),
+  Bible(id: 1, name: "KJV", hasAudio: false),
+  Bible(id: 2, name: "Kannada", hasAudio: true),
+  Bible(id: 3, name: "Nepali", hasAudio: false),
+  Bible(id: 4, name: "Hindi", hasAudio: false),
+  Bible(id: 5, name: "Gujarati", hasAudio: false),
+  Bible(id: 6, name: "Malayalam", hasAudio: false),
+  Bible(id: 7, name: "Oriya", hasAudio: false),
+  Bible(id: 8, name: "Punjabi", hasAudio: false),
+  Bible(id: 9, name: "Tamil", hasAudio: false),
+  Bible(id: 10, name: "Telugu", hasAudio: false),
+  Bible(id: 11, name: "Bengali", hasAudio: false),
 ];
 
 List<Book> getBibleFromText(String languageCode, String text) {
