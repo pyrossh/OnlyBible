@@ -7,9 +7,7 @@ class VerseList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final selectedBible = AppModel.of(context).bible;
-    final model = ChapterViewModel.of(context);
-    final verses = selectedBible.books[model.book].chapters[model.chapter].verses;
+    final chapter = ChapterViewModel.selectedChapter(context);
     return SelectionArea(
       child: ListView.builder(
         physics: const BouncingScrollPhysics(),
@@ -19,9 +17,9 @@ class VerseList extends StatelessWidget {
           right: 20,
           bottom: 55, // TODO: maybe make this 55 only when actions bar is show else 20
         ),
-        itemCount: verses.length,
+        itemCount: chapter.verses.length,
         itemBuilder: (BuildContext context, int index) {
-          final v = verses[index];
+          final v = chapter.verses[index];
           return Container(
             margin: const EdgeInsets.symmetric(vertical: 6),
             child: VerseText(index: index, text: v.text),

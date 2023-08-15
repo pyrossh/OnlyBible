@@ -136,6 +136,16 @@ class ChapterViewModel extends ChangeNotifier {
     return Provider.of(context, listen: false);
   }
 
+  static Book selectedBook(BuildContext context) {
+    final model = of(context);
+    return AppModel.of(context).bible.books[model.book];
+  }
+
+  static Chapter selectedChapter(BuildContext context) {
+    final model = of(context);
+    return AppModel.of(context).bible.books[model.book].chapters[model.chapter];
+  }
+
   ChapterViewModel({required this.book, required this.chapter, required this.selectedVerses}) {
     save(book, chapter);
   }

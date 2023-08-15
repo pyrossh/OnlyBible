@@ -21,39 +21,38 @@ class Sidebar extends StatelessWidget {
               ),
             ),
           ),
-          const Belt(top: 80),
-          Belt(top: height - 120),
           const Bookmark(left: 70),
           SizedBox(
             width: 250,
             height: height,
-            child: Container(
-                decoration: const BoxDecoration(
-                  border: Border(
-                    right: BorderSide(
-                      color: Colors.black,
-                      width: 1.5,
-                    ),
+            child: DecoratedBox(
+              decoration: const BoxDecoration(
+                border: Border(
+                  right: BorderSide(
+                    color: Colors.black,
+                    width: 1.5,
                   ),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 50, right: 50, top: 0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Flexible(
-                        child: Text("ONLY", style: Theme.of(context).textTheme.headlineLarge),
-                      ),
-                      Flexible(
-                        child: Text("BIBLE", style: Theme.of(context).textTheme.headlineLarge),
-                      ),
-                      Flexible(
-                        child: Text("APP", style: Theme.of(context).textTheme.headlineLarge),
-                      ),
-                    ],
-                  ),
-                )),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 50, right: 50, top: 0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Flexible(
+                      child: Text("ONLY", style: Theme.of(context).textTheme.headlineLarge),
+                    ),
+                    Flexible(
+                      child: Text("BIBLE", style: Theme.of(context).textTheme.headlineLarge),
+                    ),
+                    Flexible(
+                      child: Text("APP", style: Theme.of(context).textTheme.headlineLarge),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ),
         ],
       ),
@@ -123,31 +122,6 @@ class Bookmark extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class Belt extends StatelessWidget {
-  final double top;
-
-  const Belt({super.key, required this.top});
-
-  @override
-  Widget build(BuildContext context) {
-    return Positioned(
-      left: 0.0,
-      top: top,
-      child: Container(
-        width: 60.0,
-        height: 30.0,
-        decoration: BoxDecoration(
-          borderRadius: const BorderRadius.only(
-            bottomRight: Radius.circular(25),
-            topRight: Radius.circular(25),
-          ),
-          color: Theme.of(context).primaryColorLight,
-        ),
       ),
     );
   }

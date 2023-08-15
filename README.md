@@ -54,3 +54,14 @@ gsutil -m cp -r scripts/audio/Kannada gs://only-bible-app.appspot.com/
 
 Note:
 > For crashanalytics to work in dev/debug mode in macos this has to be set DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+
+## Bugs
+1. Fix verse number layout flow
+2. Swipe left should pop context if chapter/book index is previous to the current one to maintain scroll history.
+3. Reduce verse line spacing
+
+## Todo
+1. Add Sqlite for highlighting, notes, chapter verses
+2. Custom Selection should show action bar instead of tooltip/popup menu 
+3. Figure out history
+4. Add more text compact/loose maybe spacing
