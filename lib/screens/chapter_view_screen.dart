@@ -1,10 +1,9 @@
 import "package:flutter/material.dart";
-import "package:flutter_swipe_detector/flutter_swipe_detector.dart";
 import "package:only_bible_app/widgets/chapter_app_bar.dart";
 import "package:only_bible_app/widgets/header.dart";
 import "package:only_bible_app/state.dart";
 import "package:only_bible_app/widgets/sidebar.dart";
-import "package:only_bible_app/widgets/verse_list.dart";
+import "package:only_bible_app/widgets/verses_view.dart";
 import "package:provider/provider.dart";
 
 class ChapterViewScreen extends StatelessWidget {
@@ -33,42 +32,33 @@ class ChapterViewScreen extends StatelessWidget {
     //   },
     // ),
     final isDesktop = isWide(context);
-    final model = ChapterViewModel(
-      book: book,
-      chapter: chapter,
-      selectedVerses: [],
-    );
-    return ChangeNotifierProvider.value(
-      value: model,
+    return ChangeNotifierProvider(
+      create: (_) => ChapterViewModel(
+        book: book,
+        chapter: chapter,
+        selectedVerses: [],
+      ),
       child: Scaffold(
         appBar: isDesktop ? null : const ChapterAppBar(),
         backgroundColor: Theme.of(context).colorScheme.background,
         body: SafeArea(
-          child: SwipeDetector(
-            onSwipeLeft: (offset) {
-              model.onNext(context, book, chapter);
-            },
-            onSwipeRight: (offset) {
-              model.onPrevious(context, book, chapter);
-            },
-            child: isDesktop
-                ? const Row(
-                    children: [
-                      Sidebar(),
-                      Flexible(
-                        child: Column(
-                          children: [
-                            Header(),
-                            Flexible(
-                              child: VerseList(),
-                            ),
-                          ],
-                        ),
+          child: isDesktop
+              ? const Row(
+                  children: [
+                    Sidebar(),
+                    Flexible(
+                      child: Column(
+                        children: [
+                          Header(),
+                          Flexible(
+                            child: VersesView(),
+                          ),
+                        ],
                       ),
-                    ],
-                  )
-                : const VerseList(),
-          ),
+                    ),
+                  ],
+                )
+              : const VersesView(),
         ),
       ),
     );

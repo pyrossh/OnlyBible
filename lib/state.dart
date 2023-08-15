@@ -20,7 +20,7 @@ class AppModel extends ChangeNotifier {
   Bible bible = bibles.first;
   bool darkMode = false;
   bool fontBold = false;
-  int fontSizeDelta = 0;
+  double textScaleFactor = 0;
 
   static AppModel of(BuildContext context) {
     return Provider.of(context, listen: true);
@@ -35,7 +35,7 @@ class AppModel extends ChangeNotifier {
     await prefs.setInt("bibleId", bible.id);
     await prefs.setBool("darkMode", darkMode);
     await prefs.setBool("fontBold", fontBold);
-    await prefs.setInt("fontSizeDelta", fontSizeDelta);
+    await prefs.setDouble("textScaleFactor", textScaleFactor);
   }
 
   Future<(int, int)> loadData() async {
@@ -43,7 +43,7 @@ class AppModel extends ChangeNotifier {
     final bibleId = prefs.getInt("bibleId") ?? 1;
     darkMode = prefs.getBool("darkMode") ?? false;
     fontBold = prefs.getBool("fontBold") ?? false;
-    fontSizeDelta = prefs.getInt("fontSizeDelta") ?? 0;
+    textScaleFactor = prefs.getDouble("textScaleFactor") ?? 1;
     bible = await loadBible(bibleId);
     // await Future.delayed(Duration(seconds: 3));
     final book = prefs.getInt("book") ?? 0;
@@ -109,13 +109,13 @@ class AppModel extends ChangeNotifier {
   }
 
   increaseFont() async {
-    fontSizeDelta += 1;
+    textScaleFactor += 0.1;
     notifyListeners();
     save();
   }
 
   decreaseFont() async {
-    fontSizeDelta -= 1;
+    textScaleFactor -= 0.1;
     notifyListeners();
     save();
   }
