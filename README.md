@@ -75,4 +75,4 @@ Note:
 1. Add Sqlite for highlighting, notes, chapter verses
 2. Custom Selection should show action bar instead of tooltip/popup menu
 3. Figure out history
-4. Add more text compact/loose maybe spacing
+4. Add more text options compact/loose, line spacing

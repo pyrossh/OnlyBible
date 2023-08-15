@@ -11,7 +11,7 @@ import "package:just_audio/just_audio.dart";
 import "package:only_bible_app/screens/chapter_view_screen.dart";
 import "package:only_bible_app/utils/dialog.dart";
 import "package:only_bible_app/models.dart";
-import "package:only_bible_app/widgets/actions_bar.dart";
+import "package:only_bible_app/widgets/actions_sheet.dart";
 import "package:provider/provider.dart";
 import "package:shared_preferences/shared_preferences.dart";
 
@@ -205,7 +205,7 @@ class ChapterViewModel extends ChangeNotifier {
     if (!isWide(context)) {
       if (selectedVerses.isEmpty) {
         Scaffold.of(context).showBottomSheet(
-          clipBehavior: Clip.none,
+          // clipBehavior: Clip.none,
           (context) => const ActionsSheet(),
         );
       }

@@ -27,7 +27,9 @@ final lightTheme = ThemeData(
     elevation: 10,
     backgroundColor: Color(0xFFF2F2F7),
     shadowColor: Colors.black,
-    surfaceTintColor: Colors.white,
+    surfaceTintColor: Colors.black,
+    showDragHandle: true,
+    dragHandleSize: Size(50, 3),
     clipBehavior: Clip.antiAliasWithSaveLayer,
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(
