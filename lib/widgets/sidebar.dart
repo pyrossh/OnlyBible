@@ -25,32 +25,22 @@ class Sidebar extends StatelessWidget {
           SizedBox(
             width: 250,
             height: height,
-            child: DecoratedBox(
-              decoration: const BoxDecoration(
-                border: Border(
-                  right: BorderSide(
-                    color: Colors.black,
-                    width: 1.5,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 50, right: 50, top: 0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Flexible(
+                    child: Text("ONLY", style: Theme.of(context).textTheme.headlineLarge),
                   ),
-                ),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 50, right: 50, top: 0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Flexible(
-                      child: Text("ONLY", style: Theme.of(context).textTheme.headlineLarge),
-                    ),
-                    Flexible(
-                      child: Text("BIBLE", style: Theme.of(context).textTheme.headlineLarge),
-                    ),
-                    Flexible(
-                      child: Text("APP", style: Theme.of(context).textTheme.headlineLarge),
-                    ),
-                  ],
-                ),
+                  Flexible(
+                    child: Text("BIBLE", style: Theme.of(context).textTheme.headlineLarge),
+                  ),
+                  Flexible(
+                    child: Text("APP", style: Theme.of(context).textTheme.headlineLarge),
+                  ),
+                ],
               ),
             ),
           ),
