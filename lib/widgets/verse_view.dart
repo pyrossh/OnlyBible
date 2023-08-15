@@ -22,24 +22,41 @@ class VerseText extends StatelessWidget {
         decoration: BoxDecoration(
           color: selected ? Theme.of(context).highlightColor : Theme.of(context).colorScheme.background,
         ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              margin: const EdgeInsets.only(right: 4),
-              child: Transform.translate(
-                offset: const Offset(0, 2),
-                child: Text("${index + 1}", style: Theme.of(context).textTheme.labelMedium),
+        child: RichText(
+          text: TextSpan(
+            style: DefaultTextStyle.of(context).style,
+            children: [
+              WidgetSpan(
+                child: Transform.translate(
+                  offset: const Offset(0, -2),
+                  child: Text("${index + 1} ", style: Theme.of(context).textTheme.labelMedium),
+                ),
               ),
-            ),
-            Flexible(
-              child: Text(
-                text,
+              TextSpan(
+                text: text,
                 style: TextStyle(fontSize: bodySize, fontWeight: weight),
               ),
-            )
-          ],
+            ],
+          ),
         ),
+        // Row(
+        //   crossAxisAlignment: CrossAxisAlignment.start,
+        //   children: [
+        //     Container(
+        //       margin: const EdgeInsets.only(right: 4),
+        //       child: Transform.translate(
+        //         offset: const Offset(0, 2),
+        //         child: Text("${index + 1}", style: Theme.of(context).textTheme.labelMedium),
+        //       ),
+        //     ),
+        //     Flexible(
+        //       child: Text(
+        //         text,
+        //         style: TextStyle(fontSize: bodySize, fontWeight: weight),
+        //       ),
+        //     )
+        //   ],
+        // ),
       ),
     );
   }

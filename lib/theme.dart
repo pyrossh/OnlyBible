@@ -12,6 +12,11 @@ final lightTheme = ThemeData(
   hoverColor: const Color(0xAAF8D0DC),
   dividerColor: Colors.black,
   shadowColor: Colors.black,
+  // textSelectionTheme: TextSelectionThemeData(
+  //   cursorColor: Colors.black,
+  //   selectionHandleColor: Colors.black,
+  //   selectionColor: const Color(0xAAF8D0DC),
+  // ),
   appBarTheme: const AppBarTheme(
     backgroundColor: Colors.white,
     toolbarHeight: 30,
