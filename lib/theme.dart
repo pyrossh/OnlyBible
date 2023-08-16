@@ -104,7 +104,7 @@ final lightTheme = ThemeData(
     ),
     headlineMedium: TextStyle(
       color: Color(0xFF010101),
-      fontSize: 20,
+      fontSize: 18,
       fontWeight: FontWeight.w500,
       letterSpacing: 0.5,
     ),

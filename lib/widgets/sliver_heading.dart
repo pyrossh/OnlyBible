@@ -21,13 +21,14 @@ class SliverHeading extends StatelessWidget {
         margin: EdgeInsets.only(top: top, bottom: bottom, left: 20, right: 10),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Expanded(
               child: Text(title, style: Theme.of(context).textTheme.headlineMedium),
             ),
             if (showClose)
               IconButton(
-                icon: const Icon(Icons.close, size: 28),
+                icon: const Icon(Icons.close, size: 26),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
