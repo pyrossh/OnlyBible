@@ -1,7 +1,28 @@
 import "package:flutter/material.dart";
 import "package:only_bible_app/state.dart";
 
-enum ListType { small, large }
+enum ListType {
+  small,
+  large;
+
+  int crossAxisCount() {
+    switch (this) {
+      case ListType.small:
+        return 5;
+      case ListType.large:
+        return 2;
+    }
+  }
+
+  double childAspectRatio(bool isDesktop) {
+    switch (this) {
+      case ListType.small:
+        return isDesktop ? 2.33 : 1.4;
+      case ListType.large:
+        return isDesktop ? 5 : 4;
+    }
+  }
+}
 
 class SliverTileGrid extends StatelessWidget {
   final ListType listType;
@@ -16,18 +37,10 @@ class SliverTileGrid extends StatelessWidget {
     return SliverPadding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       sliver: SliverGrid.count(
-        crossAxisCount: listType == ListType.large
-            ? 2
-            : isDesktop
-                ? 6
-                : 5,
+        crossAxisCount: listType.crossAxisCount(),
         crossAxisSpacing: spacing,
         mainAxisSpacing: spacing,
-        childAspectRatio: listType == ListType.large
-            ? 4
-            : isDesktop
-                ? 1.6
-                : 1.5,
+        childAspectRatio: listType.childAspectRatio(isDesktop),
         children: children,
       ),
     );

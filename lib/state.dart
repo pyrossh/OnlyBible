@@ -12,6 +12,7 @@ import "package:only_bible_app/screens/chapter_view_screen.dart";
 import 'package:only_bible_app/dialog.dart';
 import "package:only_bible_app/models.dart";
 import "package:only_bible_app/widgets/actions_sheet.dart";
+import "package:only_bible_app/widgets/scaffold_menu.dart";
 import "package:only_bible_app/widgets/settings_sheet.dart";
 import "package:provider/provider.dart";
 import "package:shared_preferences/shared_preferences.dart";
@@ -133,14 +134,25 @@ class AppModel extends ChangeNotifier {
   }
 
   showSettings(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      isDismissible: true,
-      enableDrag: true,
-      showDragHandle: true,
-      useSafeArea: true,
-      builder: (context) => const SettingsSheet(),
-    );
+    // if (isWide(context)) {
+    //   Navigator.of(context).push(
+    //     createNoTransitionPageRoute(
+    //       const ScaffoldMenu(
+    //         backgroundColor: Color(0xFFF2F2F7),
+    //         child: SettingsSheet(),
+    //       ),
+    //     ),
+    //   );
+    // } else {
+      showModalBottomSheet(
+        context: context,
+        isDismissible: true,
+        enableDrag: true,
+        showDragHandle: true,
+        useSafeArea: true,
+        builder: (context) => const SettingsSheet(),
+      );
+    // }
   }
 
   showActions(BuildContext context) {

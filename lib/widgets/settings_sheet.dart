@@ -15,14 +15,11 @@ class SettingsSheet extends StatelessWidget {
     final iconColor = Theme.of(context).textTheme.bodyMedium!.color;
     return Column(
       children: [
-        const Padding(
-          padding: EdgeInsets.only(bottom: 15),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 20),
           child: Text(
             "Settings",
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w500,
-            ),
+            style: Theme.of(context).textTheme.headlineMedium,
           ),
         ),
         Expanded(
