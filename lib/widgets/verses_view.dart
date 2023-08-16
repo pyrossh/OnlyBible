@@ -28,8 +28,6 @@ class VersesView extends StatelessWidget {
             // contextMenuBuilder: null,
             textScaleFactor: app.textScaleFactor,
             // onSelectionChanged: (selection, _) {
-            //   // Show copy, highlight, note, audio, share
-            //   //bottom: 55, // TODO: maybe make this 55 only when actions bar is shown else 20
             // },
             TextSpan(
               style: app.fontBold
@@ -60,7 +58,7 @@ class VersesView extends StatelessWidget {
                       ),
                       const WidgetSpan(
                         child: Padding(
-                          padding: EdgeInsets.only(bottom: 30),
+                          padding: EdgeInsets.only(top: 16, bottom: 16),
                         ),
                       ),
                     ],
