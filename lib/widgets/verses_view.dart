@@ -20,52 +20,62 @@ class VersesView extends StatelessWidget {
         model.onPrevious(context, model.book, model.chapter);
       },
       child: Padding(
-        padding: EdgeInsets.only(left: 20, right: 20, bottom: app.actionsShown ? 120 : 0),
+        padding: const EdgeInsets.only(left: 20, right: 20),
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
-          child: Text.rich(
-            // scrollPhysics: const BouncingScrollPhysics(),
-            // contextMenuBuilder: null,
-            textScaleFactor: app.textScaleFactor,
-            // onSelectionChanged: (selection, _) {
-            // },
-            TextSpan(
-              style: app.fontBold
-                  ? textStyle.copyWith(
-                      fontWeight: FontWeight.w500,
-                    )
-                  : textStyle,
-              // recognizer: TapAndPanGestureRecognizer()..onDragEnd = (e) => print("Hello"),
-              children: chapter.verses
-                  .asMap()
-                  .entries
-                  .map(
-                    (e) => [
-                      WidgetSpan(
-                        child: Transform.translate(
-                          offset: const Offset(0, -2),
-                          child: Text("${e.key + 1} ", style: Theme.of(context).textTheme.labelMedium),
-                        ),
-                      ),
-                      TextSpan(
-                        text: "${e.value.text}\n",
-                        style: model.isVerseSelected(e.key)
-                            ? TextStyle(
-                                backgroundColor: Theme.of(context).highlightColor,
-                              )
-                            : null,
-                        recognizer: TapGestureRecognizer()..onTap = () => model.onVerseSelected(context, e.key),
-                      ),
-                      const WidgetSpan(
-                        child: Padding(
-                          padding: EdgeInsets.only(top: 16, bottom: 16),
-                        ),
-                      ),
-                    ],
-                  )
-                  .expand((element) => element)
-                  .toList(),
-            ),
+          child: Column(
+            children: [
+              // const Padding(
+              //   padding: EdgeInsets.only(top: 0),
+              // ),
+              Text.rich(
+                // scrollPhysics: const BouncingScrollPhysics(),
+                // contextMenuBuilder: null,
+                textScaleFactor: app.textScaleFactor,
+                // onSelectionChanged: (selection, _) {
+                // },
+                TextSpan(
+                  style: app.fontBold
+                      ? textStyle.copyWith(
+                          fontWeight: FontWeight.w500,
+                        )
+                      : textStyle,
+                  // recognizer: TapAndPanGestureRecognizer()..onDragEnd = (e) => print("Hello"),
+                  children: chapter.verses
+                      .asMap()
+                      .entries
+                      .map(
+                        (e) => [
+                          WidgetSpan(
+                            child: Transform.translate(
+                              offset: const Offset(0, -2),
+                              child: Text("${e.key + 1} ", style: Theme.of(context).textTheme.labelMedium),
+                            ),
+                          ),
+                          TextSpan(
+                            text: "${e.value.text}\n",
+                            style: model.isVerseSelected(e.key)
+                                ? TextStyle(
+                                    backgroundColor: Theme.of(context).highlightColor,
+                                  )
+                                : null,
+                            recognizer: TapGestureRecognizer()..onTap = () => model.onVerseSelected(context, e.key),
+                          ),
+                          const WidgetSpan(
+                            child: Padding(
+                              padding: EdgeInsets.only(top: 16, bottom: 16),
+                            ),
+                          ),
+                        ],
+                      )
+                      .expand((element) => element)
+                      .toList(),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(bottom: app.actionsShown ? 120 : 0),
+              ),
+            ],
           ),
         ),
       ),

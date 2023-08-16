@@ -19,7 +19,6 @@ final lightTheme = ThemeData(
   // ),
   appBarTheme: const AppBarTheme(
     backgroundColor: Colors.white,
-    toolbarHeight: 30,
     elevation: 0,
     scrolledUnderElevation: 0,
   ),

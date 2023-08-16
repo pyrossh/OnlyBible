@@ -7,7 +7,7 @@ class ChapterAppBar extends StatelessWidget implements PreferredSizeWidget {
   const ChapterAppBar({super.key});
 
   @override
-  Size get preferredSize => const Size.fromHeight(30);
+  Size get preferredSize => const Size.fromHeight(40);
 
   @override
   Widget build(BuildContext context) {
@@ -15,38 +15,40 @@ class ChapterAppBar extends StatelessWidget implements PreferredSizeWidget {
     final model = ChapterViewModel.of(context);
     final selectedBook = selectedBible.books[model.book];
     final bookName = selectedBook.name;
-    return AppBar(
-      excludeHeaderSemantics: true,
-      title: TextButton.icon(
-        style: TextButton.styleFrom(
-          padding: EdgeInsets.zero,
-          backgroundColor: Theme.of(context).colorScheme.background,
-          elevation: 0,
-        ),
-        label: Icon(
-          Icons.expand_more,
-          size: 28,
-          color: Theme.of(context).textTheme.headlineMedium!.color,
-        ),
-        icon: Text(
-          "$bookName ${model.chapter + 1}",
-          style: Theme.of(context).textTheme.headlineMedium,
-        ),
-        onPressed: () {
-          Navigator.of(context).push(
-            createNoTransitionPageRoute(
-              BookSelectScreen(bible: selectedBible),
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.only(left: 18, right: 5, bottom: 0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            InkWell(
+              enableFeedback: true,
+              onTap: () {
+                Navigator.of(context).push(
+                  createNoTransitionPageRoute(
+                    BookSelectScreen(bible: selectedBible),
+                  ),
+                );
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    "$bookName ${model.chapter + 1}",
+                    style: Theme.of(context).textTheme.headlineMedium,
+                  ),
+                  Icon(
+                    Icons.expand_more,
+                    size: 28,
+                    color: Theme.of(context).textTheme.headlineMedium!.color,
+                  ),
+                ],
+              ),
             ),
-          );
-        },
+            const MoreButton(),
+          ],
+        ),
       ),
-      centerTitle: false,
-      surfaceTintColor: Colors.white,
-      leading: null,
-      automaticallyImplyLeading: false,
-      actions: const [
-        MoreButton(),
-      ],
     );
   }
 }

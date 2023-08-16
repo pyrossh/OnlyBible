@@ -144,9 +144,11 @@ class AppModel extends ChangeNotifier {
   }
 
   hideActions(BuildContext context) {
-    actionsShown = false;
-    Navigator.of(context).pop();
-    notifyListeners();
+    if (actionsShown) {
+      actionsShown = false;
+      Navigator.of(context).pop();
+      notifyListeners();
+    }
   }
 }
 
@@ -186,6 +188,7 @@ class ChapterViewModel extends ChangeNotifier {
   }
 
   navigateBookChapter(BuildContext context, int book, int chapter, TextDirection? dir) {
+    AppModel.ofEvent(context).hideActions(context);
     Navigator.of(context).push(
       createSlideRoute(
         context: context,
