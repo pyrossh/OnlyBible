@@ -14,38 +14,40 @@ class ActionsSheet extends StatelessWidget {
     final model = ChapterViewModel.of(context);
     final audioIcon = model.isPlaying ? Icons.pause_circle_outline : Icons.play_circle_outline;
     final audioText = model.isPlaying ? "Pause" : "Play";
+    final isDesktop = isWide(context);
     return Container(
-      height: 160,
+      height: isDesktop ? 80 : 160,
       color: Theme.of(context).colorScheme.background,
       padding: EdgeInsets.only(bottom: isIOS() ? 20 : 0, left: 20, right: 20, top: 10),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              HighlightButton(
-                color: const Color(0xFFDAEFFE),
-                onTap: () {},
-              ),
-              HighlightButton(
-                color: const Color(0xFFFFFBB1),
-                onTap: () {},
-              ),
-              HighlightButton(
-                color: const Color(0xFFFFDEF3),
-                onTap: () {},
-              ),
-              HighlightButton(
-                color: const Color(0xFFE6FCC3),
-                onTap: () {},
-              ),
-              HighlightButton(
-                color: const Color(0xFFEADDFF),
-                onTap: () {},
-              ),
-            ],
-          ),
+          if (!isDesktop)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                HighlightButton(
+                  color: const Color(0xFFDAEFFE),
+                  onTap: () {},
+                ),
+                HighlightButton(
+                  color: const Color(0xFFFFFBB1),
+                  onTap: () {},
+                ),
+                HighlightButton(
+                  color: const Color(0xFFFFDEF3),
+                  onTap: () {},
+                ),
+                HighlightButton(
+                  color: const Color(0xFFE6FCC3),
+                  onTap: () {},
+                ),
+                HighlightButton(
+                  color: const Color(0xFFEADDFF),
+                  onTap: () {},
+                ),
+              ],
+            ),
           // const Padding(padding: EdgeInsets.only(top: 10)),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

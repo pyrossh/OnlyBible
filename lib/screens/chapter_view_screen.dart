@@ -1,6 +1,5 @@
 import "package:flutter/material.dart";
 import "package:only_bible_app/widgets/chapter_app_bar.dart";
-import "package:only_bible_app/widgets/header.dart";
 import "package:only_bible_app/state.dart";
 import "package:only_bible_app/widgets/sidebar.dart";
 import "package:only_bible_app/widgets/verses_view.dart";
@@ -49,7 +48,11 @@ class ChapterViewScreen extends StatelessWidget {
                     Flexible(
                       child: Column(
                         children: [
-                          Header(),
+                          ChapterAppBar(),
+                          Padding(
+                            padding: EdgeInsets.only(bottom: 10),
+                            child: Divider(height: 5, indent: 20, endIndent: 20, thickness: 1.5),
+                          ),
                           Flexible(
                             child: VersesView(),
                           ),

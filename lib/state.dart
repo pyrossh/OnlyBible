@@ -9,12 +9,20 @@ import "package:flutter/services.dart";
 import "package:flutter/material.dart";
 import "package:just_audio/just_audio.dart";
 import "package:only_bible_app/screens/chapter_view_screen.dart";
-import "package:only_bible_app/utils/dialog.dart";
+import 'package:only_bible_app/dialog.dart';
 import "package:only_bible_app/models.dart";
 import "package:only_bible_app/widgets/actions_sheet.dart";
 import "package:only_bible_app/widgets/settings_sheet.dart";
 import "package:provider/provider.dart";
 import "package:shared_preferences/shared_preferences.dart";
+
+class HistoryFrame {
+  final int book;
+  final int chapter;
+  final int? verse;
+
+  const HistoryFrame({required this.book, required this.chapter, this.verse});
+}
 
 class AppModel extends ChangeNotifier {
   String languageCode = "en";
@@ -23,6 +31,7 @@ class AppModel extends ChangeNotifier {
   bool fontBold = false;
   double textScaleFactor = 0;
   bool actionsShown = false;
+  List<HistoryFrame> history = [];
 
   static AppModel of(BuildContext context) {
     return Provider.of(context, listen: true);
@@ -215,7 +224,11 @@ class ChapterViewModel extends ChangeNotifier {
     final selectedBible = AppModel.ofEvent(context).bible;
     final selectedBook = selectedBible.books[book];
     if (chapter - 1 >= 0) {
+      // if (Navigator.of(context).canPop()) {
+      //   Navigator.of(context).pop();
+      // } else {
       navigateBookChapter(context, selectedBook.index, chapter - 1, TextDirection.rtl);
+      // }
     } else {
       if (selectedBook.index - 1 >= 0) {
         final prevBook = selectedBible.books[selectedBook.index - 1];
@@ -233,20 +246,16 @@ class ChapterViewModel extends ChangeNotifier {
   }
 
   void onVerseSelected(BuildContext context, int i) {
-    if (!isWide(context)) {
-      if (selectedVerses.isEmpty) {
-        AppModel.ofEvent(context).showActions(context);
-      }
+    if (selectedVerses.isEmpty) {
+      AppModel.ofEvent(context).showActions(context);
     }
     if (selectedVerses.contains(i)) {
       selectedVerses.remove(i);
     } else {
       selectedVerses.add(i);
     }
-    if (!isWide(context)) {
-      if (selectedVerses.isEmpty) {
-        AppModel.ofEvent(context).hideActions(context);
-      }
+    if (selectedVerses.isEmpty) {
+      AppModel.ofEvent(context).hideActions(context);
     }
     notifyListeners();
   }

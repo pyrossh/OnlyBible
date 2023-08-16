@@ -1,7 +1,6 @@
 import "package:flutter/material.dart";
 import "package:only_bible_app/screens/book_select_screen.dart";
 import "package:only_bible_app/state.dart";
-import "package:only_bible_app/widgets/more_button.dart";
 
 class ChapterAppBar extends StatelessWidget implements PreferredSizeWidget {
   const ChapterAppBar({super.key});
@@ -16,8 +15,8 @@ class ChapterAppBar extends StatelessWidget implements PreferredSizeWidget {
     final selectedBook = selectedBible.books[model.book];
     final bookName = selectedBook.name;
     return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.only(left: 18, right: 5, bottom: 0),
+      child: Container(
+        padding: const EdgeInsets.only(left: 18, right: 5),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -45,7 +44,11 @@ class ChapterAppBar extends StatelessWidget implements PreferredSizeWidget {
                 ],
               ),
             ),
-            const MoreButton(),
+            IconButton(
+              padding: EdgeInsets.zero,
+              onPressed: () => AppModel.ofEvent(context).showSettings(context),
+              icon: const Icon(Icons.more_vert, size: 24),
+            ),
           ],
         ),
       ),
