@@ -9,20 +9,26 @@ class ActionsSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final app = AppModel.of(context);
+    final isDesktop = isWide(context);
+    final iconSize = isDesktop ? 10.0 : 0.0;
     final iconColor = app.darkMode ? Colors.white.withOpacity(0.9) : Colors.black.withOpacity(0.9);
     final bodySmall = Theme.of(context).textTheme.bodySmall;
     final model = ChapterViewModel.of(context);
     final audioIcon = model.isPlaying ? Icons.pause_circle_outline : Icons.play_circle_outline;
     final audioText = model.isPlaying ? "Pause" : "Play";
-    final isDesktop = isWide(context);
+    final highlightRowEnabled = !isDesktop && false;
     return Container(
-      height: isDesktop ? 80 : 160,
+      height: highlightRowEnabled
+          ? 160
+          : isDesktop
+              ? 80
+              : 100,
       color: Theme.of(context).colorScheme.background,
-      padding: EdgeInsets.only(bottom: isIOS() ? 20 : 0, left: 20, right: 20, top: 10),
+      padding: EdgeInsets.only(left: 20, right: 20, top: isDesktop ? 10 : 0),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: highlightRowEnabled ? MainAxisAlignment.spaceAround : MainAxisAlignment.start,
         children: [
-          if (!isDesktop)
+          if (highlightRowEnabled)
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -56,7 +62,7 @@ class ActionsSheet extends StatelessWidget {
                 leading: IconButton(
                   padding: EdgeInsets.zero,
                   onPressed: () {},
-                  icon: Icon(Icons.cancel_outlined, size: 24, color: iconColor),
+                  icon: Icon(Icons.cancel_outlined, size: 24 + iconSize, color: iconColor),
                 ),
                 trailing: Text("Clear", style: bodySmall),
               ),
@@ -64,7 +70,7 @@ class ActionsSheet extends StatelessWidget {
                 leading: IconButton(
                   padding: EdgeInsets.zero,
                   onPressed: () {},
-                  icon: Icon(Icons.copy, size: 24, color: iconColor),
+                  icon: Icon(Icons.copy, size: 24 + iconSize, color: iconColor),
                 ),
                 trailing: Text("Copy", style: bodySmall),
               ),
@@ -76,7 +82,7 @@ class ActionsSheet extends StatelessWidget {
                       model.onPlay(context);
                     }
                   },
-                  icon: Icon(audioIcon, size: 32, color: app.bible.hasAudio ? iconColor : Colors.grey),
+                  icon: Icon(audioIcon, size: 34 + iconSize, color: app.bible.hasAudio ? iconColor : Colors.grey),
                 ),
                 trailing: Text(audioText, style: bodySmall),
               ),
@@ -84,7 +90,7 @@ class ActionsSheet extends StatelessWidget {
                 leading: IconButton(
                   padding: EdgeInsets.zero,
                   onPressed: () {},
-                  icon: Icon(Icons.post_add_outlined, size: 32, color: iconColor),
+                  icon: Icon(Icons.post_add_outlined, size: 32 + iconSize, color: iconColor),
                 ),
                 trailing: Text("Note", style: bodySmall),
               ),
@@ -92,7 +98,7 @@ class ActionsSheet extends StatelessWidget {
                 leading: IconButton(
                   padding: EdgeInsets.zero,
                   onPressed: () {},
-                  icon: Icon(Icons.share_outlined, size: 28, color: iconColor),
+                  icon: Icon(Icons.share_outlined, size: 28 + iconSize, color: iconColor),
                 ),
                 trailing: Text("Share", style: bodySmall),
               ),

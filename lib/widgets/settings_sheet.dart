@@ -1,17 +1,16 @@
 import "package:flutter/material.dart";
 import "package:only_bible_app/state.dart";
 import "package:settings_ui/settings_ui.dart";
-import "package:only_bible_app/screens/bible_select_screen.dart";
 
 class SettingsSheet extends StatelessWidget {
   const SettingsSheet({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final model = AppModel.of(context);
-    final selectedBible = model.bible;
-    final modeIcon = model.darkMode ? Icons.dark_mode : Icons.light_mode;
-    final modeIconColor = model.darkMode ? const Color(0xFF59EEFF) : const Color(0xFFE5B347);
+    final app = AppModel.of(context);
+    final selectedBible = app.bible;
+    final modeIcon = app.darkMode ? Icons.dark_mode : Icons.light_mode;
+    final modeIconColor = app.darkMode ? const Color(0xFF59EEFF) : const Color(0xFFE5B347);
     final iconColor = Theme.of(context).textTheme.bodyMedium!.color;
     return Column(
       children: [
@@ -46,27 +45,23 @@ class SettingsSheet extends StatelessWidget {
                     title: const Text("Bible"),
                     value: Text(selectedBible.name),
                     onPressed: (c) {
-                      Navigator.of(c).pushReplacement(
-                        createNoTransitionPageRoute(
-                          const BibleSelectScreen(),
-                        ),
-                      );
+                      app.changeBible(c);
                       return null;
                     },
                   ),
                   SettingsTile.switchTile(
                     onToggle: (value) {
-                      model.toggleMode();
+                      app.toggleMode();
                     },
-                    initialValue: model.darkMode,
+                    initialValue: app.darkMode,
                     leading: Icon(modeIcon, color: modeIconColor),
                     title: const Text("Dark mode"),
                   ),
                   SettingsTile.switchTile(
                     onToggle: (value) {
-                      model.toggleBold();
+                      app.toggleBold();
                     },
-                    initialValue: model.fontBold,
+                    initialValue: app.fontBold,
                     leading: Icon(Icons.format_bold, color: iconColor),
                     title: const Text("Bold font"),
                   ),
@@ -74,7 +69,7 @@ class SettingsSheet extends StatelessWidget {
                     title: const Text("Increase font size"),
                     leading: Icon(Icons.font_download, color: iconColor),
                     trailing: IconButton(
-                      onPressed: model.increaseFont,
+                      onPressed: app.increaseFont,
                       icon: const Icon(Icons.add_circle_outline, size: 32, color: Colors.redAccent),
                     ),
                   ),
@@ -82,7 +77,7 @@ class SettingsSheet extends StatelessWidget {
                     title: const Text("Decrease font size"),
                     leading: Icon(Icons.font_download, color: iconColor),
                     trailing: IconButton(
-                      onPressed: model.decreaseFont,
+                      onPressed: app.decreaseFont,
                       icon: const Icon(Icons.remove_circle_outline, size: 32, color: Colors.blueAccent),
                     ),
                   ),

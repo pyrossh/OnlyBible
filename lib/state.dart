@@ -8,8 +8,10 @@ import "package:flutter/foundation.dart" show defaultTargetPlatform, TargetPlatf
 import "package:flutter/services.dart";
 import "package:flutter/material.dart";
 import "package:just_audio/just_audio.dart";
+import "package:only_bible_app/screens/bible_select_screen.dart";
+import "package:only_bible_app/screens/book_select_screen.dart";
 import "package:only_bible_app/screens/chapter_view_screen.dart";
-import 'package:only_bible_app/dialog.dart';
+import "package:only_bible_app/dialog.dart";
 import "package:only_bible_app/models.dart";
 import "package:only_bible_app/widgets/actions_sheet.dart";
 import "package:only_bible_app/widgets/scaffold_menu.dart";
@@ -83,11 +85,35 @@ class AppModel extends ChangeNotifier {
     );
   }
 
-  changeBible(BuildContext context, int id) async {
+  changeBible(BuildContext context) {
+    Navigator.of(context).pushReplacement(
+      createNoTransitionPageRoute(
+        const BibleSelectScreen(),
+      ),
+    );
+  }
+
+  changeBibleFromHeader(BuildContext context) {
+    Navigator.of(context).push(
+      createNoTransitionPageRoute(
+        const BibleSelectScreen(),
+      ),
+    );
+  }
+
+  updateCurrentBible(BuildContext context, int id) async {
     // TODO: maybe use a future as the bible needs to load
     bible = await loadBible(id);
     notifyListeners();
     save();
+  }
+
+  changeBook(BuildContext context) {
+    Navigator.of(context).push(
+      createNoTransitionPageRoute(
+        BookSelectScreen(bible: bible),
+      ),
+    );
   }
 
   toggleMode() async {
@@ -144,14 +170,14 @@ class AppModel extends ChangeNotifier {
     //     ),
     //   );
     // } else {
-      showModalBottomSheet(
-        context: context,
-        isDismissible: true,
-        enableDrag: true,
-        showDragHandle: true,
-        useSafeArea: true,
-        builder: (context) => const SettingsSheet(),
-      );
+    showModalBottomSheet(
+      context: context,
+      isDismissible: true,
+      enableDrag: true,
+      showDragHandle: true,
+      useSafeArea: true,
+      builder: (context) => const SettingsSheet(),
+    );
     // }
   }
 

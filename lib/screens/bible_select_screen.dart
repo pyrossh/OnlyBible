@@ -1,4 +1,3 @@
-import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
 import "package:only_bible_app/state.dart";
 import "package:only_bible_app/models.dart";
@@ -24,7 +23,7 @@ class BibleSelectScreen extends StatelessWidget {
                 return TextButton(
                   child: Text(bible.name),
                   onPressed: () {
-                    model.changeBible(context, bible.id);
+                    model.updateCurrentBible(context, bible.id);
                     Navigator.of(context).pop();
                   },
                 );

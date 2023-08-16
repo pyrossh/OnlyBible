@@ -1,5 +1,4 @@
 import "package:flutter/material.dart";
-import "package:only_bible_app/screens/book_select_screen.dart";
 import "package:only_bible_app/state.dart";
 
 class ChapterAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -10,27 +9,22 @@ class ChapterAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final selectedBible = AppModel.of(context).bible;
+    final app = AppModel.of(context);
     final model = ChapterViewModel.of(context);
-    final selectedBook = selectedBible.books[model.book];
+    final selectedBook = app.bible.books[model.book];
     final bookName = selectedBook.name;
+    final isDesktop = isWide(context);
     return SafeArea(
       child: Container(
-        padding: const EdgeInsets.only(left: 18, right: 5),
+        padding: EdgeInsets.only(left: 18, right: 5, top: isDesktop ? 5 : 0),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             InkWell(
               enableFeedback: true,
-              onTap: () {
-                Navigator.of(context).push(
-                  createNoTransitionPageRoute(
-                    BookSelectScreen(bible: selectedBible),
-                  ),
-                );
-              },
+              onTap: () => app.changeBook(context),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(
                     "$bookName ${model.chapter + 1}",
@@ -44,10 +38,31 @@ class ChapterAppBar extends StatelessWidget implements PreferredSizeWidget {
                 ],
               ),
             ),
-            IconButton(
-              padding: EdgeInsets.zero,
-              onPressed: () => AppModel.ofEvent(context).showSettings(context),
-              icon: const Icon(Icons.more_vert, size: 24),
+            Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  if (isDesktop)
+                    TextButton.icon(
+                      onPressed: () => app.changeBibleFromHeader(context),
+                      style: ButtonStyle(
+                        padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 10)),
+                      ),
+                      icon: const Icon(Icons.book_outlined),
+                      label: Text(
+                        app.bible.name,
+                      ),
+                    ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10),
+                    child: IconButton(
+                      padding: EdgeInsets.zero,
+                      onPressed: () => AppModel.ofEvent(context).showSettings(context),
+                      icon: Icon(Icons.more_vert, size: isDesktop ? 28 : 24),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
