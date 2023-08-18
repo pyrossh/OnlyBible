@@ -17,7 +17,9 @@ import "package:only_bible_app/widgets/actions_sheet.dart";
 import "package:only_bible_app/widgets/scaffold_menu.dart";
 import "package:only_bible_app/widgets/settings_sheet.dart";
 import "package:provider/provider.dart";
+import "package:share_plus/share_plus.dart";
 import "package:shared_preferences/shared_preferences.dart";
+import "package:get_storage/get_storage.dart";
 
 class HistoryFrame {
   final int book;
@@ -35,6 +37,7 @@ class AppModel extends ChangeNotifier {
   double textScaleFactor = 0;
   bool actionsShown = false;
   List<HistoryFrame> history = [];
+  final box = GetStorage("only-bible-app-backup");
 
   static AppModel of(BuildContext context) {
     return Provider.of(context, listen: true);
@@ -202,7 +205,7 @@ class AppModel extends ChangeNotifier {
 class ChapterViewModel extends ChangeNotifier {
   final int book;
   final int chapter;
-  final List<int> selectedVerses;
+  final List<Verse> selectedVerses;
   final player = AudioPlayer();
   bool isPlaying = false;
 
@@ -235,6 +238,9 @@ class ChapterViewModel extends ChangeNotifier {
   }
 
   navigateBookChapter(BuildContext context, int book, int chapter, TextDirection? dir) {
+    if (isPlaying) {
+      pause();
+    }
     AppModel.ofEvent(context).hideActions(context);
     Navigator.of(context).push(
       createSlideRoute(
@@ -279,18 +285,29 @@ class ChapterViewModel extends ChangeNotifier {
     return selectedVerses.isNotEmpty;
   }
 
-  bool isVerseSelected(int i) {
-    return selectedVerses.contains(i);
+  void clearSelections(BuildContext context) {
+    selectedVerses.clear();
+    AppModel.ofEvent(context).hideActions(context);
+    notifyListeners();
   }
 
-  void onVerseSelected(BuildContext context, int i) {
+  bool isVerseSelected(Verse v) {
+    return selectedVerses.any((el) => el.index == v.index);
+  }
+
+  bool isVerseHighlighted(BuildContext context) {
+    // box.read("${book}:${chapter}:${verse}", "color");
+    return false;
+  }
+
+  void onVerseSelected(BuildContext context, Verse v) {
     if (selectedVerses.isEmpty) {
       AppModel.ofEvent(context).showActions(context);
     }
-    if (selectedVerses.contains(i)) {
-      selectedVerses.remove(i);
+    if (isVerseSelected(v)) {
+      selectedVerses.removeWhere((it) => it.index == v.index);
     } else {
-      selectedVerses.add(i);
+      selectedVerses.add(v);
     }
     if (selectedVerses.isEmpty) {
       AppModel.ofEvent(context).hideActions(context);
@@ -298,26 +315,44 @@ class ChapterViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void copyVerses() {
+    final text = selectedVerses.map((e) => e.text).join("\n");
+    Clipboard.setData(ClipboardData(text: text));
+    // maybe close the action menu or show a snackbar
+    // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Email address copied to clipboard")));
+  }
+
+  void shareVerses() {
+    final text = selectedVerses.map((e) => e.text).join("\n");
+    Share.share(text);
+  }
+
+  pause() async {
+    await player.pause();
+    isPlaying = false;
+    notifyListeners();
+  }
+
   onPlay(BuildContext context) async {
     final bible = AppModel.ofEvent(context).bible;
-    final model = ChapterViewModel.ofEvent(context);
-    // if (!bible.hasAudio) {
-    //   showError(context, "This bible version doesn't support ");
-    //   return;
-    // }
+    if (!bible.hasAudio) {
+      showError(
+        context,
+        "This Bible doesn't support audio. Currently audio is only available for the Kannada Bible.",
+      );
+      return;
+    }
     if (isPlaying) {
-      await player.pause();
-      isPlaying = false;
-      notifyListeners();
+      pause();
     } else {
       isPlaying = true;
       notifyListeners();
       for (final v in selectedVerses) {
         final bibleName = bible.name;
-        final book = (model.book + 1).toString().padLeft(2, "0");
-        final chapter = (model.chapter + 1).toString().padLeft(3, "0");
-        final verse = (v + 1).toString().padLeft(3, "0");
-        final pathname = "$bibleName/$book-$chapter-$verse.mp3";
+        final book = (v.book + 1).toString().padLeft(2, "0");
+        final chapter = (v.chapter + 1).toString().padLeft(3, "0");
+        final verseNo = (v.index + 1).toString().padLeft(3, "0");
+        final pathname = "$bibleName/$book-$chapter-$verseNo.mp3";
         try {
           final url = await FirebaseStorage.instance.ref(pathname).getDownloadURL();
           await player.setUrl(url);
@@ -329,9 +364,7 @@ class ChapterViewModel extends ChangeNotifier {
           showError(context, "Could not play audio");
           return;
         } finally {
-          await player.pause();
-          isPlaying = false;
-          notifyListeners();
+          pause();
         }
       }
     }

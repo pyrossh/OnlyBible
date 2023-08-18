@@ -61,7 +61,9 @@ class ActionsSheet extends StatelessWidget {
               IconButtonText(
                 leading: IconButton(
                   padding: EdgeInsets.zero,
-                  onPressed: () {},
+                  onPressed: () {
+                    model.clearSelections(context);
+                  },
                   icon: Icon(Icons.cancel_outlined, size: 24 + iconSize, color: iconColor),
                 ),
                 trailing: Text("Clear", style: bodySmall),
@@ -69,7 +71,7 @@ class ActionsSheet extends StatelessWidget {
               IconButtonText(
                 leading: IconButton(
                   padding: EdgeInsets.zero,
-                  onPressed: () {},
+                  onPressed: model.copyVerses,
                   icon: Icon(Icons.copy, size: 24 + iconSize, color: iconColor),
                 ),
                 trailing: Text("Copy", style: bodySmall),
@@ -78,13 +80,16 @@ class ActionsSheet extends StatelessWidget {
                 leading: IconButton(
                   padding: EdgeInsets.zero,
                   onPressed: () {
-                    if (app.bible.hasAudio) {
-                      model.onPlay(context);
-                    }
+                    model.onPlay(context);
                   },
                   icon: Icon(audioIcon, size: 34 + iconSize, color: app.bible.hasAudio ? iconColor : Colors.grey),
                 ),
-                trailing: Text(audioText, style: bodySmall),
+                trailing: Text(
+                  audioText,
+                  style: bodySmall!.copyWith(
+                    color: app.bible.hasAudio ? bodySmall!.color : Colors.grey,
+                  ),
+                ),
               ),
               IconButtonText(
                 leading: IconButton(
@@ -97,7 +102,7 @@ class ActionsSheet extends StatelessWidget {
               IconButtonText(
                 leading: IconButton(
                   padding: EdgeInsets.zero,
-                  onPressed: () {},
+                  onPressed: model.shareVerses,
                   icon: Icon(Icons.share_outlined, size: 28 + iconSize, color: iconColor),
                 ),
                 trailing: Text("Share", style: bodySmall),

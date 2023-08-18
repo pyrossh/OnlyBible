@@ -42,24 +42,22 @@ class VersesView extends StatelessWidget {
                       : textStyle,
                   // recognizer: TapAndPanGestureRecognizer()..onDragEnd = (e) => print("Hello"),
                   children: chapter.verses
-                      .asMap()
-                      .entries
                       .map(
-                        (e) => [
+                        (v) => [
                           WidgetSpan(
                             child: Transform.translate(
                               offset: const Offset(0, -2),
-                              child: Text("${e.key + 1} ", style: Theme.of(context).textTheme.labelMedium),
+                              child: Text("${v.index + 1} ", style: Theme.of(context).textTheme.labelMedium),
                             ),
                           ),
                           TextSpan(
-                            text: "${e.value.text}\n",
-                            style: model.isVerseSelected(e.key)
+                            text: "${v.text}\n",
+                            style: model.isVerseSelected(v)
                                 ? TextStyle(
                                     backgroundColor: Theme.of(context).highlightColor,
                                   )
                                 : null,
-                            recognizer: TapGestureRecognizer()..onTap = () => model.onVerseSelected(context, e.key),
+                            recognizer: TapGestureRecognizer()..onTap = () => model.onVerseSelected(context, v),
                           ),
                           const WidgetSpan(
                             child: Padding(

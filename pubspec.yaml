@@ -24,6 +24,8 @@ dependencies:
   firebase_performance: ^0.9.2+4
   firebase_storage: ^11.2.5
   settings_ui: ^2.0.2
+  get_storage: ^2.1.1
+  share_plus: ^7.1.0
 
 dev_dependencies:
   flutter_test:
@@ -53,7 +55,8 @@ flutter:
 flutter_launcher_icons:
   android: false
   ios: true
-  image_path: "assets/icon.png"
+  image_path: "assets/test2.png"
+  remove_alpha_ios: true
   web:
     generate: true
     background_color: "#FFFFFF"

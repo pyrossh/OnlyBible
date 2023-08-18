@@ -7,6 +7,8 @@ class ChapterAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Size get preferredSize => const Size.fromHeight(40);
 
+  // TODO: add next/prev buttons for desktop mode
+
   @override
   Widget build(BuildContext context) {
     final app = AppModel.of(context);

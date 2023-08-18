@@ -37,7 +37,7 @@ class SettingsSheet extends StatelessWidget {
                 tiles: [
                   SettingsTile.navigation(
                     leading: const Icon(Icons.language, color: Colors.green),
-                    title: const Text("Language"),
+                    title: const Text("App Language"),
                     value: const Text("English"),
                   ),
                   SettingsTile.navigation(

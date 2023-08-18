@@ -60,17 +60,12 @@ class Chapter {
 }
 
 class Verse {
+  final int index;
+  final int book;
+  final int chapter;
   final String text;
-  final TimeRange audioRange;
 
-  const Verse({required this.text, required this.audioRange});
-}
-
-class TimeRange {
-  final double start;
-  final double end;
-
-  const TimeRange({required this.start, required this.end});
+  const Verse({required this.index, required this.text, required this.chapter, required this.book});
 }
 
 const bookNames = <String, List<String>>{
@@ -281,7 +276,7 @@ const bookNames = <String, List<String>>{
 };
 
 final bibles = [
-  Bible(id: 1, name: "KJV", hasAudio: false),
+  Bible(id: 1, name: "English", hasAudio: false),
   Bible(id: 2, name: "Kannada", hasAudio: true),
   Bible(id: 3, name: "Nepali", hasAudio: false),
   Bible(id: 4, name: "Hindi", hasAudio: false),
@@ -304,14 +299,8 @@ List<Book> getBibleFromText(String languageCode, String text) {
     }
     var book = int.parse(line.substring(0, 2));
     var chapter = int.parse(line.substring(3, 6));
-    // var verseNo = line.substring(7, 10);
+    var verseNo = int.parse(line.substring(7, 10));
     var verseText = line.substring(11);
-    double start = 0;
-    double end = 0;
-    // if (item.length > 4) {
-    //   start = double.parse(item[4]);
-    //   end = double.parse(item[5]);
-    // }
     if (books.length < book) {
       books.add(
         Book(
@@ -327,8 +316,10 @@ List<Book> getBibleFromText(String languageCode, String text) {
     }
     books[book - 1].chapters[chapter - 1].verses.add(
           Verse(
+            index: verseNo - 1,
             text: verseText,
-            audioRange: TimeRange(start: start, end: end),
+            chapter: chapter - 1,
+            book: book - 1,
           ),
         );
   }

@@ -12,6 +12,7 @@ class ChapterSelectScreen extends StatelessWidget {
 
   const ChapterSelectScreen({super.key, required this.selectedBookIndex, required this.book});
 
+  // TODO: move this to app and allow to pause
   onChapterSelected(BuildContext context, int index) {
     Navigator.of(context).pushReplacement(
       createNoTransitionPageRoute(
