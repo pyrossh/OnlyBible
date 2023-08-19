@@ -14,6 +14,7 @@ import "package:only_bible_app/screens/chapter_view_screen.dart";
 import "package:only_bible_app/dialog.dart";
 import "package:only_bible_app/models.dart";
 import "package:only_bible_app/widgets/actions_sheet.dart";
+import "package:only_bible_app/widgets/note_sheet.dart";
 import "package:only_bible_app/widgets/scaffold_menu.dart";
 import "package:only_bible_app/widgets/settings_sheet.dart";
 import "package:provider/provider.dart";
@@ -36,6 +37,7 @@ class AppModel extends ChangeNotifier {
   bool fontBold = false;
   double textScaleFactor = 0;
   bool actionsShown = false;
+  final TextEditingController noteTextController = TextEditingController();
   List<HistoryFrame> history = [];
   final box = GetStorage("only-bible-app-backup");
 
@@ -199,6 +201,45 @@ class AppModel extends ChangeNotifier {
       Navigator.of(context).pop();
       notifyListeners();
     }
+  }
+
+  bool hasNote(Verse v) {
+    return box.hasData("${v.book}:${v.chapter}:${v.index}:note");
+  }
+
+  showNoteField(BuildContext context, Verse v) {
+    final noteText = box.read("${v.book}:${v.chapter}:${v.index}:note") ?? "";
+    noteTextController.text = noteText;
+    showModalBottomSheet(
+      context: context,
+      isDismissible: true,
+      enableDrag: true,
+      showDragHandle: true,
+      useSafeArea: true,
+      builder: (context) => NoteSheet(verse: v),
+    );
+  }
+
+  saveNote(BuildContext context, Verse v) {
+    final note = noteTextController.text;
+    box.write("${v.book}:${v.chapter}:${v.index}:note", note);
+    box.save();
+    // Close the bottom sheet
+    // if (!mounted) return;
+    // Navigator.of(context).pop();
+    notifyListeners();
+    hideNoteField(context);
+  }
+
+  deleteNote(BuildContext context, Verse v) {
+    box.remove("${v.book}:${v.chapter}:${v.index}:note");
+    box.save();
+    notifyListeners();
+    hideNoteField(context);
+  }
+
+  hideNoteField(BuildContext context) {
+    Navigator.of(context).pop();
   }
 }
 

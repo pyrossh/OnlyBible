@@ -94,7 +94,9 @@ class ActionsSheet extends StatelessWidget {
               IconButtonText(
                 leading: IconButton(
                   padding: EdgeInsets.zero,
-                  onPressed: () {},
+                  onPressed: () {
+                    app.showNoteField(context, model.selectedVerses.first);
+                  },
                   icon: Icon(Icons.post_add_outlined, size: 32 + iconSize, color: iconColor),
                 ),
                 trailing: Text("Note", style: bodySmall),

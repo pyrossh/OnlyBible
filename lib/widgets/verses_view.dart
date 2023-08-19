@@ -2,6 +2,7 @@ import "package:flutter/gestures.dart";
 import "package:flutter/material.dart";
 import "package:flutter_swipe_detector/flutter_swipe_detector.dart";
 import "package:only_bible_app/state.dart";
+import "package:provider/provider.dart";
 
 class VersesView extends StatelessWidget {
   const VersesView({super.key});
@@ -50,9 +51,25 @@ class VersesView extends StatelessWidget {
                               child: Text("${v.index + 1} ", style: Theme.of(context).textTheme.labelMedium),
                             ),
                           ),
+                          if (app.hasNote(v))
+                            WidgetSpan(
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 3, right: 3),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    app.showNoteField(context, v);
+                                  },
+                                  child: const Icon(
+                                    Icons.sticky_note_2_outlined,
+                                    size: 18,
+                                    color: Colors.blue,
+                                  ),
+                                ),
+                              ),
+                            ),
                           TextSpan(
                             text: "${v.text}\n",
-                            style: model.isVerseSelected(v)
+                            style: context.watch<ChapterViewModel>().isVerseSelected(v)
                                 ? TextStyle(
                                     backgroundColor: Theme.of(context).highlightColor,
                                   )
