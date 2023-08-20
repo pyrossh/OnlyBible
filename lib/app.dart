@@ -1,7 +1,7 @@
 import "package:flutter/material.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
+import "package:only_bible_app/providers/app_model.dart";
 import "package:only_bible_app/screens/chapter_view_screen.dart";
-import "package:only_bible_app/state.dart";
 import "package:only_bible_app/theme.dart";
 
 class App extends StatelessWidget {

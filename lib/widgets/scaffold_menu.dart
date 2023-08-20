@@ -1,5 +1,5 @@
 import "package:flutter/material.dart";
-import "package:only_bible_app/state.dart";
+import "package:only_bible_app/utils.dart";
 
 class ScaffoldMenu extends StatelessWidget {
   final Widget child;

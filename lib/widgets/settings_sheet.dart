@@ -1,5 +1,5 @@
 import "package:flutter/material.dart";
-import "package:only_bible_app/state.dart";
+import "package:only_bible_app/providers/app_model.dart";
 import "package:settings_ui/settings_ui.dart";
 
 class SettingsSheet extends StatelessWidget {

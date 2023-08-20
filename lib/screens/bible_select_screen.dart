@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
-import "package:only_bible_app/state.dart";
 import "package:only_bible_app/models.dart";
+import "package:only_bible_app/providers/app_model.dart";
 import "package:only_bible_app/widgets/scaffold_menu.dart";
 import "package:only_bible_app/widgets/sliver_heading.dart";
 import "package:only_bible_app/widgets/sliver_tile_grid.dart";
