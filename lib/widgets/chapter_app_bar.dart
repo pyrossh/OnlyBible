@@ -47,8 +47,8 @@ class ChapterAppBar extends StatelessWidget implements PreferredSizeWidget {
                   if (isDesktop)
                     TextButton.icon(
                       onPressed: () => app.changeBibleFromHeader(context),
-                      style: ButtonStyle(
-                        padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 10)),
+                      style: TextButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
                       ),
                       icon: const Icon(Icons.book_outlined),
                       label: Text(

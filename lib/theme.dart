@@ -1,7 +1,30 @@
 import "package:flutter/material.dart";
 
+const lightColorScheme = ColorScheme.light(
+  background: Colors.white,
+  onBackground: Color(0xFF010101),
+  primary: Color(0xFF9A1111),
+  secondary: Color(0xFFFFC351),
+  surfaceTint: Colors.black,
+  shadow: Colors.black,
+);
+
+const darkColorScheme = ColorScheme.dark(
+  background: Color(0xFF1F1F22),
+  onBackground: Color(0xFFBCBEC4),
+  primary: Color(0xFFBC86FC),
+  secondary: Color(0xFFFFC351),
+  tertiary: Color(0xFF323232),
+  onTertiary: Color(0xFFBA50AB),
+  //E24DE2
+  surfaceTint: Colors.white,
+  shadow: Colors.white,
+  outline: Color(0xAA5D4979),
+);
+
 final lightTheme = ThemeData(
   brightness: Brightness.light,
+  colorScheme: lightColorScheme,
   useMaterial3: true,
   fontFamily: "Roboto",
   primaryColor: const Color(0xFF602C2C),
@@ -17,6 +40,14 @@ final lightTheme = ThemeData(
   //   selectionHandleColor: Colors.black,
   //   selectionColor: const Color(0xAAF8D0DC),
   // ),
+  inputDecorationTheme: const InputDecorationTheme(
+    focusColor: Colors.black,
+    hoverColor: Colors.black,
+    activeIndicatorBorder: BorderSide(
+      color: Colors.black,
+    ),
+    hintStyle: TextStyle(color: Colors.grey),
+  ),
   appBarTheme: const AppBarTheme(
     backgroundColor: Colors.white,
     elevation: 0,
@@ -58,8 +89,20 @@ final lightTheme = ThemeData(
     elevation: 4,
     surfaceTintColor: Colors.transparent,
   ),
-  colorScheme: const ColorScheme.light(
-    background: Colors.white,
+  elevatedButtonTheme: ElevatedButtonThemeData(
+    style: TextButton.styleFrom(
+      elevation: 0.5,
+      shadowColor: Colors.black,
+      surfaceTintColor: Colors.white,
+      backgroundColor: const Color(0xFFEAE9E9),
+      foregroundColor: lightColorScheme.primary,
+      shape: const RoundedRectangleBorder(
+        side: BorderSide(
+          color: Colors.grey,
+          width: 1,
+        ),
+      ),
+    ),
   ),
   iconButtonTheme: IconButtonThemeData(
     style: IconButton.styleFrom(
@@ -74,7 +117,7 @@ final lightTheme = ThemeData(
       elevation: 0.5,
       shadowColor: Colors.black,
       backgroundColor: const Color(0xFFEAE9E9),
-      foregroundColor: const Color(0xFF9A1111),
+      foregroundColor: lightColorScheme.primary,
       textStyle: const TextStyle(
         fontSize: 18,
         fontWeight: FontWeight.w500,
@@ -82,28 +125,28 @@ final lightTheme = ThemeData(
       ),
     ),
   ),
-  textTheme: const TextTheme(
+  textTheme: TextTheme(
     bodyMedium: TextStyle(
       fontSize: 16,
       fontWeight: FontWeight.w400,
       wordSpacing: 0,
       letterSpacing: 0,
-      color: Color(0xFF010101),
+      color: lightColorScheme.onBackground,
     ),
     bodySmall: TextStyle(
       fontSize: 14,
       fontWeight: FontWeight.w400,
       wordSpacing: 0,
       letterSpacing: 0,
-      color: Color(0xFF010101),
+      color: lightColorScheme.onBackground,
     ),
     headlineLarge: TextStyle(
       fontSize: 38,
       fontWeight: FontWeight.w700,
-      color: Color(0xFFFFB341),
+      color: lightColorScheme.secondary,
     ),
     headlineMedium: TextStyle(
-      color: Color(0xFF010101),
+      color: lightColorScheme.onBackground,
       fontSize: 18,
       fontWeight: FontWeight.w500,
       letterSpacing: 0.5,
@@ -111,47 +154,60 @@ final lightTheme = ThemeData(
     labelMedium: TextStyle(
       fontSize: 12,
       fontWeight: FontWeight.w700,
-      color: Color(0xFF9A1111),
+      color: lightColorScheme.primary,
       letterSpacing: 0,
     ),
   ),
 );
 
-final darkTheme = ThemeData(
+final darkTheme = lightTheme.copyWith(
   brightness: Brightness.dark,
-  fontFamily: "Roboto",
-  useMaterial3: true,
-  visualDensity: VisualDensity.adaptivePlatformDensity,
+  colorScheme: darkColorScheme,
   primaryColor: const Color(0xFF4C2323),
   primaryColorDark: const Color(0xFF3C1B1C),
   primaryColorLight: const Color(0xFF7F3D3C),
   secondaryHeaderColor: const Color(0xFFFFC351),
-  highlightColor: const Color(0xAA5D4979),
-  hoverColor: const Color(0xAA5D4979),
+  highlightColor: darkColorScheme.outline,
+  hoverColor: darkColorScheme.outline,
   dividerColor: Colors.white,
   shadowColor: Colors.white,
-  appBarTheme: lightTheme.appBarTheme.copyWith(
-    backgroundColor: const Color(0xFF1F1F22),
-  ),
   bottomSheetTheme: lightTheme.bottomSheetTheme.copyWith(
     backgroundColor: const Color(0xFF141415),
     shadowColor: Colors.white,
     surfaceTintColor: const Color(0xFF141415),
   ),
-  dialogTheme: const DialogTheme(
+  dialogTheme: DialogTheme(
+    backgroundColor: darkColorScheme.background,
     elevation: 1,
     shape: Border(
       top: BorderSide(
         width: 1.5,
-        color: Color(0xAA5D4979),
+        color: darkColorScheme.outline,
       ),
     ),
   ),
   popupMenuTheme: lightTheme.popupMenuTheme,
-  colorScheme: const ColorScheme.dark(
-    background: Color(0xFF1F1F22),
+  elevatedButtonTheme: ElevatedButtonThemeData(
+    style: TextButton.styleFrom(
+      elevation: 0.5,
+      shadowColor: Colors.white,
+      surfaceTintColor: Colors.white,
+      backgroundColor: darkColorScheme.tertiary,
+      foregroundColor: darkColorScheme.primary,
+      shape: const RoundedRectangleBorder(
+        side: BorderSide(
+          color: Colors.grey,
+          width: 1,
+        ),
+      ),
+    ),
   ),
-  iconButtonTheme: lightTheme.iconButtonTheme,
+  iconButtonTheme: IconButtonThemeData(
+    style: IconButton.styleFrom(
+      enableFeedback: true,
+      foregroundColor: Colors.white,
+    ),
+  ),
   textButtonTheme: TextButtonThemeData(
     style: ButtonStyle(
       enableFeedback: lightTheme.textButtonTheme.style!.enableFeedback,
@@ -160,25 +216,25 @@ final darkTheme = ThemeData(
       textStyle: lightTheme.textButtonTheme.style!.textStyle,
       elevation: MaterialStateProperty.all(1),
       shadowColor: MaterialStateProperty.all(Colors.white),
-      backgroundColor: MaterialStateProperty.all(const Color(0xFF323232)),
-      foregroundColor: MaterialStateProperty.all(const Color(0xFFBC86FC)),
+      backgroundColor: MaterialStateProperty.all(darkColorScheme.tertiary),
+      foregroundColor: MaterialStateProperty.all(darkColorScheme.primary),
     ),
   ),
   textTheme: TextTheme(
     bodyMedium: lightTheme.textTheme.bodyMedium!.copyWith(
-      color: const Color(0xFFBCBEC4),
+      color: darkColorScheme.onBackground,
     ),
     bodySmall: lightTheme.textTheme.bodyMedium!.copyWith(
-      color: const Color(0xFFBCBEC4),
+      color: darkColorScheme.onBackground,
     ),
     headlineLarge: lightTheme.textTheme.headlineLarge!.copyWith(
-      color: const Color(0xFFFFC351),
+      color: darkColorScheme.secondary,
     ),
     headlineMedium: lightTheme.textTheme.headlineMedium!.copyWith(
-      color: const Color(0xFFBCBEC4),
+      color: darkColorScheme.onBackground,
     ),
     labelMedium: lightTheme.textTheme.labelMedium!.copyWith(
-      color: const Color(0xFFBA50AB), //E24DE2
+      color: darkColorScheme.onTertiary,
     ),
   ),
 );

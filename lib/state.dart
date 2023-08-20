@@ -216,6 +216,7 @@ class AppModel extends ChangeNotifier {
       enableDrag: true,
       showDragHandle: true,
       useSafeArea: true,
+      isScrollControlled: true,
       builder: (context) => NoteSheet(verse: v),
     );
   }
@@ -363,9 +364,13 @@ class ChapterViewModel extends ChangeNotifier {
     // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Email address copied to clipboard")));
   }
 
-  void shareVerses() {
+  void shareVerses(BuildContext context) {
+    final bible = AppModel.ofEvent(context).bible;
+    final name = bible.books[selectedVerses.first.book].name;
+    final chapter = selectedVerses.first.chapter + 1;
+    final title = "$name $chapter: ${selectedVerses.map((e) => e.index + 1).join(", ")}";
     final text = selectedVerses.map((e) => e.text).join("\n");
-    Share.share(text);
+    Share.share("$title\n$text", subject: title);
   }
 
   pause() async {

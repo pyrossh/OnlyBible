@@ -61,9 +61,7 @@ class ActionsSheet extends StatelessWidget {
               IconButtonText(
                 leading: IconButton(
                   padding: EdgeInsets.zero,
-                  onPressed: () {
-                    model.clearSelections(context);
-                  },
+                  onPressed: () => model.clearSelections(context),
                   icon: Icon(Icons.cancel_outlined, size: 24 + iconSize, color: iconColor),
                 ),
                 trailing: Text("Clear", style: bodySmall),
@@ -79,9 +77,7 @@ class ActionsSheet extends StatelessWidget {
               IconButtonText(
                 leading: IconButton(
                   padding: EdgeInsets.zero,
-                  onPressed: () {
-                    model.onPlay(context);
-                  },
+                  onPressed: () => model.onPlay(context),
                   icon: Icon(audioIcon, size: 34 + iconSize, color: app.bible.hasAudio ? iconColor : Colors.grey),
                 ),
                 trailing: Text(
@@ -94,9 +90,7 @@ class ActionsSheet extends StatelessWidget {
               IconButtonText(
                 leading: IconButton(
                   padding: EdgeInsets.zero,
-                  onPressed: () {
-                    app.showNoteField(context, model.selectedVerses.first);
-                  },
+                  onPressed: () => app.showNoteField(context, model.selectedVerses.first),
                   icon: Icon(Icons.post_add_outlined, size: 32 + iconSize, color: iconColor),
                 ),
                 trailing: Text("Note", style: bodySmall),
@@ -104,7 +98,7 @@ class ActionsSheet extends StatelessWidget {
               IconButtonText(
                 leading: IconButton(
                   padding: EdgeInsets.zero,
-                  onPressed: model.shareVerses,
+                  onPressed: () => model.shareVerses(context),
                   icon: Icon(Icons.share_outlined, size: 28 + iconSize, color: iconColor),
                 ),
                 trailing: Text("Share", style: bodySmall),
