@@ -26,6 +26,7 @@ dependencies:
   settings_ui: ^2.0.2
   get_storage: ^2.1.1
   share_plus: ^7.1.0
+  file_selector: ^1.0.0 # need this to fix android build
 
 dev_dependencies:
   flutter_test:

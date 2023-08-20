@@ -15,9 +15,10 @@ class NoteSheet extends StatelessWidget {
       padding: EdgeInsets.only(
         left: 10,
         right: 10,
-        bottom: MediaQuery.of(context).viewInsets.bottom + 120,
+        bottom: MediaQuery.of(context).viewInsets.bottom + 40,
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
