@@ -1,6 +1,6 @@
 # Only Bible App
 
-The only bible app you will ever need. No ads, No in-app purchases, No unwanted menus, No images, No Additional downloads,
+The only bible app you will ever need. No ads, No in-app purchases, No distractions.
 Optimized for reading and highlighting.
 Just the bibles which are freely available in the public domain.
 Verse by verse audio is also supported for some of the languages generated using Azure TTS.
@@ -72,7 +72,5 @@ Note:
 
 ## Todo
 
-1. Add Sqlite for highlighting, notes, chapter verses
-2. Custom Selection should show action bar instead of tooltip/popup menu
-3. Figure out history
-4. Add more text options compact/loose, line spacing
+1. Figure out history
+2. Add more text options compact/loose, line spacing

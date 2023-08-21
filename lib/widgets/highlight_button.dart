@@ -11,7 +11,7 @@ class HighlightButton extends StatelessWidget {
     return InkWell(
       onTap: () => onColorSelected(color),
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 10),
         decoration: BoxDecoration(
           color: color.withOpacity(1),
           shape: BoxShape.circle,

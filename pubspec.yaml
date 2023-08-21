@@ -26,6 +26,8 @@ dependencies:
   settings_ui: ^2.0.2
   get_storage: ^2.1.1
   share_plus: ^7.1.0
+  flutter_markdown: ^0.6.17+1
+  url_launcher: ^6.1.12
 
 dev_dependencies:
   flutter_test:
@@ -42,6 +44,7 @@ flutter:
   assets:
     - assets/bibles/
     - assets/fonts/
+    - assets/privacy-policy.md
   fonts:
     - family: Roboto
       fonts:

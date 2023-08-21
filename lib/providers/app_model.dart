@@ -4,6 +4,7 @@ import "package:flutter/material.dart";
 import "package:only_bible_app/screens/bible_select_screen.dart";
 import "package:only_bible_app/screens/book_select_screen.dart";
 import "package:only_bible_app/models.dart";
+import "package:only_bible_app/screens/privacy_policy_screen.dart";
 import "package:only_bible_app/widgets/actions_sheet.dart";
 import "package:only_bible_app/widgets/highlight_button.dart";
 import "package:only_bible_app/widgets/note_sheet.dart";
@@ -94,6 +95,14 @@ class AppModel extends ChangeNotifier {
     Navigator.of(context).push(
       createNoTransitionPageRoute(
         const BibleSelectScreen(),
+      ),
+    );
+  }
+
+  void showPrivacyPolicy(BuildContext context) {
+    Navigator.of(context).push(
+      createNoTransitionPageRoute(
+        const PrivacyPolicyScreen(),
       ),
     );
   }

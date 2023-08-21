@@ -44,10 +44,7 @@ class SettingsSheet extends StatelessWidget {
                     leading: const Icon(Icons.book_outlined, color: Colors.blueAccent),
                     title: const Text("Bible"),
                     value: Text(selectedBible.name),
-                    onPressed: (c) {
-                      app.changeBible(c);
-                      return null;
-                    },
+                    onPressed: app.changeBible,
                   ),
                   SettingsTile.switchTile(
                     onToggle: (value) {
@@ -80,6 +77,17 @@ class SettingsSheet extends StatelessWidget {
                       onPressed: app.decreaseFont,
                       icon: const Icon(Icons.remove_circle_outline, size: 32, color: Colors.blueAccent),
                     ),
+                  ),
+                ],
+              ),
+              SettingsSection(
+                margin: const EdgeInsetsDirectional.symmetric(horizontal: 20, vertical: 20),
+                title: const Text("About"),
+                tiles: [
+                  SettingsTile.navigation(
+                    leading: const Icon(Icons.info_outline, color: Colors.grey),
+                    title: const Text("Privacy Policy"),
+                    onPressed: app.showPrivacyPolicy,
                   ),
                 ],
               ),
