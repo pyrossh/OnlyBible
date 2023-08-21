@@ -7,6 +7,7 @@ const lightColorScheme = ColorScheme.light(
   secondary: Color(0xFFFFC351),
   surfaceTint: Colors.black,
   shadow: Colors.black,
+  outline: Colors.grey,
 );
 
 const darkColorScheme = ColorScheme.dark(

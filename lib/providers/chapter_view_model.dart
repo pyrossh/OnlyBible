@@ -97,6 +97,13 @@ class ChapterViewModel extends ChangeNotifier {
   }
 
   void clearSelections(BuildContext context) {
+    AppModel.ofEvent(context).removeHighlight(context, selectedVerses);
+    selectedVerses.clear();
+    AppModel.ofEvent(context).hideActions(context);
+    notifyListeners();
+  }
+
+  void closeActions(BuildContext context) {
     selectedVerses.clear();
     AppModel.ofEvent(context).hideActions(context);
     notifyListeners();

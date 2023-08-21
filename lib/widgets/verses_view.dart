@@ -72,10 +72,16 @@ class VersesView extends StatelessWidget {
                             text: "${v.text}\n",
                             style: context.watch<ChapterViewModel>().isVerseSelected(v)
                                 ? TextStyle(
-                                    backgroundColor: Theme.of(context).highlightColor,
+                                    backgroundColor: app.darkMode ? Colors.grey.shade800 : Colors.grey.shade200,
                                   )
-                                : null,
-                            recognizer: TapGestureRecognizer()..onTap = () => model.onVerseSelected(context, v),
+                                : TextStyle(
+                                    backgroundColor: app.getHighlight(v) ?? Theme.of(context).colorScheme.background,
+                                  ),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () {
+                                model.onVerseSelected(context, v);
+                                // AppModel.ofEvent(context).showHighlightMenu(context, v, details.globalPosition);
+                              },
                           ),
                           const WidgetSpan(
                             child: Padding(

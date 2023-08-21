@@ -5,6 +5,7 @@ import "package:only_bible_app/screens/bible_select_screen.dart";
 import "package:only_bible_app/screens/book_select_screen.dart";
 import "package:only_bible_app/models.dart";
 import "package:only_bible_app/widgets/actions_sheet.dart";
+import "package:only_bible_app/widgets/highlight_button.dart";
 import "package:only_bible_app/widgets/note_sheet.dart";
 import "package:only_bible_app/widgets/settings_sheet.dart";
 import "package:provider/provider.dart";
@@ -27,6 +28,7 @@ class AppModel extends ChangeNotifier {
   bool fontBold = false;
   double textScaleFactor = 0;
   bool actionsShown = false;
+  bool highlightMenuShown = false;
   final TextEditingController noteTextController = TextEditingController();
   List<HistoryFrame> history = [];
   final box = GetStorage("only-bible-app-backup");
@@ -180,7 +182,8 @@ class AppModel extends ChangeNotifier {
     actionsShown = true;
     Scaffold.of(context).showBottomSheet(
       enableDrag: false,
-          (context) => const ActionsSheet(),
+      clipBehavior: Clip.antiAliasWithSaveLayer,
+      (context) => const ActionsSheet(),
     );
     notifyListeners();
   }
@@ -231,5 +234,87 @@ class AppModel extends ChangeNotifier {
 
   hideNoteField(BuildContext context) {
     Navigator.of(context).pop();
+  }
+
+  static Color fromHexS(String hexString) {
+    return Color(int.parse(hexString, radix: 16));
+  }
+
+  String toHexS(Color c) => '${c.alpha.toRadixString(16).padLeft(2, '0')}'
+      '${c.red.toRadixString(16).padLeft(2, '0')}'
+      '${c.green.toRadixString(16).padLeft(2, '0')}'
+      '${c.blue.toRadixString(16).padLeft(2, '0')}';
+
+  Color? getHighlight(Verse v) {
+    final key = "${v.book}:${v.chapter}:${v.index}:highlight";
+    if (box.hasData(key)) {
+      // box.remove(key);
+      // print(box.read(key));
+      return fromHexS(box.read(key));
+    }
+    return null;
+  }
+
+  void setHighlight(BuildContext context, List<Verse> verses, Color c) {
+    for (final v in verses) {
+      box.write("${v.book}:${v.chapter}:${v.index}:highlight", toHexS(c));
+    }
+    box.save();
+  }
+
+  void removeHighlight(BuildContext context, List<Verse> verses) {
+    for (final v in verses) {
+      box.remove("${v.book}:${v.chapter}:${v.index}:highlight");
+    }
+    box.save();
+  }
+
+  void showHighlightMenu(BuildContext context, List<Verse> verses, Offset position) {
+    hideHighlightMenu(context);
+    highlightMenuShown = true;
+    final overlay = Overlay.of(context).context.findRenderObject();
+    onTap(c) => setHighlight(context, verses, c);
+
+    showMenu(
+        context: context,
+        position: RelativeRect.fromRect(
+          Rect.fromLTWH(position.dx, position.dy + 30, 100, 100),
+          Rect.fromLTWH(0, 0, overlay!.paintBounds.size.width, overlay.paintBounds.size.height),
+        ),
+        items: [
+          PopupMenuItem(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                HighlightButton(
+                  color: const Color(0xFFDAEFFE),
+                  onColorSelected: onTap,
+                ),
+                HighlightButton(
+                  color: const Color(0xFFFFFBB1),
+                  onColorSelected: onTap,
+                ),
+                HighlightButton(
+                  color: const Color(0xFFFFDEF3),
+                  onColorSelected: onTap,
+                ),
+                HighlightButton(
+                  color: const Color(0xFFE6FCC3),
+                  onColorSelected: onTap,
+                ),
+                HighlightButton(
+                  color: const Color(0xFFEADDFF),
+                  onColorSelected: onTap,
+                ),
+              ],
+            ),
+          ),
+        ]);
+  }
+
+  void hideHighlightMenu(BuildContext context) {
+    if (highlightMenuShown) {
+      Navigator.of(context).pop();
+    }
   }
 }

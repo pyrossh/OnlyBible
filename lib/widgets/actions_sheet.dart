@@ -18,41 +18,46 @@ class ActionsSheet extends StatelessWidget {
     final model = ChapterViewModel.of(context);
     final audioIcon = model.isPlaying ? Icons.pause_circle_outline : Icons.play_circle_outline;
     final audioText = model.isPlaying ? "Pause" : "Play";
-    final highlightRowEnabled = !isDesktop && false;
+    final highlightRowEnabled = !isDesktop;
+    onHighlight(Color c) {
+      final verses = ChapterViewModel.ofEvent(context).selectedVerses;
+      app.setHighlight(context, verses, c);
+      model.closeActions(context);
+    }
+
+    ;
     return Container(
       height: highlightRowEnabled
-          ? 160
+          ? 150
           : isDesktop
-              ? 80
-              : 100,
+              ? 95
+              : isIOS()
+                  ? 100
+                  : 70,
       color: Theme.of(context).colorScheme.background,
-      padding: EdgeInsets.only(left: 20, right: 20, top: isDesktop ? 10 : 0),
+      padding: EdgeInsets.only(left: 20, right: 20, top: isDesktop ? 10 : 10, bottom: 20),
       child: Column(
         mainAxisAlignment: highlightRowEnabled ? MainAxisAlignment.spaceAround : MainAxisAlignment.start,
         children: [
           if (highlightRowEnabled)
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 HighlightButton(
                   color: const Color(0xFFDAEFFE),
-                  onTap: () {},
+                  onColorSelected: onHighlight,
                 ),
                 HighlightButton(
                   color: const Color(0xFFFFFBB1),
-                  onTap: () {},
+                  onColorSelected: onHighlight,
                 ),
                 HighlightButton(
                   color: const Color(0xFFFFDEF3),
-                  onTap: () {},
+                  onColorSelected: onHighlight,
                 ),
                 HighlightButton(
                   color: const Color(0xFFE6FCC3),
-                  onTap: () {},
-                ),
-                HighlightButton(
-                  color: const Color(0xFFEADDFF),
-                  onTap: () {},
+                  onColorSelected: onHighlight,
                 ),
               ],
             ),
@@ -105,14 +110,6 @@ class ActionsSheet extends StatelessWidget {
                 ),
                 trailing: Text("Share", style: bodySmall),
               ),
-              // IconButtonText(
-              //   leading: IconButton(
-              //     padding: EdgeInsets.zero,
-              //     onPressed: () {},
-              //     icon: const Text(""),
-              //   ),
-              //   trailing: Text("", style: bodySmall),
-              // )
             ],
           ),
         ],

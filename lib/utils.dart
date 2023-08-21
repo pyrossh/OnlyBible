@@ -1,9 +1,9 @@
 import "dart:convert";
+import 'package:flutter/gestures.dart';
 import "package:flutter/foundation.dart" show defaultTargetPlatform, TargetPlatform;
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:only_bible_app/models.dart";
-
 
 bool isDesktop() {
   return defaultTargetPlatform == TargetPlatform.macOS ||
@@ -20,7 +20,7 @@ bool isWide(BuildContext context) {
     return false;
   }
   final width = MediaQuery.of(context).size.width;
-  return width > 600;
+  return width > 700;
 }
 
 createNoTransitionPageRoute(Widget page) {

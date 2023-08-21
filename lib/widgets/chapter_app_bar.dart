@@ -48,14 +48,49 @@ class ChapterAppBar extends StatelessWidget implements PreferredSizeWidget {
                 children: [
                   if (isDesktop)
                     TextButton.icon(
+                      onPressed: () => model.onPrevious(context, model.book, model.chapter),
+                      style: TextButton.styleFrom(
+                        elevation: 0,
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        shadowColor: Theme.of(context).shadowColor,
+                        backgroundColor: Theme.of(context).colorScheme.background,
+                        foregroundColor: Theme.of(context).colorScheme.primary,
+                      ),
+                      icon: const Icon(Icons.chevron_left),
+                      label: const Text("Prev"),
+                    ),
+                  if (isDesktop) const SizedBox(width: 10),
+                  if (isDesktop)
+                    TextButton.icon(
+                      onPressed: () => model.onNext(context, model.book, model.chapter),
+                      style: TextButton.styleFrom(
+                        elevation: 0,
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        shadowColor: Theme.of(context).shadowColor,
+                        backgroundColor: Theme.of(context).colorScheme.background,
+                        foregroundColor: Theme.of(context).colorScheme.primary,
+                      ),
+                      icon: const Icon(Icons.chevron_right),
+                      label: const Text("Next"),
+                    ),
+                  if (isDesktop) const SizedBox(width: 20),
+                  if (isDesktop)
+                    TextButton.icon(
                       onPressed: () => app.changeBibleFromHeader(context),
                       style: TextButton.styleFrom(
                         padding: const EdgeInsets.symmetric(horizontal: 10),
+                        shadowColor: Theme.of(context).shadowColor,
+                        backgroundColor: Theme.of(context).colorScheme.background,
+                        foregroundColor: Theme.of(context).colorScheme.primary,
+                        shape: RoundedRectangleBorder(
+                          side: BorderSide(
+                            color: Theme.of(context).colorScheme.primary,
+                            width: 1,
+                          ),
+                        ),
                       ),
                       icon: const Icon(Icons.book_outlined),
-                      label: Text(
-                        app.bible.name,
-                      ),
+                      label: Text(app.bible.name),
                     ),
                   Padding(
                     padding: const EdgeInsets.only(left: 10),
