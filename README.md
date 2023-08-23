@@ -74,3 +74,4 @@ Note:
 
 1. Figure out history
 2. Add more text options compact/loose, line spacing
+3. Backups (File, Google Drive)

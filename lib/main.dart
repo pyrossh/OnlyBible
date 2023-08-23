@@ -7,6 +7,7 @@ import "package:only_bible_app/firebase_options.dart";
 import "package:flutter_native_splash/flutter_native_splash.dart";
 import "package:only_bible_app/app.dart";
 import "package:only_bible_app/providers/app_model.dart";
+import "package:package_info_plus/package_info_plus.dart";
 import "package:provider/provider.dart";
 
 void main() async {

@@ -1,4 +1,4 @@
-Peter John built the Only Bible App app as a Free app. This SERVICE is provided by Peter John at no cost and is intended
+Peter John built the Only Bible App as a Free app. This SERVICE is provided by Peter John at no cost and is intended
 for use as is.
 
 This page is used to inform visitors regarding my policies with the collection, use, and disclosure of Personal
