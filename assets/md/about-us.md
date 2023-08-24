@@ -10,7 +10,7 @@ The word was given freely to all and is expected to be free even after processin
 marketplace to take our God's word and make it den of thieves.
 
 All the bibles used in this App are free and available in the public domain. Most of the text are sourced from
-[The Word Project](https://www.wordproject.org/) and with the help and compilation done by the [Bible Database](https://github.com/godlytalias/Bible-Database) team,
+[The Word Project](https://www.wordproject.org/) and compilation work done by the [Bible Database](https://github.com/godlytalias/Bible-Database) team.
 
-I also agree and completely follow the [Copyrights declaration statement](https://www.wordproject.org/contact/new/copyrights.htm) of the Word project.
+I also agree to and completely follow the [Copyrights Statement](https://www.wordproject.org/contact/new/copyrights.htm) of the Word project.
 

@@ -17,7 +17,7 @@ enum ListType {
   double childAspectRatio(bool isDesktop) {
     switch (this) {
       case ListType.small:
-        return isDesktop ? 2.33 : 1.4;
+        return isDesktop ? 1.8 : 1.4;
       case ListType.large:
         return isDesktop ? 5 : 4;
     }

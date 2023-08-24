@@ -2,7 +2,6 @@ import "package:flutter/material.dart";
 import "package:only_bible_app/providers/app_model.dart";
 import "package:only_bible_app/utils.dart";
 import "package:settings_ui/settings_ui.dart";
-// import "package:toggle_switch/toggle_switch.dart";
 
 class SettingsSheet extends StatelessWidget {
   const SettingsSheet({super.key});
@@ -11,8 +10,8 @@ class SettingsSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     final app = AppModel.of(context);
     final selectedBible = app.bible;
-    final modeIcon = app.darkMode ? Icons.dark_mode : Icons.light_mode;
-    final modeIconColor = app.darkMode ? const Color(0xFF59EEFF) : const Color(0xFFE5B347);
+    // final modeIcon = app.darkMode ? Icons.dark_mode : Icons.light_mode;
+    // final modeIconColor = app.darkMode ? const Color(0xFF59EEFF) : Colors.yellowAccent.shade700;
     final iconColor = Theme.of(context).textTheme.bodyMedium!.color;
     return SettingsList(
       contentPadding: EdgeInsets.zero,
@@ -39,60 +38,38 @@ class SettingsSheet extends StatelessWidget {
               value: Text(selectedBible.name),
               onPressed: app.changeBible,
             ),
-            SettingsTile.switchTile(
-              onToggle: (value) {
-                app.toggleMode();
-              },
-              initialValue: app.darkMode,
-              leading: Icon(modeIcon, color: modeIconColor),
-              title: const Text("Dark mode"),
+            SettingsTile.navigation(
+              leading: const Icon(Icons.color_lens_outlined, color: Colors.pink),
+              title: const Text("Theme"),
+              trailing: ToggleButtons(
+                onPressed: (int index) {
+                  app.toggleMode();
+                },
+                highlightColor: Colors.transparent,
+                borderColor: Colors.grey,
+                borderRadius: const BorderRadius.all(Radius.circular(25)),
+                selectedColor: app.darkMode ? Colors.lightBlue.shade300 : Colors.yellowAccent.shade700,
+                selectedBorderColor: Colors.grey,
+                color: Colors.grey,
+                fillColor: Colors.transparent,
+                constraints: const BoxConstraints(
+                  minHeight: 36.0,
+                  minWidth: 50.0,
+                ),
+                isSelected: [!app.darkMode, app.darkMode],
+                children: const [
+                  Icon(Icons.light_mode),
+                  Icon(Icons.dark_mode),
+                ],
+              ),
             ),
-            // SettingsTile.navigation(
-            //   leading: Icon(Icons.color_lens_outlined, color: Colors.pink),
-            //   title: const Text("Theme"),
-            //   trailing: ToggleSwitch(
-            //     // minWidth: 50.0,
-            //     // minHeight: 50.0,
-            //     initialLabelIndex: app.darkMode ? 1 : 0,
-            //     cornerRadius: 20.0,
-            //     borderWidth: 1,
-            //     dividerColor: Colors.black,
-            //     dividerMargin: 1,
-            //     borderColor: [Color(0xFFE9E9EA), Color(0xFFE9E9EA)],
-            //     activeFgColor: modeIconColor,
-            //     inactiveBgColor: Color(0xFFEAEAEB),
-            //     inactiveFgColor: Colors.grey,
-            //     activeBgColors: [[Colors.white, Colors.white], [Color(0xFF39393D), Color(0xFF39393D)]],
-            //     totalSwitches: 2,
-            //     icons: const [
-            //       Icons.light_mode,
-            //       Icons.dark_mode,
-            //     ],
-            //     iconSize: 50.0,
-            //     animate: true,
-            //     onToggle: (index) {
-            //       app.toggleMode();
-            //     },
-            //   ),
-            // ),
             SettingsTile.switchTile(
               onToggle: (value) {
                 app.toggleBold();
               },
               initialValue: app.fontBold,
               leading: Icon(Icons.format_bold, color: iconColor),
-              title: const Text("Font Weight"),
-              // trailing: ToggleSwitch(
-              //   minHeight: 35,
-              //   minWidth: 70,
-              //   cornerRadius: 20.0,
-              //   initialLabelIndex: 0,
-              //   totalSwitches: 2,
-              //   labels: const ["Normal", "Bold"],
-              //   onToggle: (index) {
-              //     print('switched to: $index');
-              //   },
-              // ),
+              title: const Text("Font Bold"),
             ),
             SettingsTile(
               title: const Text("Increase font size"),
@@ -117,23 +94,23 @@ class SettingsSheet extends StatelessWidget {
           margin: const EdgeInsetsDirectional.symmetric(horizontal: 20, vertical: 20),
           tiles: [
             SettingsTile.navigation(
-              leading: const Icon(Icons.policy_outlined, color: Colors.grey),
+              leading: const Icon(Icons.policy_outlined, color: Colors.brown),
               title: const Text("Privacy Policy"),
               onPressed: app.showPrivacyPolicy,
             ),
             SettingsTile.navigation(
-              leading: const Icon(Icons.share_outlined, color: Colors.grey),
+              leading: const Icon(Icons.share_outlined, color: Colors.blueAccent),
               title: const Text("Share the app"),
               onPressed: app.shareAppLink,
             ),
             if (!isDesktop()) // TODO: mabe support OSx if we release in that store
               SettingsTile.navigation(
-                leading: const Icon(Icons.star_border_outlined, color: Colors.grey),
+                leading: Icon(Icons.star, color: Colors.yellowAccent.shade700),
                 title: const Text("Rate the app"),
                 onPressed: app.rateApp,
               ),
             SettingsTile.navigation(
-              leading: const Icon(Icons.info_outline, color: Colors.grey),
+              leading: const Icon(Icons.info_outline, color: Colors.black),
               title: const Text("About us"),
               onPressed: app.showAboutUs,
             ),

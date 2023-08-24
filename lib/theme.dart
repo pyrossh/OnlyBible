@@ -49,10 +49,10 @@ final lightTheme = ThemeData(
     ),
     hintStyle: TextStyle(color: Colors.grey),
   ),
-  appBarTheme: const AppBarTheme(
-    backgroundColor: Colors.white,
-    elevation: 0,
-    scrolledUnderElevation: 0,
+  appBarTheme: AppBarTheme(
+    backgroundColor: lightColorScheme.background,
+    elevation: 1,
+    foregroundColor: lightColorScheme.primary,
   ),
   bottomSheetTheme: const BottomSheetThemeData(
     elevation: 10,
@@ -172,6 +172,11 @@ final darkTheme = lightTheme.copyWith(
   hoverColor: darkColorScheme.outline,
   dividerColor: Colors.white,
   shadowColor: Colors.white,
+  appBarTheme: AppBarTheme(
+    backgroundColor: darkColorScheme.background,
+    foregroundColor: darkColorScheme.primary,
+    elevation: 1,
+  ),
   bottomSheetTheme: lightTheme.bottomSheetTheme.copyWith(
     backgroundColor: const Color(0xFF141415),
     shadowColor: Colors.white,

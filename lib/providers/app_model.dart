@@ -1,15 +1,12 @@
 // import "package:firebase_performance/firebase_performance.dart";
-import "dart:ffi";
-
 import "package:flutter/services.dart";
 import "package:flutter/material.dart";
-import "package:only_bible_app/screens/about_us_screen.dart";
 import "package:only_bible_app/screens/bible_select_screen.dart";
 import "package:only_bible_app/screens/book_select_screen.dart";
 import "package:only_bible_app/models.dart";
-import "package:only_bible_app/screens/privacy_policy_screen.dart";
 import "package:only_bible_app/widgets/actions_sheet.dart";
 import "package:only_bible_app/widgets/highlight_button.dart";
+import "package:only_bible_app/widgets/scaffold_markdown.dart";
 import "package:only_bible_app/widgets/note_sheet.dart";
 import "package:only_bible_app/widgets/settings_sheet.dart";
 import "package:package_info_plus/package_info_plus.dart";
@@ -348,7 +345,7 @@ class AppModel extends ChangeNotifier {
   void rateApp(BuildContext context) {
     if (isAndroid()) {
       openUrl(context, "https://play.google.com/store/apps/details?id=${packageInfo.packageName}");
-    }  else if (isIOS()) {
+    } else if (isIOS()) {
       openUrl(context, "https://apps.apple.com/us/app/hare-pro/id123");
     }
   }
@@ -356,7 +353,7 @@ class AppModel extends ChangeNotifier {
   showPrivacyPolicy(BuildContext context) {
     Navigator.of(context).push(
       createNoTransitionPageRoute(
-        const PrivacyPolicyScreen(),
+        const ScaffoldMarkdown(title: "Privacy Policy", file: "privacy-policy.md"),
       ),
     );
   }
@@ -364,7 +361,7 @@ class AppModel extends ChangeNotifier {
   showAboutUs(BuildContext context) {
     Navigator.of(context).push(
       createNoTransitionPageRoute(
-        const AboutUsScreen(),
+        const ScaffoldMarkdown(title: "About Us", file: "about-us.md"),
       ),
     );
   }

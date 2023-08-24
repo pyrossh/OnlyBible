@@ -28,7 +28,6 @@ dependencies:
   share_plus: ^7.1.0
   flutter_markdown: ^0.6.17+1
   url_launcher: ^6.1.12
-  toggle_switch: ^2.1.0
   package_info_plus: ^4.1.0
 
 dev_dependencies:
@@ -46,8 +45,7 @@ flutter:
   assets:
     - assets/bibles/
     - assets/fonts/
-    - assets/privacy-policy.md
-    - assets/about-us.md
+    - assets/md/
   fonts:
     - family: Roboto
       fonts:
