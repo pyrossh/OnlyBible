@@ -10,7 +10,6 @@ class BibleSelectScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = AppModel.of(context);
     return ScaffoldMenu(
       child: CustomScrollView(
         physics: const BouncingScrollPhysics(),

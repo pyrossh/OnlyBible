@@ -89,7 +89,7 @@ class AppModel extends ChangeNotifier {
   }
 
   List<String> getBookNames(BuildContext context) {
-    final l = engTitles ? lookupAppLocalizations(Locale("en")) : AppLocalizations.of(context)!;
+    final l = engTitles ? lookupAppLocalizations(const Locale("en")) : AppLocalizations.of(context)!;
     return [
       l.genesis,
       l.exodus,
@@ -427,7 +427,7 @@ class AppModel extends ChangeNotifier {
     if (isAndroid()) {
       openUrl(context, "https://play.google.com/store/apps/details?id=${packageInfo.packageName}");
     } else if (isIOS()) {
-      openUrl(context, "https://apps.apple.com/us/app/hare-pro/id123");
+      openUrl(context, "https://apps.apple.com/us/app/only-bible-app/${packageInfo.packageName}");
     }
   }
 

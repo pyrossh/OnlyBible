@@ -112,7 +112,7 @@ class SettingsSheet extends StatelessWidget {
                 onPressed: app.rateApp,
               ),
             SettingsTile.navigation(
-              leading: const Icon(Icons.info_outline, color: Colors.black),
+              leading: Icon(Icons.info_outline, color: Theme.of(context).colorScheme.onBackground),
               title: const Text("About us"),
               onPressed: app.showAboutUs,
             ),
