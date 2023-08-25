@@ -1,12 +1,10 @@
 import "dart:convert";
 import "package:only_bible_app/dialog.dart";
 import "package:url_launcher/url_launcher.dart";
-import 'package:flutter/gestures.dart';
 import "package:flutter/foundation.dart" show defaultTargetPlatform, TargetPlatform;
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:only_bible_app/models.dart";
-import "package:url_launcher/url_launcher_string.dart";
 
 bool isDesktop() {
   return defaultTargetPlatform == TargetPlatform.macOS ||
@@ -63,9 +61,9 @@ createSlideRoute({required BuildContext context, TextDirection? slideDir, requir
   );
 }
 
-getBibleFromAsset(String languageCode, String file) async {
+getBibleFromAsset(String file) async {
   final bytes = await rootBundle.load("assets/bibles/$file.txt");
-  return getBibleFromText(languageCode, utf8.decode(bytes.buffer.asUint8List(), allowMalformed: false));
+  return getBibleFromText(utf8.decode(bytes.buffer.asUint8List(), allowMalformed: false));
 }
 
 openUrl(BuildContext context, String url) async {

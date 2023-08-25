@@ -1,3 +1,6 @@
+import "package:flutter/material.dart";
+import "package:flutter_gen/gen_l10n/app_localizations.dart";
+
 class Bible {
   final int id;
   final String name;
@@ -28,26 +31,101 @@ class Bible {
   List<Book> getNewBooks() {
     return books.where((it) => it.isNewTestament()).toList();
   }
+
+  static List<String> getBookNames(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
+    return [
+      l.genesis,
+      l.exodus,
+      l.leviticus,
+      l.numbers,
+      l.deuteronomy,
+      l.joshua,
+      l.judges,
+      l.ruth,
+      l.firstSamuel,
+      l.secondSamuel,
+      l.firstKings,
+      l.secondKings,
+      l.firstChronicles,
+      l.secondChronicles,
+      l.ezra,
+      l.nehemiah,
+      l.esther,
+      l.job,
+      l.psalms,
+      l.proverbs,
+      l.ecclesiastes,
+      l.song_of_solomon,
+      l.isaiah,
+      l.jeremiah,
+      l.lamentations,
+      l.ezekiel,
+      l.daniel,
+      l.hosea,
+      l.joel,
+      l.amos,
+      l.obadiah,
+      l.jonah,
+      l.micah,
+      l.nahum,
+      l.habakkuk,
+      l.zephaniah,
+      l.haggai,
+      l.zechariah,
+      l.malachi,
+      l.matthew,
+      l.mark,
+      l.luke,
+      l.john,
+      l.acts,
+      l.romans,
+      l.firstCorinthians,
+      l.secondCorinthians,
+      l.galatians,
+      l.ephesians,
+      l.philippians,
+      l.colossians,
+      l.firstThessalonians,
+      l.secondThessalonians,
+      l.firstTimothy,
+      l.secondTimothy,
+      l.titus,
+      l.philemon,
+      l.hebrews,
+      l.james,
+      l.firstPeter,
+      l.secondPeter,
+      l.firstJohn,
+      l.secondJohn,
+      l.thirdJohn,
+      l.jude,
+      l.revelation,
+    ];
+  }
 }
 
 class Book {
   final int index;
-  final String name;
   final List<Chapter> chapters;
 
   const Book({
     required this.index,
-    required this.name,
     required this.chapters,
   });
+
+  String name(BuildContext context) {
+    return Bible.getBookNames(context)[index];
+  }
 
   bool isOldTestament() => index < 39;
 
   bool isNewTestament() => index >= 39;
 
-  String shortName() {
+  String shortName(BuildContext context) {
+    final name = this.name(context);
     if (name[0] == "1" || name[0] == "2" || name[0] == "3") {
-      return "${name[0]}${name[2].toUpperCase()}${name.substring(3, 4).toLowerCase()}";
+      return "${name[0]}${name[2].toUpperCase()}${name.substring(3, 5).toLowerCase()}";
     }
     return "${name[0].toUpperCase()}${name.substring(1, 3).toLowerCase()}";
   }
@@ -68,213 +146,6 @@ class Verse {
   const Verse({required this.index, required this.text, required this.chapter, required this.book});
 }
 
-const bookNames = <String, List<String>>{
-  "en": [
-    "Genesis",
-    "Exodus",
-    "Leviticus",
-    "Numbers",
-    "Deuteronomy",
-    "Joshua",
-    "Judges",
-    "Ruth",
-    "1 Samuel",
-    "2 Samuel",
-    "1 Kings",
-    "2 Kings",
-    "1 Chronicles",
-    "2 Chronicles",
-    "Ezra",
-    "Nehemiah",
-    "Esther",
-    "Job",
-    "Psalms",
-    "Proverbs",
-    "Ecclesiastes",
-    "Song of Solomon",
-    "Isaiah",
-    "Jeremiah",
-    "Lamentations",
-    "Ezekiel",
-    "Daniel",
-    "Hosea",
-    "Joel",
-    "Amos",
-    "Obadiah",
-    "Jonah",
-    "Micah",
-    "Nahum",
-    "Habakkuk",
-    "Zephaniah",
-    "Haggai",
-    "Zechariah",
-    "Malachi",
-    "Matthew",
-    "Mark",
-    "Luke",
-    "John",
-    "Acts",
-    "Romans",
-    "1 Corinthians",
-    "2 Corinthians",
-    "Galatians",
-    "Ephesians",
-    "Philippians",
-    "Colossians",
-    "1 Thessalonians",
-    "2 Thessalonians",
-    "1 Timothy",
-    "2 Timothy",
-    "Titus",
-    "Philemon",
-    "Hebrews",
-    "James",
-    "1 Peter",
-    "2 Peter",
-    "1 John",
-    "2 John",
-    "3 John",
-    "Jude",
-    "Revelation"
-  ],
-  "kn": [
-    "ಆದಿಕಾಂಡ",
-    "ವಿಮೋಚನಕಾಂಡ",
-    "ಯಾಜಕಕಾಂಡ",
-    "ಅರಣ್ಯಕಾಂಡ",
-    "ಧರ್ಮೋಪದೇಶಕಾಂಡ",
-    "ಯೆಹೋಶುವ",
-    "ನ್ಯಾಯಸ್ಥಾಪಕರು",
-    "ರೂತಳು",
-    "1 ಸಮುವೇಲನು",
-    "2 ಸಮುವೇಲನು",
-    "1 ಅರಸುಗಳು",
-    "2 ಅರಸುಗಳು",
-    "1 ಪೂರ್ವಕಾಲವೃತ್ತಾ",
-    "2 ಪೂರ್ವಕಾಲವೃತ್ತಾ",
-    "ಎಜ್ರನು",
-    "ನೆಹೆಮಿಯ",
-    "ಎಸ್ತೇರಳು",
-    "ಯೋಬನು",
-    "ಕೀರ್ತನೆಗಳು",
-    "ಙ್ಞಾನೋಕ್ತಿಗಳು",
-    "ಪ್ರಸಂಗಿ",
-    "ಪರಮ ಗೀತ",
-    "ಯೆಶಾಯ",
-    "ಯೆರೆಮಿಯ",
-    "ಪ್ರಲಾಪಗಳು",
-    "ಯೆಹೆಜ್ಕೇಲನು",
-    "ದಾನಿಯೇಲನು",
-    "ಹೋಶೇ",
-    "ಯೋವೇಲ",
-    "ಆಮೋಸ",
-    "ಓಬದ್ಯ",
-    "ಯೋನ",
-    "ಮಿಕ",
-    "ನಹೂಮ",
-    "ಹಬಕ್ಕೂಕ್ಕ",
-    "ಚೆಫನ್ಯ",
-    "ಹಗ್ಗಾಯ",
-    "ಜೆಕರ್ಯ",
-    "ಮಲಾಕಿಯ",
-    "ಮತ್ತಾಯನು",
-    "ಮಾರ್ಕನು",
-    "ಲೂಕನು",
-    "ಯೋಹಾನನು",
-    "ಅಪೊಸ್ತಲರ ಕೃತ್ಯಗ",
-    "ರೋಮಾಪುರದವರಿಗೆ",
-    "1 ಕೊರಿಂಥದವರಿಗೆ",
-    "2 ಕೊರಿಂಥದವರಿಗೆ",
-    "ಗಲಾತ್ಯದವರಿಗೆ",
-    "ಎಫೆಸದವರಿಗೆ",
-    "ಫಿಲಿಪ್ಪಿಯವರಿಗೆ",
-    "ಕೊಲೊಸ್ಸೆಯವರಿಗೆ",
-    "1 ಥೆಸಲೊನೀಕದವರಿಗೆ",
-    "2 ಥೆಸಲೊನೀಕದವರಿಗೆ",
-    "1 ತಿಮೊಥೆಯನಿಗೆ",
-    "2 ತಿಮೊಥೆಯನಿಗೆ",
-    "ತೀತನಿಗೆ",
-    "ಫಿಲೆಮೋನನಿಗೆ",
-    "ಇಬ್ರಿಯರಿಗೆ",
-    "ಯಾಕೋಬನು",
-    "1 ಪೇತ್ರನು",
-    "2 ಪೇತ್ರನು",
-    "1 ಯೋಹಾನನು",
-    "2 ಯೋಹಾನನು",
-    "3 ಯೋಹಾನನು",
-    "ಯೂದನು",
-    "ಪ್ರಕಟನೆ"
-  ],
-  "ne": [
-    "उत्पत्ति",
-    "प्रस्थान ",
-    "लेवी",
-    "गन्ती",
-    "व्यवस्था",
-    "यहोशू",
-    "न्यायकर्ता",
-    "रूथ",
-    "1 शमूएल",
-    "2 शमूएल",
-    "1 राजा",
-    "2 राजा",
-    "1 इतिहास",
-    "2 इतिहास",
-    "एज्रा",
-    "नहेम्याह",
-    "एस्तर",
-    "अय्यूब",
-    "भजनसंग्रह",
-    "हितोपदेश",
-    "उपदेशक",
-    "श्रेष्ठगीत",
-    "यशैया",
-    "यर्मिया",
-    "विलाप",
-    "इजकिएल",
-    "दानियल",
-    "होशे",
-    "योएल",
-    "आमोस",
-    "ओबदिया",
-    "योना",
-    "मीका",
-    "नहूम",
-    "हबकूक",
-    "सपन्याह",
-    "हाग्गै",
-    "जकरिया",
-    "मलाकी",
-    "मत्ती",
-    "मर्कूस",
-    "लूका",
-    "यूहन्ना",
-    "प्रेरित",
-    "रोमी",
-    "1 कोरिन्थी",
-    "2 कोरिन्थी",
-    "गलाती",
-    "एफिसी",
-    "फिलिप्पी",
-    "कलस्सी",
-    "1 थिस्सलोनिकी",
-    "2 थिस्सलोनिकी",
-    "1 तिमोथी",
-    "2 तिमोथी",
-    "तीतस",
-    "फिलेमोन",
-    "हिब्रू",
-    "याकूब",
-    "1 पत्रुस",
-    "2 पत्रुस",
-    "1 यूहन्ना",
-    "2 यूहन्ना",
-    "3 यूहन्ना",
-    "यहूदा",
-    "प्रकाश",
-  ]
-};
-
 final bibles = [
   Bible(id: 1, name: "English", hasAudio: false),
   Bible(id: 2, name: "Kannada", hasAudio: true),
@@ -289,11 +160,11 @@ final bibles = [
   Bible(id: 11, name: "Bengali", hasAudio: false),
 ];
 
-List<Book> getBibleFromText(String languageCode, String text) {
+List<Book> getBibleFromText(String text) {
   final List<Book> books = [];
   final lines = text.split("\n");
   for (var (index, line) in lines.indexed) {
-    // ignore last empty line
+// ignore last empty line
     if (lines.length - 1 == index) {
       continue;
     }
@@ -305,13 +176,12 @@ List<Book> getBibleFromText(String languageCode, String text) {
       books.add(
         Book(
           index: book - 1,
-          name: bookNames[languageCode]![book - 1],
           chapters: [],
         ),
       );
     }
     if (books[book - 1].chapters.length < chapter) {
-      // ignore: prefer_const_constructors
+// ignore: prefer_const_constructors
       books[book - 1].chapters.add(Chapter(verses: []));
     }
     books[book - 1].chapters[chapter - 1].verses.add(

@@ -27,7 +27,7 @@ class ChapterSelectScreen extends StatelessWidget {
       child: CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [
-          SliverHeading(title: book.name, showClose: true),
+          SliverHeading(title: book.name(context), showClose: true),
           SliverTileGrid(
             children: List.generate(book.chapters.length, (index) {
               return TextButton(

@@ -1,3 +1,4 @@
+import 'dart:ui' as ui;
 import "package:flutter/material.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:only_bible_app/providers/app_model.dart";
@@ -15,6 +16,7 @@ class App extends StatelessWidget {
     final model = AppModel.of(context);
     return MaterialApp(
       title: "Only Bible App",
+      locale: model.locale,
       // onGenerateTitle: (context) =>
       //   DemoLocalizations.of(context).title,
       localizationsDelegates: AppLocalizations.localizationsDelegates,

@@ -35,7 +35,7 @@ class BookSelectScreen extends StatelessWidget {
             children: List.of(
               bible.getOldBooks().map((book) {
                 return TextButton(
-                  child: Text(book.shortName()),
+                  child: Text(book.shortName(context)),
                   onPressed: () => onBookSelected(context, book.index),
                 );
               }),
@@ -46,7 +46,7 @@ class BookSelectScreen extends StatelessWidget {
             children: List.of(
               bible.getNewBooks().map((book) {
                 return TextButton(
-                  child: Text(book.shortName()),
+                  child: Text(book.shortName(context)),
                   onPressed: () => onBookSelected(context, book.index),
                 );
               }),

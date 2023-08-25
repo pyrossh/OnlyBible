@@ -4,6 +4,7 @@ import "package:flutter/material.dart";
 import "package:only_bible_app/screens/bible_select_screen.dart";
 import "package:only_bible_app/screens/book_select_screen.dart";
 import "package:only_bible_app/models.dart";
+import "package:only_bible_app/screens/locale_select_screen.dart";
 import "package:only_bible_app/widgets/actions_sheet.dart";
 import "package:only_bible_app/widgets/highlight_button.dart";
 import "package:only_bible_app/widgets/scaffold_markdown.dart";
@@ -26,7 +27,7 @@ class HistoryFrame {
 
 class AppModel extends ChangeNotifier {
   late PackageInfo packageInfo;
-  String languageCode = "en";
+  Locale locale = const Locale("en");
   Bible bible = bibles.first;
   bool darkMode = false;
   bool fontBold = false;
@@ -51,6 +52,7 @@ class AppModel extends ChangeNotifier {
     await prefs.setBool("darkMode", darkMode);
     await prefs.setBool("fontBold", fontBold);
     await prefs.setDouble("textScaleFactor", textScaleFactor);
+    await prefs.setString("languageCode", locale.languageCode);
   }
 
   Future<(int, int)> loadData() async {
@@ -60,6 +62,7 @@ class AppModel extends ChangeNotifier {
     darkMode = prefs.getBool("darkMode") ?? false;
     fontBold = prefs.getBool("fontBold") ?? false;
     textScaleFactor = prefs.getDouble("textScaleFactor") ?? 1;
+    locale = Locale(prefs.getString("languageCode") ?? "en");
     bible = await loadBible(bibleId);
     // await Future.delayed(Duration(seconds: 3));
     final book = prefs.getInt("book") ?? 0;
@@ -75,7 +78,7 @@ class AppModel extends ChangeNotifier {
     //   customTrace = FirebasePerformance.instance.newTrace("loadBible");
     //   await customTrace.start();
     // }
-    final books = await getBibleFromAsset(languageCode, selectedBible.name);
+    final books = await getBibleFromAsset(selectedBible.name);
     // if (!isDesktop()) {
     //   await customTrace.stop();
     // }
@@ -84,6 +87,14 @@ class AppModel extends ChangeNotifier {
       name: selectedBible.name,
       hasAudio: selectedBible.hasAudio,
       books: books,
+    );
+  }
+
+  changeLocale(BuildContext context) {
+    Navigator.of(context).pushReplacement(
+      createNoTransitionPageRoute(
+        const LocaleSelectScreen(),
+      ),
     );
   }
 
@@ -101,6 +112,12 @@ class AppModel extends ChangeNotifier {
         const BibleSelectScreen(),
       ),
     );
+  }
+
+  updateCurrentLocale(Locale l) async {
+    locale = l;
+    notifyListeners();
+    save();
   }
 
   updateCurrentBible(BuildContext context, int id) async {

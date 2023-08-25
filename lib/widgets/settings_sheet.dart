@@ -2,6 +2,7 @@ import "package:flutter/material.dart";
 import "package:only_bible_app/providers/app_model.dart";
 import "package:only_bible_app/utils.dart";
 import "package:settings_ui/settings_ui.dart";
+import "package:flutter_gen/gen_l10n/app_localizations.dart";
 
 class SettingsSheet extends StatelessWidget {
   const SettingsSheet({super.key});
@@ -9,9 +10,7 @@ class SettingsSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final app = AppModel.of(context);
-    final selectedBible = app.bible;
-    // final modeIcon = app.darkMode ? Icons.dark_mode : Icons.light_mode;
-    // final modeIconColor = app.darkMode ? const Color(0xFF59EEFF) : Colors.yellowAccent.shade700;
+    final localizations = AppLocalizations.of(context)!;
     final iconColor = Theme.of(context).textTheme.bodyMedium!.color;
     return SettingsList(
       contentPadding: EdgeInsets.zero,
@@ -24,18 +23,19 @@ class SettingsSheet extends StatelessWidget {
       ),
       sections: [
         SettingsSection(
-          title: Text("Settings", style: Theme.of(context).textTheme.headlineMedium),
+          title: Text(localizations.settingsTitle, style: Theme.of(context).textTheme.headlineMedium),
           margin: const EdgeInsetsDirectional.symmetric(horizontal: 20),
           tiles: [
             SettingsTile.navigation(
               leading: const Icon(Icons.language, color: Colors.green),
               title: const Text("App Language"),
-              value: const Text("English"),
+              value: Text(AppLocalizations.of(context)!.languageTitle),
+              onPressed: app.changeLocale,
             ),
             SettingsTile.navigation(
               leading: const Icon(Icons.book_outlined, color: Colors.blueAccent),
               title: const Text("Bible"),
-              value: Text(selectedBible.name),
+              value: Text(app.bible.name),
               onPressed: app.changeBible,
             ),
             SettingsTile.navigation(
