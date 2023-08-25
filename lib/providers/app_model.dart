@@ -1,10 +1,10 @@
 // import "package:firebase_performance/firebase_performance.dart";
+import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:flutter/services.dart";
 import "package:flutter/material.dart";
 import "package:only_bible_app/screens/bible_select_screen.dart";
 import "package:only_bible_app/screens/book_select_screen.dart";
 import "package:only_bible_app/models.dart";
-import "package:only_bible_app/screens/locale_select_screen.dart";
 import "package:only_bible_app/widgets/actions_sheet.dart";
 import "package:only_bible_app/widgets/highlight_button.dart";
 import "package:only_bible_app/widgets/scaffold_markdown.dart";
@@ -27,8 +27,9 @@ class HistoryFrame {
 
 class AppModel extends ChangeNotifier {
   late PackageInfo packageInfo;
-  Locale locale = const Locale("en");
-  Bible bible = bibles.first;
+  late Bible bible;
+  late Locale locale;
+  bool engTitles = false;
   bool darkMode = false;
   bool fontBold = false;
   double textScaleFactor = 0;
@@ -48,7 +49,7 @@ class AppModel extends ChangeNotifier {
 
   save() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setInt("bibleId", bible.id);
+    await prefs.setString("bibleName", bible.name);
     await prefs.setBool("darkMode", darkMode);
     await prefs.setBool("fontBold", fontBold);
     await prefs.setDouble("textScaleFactor", textScaleFactor);
@@ -58,12 +59,11 @@ class AppModel extends ChangeNotifier {
   Future<(int, int)> loadData() async {
     packageInfo = await PackageInfo.fromPlatform();
     final prefs = await SharedPreferences.getInstance();
-    final bibleId = prefs.getInt("bibleId") ?? 1;
     darkMode = prefs.getBool("darkMode") ?? false;
     fontBold = prefs.getBool("fontBold") ?? false;
     textScaleFactor = prefs.getDouble("textScaleFactor") ?? 1;
     locale = Locale(prefs.getString("languageCode") ?? "en");
-    bible = await loadBible(bibleId);
+    bible = await loadBible(prefs.getString("bibleName") ?? "English");
     // await Future.delayed(Duration(seconds: 3));
     final book = prefs.getInt("book") ?? 0;
     final chapter = prefs.getInt("chapter") ?? 0;
@@ -71,31 +71,93 @@ class AppModel extends ChangeNotifier {
     return (book, chapter);
   }
 
-  Future<Bible> loadBible(int id) async {
-    final selectedBible = bibles.firstWhere((it) => it.id == id);
+  Future<Bible> loadBible(String name) async {
     // Trace customTrace;
     // if (!isDesktop()) {
     //   customTrace = FirebasePerformance.instance.newTrace("loadBible");
     //   await customTrace.start();
     // }
-    final books = await getBibleFromAsset(selectedBible.name);
+    final books = await getBibleFromAsset(name);
     // if (!isDesktop()) {
     //   await customTrace.stop();
     // }
     return Bible.withBooks(
-      id: selectedBible.id,
-      name: selectedBible.name,
-      hasAudio: selectedBible.hasAudio,
+      name: name,
+      hasAudio: true,
       books: books,
     );
   }
 
-  changeLocale(BuildContext context) {
-    Navigator.of(context).pushReplacement(
-      createNoTransitionPageRoute(
-        const LocaleSelectScreen(),
-      ),
-    );
+  List<String> getBookNames(BuildContext context) {
+    final l = engTitles ? lookupAppLocalizations(Locale("en")) : AppLocalizations.of(context)!;
+    return [
+      l.genesis,
+      l.exodus,
+      l.leviticus,
+      l.numbers,
+      l.deuteronomy,
+      l.joshua,
+      l.judges,
+      l.ruth,
+      l.firstSamuel,
+      l.secondSamuel,
+      l.firstKings,
+      l.secondKings,
+      l.firstChronicles,
+      l.secondChronicles,
+      l.ezra,
+      l.nehemiah,
+      l.esther,
+      l.job,
+      l.psalms,
+      l.proverbs,
+      l.ecclesiastes,
+      l.song_of_solomon,
+      l.isaiah,
+      l.jeremiah,
+      l.lamentations,
+      l.ezekiel,
+      l.daniel,
+      l.hosea,
+      l.joel,
+      l.amos,
+      l.obadiah,
+      l.jonah,
+      l.micah,
+      l.nahum,
+      l.habakkuk,
+      l.zephaniah,
+      l.haggai,
+      l.zechariah,
+      l.malachi,
+      l.matthew,
+      l.mark,
+      l.luke,
+      l.john,
+      l.acts,
+      l.romans,
+      l.firstCorinthians,
+      l.secondCorinthians,
+      l.galatians,
+      l.ephesians,
+      l.philippians,
+      l.colossians,
+      l.firstThessalonians,
+      l.secondThessalonians,
+      l.firstTimothy,
+      l.secondTimothy,
+      l.titus,
+      l.philemon,
+      l.hebrews,
+      l.james,
+      l.firstPeter,
+      l.secondPeter,
+      l.firstJohn,
+      l.secondJohn,
+      l.thirdJohn,
+      l.jude,
+      l.revelation,
+    ];
   }
 
   changeBible(BuildContext context) {
@@ -114,15 +176,11 @@ class AppModel extends ChangeNotifier {
     );
   }
 
-  updateCurrentLocale(Locale l) async {
-    locale = l;
-    notifyListeners();
-    save();
-  }
-
-  updateCurrentBible(BuildContext context, int id) async {
+  // TODO: maybe don't pass name here
+  updateCurrentBible(BuildContext context, Locale l, String name) async {
     // TODO: maybe use a future as the bible needs to load
-    bible = await loadBible(id);
+    locale = l;
+    bible = await loadBible(name);
     notifyListeners();
     save();
   }
@@ -135,9 +193,15 @@ class AppModel extends ChangeNotifier {
     );
   }
 
-  toggleMode() async {
+  toggleDarkMode() {
     darkMode = !darkMode;
     updateStatusBar();
+    notifyListeners();
+    save();
+  }
+
+  toggleEngBookNames() {
+    engTitles = !engTitles;
     notifyListeners();
     save();
   }

@@ -1,20 +1,17 @@
 import "package:flutter/material.dart";
-import "package:flutter_gen/gen_l10n/app_localizations.dart";
+import "package:only_bible_app/providers/app_model.dart";
 
 class Bible {
-  final int id;
   final String name;
   final bool hasAudio;
   List<Book> books = [];
 
   Bible({
-    required this.id,
     required this.name,
     required this.hasAudio,
   });
 
   Bible.withBooks({
-    required this.id,
     required this.name,
     required this.hasAudio,
     required this.books,
@@ -31,78 +28,6 @@ class Bible {
   List<Book> getNewBooks() {
     return books.where((it) => it.isNewTestament()).toList();
   }
-
-  static List<String> getBookNames(BuildContext context) {
-    final l = AppLocalizations.of(context)!;
-    return [
-      l.genesis,
-      l.exodus,
-      l.leviticus,
-      l.numbers,
-      l.deuteronomy,
-      l.joshua,
-      l.judges,
-      l.ruth,
-      l.firstSamuel,
-      l.secondSamuel,
-      l.firstKings,
-      l.secondKings,
-      l.firstChronicles,
-      l.secondChronicles,
-      l.ezra,
-      l.nehemiah,
-      l.esther,
-      l.job,
-      l.psalms,
-      l.proverbs,
-      l.ecclesiastes,
-      l.song_of_solomon,
-      l.isaiah,
-      l.jeremiah,
-      l.lamentations,
-      l.ezekiel,
-      l.daniel,
-      l.hosea,
-      l.joel,
-      l.amos,
-      l.obadiah,
-      l.jonah,
-      l.micah,
-      l.nahum,
-      l.habakkuk,
-      l.zephaniah,
-      l.haggai,
-      l.zechariah,
-      l.malachi,
-      l.matthew,
-      l.mark,
-      l.luke,
-      l.john,
-      l.acts,
-      l.romans,
-      l.firstCorinthians,
-      l.secondCorinthians,
-      l.galatians,
-      l.ephesians,
-      l.philippians,
-      l.colossians,
-      l.firstThessalonians,
-      l.secondThessalonians,
-      l.firstTimothy,
-      l.secondTimothy,
-      l.titus,
-      l.philemon,
-      l.hebrews,
-      l.james,
-      l.firstPeter,
-      l.secondPeter,
-      l.firstJohn,
-      l.secondJohn,
-      l.thirdJohn,
-      l.jude,
-      l.revelation,
-    ];
-  }
 }
 
 class Book {
@@ -115,7 +40,7 @@ class Book {
   });
 
   String name(BuildContext context) {
-    return Bible.getBookNames(context)[index];
+    return AppModel.of(context).getBookNames(context)[index];
   }
 
   bool isOldTestament() => index < 39;
@@ -145,20 +70,6 @@ class Verse {
 
   const Verse({required this.index, required this.text, required this.chapter, required this.book});
 }
-
-final bibles = [
-  Bible(id: 1, name: "English", hasAudio: false),
-  Bible(id: 2, name: "Kannada", hasAudio: true),
-  Bible(id: 3, name: "Nepali", hasAudio: false),
-  Bible(id: 4, name: "Hindi", hasAudio: false),
-  Bible(id: 5, name: "Gujarati", hasAudio: false),
-  Bible(id: 6, name: "Malayalam", hasAudio: false),
-  Bible(id: 7, name: "Oriya", hasAudio: false),
-  Bible(id: 8, name: "Punjabi", hasAudio: false),
-  Bible(id: 9, name: "Tamil", hasAudio: false),
-  Bible(id: 10, name: "Telugu", hasAudio: false),
-  Bible(id: 11, name: "Bengali", hasAudio: false),
-];
 
 List<Book> getBibleFromText(String text) {
   final List<Book> books = [];

@@ -1,5 +1,5 @@
 import "package:flutter/material.dart";
-import "package:only_bible_app/models.dart";
+import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:only_bible_app/providers/app_model.dart";
 import "package:only_bible_app/widgets/scaffold_menu.dart";
 import "package:only_bible_app/widgets/sliver_heading.dart";
@@ -19,13 +19,28 @@ class BibleSelectScreen extends StatelessWidget {
           SliverTileGrid(
             listType: ListType.large,
             children: List.of(
-              bibles.map((bible) {
-                return TextButton(
-                  child: Text(bible.name),
-                  onPressed: () {
-                    model.updateCurrentBible(context, bible.id);
-                    Navigator.of(context).pop();
-                  },
+              AppLocalizations.supportedLocales.map((l) {
+                return Localizations.override(
+                  context: context,
+                  locale: Locale(l.languageCode),
+                  child: Builder(
+                    builder: (context) {
+                      final bibleName = AppLocalizations.of(context)!.languageTitle;
+                      return TextButton(
+                        child: Text(bibleName),
+                        // child: Column(
+                        //   children: [
+                        //     Text(l.name),
+                        //     // Text("(${l.localName})"),
+                        //   ],
+                        // ),
+                        onPressed: () {
+                          AppModel.ofEvent(context).updateCurrentBible(context, l, bibleName);
+                          Navigator.of(context).pop();
+                        },
+                      );
+                    },
+                  ),
                 );
               }),
             ),

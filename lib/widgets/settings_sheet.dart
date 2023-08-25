@@ -27,12 +27,6 @@ class SettingsSheet extends StatelessWidget {
           margin: const EdgeInsetsDirectional.symmetric(horizontal: 20),
           tiles: [
             SettingsTile.navigation(
-              leading: const Icon(Icons.language, color: Colors.green),
-              title: const Text("App Language"),
-              value: Text(AppLocalizations.of(context)!.languageTitle),
-              onPressed: app.changeLocale,
-            ),
-            SettingsTile.navigation(
               leading: const Icon(Icons.book_outlined, color: Colors.blueAccent),
               title: const Text("Bible"),
               value: Text(app.bible.name),
@@ -43,7 +37,7 @@ class SettingsSheet extends StatelessWidget {
               title: const Text("Theme"),
               trailing: ToggleButtons(
                 onPressed: (int index) {
-                  app.toggleMode();
+                  app.toggleDarkMode();
                 },
                 highlightColor: Colors.transparent,
                 borderColor: Colors.grey,
@@ -86,6 +80,14 @@ class SettingsSheet extends StatelessWidget {
                 onPressed: app.decreaseFont,
                 icon: const Icon(Icons.remove_circle_outline, size: 32, color: Colors.blueAccent),
               ),
+            ),
+            SettingsTile.switchTile(
+              onToggle: (value) {
+                app.toggleEngBookNames();
+              },
+              initialValue: app.engTitles,
+              leading: Icon(Icons.abc, color: iconColor),
+              title: const Text("English Titles"),
             ),
           ],
         ),
