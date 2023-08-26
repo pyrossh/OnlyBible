@@ -2,7 +2,6 @@ import "package:flutter/material.dart";
 import "package:only_bible_app/providers/app_model.dart";
 import "package:only_bible_app/utils.dart";
 import "package:settings_ui/settings_ui.dart";
-import "package:flutter_gen/gen_l10n/app_localizations.dart";
 
 class SettingsSheet extends StatelessWidget {
   const SettingsSheet({super.key});
@@ -10,7 +9,7 @@ class SettingsSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final app = AppModel.of(context);
-    final localizations = AppLocalizations.of(context)!;
+    final localizations = AppModel.getLocalizations(context);
     final iconColor = Theme.of(context).textTheme.bodyMedium!.color;
     return SettingsList(
       contentPadding: EdgeInsets.zero,
@@ -28,13 +27,13 @@ class SettingsSheet extends StatelessWidget {
           tiles: [
             SettingsTile.navigation(
               leading: const Icon(Icons.book_outlined, color: Colors.blueAccent),
-              title: const Text("Bible"),
+              title: Text(localizations.bibleTitle),
               value: Text(app.bible.name),
               onPressed: app.changeBible,
             ),
             SettingsTile.navigation(
               leading: const Icon(Icons.color_lens_outlined, color: Colors.pink),
-              title: const Text("Theme"),
+              title: Text(localizations.themeTitle),
               trailing: ToggleButtons(
                 onPressed: (int index) {
                   app.toggleDarkMode();
@@ -57,16 +56,8 @@ class SettingsSheet extends StatelessWidget {
                 ],
               ),
             ),
-            SettingsTile.switchTile(
-              onToggle: (value) {
-                app.toggleBold();
-              },
-              initialValue: app.fontBold,
-              leading: Icon(Icons.format_bold, color: iconColor),
-              title: const Text("Font Bold"),
-            ),
             SettingsTile(
-              title: const Text("Increase font size"),
+              title: Text(localizations.incrementFontTitle),
               leading: Icon(Icons.font_download, color: iconColor),
               trailing: IconButton(
                 onPressed: app.increaseFont,
@@ -74,7 +65,7 @@ class SettingsSheet extends StatelessWidget {
               ),
             ),
             SettingsTile(
-              title: const Text("Decrease font size"),
+              title: Text(localizations.decrementFontTitle),
               leading: Icon(Icons.font_download, color: iconColor),
               trailing: IconButton(
                 onPressed: app.decreaseFont,
@@ -83,11 +74,19 @@ class SettingsSheet extends StatelessWidget {
             ),
             SettingsTile.switchTile(
               onToggle: (value) {
+                app.toggleBold();
+              },
+              initialValue: app.fontBold,
+              leading: Icon(Icons.format_bold, color: iconColor),
+              title: Text(localizations.boldFontTitle),
+            ),
+            SettingsTile.switchTile(
+              onToggle: (value) {
                 app.toggleEngBookNames();
               },
               initialValue: app.engTitles,
               leading: Icon(Icons.abc, color: iconColor),
-              title: const Text("English Titles"),
+              title: Text(localizations.engTitles),
             ),
           ],
         ),
@@ -97,23 +96,23 @@ class SettingsSheet extends StatelessWidget {
           tiles: [
             SettingsTile.navigation(
               leading: const Icon(Icons.policy_outlined, color: Colors.brown),
-              title: const Text("Privacy Policy"),
+              title: Text(localizations.privacyPolicyTitle),
               onPressed: app.showPrivacyPolicy,
             ),
             SettingsTile.navigation(
               leading: const Icon(Icons.share_outlined, color: Colors.blueAccent),
-              title: const Text("Share the app"),
+              title: Text(localizations.shareAppTitle),
               onPressed: app.shareAppLink,
             ),
             if (!isDesktop()) // TODO: mabe support OSx if we release in that store
               SettingsTile.navigation(
                 leading: Icon(Icons.star, color: Colors.yellowAccent.shade700),
-                title: const Text("Rate the app"),
+                title: Text(localizations.rateAppTitle),
                 onPressed: app.rateApp,
               ),
             SettingsTile.navigation(
               leading: Icon(Icons.info_outline, color: Theme.of(context).colorScheme.onBackground),
-              title: const Text("About us"),
+              title: Text(localizations.aboutUsTitle),
               onPressed: app.showAboutUs,
             ),
           ],

@@ -47,6 +47,10 @@ class AppModel extends ChangeNotifier {
     return Provider.of(context, listen: false);
   }
 
+  static AppLocalizations getLocalizations(BuildContext context) {
+    return AppModel.of(context).engTitles ? lookupAppLocalizations(const Locale("en")) : AppLocalizations.of(context)!;
+  }
+
   save() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString("bibleName", bible.name);
@@ -89,7 +93,7 @@ class AppModel extends ChangeNotifier {
   }
 
   List<String> getBookNames(BuildContext context) {
-    final l = engTitles ? lookupAppLocalizations(const Locale("en")) : AppLocalizations.of(context)!;
+    final l = getLocalizations(context);
     return [
       l.genesis,
       l.exodus,

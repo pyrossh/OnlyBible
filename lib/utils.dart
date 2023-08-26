@@ -6,6 +6,11 @@ import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:only_bible_app/models.dart";
 
+extension MyIterable<E> on Iterable<E> {
+  Iterable<E> sortedBy(Comparable Function(E e) key) =>
+      toList()..sort((a, b) => key(a).compareTo(key(b)));
+}
+
 bool isDesktop() {
   return defaultTargetPlatform == TargetPlatform.macOS ||
       defaultTargetPlatform == TargetPlatform.windows ||
