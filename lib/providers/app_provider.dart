@@ -13,11 +13,11 @@ import "package:flutter/services.dart";
 import "package:only_bible_app/screens/bible_select_screen.dart";
 import "package:only_bible_app/screens/book_select_screen.dart";
 import "package:only_bible_app/models.dart";
-import "package:only_bible_app/widgets/actions_sheet.dart";
-import "package:only_bible_app/widgets/highlight_sheet.dart";
+import "package:only_bible_app/sheets/actions_sheet.dart";
+import "package:only_bible_app/sheets/highlight_sheet.dart";
 import "package:only_bible_app/widgets/scaffold_markdown.dart";
 import "package:only_bible_app/widgets/note_sheet.dart";
-import "package:only_bible_app/widgets/settings_sheet.dart";
+import "package:only_bible_app/sheets/settings_sheet.dart";
 import "package:package_info_plus/package_info_plus.dart";
 import "package:provider/provider.dart";
 import "package:shared_preferences/shared_preferences.dart";
@@ -407,8 +407,12 @@ class AppProvider extends ChangeNotifier {
       );
     }
     if (darkMode) {
+      // return TextStyle(
+      //   color: getHighlight(v) ?? context.theme.colorScheme.onBackground,
+      // );
       return TextStyle(
-        color: getHighlight(v) ?? context.theme.colorScheme.onBackground,
+        backgroundColor: getHighlight(v)?.withOpacity(0.7),
+        color: getHighlight(v) != null ? Colors.white : context.theme.colorScheme.onBackground,
       );
     }
     return TextStyle(
