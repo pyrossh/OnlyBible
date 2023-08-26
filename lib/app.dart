@@ -1,7 +1,7 @@
 import 'dart:ui' as ui;
 import "package:flutter/material.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
-import "package:only_bible_app/providers/app_model.dart";
+import "package:only_bible_app/providers/app_provider.dart";
 import "package:only_bible_app/screens/chapter_view_screen.dart";
 import "package:only_bible_app/theme.dart";
 
@@ -13,7 +13,7 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = AppModel.of(context);
+    final model = AppProvider.of(context);
     return MaterialApp(
       title: "Only Bible App",
       locale: model.locale,

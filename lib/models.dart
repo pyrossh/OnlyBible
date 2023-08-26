@@ -1,5 +1,5 @@
 import "package:flutter/material.dart";
-import "package:only_bible_app/providers/app_model.dart";
+import "package:only_bible_app/providers/app_provider.dart";
 
 class Bible {
   final String name;
@@ -37,7 +37,7 @@ class Book {
   });
 
   String name(BuildContext context) {
-    return AppModel.of(context).getBookNames(context)[index];
+    return AppProvider.of(context).getBookNames(context)[index];
   }
 
   bool isOldTestament() => index < 39;

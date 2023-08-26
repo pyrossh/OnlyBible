@@ -1,5 +1,5 @@
 import "package:flutter/material.dart";
-import "package:only_bible_app/providers/app_model.dart";
+import "package:only_bible_app/providers/app_provider.dart";
 import "package:only_bible_app/providers/chapter_view_model.dart";
 import "package:only_bible_app/utils.dart";
 
@@ -13,7 +13,7 @@ class ChapterAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final app = AppModel.of(context);
+    final app = AppProvider.of(context);
     final model = ChapterViewModel.of(context);
     final selectedBook = app.bible.books[model.book];
     final bookName = selectedBook.name(context);
@@ -96,7 +96,7 @@ class ChapterAppBar extends StatelessWidget implements PreferredSizeWidget {
                     padding: const EdgeInsets.only(left: 10),
                     child: IconButton(
                       padding: EdgeInsets.zero,
-                      onPressed: () => AppModel.ofEvent(context).showSettings(context),
+                      onPressed: () => AppProvider.ofEvent(context).showSettings(context),
                       icon: Icon(Icons.more_vert, size: isDesktop ? 28 : 24),
                     ),
                   ),

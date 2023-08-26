@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
 import "package:only_bible_app/models.dart";
-import "package:only_bible_app/providers/app_model.dart";
+import "package:only_bible_app/providers/app_provider.dart";
 import "package:only_bible_app/utils.dart";
 import "package:only_bible_app/widgets/modal_button.dart";
 
@@ -11,7 +11,7 @@ class NoteSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final app = AppModel.of(context);
+    final app = AppProvider.of(context);
     return Container(
       padding: EdgeInsets.only(
         left: 10,

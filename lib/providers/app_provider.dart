@@ -31,7 +31,7 @@ class HistoryFrame {
   const HistoryFrame({required this.book, required this.chapter, this.verse});
 }
 
-class AppModel extends ChangeNotifier {
+class AppProvider extends ChangeNotifier {
   late PackageInfo packageInfo;
   late Bible bible;
   late Locale locale;
@@ -48,16 +48,16 @@ class AppModel extends ChangeNotifier {
   List<HistoryFrame> history = [];
   final box = GetStorage("only-bible-app-backup");
 
-  static AppModel of(BuildContext context) {
+  static AppProvider of(BuildContext context) {
     return Provider.of(context, listen: true);
   }
 
-  static AppModel ofEvent(BuildContext context) {
+  static AppProvider ofEvent(BuildContext context) {
     return Provider.of(context, listen: false);
   }
 
   static AppLocalizations getLocalizations(BuildContext context) {
-    return AppModel.of(context).engTitles ? lookupAppLocalizations(const Locale("en")) : AppLocalizations.of(context)!;
+    return AppProvider.of(context).engTitles ? lookupAppLocalizations(const Locale("en")) : AppLocalizations.of(context)!;
   }
 
   save() async {
@@ -469,15 +469,15 @@ class AppModel extends ChangeNotifier {
   }
 
   void removeSelectedHighlights(BuildContext context) {
-    AppModel.ofEvent(context).removeHighlight(context, selectedVerses);
+    AppProvider.ofEvent(context).removeHighlight(context, selectedVerses);
     selectedVerses.clear();
-    AppModel.ofEvent(context).hideActions(context);
+    AppProvider.ofEvent(context).hideActions(context);
     notifyListeners();
   }
 
   void closeActions(BuildContext context) {
     selectedVerses.clear();
-    AppModel.ofEvent(context).hideActions(context);
+    AppProvider.ofEvent(context).hideActions(context);
     notifyListeners();
   }
 
@@ -487,7 +487,7 @@ class AppModel extends ChangeNotifier {
 
   void onVerseSelected(BuildContext context, Verse v) {
     if (selectedVerses.isEmpty) {
-      AppModel.ofEvent(context).showActions(context);
+      AppProvider.ofEvent(context).showActions(context);
     }
     if (isVerseSelected(v)) {
       selectedVerses.removeWhere((it) => it.index == v.index);
@@ -495,7 +495,7 @@ class AppModel extends ChangeNotifier {
       selectedVerses.add(v);
     }
     if (selectedVerses.isEmpty) {
-      AppModel.ofEvent(context).hideActions(context);
+      AppProvider.ofEvent(context).hideActions(context);
     }
     notifyListeners();
   }

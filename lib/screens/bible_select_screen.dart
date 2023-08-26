@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
-import "package:only_bible_app/providers/app_model.dart";
+import "package:only_bible_app/providers/app_provider.dart";
 import "package:only_bible_app/utils.dart";
 import "package:only_bible_app/widgets/scaffold_menu.dart";
 import "package:only_bible_app/widgets/sliver_heading.dart";
@@ -36,7 +36,7 @@ class BibleSelectScreen extends StatelessWidget {
                         //   ],
                         // ),
                         onPressed: () {
-                          AppModel.ofEvent(context).updateCurrentBible(context, l, bibleName);
+                          AppProvider.ofEvent(context).updateCurrentBible(context, l, bibleName);
                           Navigator.of(context).pop();
                         },
                       );

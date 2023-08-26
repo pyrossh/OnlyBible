@@ -1,5 +1,5 @@
 import "package:flutter/material.dart";
-import "package:only_bible_app/providers/app_model.dart";
+import "package:only_bible_app/providers/app_provider.dart";
 import "package:only_bible_app/widgets/scaffold_menu.dart";
 import "package:only_bible_app/screens/chapter_select_screen.dart";
 import "package:only_bible_app/widgets/sliver_heading.dart";
@@ -27,7 +27,7 @@ class BookSelectScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppModel.getLocalizations(context);
+    final localizations = AppProvider.getLocalizations(context);
     return ScaffoldMenu(
       child: CustomScrollView(
         physics: const BouncingScrollPhysics(),

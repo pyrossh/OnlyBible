@@ -1,6 +1,6 @@
 import "dart:convert";
 import "package:only_bible_app/dialog.dart";
-import "package:only_bible_app/providers/app_model.dart";
+import "package:only_bible_app/providers/app_provider.dart";
 import "package:only_bible_app/providers/chapter_view_model.dart";
 import "package:url_launcher/url_launcher.dart";
 import "package:flutter/foundation.dart" show defaultTargetPlatform, TargetPlatform;
@@ -18,8 +18,8 @@ extension MyIterable<E> on Iterable<E> {
 extension AppContext on BuildContext {
   ThemeData get theme => Theme.of(this);
   AppLocalizations get l10n => app.engTitles ? lookupAppLocalizations(const Locale("en")) : AppLocalizations.of(this)!;
-  AppModel get app => Provider.of(this, listen: true);
-  AppModel get appEvent => Provider.of(this, listen: false);
+  AppProvider get app => Provider.of(this, listen: true);
+  AppProvider get appEvent => Provider.of(this, listen: false);
   ChapterViewModel get chapter => Provider.of(this, listen: true);
   ChapterViewModel get chapterEvent => Provider.of(this, listen: false);
 }
