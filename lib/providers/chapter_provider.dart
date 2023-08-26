@@ -1,5 +1,4 @@
 import "package:flutter/material.dart";
-import "package:only_bible_app/screens/chapter_view_screen.dart";
 import "package:only_bible_app/models.dart";
 import "package:provider/provider.dart";
 import "package:shared_preferences/shared_preferences.dart";

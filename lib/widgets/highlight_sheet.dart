@@ -8,8 +8,9 @@ class HighlightSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDesktop = isWide(context);
-    final height = isDesktop || isIOS() ? 100.0 : 70.0;
-    onHighlight(Color c) {
+    final bottom = isIOS() ? 20.0 : 0.0;
+    final height = isIOS() ? 100.0 : 80.0;
+    void onHighlight(Color c) {
       final verses = context.appEvent.selectedVerses;
       context.appEvent.setHighlight(context, verses, c);
       context.appEvent.closeActions(context);
@@ -18,9 +19,9 @@ class HighlightSheet extends StatelessWidget {
     return Container(
       height: height,
       color: Theme.of(context).colorScheme.background,
-      padding: EdgeInsets.only(left: 20, right: 20, top: isDesktop ? 10 : 10, bottom: 30),
+      padding: EdgeInsets.only(left: 20, right: 20, top: isDesktop ? 10 : 10, bottom: bottom),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           HighlightButton(
             color: const Color(0xFFDAEFFE),
@@ -36,10 +37,6 @@ class HighlightSheet extends StatelessWidget {
           ),
           HighlightButton(
             color: const Color(0xFFE6FCC3),
-            onColorSelected: onHighlight,
-          ),
-          HighlightButton(
-            color: const Color(0xFFAACCAA),
             onColorSelected: onHighlight,
           ),
         ],

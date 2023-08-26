@@ -11,7 +11,8 @@ class ActionsSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     final app = AppProvider.of(context);
     final isDesktop = isWide(context);
-    final height = isDesktop || isIOS() ? 92.0 : 70.0;
+    final bottom = isIOS() ? 20.0 : 0.0;
+    final height = isIOS() ? 100.0 : 80.0;
     final iconColor = app.darkMode ? Colors.white.withOpacity(0.9) : Colors.black.withOpacity(0.9);
     final bodySmall = Theme.of(context).textTheme.bodySmall;
     final audioIcon = app.isPlaying ? Icons.pause_circle_outline : Icons.play_circle_outline;
@@ -20,12 +21,12 @@ class ActionsSheet extends StatelessWidget {
     return Container(
       height: height,
       color: Theme.of(context).colorScheme.background,
-      padding: EdgeInsets.only(left: 20, right: 20, top: isDesktop ? 10 : 10, bottom: 20),
+      padding: EdgeInsets.only(left: 20, right: 20, top: isDesktop ? 10 : 10, bottom: bottom),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               IconButtonText(
                 leading: IconButton(
