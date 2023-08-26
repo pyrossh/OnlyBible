@@ -80,7 +80,7 @@ class VersesView extends StatelessWidget {
                             backgroundColor: app.darkMode ? Colors.grey.shade800 : Colors.grey.shade200,
                           )
                               : TextStyle(
-                            backgroundColor: app.getHighlight(v) ?? Theme.of(context).colorScheme.background,
+                            backgroundColor: app.getHighlight(v) ?? context.theme.colorScheme.background,
                           ),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {

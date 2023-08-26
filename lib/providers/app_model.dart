@@ -209,12 +209,10 @@ class AppModel extends ChangeNotifier {
     );
   }
 
-  clearEvents(
-    BuildContext context,
-  ) {
-    if (isPlaying) {
-      pause();
-    }
+  clearEvents(BuildContext context) {
+    // if (isPlaying) {
+    //   pause();
+    // }
     clearSelections();
     hideActions(context);
   }
@@ -484,12 +482,7 @@ class AppModel extends ChangeNotifier {
   }
 
   bool isVerseSelected(Verse v) {
-    return selectedVerses.any((el) => el.index == v.index);
-  }
-
-  bool isVerseHighlighted(BuildContext context) {
-    // box.read("${book}:${chapter}:${verse}", "color");
-    return false;
+    return selectedVerses.any((el) => el.book == v.book && el.chapter == v.chapter && el.index == v.index);
   }
 
   void onVerseSelected(BuildContext context, Verse v) {
@@ -522,13 +515,13 @@ class AppModel extends ChangeNotifier {
   }
 
   onPlay(BuildContext context) async {
+    final versesToPlay = List.from(selectedVerses);
     if (isPlaying) {
       pause();
     } else {
       isPlaying = true;
       notifyListeners();
-      // add locks todo
-      for (final v in selectedVerses) {
+      for (final v in versesToPlay) {
         final bibleName = bible.name;
         final book = (v.book + 1).toString().padLeft(2, "0");
         final chapter = (v.chapter + 1).toString().padLeft(3, "0");
@@ -542,7 +535,9 @@ class AppModel extends ChangeNotifier {
         } catch (err) {
           log("Could not play audio", name: "play", error: (err.toString(), pathname));
           FirebaseCrashlytics.instance.recordFlutterError(FlutterErrorDetails(exception: (err.toString(), pathname)));
-          showError(context, "Could not play audio");
+          if (context.mounted) {
+            showError(context, "Could not play audio");
+          }
           return;
         } finally {
           pause();
