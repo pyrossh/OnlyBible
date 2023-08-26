@@ -1,5 +1,19 @@
 import "package:flutter/material.dart";
 
+const lightHighlights = [
+  Color(0xFFDAEFFE),
+  Color(0xFFFFFCB2),
+  Color(0xFFFFDDF3),
+  Color(0xFFE6FCC3),
+];
+
+const darkHighlights = [
+  Color(0xFF69A9FC),
+  Color(0xFFFFEB66),
+  Color(0xFFFF66B3),
+  Color(0xFF48F334),
+];
+
 const lightColorScheme = ColorScheme.light(
   background: Colors.white,
   onBackground: Color(0xFF010101),

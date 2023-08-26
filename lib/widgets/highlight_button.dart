@@ -1,15 +1,16 @@
 import "package:flutter/material.dart";
 
 class HighlightButton extends StatelessWidget {
+  final int index;
   final Color color;
-  final Function(Color c) onColorSelected;
+  final Function(int) onHighlightSelected;
 
-  const HighlightButton({super.key, required this.color, required this.onColorSelected});
+  const HighlightButton({super.key, required this.index, required this.color, required this.onHighlightSelected});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => onColorSelected(color),
+      onTap: () => onHighlightSelected(index),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10),
         decoration: BoxDecoration(

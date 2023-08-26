@@ -5,6 +5,7 @@ import "package:firebase_storage/firebase_storage.dart";
 import "package:just_audio/just_audio.dart";
 import "package:only_bible_app/dialog.dart";
 import "package:only_bible_app/screens/chapter_view_screen.dart";
+import "package:only_bible_app/theme.dart";
 import "package:share_plus/share_plus.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:flutter/material.dart";
@@ -57,7 +58,9 @@ class AppProvider extends ChangeNotifier {
   }
 
   static AppLocalizations getLocalizations(BuildContext context) {
-    return AppProvider.of(context).engTitles ? lookupAppLocalizations(const Locale("en")) : AppLocalizations.of(context)!;
+    return AppProvider.of(context).engTitles
+        ? lookupAppLocalizations(const Locale("en"))
+        : AppLocalizations.of(context)!;
   }
 
   save() async {
@@ -383,28 +386,39 @@ class AppProvider extends ChangeNotifier {
     Navigator.of(context).pop();
   }
 
-  static Color fromHexS(String hexString) {
-    return Color(int.parse(hexString, radix: 16));
-  }
-
-  String toHexS(Color c) => '${c.alpha.toRadixString(16).padLeft(2, '0')}'
-      '${c.red.toRadixString(16).padLeft(2, '0')}'
-      '${c.green.toRadixString(16).padLeft(2, '0')}'
-      '${c.blue.toRadixString(16).padLeft(2, '0')}';
-
   Color? getHighlight(Verse v) {
     final key = "${v.book}:${v.chapter}:${v.index}:highlight";
     if (box.hasData(key)) {
       // box.remove(key);
       // print(box.read(key));
-      return fromHexS(box.read(key));
+      final index = box.read<int>(key);
+      if (index == null) {
+        return null;
+      }
+      return darkMode ? darkHighlights[index] : lightHighlights[index];
     }
     return null;
   }
 
-  void setHighlight(BuildContext context, List<Verse> verses, Color c) {
+  TextStyle getHighlightStyle(BuildContext context, Verse v) {
+    if (isVerseSelected(v)) {
+      return TextStyle(
+        backgroundColor: darkMode ? Colors.grey.shade800 : Colors.grey.shade200,
+      );
+    }
+    if (darkMode) {
+      return TextStyle(
+        color: getHighlight(v) ?? context.theme.colorScheme.onBackground,
+      );
+    }
+    return TextStyle(
+      backgroundColor: getHighlight(v) ?? context.theme.colorScheme.background,
+    );
+  }
+
+  void setHighlight(BuildContext context, List<Verse> verses, int index) {
     for (final v in verses) {
-      box.write("${v.book}:${v.chapter}:${v.index}:highlight", toHexS(c));
+      box.write("${v.book}:${v.chapter}:${v.index}:highlight", index);
     }
     box.save();
   }
