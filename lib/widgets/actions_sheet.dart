@@ -26,7 +26,7 @@ class ActionsSheet extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: isDesktop ? MainAxisAlignment.spaceEvenly : MainAxisAlignment.spaceBetween,
             children: [
               IconButtonText(
                 leading: IconButton(
@@ -34,7 +34,7 @@ class ActionsSheet extends StatelessWidget {
                   onPressed: () => context.appEvent.removeSelectedHighlights(context),
                   icon: Icon(Icons.cancel_outlined, size: 28, color: iconColor),
                 ),
-                trailing: Text("Clear", style: bodySmall),
+                trailing: Text("", style: bodySmall),
               ),
               IconButtonText(
                 leading: IconButton(
@@ -42,7 +42,7 @@ class ActionsSheet extends StatelessWidget {
                   onPressed: () => context.appEvent.showHighlights(context),
                   icon: Icon(Icons.border_color_outlined, size: 28, color: iconColor),
                 ),
-                trailing: Text("Highlight", style: bodySmall),
+                trailing: Text("", style: bodySmall),
               ),
               IconButtonText(
                 leading: IconButton(
@@ -60,7 +60,7 @@ class ActionsSheet extends StatelessWidget {
                   icon: Icon(audioIcon, size: 34, color: audioEnabled ? iconColor : Colors.grey),
                 ),
                 trailing: Text(
-                  audioText,
+                  "",
                   style: bodySmall!.copyWith(
                     color: audioEnabled ? bodySmall.color : Colors.grey,
                   ),
@@ -72,7 +72,7 @@ class ActionsSheet extends StatelessWidget {
                   onPressed: () => context.appEvent.showNoteField(context, context.appEvent.selectedVerses.first),
                   icon: Icon(Icons.post_add_outlined, size: 34, color: iconColor),
                 ),
-                trailing: Text("Note", style: bodySmall),
+                trailing: Text("", style: bodySmall),
               ),
               IconButtonText(
                 leading: IconButton(
@@ -80,7 +80,7 @@ class ActionsSheet extends StatelessWidget {
                   onPressed: () => context.appEvent.shareVerses(context),
                   icon: Icon(Icons.share_outlined, size: 34, color: iconColor),
                 ),
-                trailing: Text("Share", style: bodySmall),
+                trailing: Text("", style: bodySmall),
               ),
             ],
           ),
