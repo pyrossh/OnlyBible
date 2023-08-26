@@ -42,8 +42,8 @@ final lightTheme = ThemeData(
   //   selectionColor: const Color(0xAAF8D0DC),
   // ),
   inputDecorationTheme: const InputDecorationTheme(
-    focusColor: Colors.black,
-    hoverColor: Colors.black,
+    focusColor: Colors.transparent,
+    hoverColor: Colors.transparent,
     activeIndicatorBorder: BorderSide(
       color: Colors.black,
     ),

@@ -1,14 +1,7 @@
-import "dart:developer";
-import "package:firebase_crashlytics/firebase_crashlytics.dart";
-import "package:firebase_storage/firebase_storage.dart";
-import "package:flutter/services.dart";
 import "package:flutter/material.dart";
-import "package:just_audio/just_audio.dart";
 import "package:only_bible_app/screens/chapter_view_screen.dart";
-import "package:only_bible_app/dialog.dart";
 import "package:only_bible_app/models.dart";
 import "package:provider/provider.dart";
-import "package:share_plus/share_plus.dart";
 import "package:shared_preferences/shared_preferences.dart";
 import "package:only_bible_app/utils.dart";
 import "package:only_bible_app/providers/app_model.dart";
@@ -16,9 +9,6 @@ import "package:only_bible_app/providers/app_model.dart";
 class ChapterViewModel extends ChangeNotifier {
   final int book;
   final int chapter;
-  final List<Verse> selectedVerses;
-  final player = AudioPlayer();
-  bool isPlaying = false;
 
   static ChapterViewModel of(BuildContext context) {
     return Provider.of(context, listen: true);
@@ -38,7 +28,7 @@ class ChapterViewModel extends ChangeNotifier {
     return AppModel.of(context).bible.books[model.book].chapters[model.chapter];
   }
 
-  ChapterViewModel({required this.book, required this.chapter, required this.selectedVerses}) {
+  ChapterViewModel({required this.book, required this.chapter}) {
     save(book, chapter);
   }
 
@@ -49,17 +39,7 @@ class ChapterViewModel extends ChangeNotifier {
   }
 
   navigateBookChapter(BuildContext context, int book, int chapter, TextDirection? dir) {
-    if (isPlaying) {
-      pause();
-    }
-    AppModel.ofEvent(context).hideActions(context);
-    Navigator.of(context).push(
-      createSlideRoute(
-        context: context,
-        slideDir: dir,
-        page: ChapterViewScreen(book: book, chapter: chapter),
-      ),
-    );
+    context.appEvent.pushBookChapter(context, book, chapter, dir);
   }
 
   onNext(BuildContext context, int book, int chapter) {
@@ -88,106 +68,6 @@ class ChapterViewModel extends ChangeNotifier {
       if (selectedBook.index - 1 >= 0) {
         final prevBook = selectedBible.books[selectedBook.index - 1];
         navigateBookChapter(context, prevBook.index, prevBook.chapters.length - 1, TextDirection.rtl);
-      }
-    }
-  }
-
-  bool hasSelectedVerses() {
-    return selectedVerses.isNotEmpty;
-  }
-
-  void clearSelections(BuildContext context) {
-    AppModel.ofEvent(context).removeHighlight(context, selectedVerses);
-    selectedVerses.clear();
-    AppModel.ofEvent(context).hideActions(context);
-    notifyListeners();
-  }
-
-  void closeActions(BuildContext context) {
-    selectedVerses.clear();
-    AppModel.ofEvent(context).hideActions(context);
-    notifyListeners();
-  }
-
-  bool isVerseSelected(Verse v) {
-    return selectedVerses.any((el) => el.index == v.index);
-  }
-
-  bool isVerseHighlighted(BuildContext context) {
-    // box.read("${book}:${chapter}:${verse}", "color");
-    return false;
-  }
-
-  void onVerseSelected(BuildContext context, Verse v) {
-    if (selectedVerses.isEmpty) {
-      AppModel.ofEvent(context).showActions(context);
-    }
-    if (isVerseSelected(v)) {
-      selectedVerses.removeWhere((it) => it.index == v.index);
-    } else {
-      selectedVerses.add(v);
-    }
-    if (selectedVerses.isEmpty) {
-      AppModel.ofEvent(context).hideActions(context);
-    }
-    notifyListeners();
-  }
-
-  void copyVerses() {
-    final text = selectedVerses.map((e) => e.text).join("\n");
-    Clipboard.setData(ClipboardData(text: text));
-    // maybe close the action menu or show a snackbar on iOS (android already does this)
-    // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Copied to clipboard")));
-  }
-
-  void shareVerses(BuildContext context) {
-    final bible = AppModel.ofEvent(context).bible;
-    final name = bible.books[selectedVerses.first.book].name;
-    final chapter = selectedVerses.first.chapter + 1;
-    final title = "$name $chapter: ${selectedVerses.map((e) => e.index + 1).join(", ")}";
-    final text = selectedVerses.map((e) => e.text).join("\n");
-    Share.share("$title\n$text", subject: title);
-  }
-
-  pause() async {
-    await player.pause();
-    isPlaying = false;
-    notifyListeners();
-  }
-
-  onPlay(BuildContext context) async {
-    final bible = AppModel.ofEvent(context).bible;
-    if (!bible.hasAudio) {
-      showError(
-        context,
-        "This Bible doesn't support audio. Currently audio is only available for the Kannada Bible.",
-      );
-      return;
-    }
-    if (isPlaying) {
-      pause();
-    } else {
-      isPlaying = true;
-      notifyListeners();
-      for (final v in selectedVerses) {
-        final bibleName = bible.name;
-        final book = (v.book + 1).toString().padLeft(2, "0");
-        final chapter = (v.chapter + 1).toString().padLeft(3, "0");
-        final verseNo = (v.index + 1).toString().padLeft(3, "0");
-        final pathname = "$bibleName/$book-$chapter-$verseNo.mp3";
-        try {
-          final url = await FirebaseStorage.instance.ref(pathname).getDownloadURL();
-          await player.setUrl(url);
-          await player.play();
-          await player.stop();
-        } catch (err) {
-          log("Could not play audio", name: "play", error: (err.toString(), pathname));
-          FirebaseCrashlytics.instance.recordFlutterError(FlutterErrorDetails(exception: (err.toString(), pathname)));
-          showError(context, "Could not play audio");
-          return;
-        } finally {
-          pause();
-        }
       }
     }
   }

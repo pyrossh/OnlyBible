@@ -1,18 +1,24 @@
 // import "package:firebase_performance/firebase_performance.dart";
+import "dart:developer";
+import "package:firebase_crashlytics/firebase_crashlytics.dart";
+import "package:firebase_storage/firebase_storage.dart";
+import "package:just_audio/just_audio.dart";
+import "package:only_bible_app/dialog.dart";
+import "package:only_bible_app/screens/chapter_view_screen.dart";
+import "package:share_plus/share_plus.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
-import "package:flutter/services.dart";
 import "package:flutter/material.dart";
+import "package:flutter/services.dart";
 import "package:only_bible_app/screens/bible_select_screen.dart";
 import "package:only_bible_app/screens/book_select_screen.dart";
 import "package:only_bible_app/models.dart";
 import "package:only_bible_app/widgets/actions_sheet.dart";
-import "package:only_bible_app/widgets/highlight_button.dart";
+import "package:only_bible_app/widgets/highlight_sheet.dart";
 import "package:only_bible_app/widgets/scaffold_markdown.dart";
 import "package:only_bible_app/widgets/note_sheet.dart";
 import "package:only_bible_app/widgets/settings_sheet.dart";
 import "package:package_info_plus/package_info_plus.dart";
 import "package:provider/provider.dart";
-import "package:share_plus/share_plus.dart";
 import "package:shared_preferences/shared_preferences.dart";
 import "package:get_storage/get_storage.dart";
 import "package:only_bible_app/utils.dart";
@@ -34,7 +40,10 @@ class AppModel extends ChangeNotifier {
   bool fontBold = false;
   double textScaleFactor = 0;
   bool actionsShown = false;
-  bool highlightMenuShown = false;
+  bool highlightsShown = false;
+  final player = AudioPlayer();
+  bool isPlaying = false;
+  final List<Verse> selectedVerses = [];
   final TextEditingController noteTextController = TextEditingController();
   List<HistoryFrame> history = [];
   final box = GetStorage("only-bible-app-backup");
@@ -87,7 +96,6 @@ class AppModel extends ChangeNotifier {
     // }
     return Bible.withBooks(
       name: name,
-      hasAudio: true,
       books: books,
     );
   }
@@ -164,6 +172,10 @@ class AppModel extends ChangeNotifier {
     ];
   }
 
+  hasAudio(BuildContext context) {
+    return context.l10n.hasAudio == "true";
+  }
+
   changeBible(BuildContext context) {
     Navigator.of(context).pushReplacement(
       createNoTransitionPageRoute(
@@ -193,6 +205,36 @@ class AppModel extends ChangeNotifier {
     Navigator.of(context).push(
       createNoTransitionPageRoute(
         BookSelectScreen(bible: bible),
+      ),
+    );
+  }
+
+  clearEvents(
+    BuildContext context,
+  ) {
+    if (isPlaying) {
+      pause();
+    }
+    clearSelections();
+    hideActions(context);
+  }
+
+  pushBookChapter(BuildContext context, int book, int chapter, TextDirection? dir) {
+    clearEvents(context);
+    Navigator.of(context).push(
+      createSlideRoute(
+        context: context,
+        slideDir: dir,
+        page: ChapterViewScreen(book: book, chapter: chapter),
+      ),
+    );
+  }
+
+  replaceBookChapter(BuildContext context, int book, int chapter) {
+    clearEvents(context);
+    Navigator.of(context).pushReplacement(
+      createNoTransitionPageRoute(
+        ChapterViewScreen(book: book, chapter: chapter),
       ),
     );
   }
@@ -286,6 +328,24 @@ class AppModel extends ChangeNotifier {
     }
   }
 
+  showHighlights(BuildContext context) {
+    highlightsShown = true;
+    Scaffold.of(context).showBottomSheet(
+      enableDrag: false,
+      clipBehavior: Clip.antiAliasWithSaveLayer,
+      (context) => const HighlightSheet(),
+    );
+    notifyListeners();
+  }
+
+  hideHighlights(BuildContext context) {
+    if (highlightsShown) {
+      highlightsShown = false;
+      Navigator.of(context).pop();
+      notifyListeners();
+    }
+  }
+
   bool hasNote(Verse v) {
     return box.hasData("${v.book}:${v.chapter}:${v.index}:note");
   }
@@ -308,11 +368,10 @@ class AppModel extends ChangeNotifier {
     final note = noteTextController.text;
     box.write("${v.book}:${v.chapter}:${v.index}:note", note);
     box.save();
-    // Close the bottom sheet
-    // if (!mounted) return;
-    // Navigator.of(context).pop();
-    notifyListeners();
     hideNoteField(context);
+    clearSelections();
+    hideActions(context);
+    notifyListeners();
   }
 
   deleteNote(BuildContext context, Verse v) {
@@ -359,55 +418,6 @@ class AppModel extends ChangeNotifier {
     box.save();
   }
 
-  void showHighlightMenu(BuildContext context, List<Verse> verses, Offset position) {
-    hideHighlightMenu(context);
-    highlightMenuShown = true;
-    final overlay = Overlay.of(context).context.findRenderObject();
-    onTap(c) => setHighlight(context, verses, c);
-
-    showMenu(
-        context: context,
-        position: RelativeRect.fromRect(
-          Rect.fromLTWH(position.dx, position.dy + 30, 100, 100),
-          Rect.fromLTWH(0, 0, overlay!.paintBounds.size.width, overlay.paintBounds.size.height),
-        ),
-        items: [
-          PopupMenuItem(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                HighlightButton(
-                  color: const Color(0xFFDAEFFE),
-                  onColorSelected: onTap,
-                ),
-                HighlightButton(
-                  color: const Color(0xFFFFFBB1),
-                  onColorSelected: onTap,
-                ),
-                HighlightButton(
-                  color: const Color(0xFFFFDEF3),
-                  onColorSelected: onTap,
-                ),
-                HighlightButton(
-                  color: const Color(0xFFE6FCC3),
-                  onColorSelected: onTap,
-                ),
-                HighlightButton(
-                  color: const Color(0xFFEADDFF),
-                  onColorSelected: onTap,
-                ),
-              ],
-            ),
-          ),
-        ]);
-  }
-
-  void hideHighlightMenu(BuildContext context) {
-    if (highlightMenuShown) {
-      Navigator.of(context).pop();
-    }
-  }
-
   void shareAppLink(BuildContext context) {
     if (isAndroid()) {
       Share.share(
@@ -449,5 +459,95 @@ class AppModel extends ChangeNotifier {
         const ScaffoldMarkdown(title: "About Us", file: "about-us.md"),
       ),
     );
+  }
+
+  bool hasSelectedVerses() {
+    return selectedVerses.isNotEmpty;
+  }
+
+  void clearSelections() {
+    selectedVerses.clear();
+    notifyListeners();
+  }
+
+  void removeSelectedHighlights(BuildContext context) {
+    AppModel.ofEvent(context).removeHighlight(context, selectedVerses);
+    selectedVerses.clear();
+    AppModel.ofEvent(context).hideActions(context);
+    notifyListeners();
+  }
+
+  void closeActions(BuildContext context) {
+    selectedVerses.clear();
+    AppModel.ofEvent(context).hideActions(context);
+    notifyListeners();
+  }
+
+  bool isVerseSelected(Verse v) {
+    return selectedVerses.any((el) => el.index == v.index);
+  }
+
+  bool isVerseHighlighted(BuildContext context) {
+    // box.read("${book}:${chapter}:${verse}", "color");
+    return false;
+  }
+
+  void onVerseSelected(BuildContext context, Verse v) {
+    if (selectedVerses.isEmpty) {
+      AppModel.ofEvent(context).showActions(context);
+    }
+    if (isVerseSelected(v)) {
+      selectedVerses.removeWhere((it) => it.index == v.index);
+    } else {
+      selectedVerses.add(v);
+    }
+    if (selectedVerses.isEmpty) {
+      AppModel.ofEvent(context).hideActions(context);
+    }
+    notifyListeners();
+  }
+
+  void shareVerses(BuildContext context) {
+    final name = bible.books[selectedVerses.first.book].name;
+    final chapter = selectedVerses.first.chapter + 1;
+    final title = "$name $chapter: ${selectedVerses.map((e) => e.index + 1).join(", ")}";
+    final text = selectedVerses.map((e) => e.text).join("\n");
+    Share.share("$title\n$text", subject: title);
+  }
+
+  pause() async {
+    await player.pause();
+    isPlaying = false;
+    notifyListeners();
+  }
+
+  onPlay(BuildContext context) async {
+    if (isPlaying) {
+      pause();
+    } else {
+      isPlaying = true;
+      notifyListeners();
+      // add locks todo
+      for (final v in selectedVerses) {
+        final bibleName = bible.name;
+        final book = (v.book + 1).toString().padLeft(2, "0");
+        final chapter = (v.chapter + 1).toString().padLeft(3, "0");
+        final verseNo = (v.index + 1).toString().padLeft(3, "0");
+        final pathname = "$bibleName/$book-$chapter-$verseNo.mp3";
+        try {
+          final url = await FirebaseStorage.instance.ref(pathname).getDownloadURL();
+          await player.setUrl(url);
+          await player.play();
+          await player.stop();
+        } catch (err) {
+          log("Could not play audio", name: "play", error: (err.toString(), pathname));
+          FirebaseCrashlytics.instance.recordFlutterError(FlutterErrorDetails(exception: (err.toString(), pathname)));
+          showError(context, "Could not play audio");
+          return;
+        } finally {
+          pause();
+        }
+      }
+    }
   }
 }

@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import "package:only_bible_app/models.dart";
 import "package:only_bible_app/providers/app_model.dart";
+import "package:only_bible_app/utils.dart";
 import "package:only_bible_app/widgets/modal_button.dart";
 
 class NoteSheet extends StatelessWidget {
@@ -24,7 +25,7 @@ class NoteSheet extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(bottom: 5, left: 15),
             child: Text(
-              "Note on ${app.bible.books[verse.book].name} ${verse.chapter + 1}:${verse.index + 1}",
+              "Note on ${app.bible.books[verse.book].name(context)} ${verse.chapter + 1}:${verse.index + 1}",
               style: Theme.of(context).textTheme.headlineMedium,
             ),
           ),
@@ -57,7 +58,11 @@ class NoteSheet extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       ModalButton(
-                        onPressed: () => app.saveNote(context, verse),
+                        onPressed: () {
+                          context.appEvent.saveNote(context, verse);
+                          // context.chapterEvent.clearSelections();
+                          // context.appEvent.hideActions(context);
+                        },
                         icon: Icons.save_outlined,
                         label: "Save",
                       ),

@@ -1,5 +1,4 @@
 import "package:flutter/material.dart";
-import "package:only_bible_app/providers/app_model.dart";
 import "package:only_bible_app/utils.dart";
 import "package:settings_ui/settings_ui.dart";
 
@@ -8,9 +7,6 @@ class SettingsSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final app = AppModel.of(context);
-    final localizations = AppModel.getLocalizations(context);
-    final iconColor = Theme.of(context).textTheme.bodyMedium!.color;
     return SettingsList(
       contentPadding: EdgeInsets.zero,
       platform: DevicePlatform.iOS,
@@ -22,26 +18,26 @@ class SettingsSheet extends StatelessWidget {
       ),
       sections: [
         SettingsSection(
-          title: Text(localizations.settingsTitle, style: Theme.of(context).textTheme.headlineMedium),
+          title: Text(context.l10n.settingsTitle, style: context.theme.textTheme.headlineMedium),
           margin: const EdgeInsetsDirectional.symmetric(horizontal: 20),
           tiles: [
             SettingsTile.navigation(
               leading: const Icon(Icons.book_outlined, color: Colors.blueAccent),
-              title: Text(localizations.bibleTitle),
-              value: Text(app.bible.name),
-              onPressed: app.changeBible,
+              title: Text(context.l10n.bibleTitle),
+              value: Text(context.app.bible.name),
+              onPressed: context.app.changeBible,
             ),
             SettingsTile.navigation(
               leading: const Icon(Icons.color_lens_outlined, color: Colors.pink),
-              title: Text(localizations.themeTitle),
+              title: Text(context.l10n.themeTitle),
               trailing: ToggleButtons(
                 onPressed: (int index) {
-                  app.toggleDarkMode();
+                  context.appEvent.toggleDarkMode();
                 },
                 highlightColor: Colors.transparent,
                 borderColor: Colors.grey,
                 borderRadius: const BorderRadius.all(Radius.circular(25)),
-                selectedColor: app.darkMode ? Colors.lightBlue.shade300 : Colors.yellowAccent.shade700,
+                selectedColor: context.app.darkMode ? Colors.lightBlue.shade300 : Colors.yellowAccent.shade700,
                 selectedBorderColor: Colors.grey,
                 color: Colors.grey,
                 fillColor: Colors.transparent,
@@ -49,7 +45,7 @@ class SettingsSheet extends StatelessWidget {
                   minHeight: 36.0,
                   minWidth: 50.0,
                 ),
-                isSelected: [!app.darkMode, app.darkMode],
+                isSelected: [!context.app.darkMode, context.app.darkMode],
                 children: const [
                   Icon(Icons.light_mode),
                   Icon(Icons.dark_mode),
@@ -57,63 +53,59 @@ class SettingsSheet extends StatelessWidget {
               ),
             ),
             SettingsTile(
-              title: Text(localizations.incrementFontTitle),
-              leading: Icon(Icons.font_download, color: iconColor),
+              title: Text(context.l10n.incrementFontTitle),
+              leading: Icon(Icons.font_download, color: context.theme.colorScheme.onBackground),
               trailing: IconButton(
-                onPressed: app.increaseFont,
+                onPressed: context.appEvent.increaseFont,
                 icon: const Icon(Icons.add_circle_outline, size: 32, color: Colors.redAccent),
               ),
             ),
             SettingsTile(
-              title: Text(localizations.decrementFontTitle),
-              leading: Icon(Icons.font_download, color: iconColor),
+              title: Text(context.l10n.decrementFontTitle),
+              leading: Icon(Icons.font_download, color: context.theme.colorScheme.onBackground),
               trailing: IconButton(
-                onPressed: app.decreaseFont,
+                onPressed: context.appEvent.decreaseFont,
                 icon: const Icon(Icons.remove_circle_outline, size: 32, color: Colors.blueAccent),
               ),
             ),
             SettingsTile.switchTile(
-              onToggle: (value) {
-                app.toggleBold();
-              },
-              initialValue: app.fontBold,
-              leading: Icon(Icons.format_bold, color: iconColor),
-              title: Text(localizations.boldFontTitle),
+              initialValue: context.app.fontBold,
+              leading: Icon(Icons.format_bold, color: context.theme.colorScheme.onBackground),
+              title: Text(context.l10n.boldFontTitle),
+              onToggle: (value) => context.appEvent.toggleBold(),
             ),
             SettingsTile.switchTile(
-              onToggle: (value) {
-                app.toggleEngBookNames();
-              },
-              initialValue: app.engTitles,
-              leading: Icon(Icons.abc, color: iconColor),
-              title: Text(localizations.engTitles),
+              initialValue: context.app.engTitles,
+              leading: Icon(Icons.abc, color: context.theme.colorScheme.onBackground),
+              title: Text(context.l10n.engTitles),
+              onToggle: (value) => context.appEvent.toggleEngBookNames(),
             ),
           ],
         ),
         SettingsSection(
-          // title: Text("About", style: Theme.of(context).textTheme.headlineMedium),
+          title: Text(context.l10n.aboutUsTitle, style: context.theme.textTheme.headlineMedium),
           margin: const EdgeInsetsDirectional.symmetric(horizontal: 20, vertical: 20),
           tiles: [
             SettingsTile.navigation(
               leading: const Icon(Icons.policy_outlined, color: Colors.brown),
-              title: Text(localizations.privacyPolicyTitle),
-              onPressed: app.showPrivacyPolicy,
+              title: Text(context.l10n.privacyPolicyTitle),
+              onPressed: context.appEvent.showPrivacyPolicy,
             ),
             SettingsTile.navigation(
               leading: const Icon(Icons.share_outlined, color: Colors.blueAccent),
-              title: Text(localizations.shareAppTitle),
-              onPressed: app.shareAppLink,
+              title: Text(context.l10n.shareAppTitle),
+              onPressed: context.appEvent.shareAppLink,
             ),
             if (!isDesktop()) // TODO: mabe support OSx if we release in that store
               SettingsTile.navigation(
                 leading: Icon(Icons.star, color: Colors.yellowAccent.shade700),
-                title: Text(localizations.rateAppTitle),
-                onPressed: app.rateApp,
+                title: Text(context.l10n.rateAppTitle),
+                onPressed: context.appEvent.rateApp,
               ),
             SettingsTile.navigation(
-              leading: Icon(Icons.info_outline, color: Theme.of(context).colorScheme.onBackground),
-              title: Text(localizations.aboutUsTitle),
-              onPressed: app.showAboutUs,
+              leading: Icon(Icons.info_outline, color: context.theme.colorScheme.onBackground),
+              title: Text(context.l10n.aboutUsTitle),
+              onPressed: context.appEvent.showAboutUs,
             ),
           ],
         ),

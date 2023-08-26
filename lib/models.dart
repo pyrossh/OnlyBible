@@ -3,17 +3,14 @@ import "package:only_bible_app/providers/app_model.dart";
 
 class Bible {
   final String name;
-  final bool hasAudio;
   List<Book> books = [];
 
   Bible({
     required this.name,
-    required this.hasAudio,
   });
 
   Bible.withBooks({
     required this.name,
-    required this.hasAudio,
     required this.books,
   });
 
@@ -50,7 +47,7 @@ class Book {
   String shortName(BuildContext context) {
     final name = this.name(context);
     if (name[0] == "1" || name[0] == "2" || name[0] == "3") {
-      return "${name[0]}${name[2].toUpperCase()}${name.substring(3, 5).toLowerCase()}";
+      return "${name[0]}${name[2].toUpperCase()}${name.substring(3, 4).toLowerCase()}";
     }
     return "${name[0].toUpperCase()}${name.substring(1, 3).toLowerCase()}";
   }

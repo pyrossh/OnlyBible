@@ -36,7 +36,6 @@ class ChapterViewScreen extends StatelessWidget {
       create: (_) => ChapterViewModel(
         book: book,
         chapter: chapter,
-        selectedVerses: [],
       ),
       child: Scaffold(
         appBar: isDesktop ? null : const ChapterAppBar(),

@@ -3,7 +3,7 @@ import "package:flutter/material.dart";
 import "package:flutter_swipe_detector/flutter_swipe_detector.dart";
 import "package:only_bible_app/providers/app_model.dart";
 import "package:only_bible_app/providers/chapter_view_model.dart";
-import "package:provider/provider.dart";
+import "package:only_bible_app/utils.dart";
 
 class VersesView extends StatelessWidget {
   const VersesView({super.key});
@@ -75,7 +75,7 @@ class VersesView extends StatelessWidget {
                           ),
                         TextSpan(
                           text: "${v.text}\n",
-                          style: context.watch<ChapterViewModel>().isVerseSelected(v)
+                          style: context.app.isVerseSelected(v)
                               ? TextStyle(
                             backgroundColor: app.darkMode ? Colors.grey.shade800 : Colors.grey.shade200,
                           )
@@ -84,7 +84,7 @@ class VersesView extends StatelessWidget {
                           ),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
-                              model.onVerseSelected(context, v);
+                              context.appEvent.onVerseSelected(context, v);
                               // AppModel.ofEvent(context).showHighlightMenu(context, v, details.globalPosition);
                             },
                         ),
