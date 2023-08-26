@@ -16,7 +16,7 @@ class BibleSelectScreen extends StatelessWidget {
       child: CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [
-          SliverHeading(title: AppLocalizations.of(context)!.bibleSelectTitle, showClose: true),
+          SliverHeading(title: context.l10n.bibleSelectTitle, showClose: true),
           SliverTileGrid(
             listType: ListType.large,
             children: List.of(
@@ -26,7 +26,7 @@ class BibleSelectScreen extends StatelessWidget {
                   locale: Locale(l.languageCode),
                   child: Builder(
                     builder: (context) {
-                      final bibleName = AppLocalizations.of(context)!.languageTitle;
+                      final bibleName = context.l10n.languageTitle;
                       return TextButton(
                         child: Text(bibleName),
                         // child: Column(
