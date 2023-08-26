@@ -11,7 +11,6 @@ import "package:only_bible_app/providers/app_provider.dart";
 import "package:provider/provider.dart";
 
 void main() async {
-  usePathUrlStrategy();
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -25,6 +24,7 @@ void main() async {
     return true;
   };
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  usePathUrlStrategy();
   print(Intl.getCurrentLocale());
   final model = AppProvider();
   final (book, chapter) = await model.loadData();
