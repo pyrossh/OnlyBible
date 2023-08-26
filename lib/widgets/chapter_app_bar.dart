@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
 import "package:only_bible_app/providers/app_provider.dart";
-import "package:only_bible_app/providers/chapter_view_model.dart";
+import "package:only_bible_app/providers/chapter_provider.dart";
 import "package:only_bible_app/utils.dart";
 
 class ChapterAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -14,7 +14,7 @@ class ChapterAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     final app = AppProvider.of(context);
-    final model = ChapterViewModel.of(context);
+    final model = ChapterProvider.of(context);
     final selectedBook = app.bible.books[model.book];
     final bookName = selectedBook.name(context);
     final isDesktop = isWide(context);

@@ -6,15 +6,15 @@ import "package:shared_preferences/shared_preferences.dart";
 import "package:only_bible_app/utils.dart";
 import "package:only_bible_app/providers/app_provider.dart";
 
-class ChapterViewModel extends ChangeNotifier {
+class ChapterProvider extends ChangeNotifier {
   final int book;
   final int chapter;
 
-  static ChapterViewModel of(BuildContext context) {
+  static ChapterProvider of(BuildContext context) {
     return Provider.of(context, listen: true);
   }
 
-  static ChapterViewModel ofEvent(BuildContext context) {
+  static ChapterProvider ofEvent(BuildContext context) {
     return Provider.of(context, listen: false);
   }
 
@@ -28,7 +28,7 @@ class ChapterViewModel extends ChangeNotifier {
     return AppProvider.of(context).bible.books[model.book].chapters[model.chapter];
   }
 
-  ChapterViewModel({required this.book, required this.chapter}) {
+  ChapterProvider({required this.book, required this.chapter}) {
     save(book, chapter);
   }
 

@@ -2,7 +2,7 @@ import "package:flutter/gestures.dart";
 import "package:flutter/material.dart";
 import "package:flutter_swipe_detector/flutter_swipe_detector.dart";
 import "package:only_bible_app/providers/app_provider.dart";
-import "package:only_bible_app/providers/chapter_view_model.dart";
+import "package:only_bible_app/providers/chapter_provider.dart";
 import "package:only_bible_app/utils.dart";
 
 class VersesView extends StatelessWidget {
@@ -11,8 +11,8 @@ class VersesView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final app = AppProvider.of(context);
-    final model = ChapterViewModel.of(context);
-    final chapter = ChapterViewModel.selectedChapter(context);
+    final model = ChapterProvider.of(context);
+    final chapter = ChapterProvider.selectedChapter(context);
     final textStyle = DefaultTextStyle.of(context).style;
     return SwipeDetector(
       onSwipeLeft: (offset) {

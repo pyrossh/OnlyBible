@@ -1,5 +1,5 @@
 import "package:flutter/material.dart";
-import "package:only_bible_app/providers/chapter_view_model.dart";
+import "package:only_bible_app/providers/chapter_provider.dart";
 import "package:only_bible_app/utils.dart";
 import "package:only_bible_app/widgets/chapter_app_bar.dart";
 import "package:only_bible_app/widgets/sidebar.dart";
@@ -33,7 +33,7 @@ class ChapterViewScreen extends StatelessWidget {
     // ),
     final isDesktop = isWide(context);
     return ChangeNotifierProvider(
-      create: (_) => ChapterViewModel(
+      create: (_) => ChapterProvider(
         book: book,
         chapter: chapter,
       ),
