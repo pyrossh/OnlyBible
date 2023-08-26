@@ -8,6 +8,12 @@
     ],
     "frameworksBackend": {
       "region": "us-east1"
-    }
+    },
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
   }
 }
