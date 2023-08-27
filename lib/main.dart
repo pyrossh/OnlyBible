@@ -26,7 +26,7 @@ void main() async {
   usePathUrlStrategy();
   await initState();
   updateStatusBar(darkMode.value);
-  await loadBible();
+  bibleCache.value = loadBible(bibleName.value);
   runApp(const App());
   FlutterNativeSplash.remove();
 }

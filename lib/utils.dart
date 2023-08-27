@@ -1,13 +1,9 @@
-import "dart:convert";
 import "package:only_bible_app/dialog.dart";
 import "package:only_bible_app/state.dart";
 import "package:url_launcher/url_launcher.dart";
 import "package:flutter/foundation.dart" show defaultTargetPlatform, TargetPlatform;
 import "package:flutter/material.dart";
-import "package:flutter/services.dart";
-import "package:only_bible_app/models.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
-import "package:provider/provider.dart";
 
 extension MyIterable<E> on Iterable<E> {
   Iterable<E> sortedBy(Comparable Function(E e) key) => toList()..sort((a, b) => key(a).compareTo(key(b)));
@@ -20,11 +16,7 @@ extension MyIterable<E> on Iterable<E> {
 extension AppContext on BuildContext {
   ThemeData get theme => Theme.of(this);
 
-  AppLocalizations get l => engTitles.value && languageCode.value != "en"
-      ? lookupAppLocalizations(const Locale("en"))
-      : AppLocalizations.of(this)!;
-
-  AppLocalizations get lEvent => engTitles.value && languageCode.value != "en"
+  AppLocalizations get l => engTitles.watch(this) && languageCode.watch(this) != "en"
       ? lookupAppLocalizations(const Locale("en"))
       : AppLocalizations.of(this)!;
 
@@ -125,6 +117,17 @@ extension AppContext on BuildContext {
       l.revelation,
     ];
   }
+
+  openUrl(String url) async {
+    final uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      if (await launchUrl(uri)) {
+        return;
+      }
+    }
+    if (!mounted) return;
+    showError(this, l.urlError);
+  }
 }
 
 bool isDesktop() {
@@ -139,53 +142,4 @@ bool isIOS() {
 
 bool isAndroid() {
   return defaultTargetPlatform == TargetPlatform.android;
-}
-
-createNoTransitionPageRoute(Widget page) {
-  return PageRouteBuilder(
-    opaque: false,
-    transitionDuration: Duration.zero,
-    reverseTransitionDuration: Duration.zero,
-    pageBuilder: (context, _, __) => page,
-  );
-}
-
-createSlideRoute({required BuildContext context, TextDirection? slideDir, required Widget page}) {
-  if (context.isWide || slideDir == null) {
-    return PageRouteBuilder(
-      pageBuilder: (context, _, __) {
-        return page;
-      },
-    );
-  }
-  return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => page,
-    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      const begin = Offset(1.0, 0.0);
-      const end = Offset.zero;
-      const curve = Curves.ease;
-      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-      return SlideTransition(
-        textDirection: slideDir,
-        position: animation.drive(tween),
-        child: child,
-      );
-    },
-  );
-}
-
-getBibleFromAsset(String file) async {
-  final bytes = await rootBundle.load("assets/bibles/$file.txt");
-  return getBibleFromText(utf8.decode(bytes.buffer.asUint8List(), allowMalformed: false));
-}
-
-openUrl(BuildContext context, String url) async {
-  final uri = Uri.parse(url);
-  if (await canLaunchUrl(uri)) {
-    if (await launchUrl(uri)) {
-      return;
-    }
-  }
-  if (!context.mounted) return;
-  showError(context, context.l.urlError);
 }

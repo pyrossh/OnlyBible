@@ -9,6 +9,14 @@ ensureAtomsInitialized(GetStorage box) async {
   await localBox.initStorage;
 }
 
+class Cubit<T> extends ValueNotifier<T> {
+  Cubit(T initialState) : super(initialState);
+
+  void emit(T state) {
+    super.value = state;
+  }
+}
+
 class Atom<T> extends ValueNotifier<T> {
   final String key;
   final bool persist;

@@ -1,7 +1,9 @@
+import "dart:convert";
 import "dart:developer";
 import "package:firebase_crashlytics/firebase_crashlytics.dart";
 import "package:firebase_storage/firebase_storage.dart";
 import "package:flutter/material.dart";
+import "package:flutter/services.dart";
 import "package:get_storage/get_storage.dart";
 import "package:just_audio/just_audio.dart";
 import "package:only_bible_app/atom.dart";
@@ -53,27 +55,44 @@ final Atom<Bible> bible = Atom<Bible>(
   },
 );
 
+final bibleCache = Atom<Future<Bible?>?>(
+  key: "bible",
+  persist: false,
+  initialValue: null,
+);
+
 updateCurrentBible(BuildContext context, Locale l, String name) async {
   languageCode.value = l.languageCode;
-  bibleName.value = name;
-  await loadBible();
+  bibleName.update!(name);
+  bibleCache.value = loadBible(name);
 }
 
-loadBible() async {
-  // Trace customTrace;
-  // if (!isDesktop()) {
-  //   customTrace = FirebasePerformance.instance.newTrace("loadBible");
-  //   await customTrace.start();
-  // }
-  final books = await getBibleFromAsset(bibleName.value);
-  // if (!isDesktop()) {
-  //   await customTrace.stop();
-  // }
-  bible.update!(Bible.withBooks(
+Future<Bible> getBibleFromAsset(String file) async {
+  final bytes = await rootBundle.load("assets/bibles/$file.txt");
+  final books = getBibleFromText(utf8.decode(bytes.buffer.asUint8List(), allowMalformed: false));
+  // await Future.delayed(Duration(seconds: 1));
+  return Bible.withBooks(
     name: bibleName.value,
     books: books,
-  ));
+  );
 }
+
+Future<Bible?> loadBible(String name) async {
+  print("loadBible ${name}");
+  return getBibleFromAsset(name).then((value) {
+    bible.update!(value);
+    return value;
+  });
+}
+// Trace customTrace;
+// if (!isDesktop()) {
+//   customTrace = FirebasePerformance.instance.newTrace("loadBible");
+//   await customTrace.start();
+// }
+// bibleLoading = Future.delayed(const Duration(seconds: 2)).then((value) => getBibleFromAsset(bibleName.value));
+// if (!isDesktop()) {
+//   await customTrace.stop();
+// }
 
 final Atom<bool> engTitles = Atom<bool>(
   key: "engTitles",
@@ -251,7 +270,7 @@ onPlay(BuildContext context) async {
         log("Could not play audio", name: "play", error: (err.toString(), pathname));
         FirebaseCrashlytics.instance.recordFlutterError(FlutterErrorDetails(exception: (err.toString(), pathname)));
         if (context.mounted) {
-          showError(context, context.lEvent.audioError);
+          showError(context, context.l.audioError);
         }
         return;
       } finally {

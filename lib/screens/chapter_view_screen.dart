@@ -1,10 +1,9 @@
 import "package:flutter/material.dart";
-import "package:only_bible_app/state.dart";
 import "package:only_bible_app/utils.dart";
+import "package:only_bible_app/widgets/bible_loader.dart";
 import "package:only_bible_app/widgets/chapter_app_bar.dart";
 import "package:only_bible_app/widgets/sidebar.dart";
 import "package:only_bible_app/widgets/verses_view.dart";
-import "package:provider/provider.dart";
 
 class ChapterViewScreen extends StatelessWidget {
   final int bookIndex;
@@ -14,35 +13,19 @@ class ChapterViewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // FutureBuilder(
-    //   future: loadData(), // This reloads everytime theme changes
-    //   builder: (context, snapshot) {
-    //     if (snapshot.hasData && snapshot.data != null && snapshot.connectionState == ConnectionState.done) {
-    //       return ChangeNotifierProvider(
-    //         create: (_) => BibleViewModel(bible: snapshot.data!.$1),
-    //         child: ChapterViewScreen(book: snapshot.data!.$2, chapter: snapshot.data!.$3),
-    //       );
-    //     }
-    //     return ColoredBox(
-    //       color: Theme.of(context).colorScheme.background,
-    //       child: const Center(
-    //         child: CircularProgressIndicator(),
-    //       ),
-    //     );
-    //   },
-    // ),
-    final book = bible.watch(context).books[bookIndex];
-    final chapter = book.chapters[chapterIndex];
-    return Scaffold(
-      appBar: context.isWide ? null : ChapterAppBar(book: book, chapter: chapter),
-      backgroundColor: Theme.of(context).colorScheme.background,
-      body: SafeArea(
-        child: context.isWide
-            ? Row(
-                children: [
-                  const Sidebar(),
-                  Flexible(
-                    child: Column(
+    if (context.isWide) {
+      return Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.background,
+        body: SafeArea(
+          child: Row(
+            children: [
+              const Sidebar(),
+              Flexible(
+                child: BibleLoader(
+                  builder: (bible) {
+                    final book = bible.books[bookIndex];
+                    final chapter = book.chapters[chapterIndex];
+                    return Column(
                       children: [
                         ChapterAppBar(book: book, chapter: chapter),
                         const Padding(
@@ -53,12 +36,27 @@ class ChapterViewScreen extends StatelessWidget {
                           child: VersesView(chapter: chapter),
                         ),
                       ],
-                    ),
-                  ),
-                ],
-              )
-            : VersesView(chapter: chapter),
-      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+    return BibleLoader(
+      builder: (bible) {
+        final book = bible.books[bookIndex];
+        final chapter = book.chapters[chapterIndex];
+        return Scaffold(
+          appBar: ChapterAppBar(book: book, chapter: chapter),
+          backgroundColor: Theme.of(context).colorScheme.background,
+          body: SafeArea(
+            child: VersesView(chapter: chapter),
+          ),
+        );
+      },
     );
   }
 }

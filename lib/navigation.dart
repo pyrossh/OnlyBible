@@ -31,6 +31,39 @@ final Atom<bool> highlightsShown = Atom<bool>(
   },
 );
 
+createNoTransitionPageRoute(Widget page) {
+  return PageRouteBuilder(
+    opaque: false,
+    transitionDuration: Duration.zero,
+    reverseTransitionDuration: Duration.zero,
+    pageBuilder: (context, _, __) => page,
+  );
+}
+
+createSlideRoute({required BuildContext context, TextDirection? slideDir, required Widget page}) {
+  if (context.isWide || slideDir == null) {
+    return PageRouteBuilder(
+      pageBuilder: (context, _, __) {
+        return page;
+      },
+    );
+  }
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => page,
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      const begin = Offset(1.0, 0.0);
+      const end = Offset.zero;
+      const curve = Curves.ease;
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+      return SlideTransition(
+        textDirection: slideDir,
+        position: animation.drive(tween),
+        child: child,
+      );
+    },
+  );
+}
+
 updateStatusBar(bool v) {
   if (v) {
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
@@ -162,9 +195,9 @@ shareAppLink(BuildContext context) {
 
 rateApp(BuildContext context) {
   if (isAndroid()) {
-    openUrl(context, "https://play.google.com/store/apps/details?id=packageName");
+    context.openUrl("https://play.google.com/store/apps/details?id=packageName");
   } else if (isIOS()) {
-    openUrl(context, "https://apps.apple.com/us/app/only-bible-app/packageName");
+    context.openUrl("https://apps.apple.com/us/app/only-bible-app/packageName");
   }
 }
 

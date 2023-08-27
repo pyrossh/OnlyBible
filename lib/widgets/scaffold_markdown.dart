@@ -29,7 +29,7 @@ class ScaffoldMarkdown extends StatelessWidget {
                 ),
                 data: snapshot.data!,
                 onTapLink: (text, href, title) {
-                  openUrl(context, href!);
+                  context.openUrl(href!);
                 },
               );
             }

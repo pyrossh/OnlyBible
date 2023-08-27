@@ -36,7 +36,7 @@ class ActionsSheet extends StatelessWidget {
               if (audioEnabled) {
                 onPlay(context);
               } else {
-                showError(context, context.lEvent.audioNotAvailable);
+                showError(context, context.l.audioNotAvailable);
               }
             },
             icon: Icon(audioIcon, size: 34, color: audioEnabled ? iconColor : Colors.grey),
