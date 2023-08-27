@@ -31,7 +31,7 @@ class BookSelectScreen extends StatelessWidget {
       child: CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [
-          SliverHeading(title: context.l10n.oldTestamentTitle, showClose: true),
+          SliverHeading(title: context.l.oldTestamentTitle, showClose: true),
           SliverTileGrid(
             children: List.of(
               bible.getOldBooks().map((book) {
@@ -42,7 +42,7 @@ class BookSelectScreen extends StatelessWidget {
               }),
             ),
           ),
-          SliverHeading(title: context.l10n.newTestamentTitle, top: 30, bottom: 20),
+          SliverHeading(title: context.l.newTestamentTitle, top: 30, bottom: 20),
           SliverTileGrid(
             children: List.of(
               bible.getNewBooks().map((book) {

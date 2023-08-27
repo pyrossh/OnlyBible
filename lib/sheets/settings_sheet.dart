@@ -18,18 +18,18 @@ class SettingsSheet extends StatelessWidget {
       ),
       sections: [
         SettingsSection(
-          title: Text(context.l10n.settingsTitle, style: context.theme.textTheme.headlineMedium),
+          title: Text(context.l.settingsTitle, style: context.theme.textTheme.headlineMedium),
           margin: const EdgeInsetsDirectional.symmetric(horizontal: 20),
           tiles: [
             SettingsTile.navigation(
               leading: const Icon(Icons.book_outlined, color: Colors.blueAccent),
-              title: Text(context.l10n.bibleTitle),
+              title: Text(context.l.bibleTitle),
               value: Text(context.app.bible.name),
               onPressed: context.app.changeBible,
             ),
             SettingsTile.navigation(
               leading: const Icon(Icons.color_lens_outlined, color: Colors.pink),
-              title: Text(context.l10n.themeTitle),
+              title: Text(context.l.themeTitle),
               trailing: ToggleButtons(
                 onPressed: (int index) {
                   context.appEvent.toggleDarkMode();
@@ -53,7 +53,7 @@ class SettingsSheet extends StatelessWidget {
               ),
             ),
             SettingsTile(
-              title: Text(context.l10n.incrementFontTitle),
+              title: Text(context.l.incrementFontTitle),
               leading: Icon(Icons.font_download, color: context.theme.colorScheme.onBackground),
               trailing: IconButton(
                 onPressed: context.appEvent.increaseFont,
@@ -61,7 +61,7 @@ class SettingsSheet extends StatelessWidget {
               ),
             ),
             SettingsTile(
-              title: Text(context.l10n.decrementFontTitle),
+              title: Text(context.l.decrementFontTitle),
               leading: Icon(Icons.font_download, color: context.theme.colorScheme.onBackground),
               trailing: IconButton(
                 onPressed: context.appEvent.decreaseFont,
@@ -71,40 +71,40 @@ class SettingsSheet extends StatelessWidget {
             SettingsTile.switchTile(
               initialValue: context.app.fontBold,
               leading: Icon(Icons.format_bold, color: context.theme.colorScheme.onBackground),
-              title: Text(context.l10n.boldFontTitle),
+              title: Text(context.l.boldFontTitle),
               onToggle: (value) => context.appEvent.toggleBold(),
             ),
             SettingsTile.switchTile(
               initialValue: context.app.engTitles,
               leading: Icon(Icons.abc, color: context.theme.colorScheme.onBackground),
-              title: Text(context.l10n.engTitles),
+              title: Text(context.l.engTitles),
               onToggle: (value) => context.appEvent.toggleEngBookNames(),
             ),
           ],
         ),
         SettingsSection(
-          title: Text(context.l10n.aboutUsTitle, style: context.theme.textTheme.headlineMedium),
+          title: Text(context.l.aboutUsTitle, style: context.theme.textTheme.headlineMedium),
           margin: const EdgeInsetsDirectional.symmetric(horizontal: 20, vertical: 20),
           tiles: [
             SettingsTile.navigation(
               leading: const Icon(Icons.policy_outlined, color: Colors.brown),
-              title: Text(context.l10n.privacyPolicyTitle),
+              title: Text(context.l.privacyPolicyTitle),
               onPressed: context.appEvent.showPrivacyPolicy,
             ),
             SettingsTile.navigation(
               leading: const Icon(Icons.share_outlined, color: Colors.blueAccent),
-              title: Text(context.l10n.shareAppTitle),
+              title: Text(context.l.shareAppTitle),
               onPressed: context.appEvent.shareAppLink,
             ),
             if (!isDesktop()) // TODO: mabe support OSx if we release in that store
               SettingsTile.navigation(
                 leading: Icon(Icons.star, color: Colors.yellowAccent.shade700),
-                title: Text(context.l10n.rateAppTitle),
+                title: Text(context.l.rateAppTitle),
                 onPressed: context.appEvent.rateApp,
               ),
             SettingsTile.navigation(
               leading: Icon(Icons.info_outline, color: context.theme.colorScheme.onBackground),
-              title: Text(context.l10n.aboutUsTitle),
+              title: Text(context.l.aboutUsTitle),
               onPressed: context.appEvent.showAboutUs,
             ),
           ],

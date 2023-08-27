@@ -14,7 +14,7 @@ class BibleSelectScreen extends StatelessWidget {
       child: CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [
-          SliverHeading(title: context.l10n.bibleSelectTitle, showClose: !context.app.firstOpen),
+          SliverHeading(title: context.l.bibleSelectTitle, showClose: !context.app.firstOpen),
           SliverTileGrid(
             listType: ListType.large,
             children: List.of(

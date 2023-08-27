@@ -102,7 +102,7 @@ class AppProvider extends ChangeNotifier {
   }
 
   hasAudio(BuildContext context) {
-    return context.l10n.hasAudio == "true";
+    return context.l.hasAudio == "true";
   }
 
   changeBible(BuildContext context) {
@@ -485,7 +485,7 @@ class AppProvider extends ChangeNotifier {
           log("Could not play audio", name: "play", error: (err.toString(), pathname));
           FirebaseCrashlytics.instance.recordFlutterError(FlutterErrorDetails(exception: (err.toString(), pathname)));
           if (context.mounted) {
-            showError(context, context.l10nEvent.audioError);
+            showError(context, context.lEvent.audioError);
           }
           return;
         } finally {
