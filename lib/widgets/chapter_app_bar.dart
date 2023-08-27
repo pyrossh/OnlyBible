@@ -17,7 +17,7 @@ class ChapterAppBar extends StatelessWidget implements PreferredSizeWidget {
     final model = ChapterProvider.of(context);
     final selectedBook = app.bible.books[model.book];
     final bookName = selectedBook.name(context);
-    final isDesktop = isWide(context);
+    final isDesktop = context.isWide;
     return SafeArea(
       child: Container(
         padding: EdgeInsets.only(left: 18, right: 5, top: isDesktop ? 5 : 0),

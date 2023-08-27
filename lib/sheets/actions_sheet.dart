@@ -9,7 +9,6 @@ class ActionsSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final app = AppProvider.of(context);
-    final isDesktop = isWide(context);
     final bottom = isIOS() ? 20.0 : 0.0;
     final height = isIOS() ? 100.0 : 65.0;
     final iconColor = app.darkMode ? Colors.white.withOpacity(0.9) : Colors.black.withOpacity(0.9);
@@ -20,7 +19,7 @@ class ActionsSheet extends StatelessWidget {
       color: Theme.of(context).colorScheme.background,
       padding: EdgeInsets.only(left: 20, right: 20, bottom: bottom),
       child: Row(
-        mainAxisAlignment: isDesktop ? MainAxisAlignment.spaceEvenly : MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: context.isWide ? MainAxisAlignment.spaceEvenly : MainAxisAlignment.spaceBetween,
         children: [
           IconButton(
             padding: EdgeInsets.zero,
@@ -38,10 +37,7 @@ class ActionsSheet extends StatelessWidget {
               if (audioEnabled) {
                 context.appEvent.onPlay(context);
               } else {
-                showError(
-                  context,
-                  "This Bible doesn't support audio. Currently audio is only available for the Kannada Bible.",
-                );
+                showError(context, context.l10n.audioNotAvailable);
               }
             },
             icon: Icon(audioIcon, size: 34, color: audioEnabled ? iconColor : Colors.grey),

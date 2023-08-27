@@ -65,8 +65,8 @@ final lightTheme = ThemeData(
   ),
   appBarTheme: AppBarTheme(
     backgroundColor: lightColorScheme.background,
+    foregroundColor: lightColorScheme.onBackground,
     elevation: 1,
-    foregroundColor: lightColorScheme.primary,
   ),
   bottomSheetTheme: const BottomSheetThemeData(
     elevation: 10,
@@ -188,7 +188,7 @@ final darkTheme = lightTheme.copyWith(
   shadowColor: Colors.white,
   appBarTheme: AppBarTheme(
     backgroundColor: darkColorScheme.background,
-    foregroundColor: darkColorScheme.primary,
+    foregroundColor: darkColorScheme.onBackground,
     elevation: 1,
   ),
   bottomSheetTheme: lightTheme.bottomSheetTheme.copyWith(

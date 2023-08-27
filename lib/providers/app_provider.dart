@@ -7,7 +7,6 @@ import "package:only_bible_app/dialog.dart";
 import "package:only_bible_app/screens/chapter_view_screen.dart";
 import "package:only_bible_app/theme.dart";
 import "package:share_plus/share_plus.dart";
-import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:only_bible_app/screens/bible_select_screen.dart";
@@ -36,6 +35,7 @@ class AppProvider extends ChangeNotifier {
   late PackageInfo packageInfo;
   late Bible bible;
   late Locale locale;
+  bool firstOpen = true;
   bool engTitles = false;
   bool darkMode = false;
   bool fontBold = false;
@@ -57,24 +57,22 @@ class AppProvider extends ChangeNotifier {
     return Provider.of(context, listen: false);
   }
 
-  static AppLocalizations getLocalizations(BuildContext context) {
-    return AppProvider.of(context).engTitles
-        ? lookupAppLocalizations(const Locale("en"))
-        : AppLocalizations.of(context)!;
-  }
-
   save() async {
     final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool("firstOpen", firstOpen);
     await prefs.setString("bibleName", bible.name);
+    await prefs.setBool("engTitles", engTitles);
     await prefs.setBool("darkMode", darkMode);
     await prefs.setBool("fontBold", fontBold);
     await prefs.setDouble("textScaleFactor", textScaleFactor);
     await prefs.setString("languageCode", locale.languageCode);
   }
 
-  Future<(int, int)> loadData() async {
+  Future<(bool, int, int)> loadData() async {
     packageInfo = await PackageInfo.fromPlatform();
     final prefs = await SharedPreferences.getInstance();
+    engTitles = prefs.getBool("engTitles") ?? false;
+    firstOpen = prefs.getBool("firstOpen") ?? true;
     darkMode = prefs.getBool("darkMode") ?? false;
     fontBold = prefs.getBool("fontBold") ?? false;
     textScaleFactor = prefs.getDouble("textScaleFactor") ?? 1;
@@ -84,7 +82,7 @@ class AppProvider extends ChangeNotifier {
     final book = prefs.getInt("book") ?? 0;
     final chapter = prefs.getInt("chapter") ?? 0;
     updateStatusBar();
-    return (book, chapter);
+    return (firstOpen, book, chapter);
   }
 
   Future<Bible> loadBible(String name) async {
@@ -101,78 +99,6 @@ class AppProvider extends ChangeNotifier {
       name: name,
       books: books,
     );
-  }
-
-  List<String> getBookNames(BuildContext context) {
-    final l = getLocalizations(context);
-    return [
-      l.genesis,
-      l.exodus,
-      l.leviticus,
-      l.numbers,
-      l.deuteronomy,
-      l.joshua,
-      l.judges,
-      l.ruth,
-      l.firstSamuel,
-      l.secondSamuel,
-      l.firstKings,
-      l.secondKings,
-      l.firstChronicles,
-      l.secondChronicles,
-      l.ezra,
-      l.nehemiah,
-      l.esther,
-      l.job,
-      l.psalms,
-      l.proverbs,
-      l.ecclesiastes,
-      l.song_of_solomon,
-      l.isaiah,
-      l.jeremiah,
-      l.lamentations,
-      l.ezekiel,
-      l.daniel,
-      l.hosea,
-      l.joel,
-      l.amos,
-      l.obadiah,
-      l.jonah,
-      l.micah,
-      l.nahum,
-      l.habakkuk,
-      l.zephaniah,
-      l.haggai,
-      l.zechariah,
-      l.malachi,
-      l.matthew,
-      l.mark,
-      l.luke,
-      l.john,
-      l.acts,
-      l.romans,
-      l.firstCorinthians,
-      l.secondCorinthians,
-      l.galatians,
-      l.ephesians,
-      l.philippians,
-      l.colossians,
-      l.firstThessalonians,
-      l.secondThessalonians,
-      l.firstTimothy,
-      l.secondTimothy,
-      l.titus,
-      l.philemon,
-      l.hebrews,
-      l.james,
-      l.firstPeter,
-      l.secondPeter,
-      l.firstJohn,
-      l.secondJohn,
-      l.thirdJohn,
-      l.jude,
-      l.revelation,
-    ];
   }
 
   hasAudio(BuildContext context) {
@@ -238,6 +164,11 @@ class AppProvider extends ChangeNotifier {
         ChapterViewScreen(book: book, chapter: chapter),
       ),
     );
+  }
+
+  updateFirstOpen() {
+    firstOpen = false;
+    save();
   }
 
   toggleDarkMode() {
@@ -554,7 +485,7 @@ class AppProvider extends ChangeNotifier {
           log("Could not play audio", name: "play", error: (err.toString(), pathname));
           FirebaseCrashlytics.instance.recordFlutterError(FlutterErrorDetails(exception: (err.toString(), pathname)));
           if (context.mounted) {
-            showError(context, "Could not play audio");
+            showError(context, context.l10n.audioError);
           }
           return;
         } finally {

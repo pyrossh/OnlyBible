@@ -31,17 +31,16 @@ class ChapterViewScreen extends StatelessWidget {
     //     );
     //   },
     // ),
-    final isDesktop = isWide(context);
     return ChangeNotifierProvider(
       create: (_) => ChapterProvider(
         book: book,
         chapter: chapter,
       ),
       child: Scaffold(
-        appBar: isDesktop ? null : const ChapterAppBar(),
+        appBar: context.isWide ? null : const ChapterAppBar(),
         backgroundColor: Theme.of(context).colorScheme.background,
         body: SafeArea(
-          child: isDesktop
+          child: context.isWide
               ? const Row(
                   children: [
                     Sidebar(),

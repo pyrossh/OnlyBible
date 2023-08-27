@@ -1,5 +1,4 @@
 import "package:flutter/material.dart";
-import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:only_bible_app/providers/app_provider.dart";
 import "package:only_bible_app/utils.dart";
 import "package:only_bible_app/widgets/scaffold_menu.dart";
@@ -11,37 +10,32 @@ class BibleSelectScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final locales = AppLocalizations.supportedLocales.sortedBy((e) => e.languageCode);
     return ScaffoldMenu(
       child: CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [
-          SliverHeading(title: context.l10n.bibleSelectTitle, showClose: true),
+          SliverHeading(title: context.l10n.bibleSelectTitle, showClose: !context.app.firstOpen),
           SliverTileGrid(
             listType: ListType.large,
             children: List.of(
-              locales.map((l) {
-                return Localizations.override(
-                  context: context,
-                  locale: Locale(l.languageCode),
-                  child: Builder(
-                    builder: (context) {
-                      final bibleName = context.l10n.languageTitle;
-                      return TextButton(
-                        child: Text(bibleName),
-                        // child: Column(
-                        //   children: [
-                        //     Text(l.name),
-                        //     // Text("(${l.localName})"),
-                        //   ],
-                        // ),
-                        onPressed: () {
-                          AppProvider.ofEvent(context).updateCurrentBible(context, l, bibleName);
-                          Navigator.of(context).pop();
-                        },
-                      );
-                    },
-                  ),
+              context.supportedLocalizations.map((l) {
+                return TextButton(
+                  child: Text(l.languageTitle),
+                  // child: Column(
+                  //   children: [
+                  //     Text(l.name),
+                  //     // Text("(${l.localName})"),
+                  //   ],
+                  // ),
+                  onPressed: () {
+                    AppProvider.ofEvent(context).updateCurrentBible(context, Locale(l.localeName), l.languageTitle);
+                    if (context.appEvent.firstOpen) {
+                      context.appEvent.updateFirstOpen();
+                      context.appEvent.pushBookChapter(context, 0, 0, null);
+                    } else {
+                      Navigator.of(context).pop();
+                    }
+                  },
                 );
               }),
             ),

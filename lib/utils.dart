@@ -11,19 +11,110 @@ import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:provider/provider.dart";
 
 extension MyIterable<E> on Iterable<E> {
-  Iterable<E> sortedBy(Comparable Function(E e) key) =>
-      toList()..sort((a, b) => key(a).compareTo(key(b)));
+  Iterable<E> sortedBy(Comparable Function(E e) key) => toList()..sort((a, b) => key(a).compareTo(key(b)));
 }
 
 extension AppContext on BuildContext {
   ThemeData get theme => Theme.of(this);
-  AppLocalizations get l10n => app.engTitles ? lookupAppLocalizations(const Locale("en")) : AppLocalizations.of(this)!;
-  AppProvider get app => Provider.of(this, listen: true);
-  AppProvider get appEvent => Provider.of(this, listen: false);
-  ChapterProvider get chapter => Provider.of(this, listen: true);
-  ChapterProvider get chapterEvent => Provider.of(this, listen: false);
-}
 
+  AppLocalizations get l10n => app.engTitles && app.locale.languageCode != "en"
+      ? lookupAppLocalizations(const Locale("en"))
+      : AppLocalizations.of(this)!;
+
+  AppProvider get app => Provider.of(this, listen: true);
+
+  AppProvider get appEvent => Provider.of(this, listen: false);
+
+  ChapterProvider get chapter => Provider.of(this, listen: true);
+
+  ChapterProvider get chapterEvent => Provider.of(this, listen: false);
+
+  bool get isWide {
+    if (defaultTargetPlatform == TargetPlatform.android || defaultTargetPlatform == TargetPlatform.iOS) {
+      return false;
+    }
+    final width = MediaQuery.of(this).size.width;
+    return width > 700;
+  }
+
+  List<AppLocalizations> get supportedLocalizations {
+    return AppLocalizations.supportedLocales
+        .sortedBy((e) => e.languageCode)
+        .map((e) => lookupAppLocalizations(e))
+        .toList();
+  }
+
+  List<String> get bookNames {
+    return [
+      l10n.genesis,
+      l10n.exodus,
+      l10n.leviticus,
+      l10n.numbers,
+      l10n.deuteronomy,
+      l10n.joshua,
+      l10n.judges,
+      l10n.ruth,
+      l10n.firstSamuel,
+      l10n.secondSamuel,
+      l10n.firstKings,
+      l10n.secondKings,
+      l10n.firstChronicles,
+      l10n.secondChronicles,
+      l10n.ezra,
+      l10n.nehemiah,
+      l10n.esther,
+      l10n.job,
+      l10n.psalms,
+      l10n.proverbs,
+      l10n.ecclesiastes,
+      l10n.song_of_solomon,
+      l10n.isaiah,
+      l10n.jeremiah,
+      l10n.lamentations,
+      l10n.ezekiel,
+      l10n.daniel,
+      l10n.hosea,
+      l10n.joel,
+      l10n.amos,
+      l10n.obadiah,
+      l10n.jonah,
+      l10n.micah,
+      l10n.nahum,
+      l10n.habakkuk,
+      l10n.zephaniah,
+      l10n.haggai,
+      l10n.zechariah,
+      l10n.malachi,
+      l10n.matthew,
+      l10n.mark,
+      l10n.luke,
+      l10n.john,
+      l10n.acts,
+      l10n.romans,
+      l10n.firstCorinthians,
+      l10n.secondCorinthians,
+      l10n.galatians,
+      l10n.ephesians,
+      l10n.philippians,
+      l10n.colossians,
+      l10n.firstThessalonians,
+      l10n.secondThessalonians,
+      l10n.firstTimothy,
+      l10n.secondTimothy,
+      l10n.titus,
+      l10n.philemon,
+      l10n.hebrews,
+      l10n.james,
+      l10n.firstPeter,
+      l10n.secondPeter,
+      l10n.firstJohn,
+      l10n.secondJohn,
+      l10n.thirdJohn,
+      l10n.jude,
+      l10n.revelation,
+    ];
+  }
+}
 
 bool isDesktop() {
   return defaultTargetPlatform == TargetPlatform.macOS ||
@@ -39,14 +130,6 @@ bool isAndroid() {
   return defaultTargetPlatform == TargetPlatform.android;
 }
 
-bool isWide(BuildContext context) {
-  if (defaultTargetPlatform == TargetPlatform.android || defaultTargetPlatform == TargetPlatform.iOS) {
-    return false;
-  }
-  final width = MediaQuery.of(context).size.width;
-  return width > 700;
-}
-
 createNoTransitionPageRoute(Widget page) {
   return PageRouteBuilder(
     opaque: false,
@@ -57,7 +140,7 @@ createNoTransitionPageRoute(Widget page) {
 }
 
 createSlideRoute({required BuildContext context, TextDirection? slideDir, required Widget page}) {
-  if (isWide(context) || slideDir == null) {
+  if (context.isWide || slideDir == null) {
     return PageRouteBuilder(
       pageBuilder: (context, _, __) {
         return page;
@@ -93,5 +176,5 @@ openUrl(BuildContext context, String url) async {
     }
   }
   if (!context.mounted) return;
-  showError(context, "Could not open browser");
+  showError(context, context.l10n.urlError);
 }

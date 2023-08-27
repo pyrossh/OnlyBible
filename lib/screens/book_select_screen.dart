@@ -1,5 +1,5 @@
 import "package:flutter/material.dart";
-import "package:only_bible_app/providers/app_provider.dart";
+import "package:only_bible_app/utils.dart";
 import "package:only_bible_app/widgets/scaffold_menu.dart";
 import "package:only_bible_app/screens/chapter_select_screen.dart";
 import "package:only_bible_app/widgets/sliver_heading.dart";
@@ -27,12 +27,11 @@ class BookSelectScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppProvider.getLocalizations(context);
     return ScaffoldMenu(
       child: CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [
-          SliverHeading(title: localizations.oldTestamentTitle, showClose: true),
+          SliverHeading(title: context.l10n.oldTestamentTitle, showClose: true),
           SliverTileGrid(
             children: List.of(
               bible.getOldBooks().map((book) {
@@ -43,7 +42,7 @@ class BookSelectScreen extends StatelessWidget {
               }),
             ),
           ),
-          SliverHeading(title: localizations.newTestamentTitle, top: 30, bottom: 20),
+          SliverHeading(title: context.l10n.newTestamentTitle, top: 30, bottom: 20),
           SliverTileGrid(
             children: List.of(
               bible.getNewBooks().map((book) {

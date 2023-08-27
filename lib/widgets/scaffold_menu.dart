@@ -10,15 +10,16 @@ class ScaffoldMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final pageWidth = MediaQuery.of(context).size.width;
+    final isWide = context.isWide && !context.app.firstOpen;
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: isWide ? Colors.transparent : context.theme.colorScheme.background,
       body: SafeArea(
         child: Container(
           color: Colors.black.withOpacity(0.7),
-          margin: EdgeInsets.only(left: isWide(context) ? 250 : 0),
+          margin: EdgeInsets.only(left: isWide ? 250 : 0),
           child: Container(
-            color: backgroundColor ?? Theme.of(context).colorScheme.background,
-            margin: EdgeInsets.only(right: isWide(context) ? pageWidth - 750 : 0),
+            color: backgroundColor ?? context.theme.colorScheme.background,
+            margin: EdgeInsets.only(right: isWide ? pageWidth - 750 : 0),
             child: child,
           ),
         ),

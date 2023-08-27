@@ -1,5 +1,4 @@
 import "package:flutter/material.dart";
-import "package:intl/intl.dart";
 import "package:flutter/foundation.dart";
 import "package:flutter_web_plugins/url_strategy.dart";
 import "package:firebase_core/firebase_core.dart";
@@ -25,13 +24,12 @@ void main() async {
   };
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   usePathUrlStrategy();
-  print(Intl.getCurrentLocale());
   final model = AppProvider();
-  final (book, chapter) = await model.loadData();
+  final (firstOpen, book, chapter) = await model.loadData();
   runApp(
     ChangeNotifierProvider.value(
       value: model,
-      child: App(initialBook: book, initialChapter: chapter),
+      child: App(firstOpen: firstOpen, initialBook: book, initialChapter: chapter),
     ),
   );
   FlutterNativeSplash.remove();
