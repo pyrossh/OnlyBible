@@ -30,7 +30,7 @@ class BibleSelectScreen extends StatelessWidget {
                   onPressed: () {
                     AppProvider.ofEvent(context).updateCurrentBible(context, Locale(l.localeName), l.languageTitle);
                     if (context.appEvent.firstOpen) {
-                      context.appEvent.updateFirstOpen();
+                      context.appEvent.firstOpen = false;
                       context.appEvent.pushBookChapter(context, 0, 0, null);
                     } else {
                       Navigator.of(context).pop();

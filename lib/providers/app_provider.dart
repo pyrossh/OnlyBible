@@ -35,7 +35,6 @@ class AppProvider extends ChangeNotifier {
   late PackageInfo packageInfo;
   late Bible bible;
   late Locale locale;
-  bool firstOpen = true;
   bool engTitles = false;
   bool darkMode = false;
   bool fontBold = false;
@@ -49,6 +48,13 @@ class AppProvider extends ChangeNotifier {
   List<HistoryFrame> history = [];
   final box = GetStorage("only-bible-app-backup");
 
+  get firstOpen => box.read("firstOpen") ?? true;
+
+  set firstOpen(v) {
+    box.write("firstOpen", v);
+    box.save();
+  }
+
   static AppProvider of(BuildContext context) {
     return Provider.of(context, listen: true);
   }
@@ -59,7 +65,6 @@ class AppProvider extends ChangeNotifier {
 
   save() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool("firstOpen", firstOpen);
     await prefs.setString("bibleName", bible.name);
     await prefs.setBool("engTitles", engTitles);
     await prefs.setBool("darkMode", darkMode);
@@ -68,21 +73,17 @@ class AppProvider extends ChangeNotifier {
     await prefs.setString("languageCode", locale.languageCode);
   }
 
-  Future<(bool, int, int)> loadData() async {
+  loadData() async {
     packageInfo = await PackageInfo.fromPlatform();
     final prefs = await SharedPreferences.getInstance();
     engTitles = prefs.getBool("engTitles") ?? false;
-    firstOpen = prefs.getBool("firstOpen") ?? true;
     darkMode = prefs.getBool("darkMode") ?? false;
     fontBold = prefs.getBool("fontBold") ?? false;
     textScaleFactor = prefs.getDouble("textScaleFactor") ?? 1;
     locale = Locale(prefs.getString("languageCode") ?? "en");
     bible = await loadBible(prefs.getString("bibleName") ?? "English");
     // await Future.delayed(Duration(seconds: 3));
-    final book = prefs.getInt("book") ?? 0;
-    final chapter = prefs.getInt("chapter") ?? 0;
     updateStatusBar();
-    return (firstOpen, book, chapter);
   }
 
   Future<Bible> loadBible(String name) async {
@@ -146,29 +147,69 @@ class AppProvider extends ChangeNotifier {
     hideActions(context);
   }
 
+  onNext(BuildContext context, int book, int chapter) {
+    final selectedBook = bible.books[book];
+    if (selectedBook.chapters.length > chapter + 1) {
+      pushBookChapter(context, selectedBook.index, chapter + 1, TextDirection.ltr);
+    } else {
+      if (selectedBook.index + 1 < bible.books.length) {
+        final nextBook = bible.books[selectedBook.index + 1];
+        pushBookChapter(context, nextBook.index, 0, TextDirection.ltr);
+      }
+    }
+  }
+
+  onPrevious(BuildContext context, int book, int chapter) {
+    final selectedBook = bible.books[book];
+    if (chapter - 1 >= 0) {
+      // if (Navigator.of(context).canPop()) {
+      //   Navigator.of(context).pop();
+      // } else {
+      pushBookChapter(context, selectedBook.index, chapter - 1, TextDirection.rtl);
+      // }
+    } else {
+      if (selectedBook.index - 1 >= 0) {
+        final prevBook = bible.books[selectedBook.index - 1];
+        pushBookChapter(context, prevBook.index, prevBook.chapters.length - 1, TextDirection.rtl);
+      }
+    }
+  }
+
+  (int, int) loadBookChapter() {
+    return (box.read("book") ?? 0, box.read("chapter") ?? 0);
+  }
+
+  saveBookChapter(int book, int chapter) {
+    box.write("book", book);
+    box.write("chapter", chapter);
+    box.save();
+  }
+
   pushBookChapter(BuildContext context, int book, int chapter, TextDirection? dir) {
+    saveBookChapter(book, chapter);
     clearEvents(context);
     Navigator.of(context).push(
       createSlideRoute(
         context: context,
         slideDir: dir,
-        page: ChapterViewScreen(book: book, chapter: chapter),
+        page: ChapterViewScreen(bookIndex: book, chapterIndex: chapter),
       ),
     );
   }
 
   replaceBookChapter(BuildContext context, int book, int chapter) {
+    saveBookChapter(book, chapter);
     clearEvents(context);
     Navigator.of(context).pushReplacement(
       createNoTransitionPageRoute(
-        ChapterViewScreen(book: book, chapter: chapter),
+        ChapterViewScreen(bookIndex: book, chapterIndex: chapter),
       ),
     );
   }
 
   updateFirstOpen() {
-    firstOpen = false;
-    save();
+    box.write("firstOpen", true);
+    box.save();
   }
 
   toggleDarkMode() {
@@ -450,7 +491,7 @@ class AppProvider extends ChangeNotifier {
   }
 
   void shareVerses(BuildContext context) {
-    final name = bible.books[selectedVerses.first.book].name;
+    final name = bible.books[selectedVerses.first.book].name(context);
     final chapter = selectedVerses.first.chapter + 1;
     final title = "$name $chapter: ${selectedVerses.map((e) => e.index + 1).join(", ")}";
     final text = selectedVerses.map((e) => e.text).join("\n");

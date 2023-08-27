@@ -25,11 +25,12 @@ void main() async {
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   usePathUrlStrategy();
   final model = AppProvider();
-  final (firstOpen, book, chapter) = await model.loadData();
+  await model.loadData();
+  final (book, chapter) = model.loadBookChapter();
   runApp(
     ChangeNotifierProvider.value(
       value: model,
-      child: App(firstOpen: firstOpen, initialBook: book, initialChapter: chapter),
+      child: App(initialBook: book, initialChapter: chapter),
     ),
   );
   FlutterNativeSplash.remove();

@@ -1,16 +1,14 @@
 import "package:flutter/material.dart";
-import "package:only_bible_app/providers/chapter_provider.dart";
 import "package:only_bible_app/utils.dart";
 import "package:only_bible_app/widgets/chapter_app_bar.dart";
 import "package:only_bible_app/widgets/sidebar.dart";
 import "package:only_bible_app/widgets/verses_view.dart";
-import "package:provider/provider.dart";
 
 class ChapterViewScreen extends StatelessWidget {
-  final int book;
-  final int chapter;
+  final int bookIndex;
+  final int chapterIndex;
 
-  const ChapterViewScreen({super.key, required this.book, required this.chapter});
+  const ChapterViewScreen({super.key, required this.bookIndex, required this.chapterIndex});
 
   @override
   Widget build(BuildContext context) {
@@ -31,37 +29,33 @@ class ChapterViewScreen extends StatelessWidget {
     //     );
     //   },
     // ),
-    return ChangeNotifierProvider(
-      create: (_) => ChapterProvider(
-        book: book,
-        chapter: chapter,
-      ),
-      child: Scaffold(
-        appBar: context.isWide ? null : const ChapterAppBar(),
-        backgroundColor: Theme.of(context).colorScheme.background,
-        body: SafeArea(
-          child: context.isWide
-              ? const Row(
-                  children: [
-                    Sidebar(),
-                    Flexible(
-                      child: Column(
-                        children: [
-                          ChapterAppBar(),
-                          Padding(
-                            padding: EdgeInsets.only(bottom: 10),
-                            child: Divider(height: 5, indent: 20, endIndent: 20, thickness: 1.5),
-                          ),
-                          Flexible(
-                            child: VersesView(),
-                          ),
-                        ],
-                      ),
+    final book = context.app.bible.books[bookIndex];
+    final chapter = book.chapters[chapterIndex];
+    return Scaffold(
+      appBar: context.isWide ? null : ChapterAppBar(book: book, chapter: chapter),
+      backgroundColor: Theme.of(context).colorScheme.background,
+      body: SafeArea(
+        child: context.isWide
+            ? Row(
+                children: [
+                  const Sidebar(),
+                  Flexible(
+                    child: Column(
+                      children: [
+                        ChapterAppBar(book: book, chapter: chapter),
+                        const Padding(
+                          padding: EdgeInsets.only(bottom: 10),
+                          child: Divider(height: 5, indent: 20, endIndent: 20, thickness: 1.5),
+                        ),
+                        Flexible(
+                          child: VersesView(book: book, chapter: chapter),
+                        ),
+                      ],
                     ),
-                  ],
-                )
-              : const VersesView(),
-        ),
+                  ),
+                ],
+              )
+            : VersesView(book: book, chapter: chapter),
       ),
     );
   }

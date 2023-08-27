@@ -7,11 +7,10 @@ import "package:only_bible_app/utils.dart";
 import "package:only_bible_app/widgets/scaffold_markdown.dart";
 
 class App extends StatelessWidget {
-  final bool firstOpen;
   final int initialBook;
   final int initialChapter;
 
-  const App({super.key, required this.firstOpen, required this.initialBook, required this.initialChapter});
+  const App({super.key, required this.initialBook, required this.initialChapter});
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +30,9 @@ class App extends StatelessWidget {
         "/privacy-policy": (context) => const ScaffoldMarkdown(title: "Privacy Policy", file: "privacy-policy.md"),
         "/about-us": (context) => const ScaffoldMarkdown(title: "About Us", file: "about-us.md"),
       },
-      home: firstOpen ? const BibleSelectScreen() : ChapterViewScreen(book: initialBook, chapter: initialChapter),
+      home: context.app.firstOpen
+          ? const BibleSelectScreen()
+          : ChapterViewScreen(bookIndex: initialBook, chapterIndex: initialChapter),
     );
   }
 }

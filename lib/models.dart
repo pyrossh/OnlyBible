@@ -54,9 +54,10 @@ class Book {
 }
 
 class Chapter {
+  final int index;
   final List<Verse> verses;
 
-  const Chapter({required this.verses});
+  const Chapter({required this.index, required this.verses});
 }
 
 class Verse {
@@ -90,7 +91,7 @@ List<Book> getBibleFromText(String text) {
     }
     if (books[book - 1].chapters.length < chapter) {
 // ignore: prefer_const_constructors
-      books[book - 1].chapters.add(Chapter(verses: []));
+      books[book - 1].chapters.add(Chapter(index: chapter - 1, verses: []));
     }
     books[book - 1].chapters[chapter - 1].verses.add(
           Verse(

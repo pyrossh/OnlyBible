@@ -1,7 +1,6 @@
 import "dart:convert";
 import "package:only_bible_app/dialog.dart";
 import "package:only_bible_app/providers/app_provider.dart";
-import "package:only_bible_app/providers/chapter_provider.dart";
 import "package:url_launcher/url_launcher.dart";
 import "package:flutter/foundation.dart" show defaultTargetPlatform, TargetPlatform;
 import "package:flutter/material.dart";
@@ -28,10 +27,6 @@ extension AppContext on BuildContext {
   AppProvider get app => Provider.of(this, listen: true);
 
   AppProvider get appEvent => Provider.of(this, listen: false);
-
-  ChapterProvider get chapter => Provider.of(this, listen: true);
-
-  ChapterProvider get chapterEvent => Provider.of(this, listen: false);
 
   double get actionsHeight {
     if (isIOS()) {

@@ -1,25 +1,25 @@
 import "package:flutter/gestures.dart";
 import "package:flutter/material.dart";
 import "package:flutter_swipe_detector/flutter_swipe_detector.dart";
+import "package:only_bible_app/models.dart";
 import "package:only_bible_app/providers/app_provider.dart";
-import "package:only_bible_app/providers/chapter_provider.dart";
 import "package:only_bible_app/utils.dart";
 
 class VersesView extends StatelessWidget {
-  const VersesView({super.key});
+  final Book book;
+  final Chapter chapter;
+  const VersesView({super.key, required this.book, required this.chapter});
 
   @override
   Widget build(BuildContext context) {
     final app = AppProvider.of(context);
-    final model = ChapterProvider.of(context);
-    final chapter = ChapterProvider.selectedChapter(context);
     final textStyle = DefaultTextStyle.of(context).style;
     return SwipeDetector(
       onSwipeLeft: (offset) {
-        model.onNext(context, model.book, model.chapter);
+        context.appEvent.onNext(context, book.index, chapter.index);
       },
       onSwipeRight: (offset) {
-        model.onPrevious(context, model.book, model.chapter);
+        context.appEvent.onPrevious(context, book.index, chapter.index);
       },
       child: Padding(
         padding: const EdgeInsets.only(left: 20, right: 20),
