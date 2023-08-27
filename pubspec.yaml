@@ -61,7 +61,7 @@ flutter:
 flutter_launcher_icons:
   android: false
   ios: true
-  image_path: "assets/test2.png"
+  image_path: "assets/icon.png"
   remove_alpha_ios: true
   web:
     generate: true
