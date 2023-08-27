@@ -9,7 +9,6 @@ class HighlightSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bottom = isIOS() ? 20.0 : 0.0;
-    final height = isIOS() ? 100.0 : 65.0;
     final iconColor = context.app.darkMode ? Colors.white.withOpacity(0.9) : Colors.black.withOpacity(0.9);
     void onHighlight(int index) {
       final verses = context.appEvent.selectedVerses;
@@ -18,11 +17,11 @@ class HighlightSheet extends StatelessWidget {
     }
 
     return Container(
-      height: height,
+      height: context.actionsHeight,
       color: context.theme.colorScheme.background,
       padding: EdgeInsets.only(left: 20, right: 20, bottom: bottom),
       child: Row(
-        mainAxisAlignment: context.isWide ? MainAxisAlignment.spaceEvenly : MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: context.isWide ? MainAxisAlignment.spaceEvenly : MainAxisAlignment.spaceAround,
         children: [
           IconButton(
             padding: EdgeInsets.zero,

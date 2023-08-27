@@ -10,16 +10,15 @@ class ActionsSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     final app = AppProvider.of(context);
     final bottom = isIOS() ? 20.0 : 0.0;
-    final height = isIOS() ? 100.0 : 65.0;
     final iconColor = app.darkMode ? Colors.white.withOpacity(0.9) : Colors.black.withOpacity(0.9);
     final audioIcon = app.isPlaying ? Icons.pause_circle_outline : Icons.play_circle_outline;
     final audioEnabled = app.hasAudio(context);
     return Container(
-      height: height,
+      height: context.actionsHeight,
       color: Theme.of(context).colorScheme.background,
       padding: EdgeInsets.only(left: 20, right: 20, bottom: bottom),
       child: Row(
-        mainAxisAlignment: context.isWide ? MainAxisAlignment.spaceEvenly : MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: context.isWide ? MainAxisAlignment.spaceEvenly : MainAxisAlignment.spaceAround,
         children: [
           IconButton(
             padding: EdgeInsets.zero,
@@ -37,7 +36,7 @@ class ActionsSheet extends StatelessWidget {
               if (audioEnabled) {
                 context.appEvent.onPlay(context);
               } else {
-                showError(context, context.l10n.audioNotAvailable);
+                showError(context, context.l10nEvent.audioNotAvailable);
               }
             },
             icon: Icon(audioIcon, size: 34, color: audioEnabled ? iconColor : Colors.grey),

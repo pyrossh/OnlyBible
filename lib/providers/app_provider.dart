@@ -485,7 +485,7 @@ class AppProvider extends ChangeNotifier {
           log("Could not play audio", name: "play", error: (err.toString(), pathname));
           FirebaseCrashlytics.instance.recordFlutterError(FlutterErrorDetails(exception: (err.toString(), pathname)));
           if (context.mounted) {
-            showError(context, context.l10n.audioError);
+            showError(context, context.l10nEvent.audioError);
           }
           return;
         } finally {

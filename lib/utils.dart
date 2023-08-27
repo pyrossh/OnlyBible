@@ -21,6 +21,10 @@ extension AppContext on BuildContext {
       ? lookupAppLocalizations(const Locale("en"))
       : AppLocalizations.of(this)!;
 
+  AppLocalizations get l10nEvent => appEvent.engTitles && appEvent.locale.languageCode != "en"
+      ? lookupAppLocalizations(const Locale("en"))
+      : AppLocalizations.of(this)!;
+
   AppProvider get app => Provider.of(this, listen: true);
 
   AppProvider get appEvent => Provider.of(this, listen: false);
@@ -28,6 +32,16 @@ extension AppContext on BuildContext {
   ChapterProvider get chapter => Provider.of(this, listen: true);
 
   ChapterProvider get chapterEvent => Provider.of(this, listen: false);
+
+  double get actionsHeight {
+    if (isIOS()) {
+      return 80.0;
+    }
+    if (isWide) {
+      return 60;
+    }
+    return 50.0;
+  }
 
   bool get isWide {
     if (defaultTargetPlatform == TargetPlatform.android || defaultTargetPlatform == TargetPlatform.iOS) {

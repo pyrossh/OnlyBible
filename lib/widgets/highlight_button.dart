@@ -17,7 +17,7 @@ class HighlightButton extends StatelessWidget {
           color: color.withOpacity(1),
           shape: BoxShape.circle,
         ),
-        child: const SizedBox(width: 28, height: 28),
+        child: const SizedBox(width: 24, height: 24),
       ),
     );
   }
