@@ -6,8 +6,8 @@ import "package:firebase_crashlytics/firebase_crashlytics.dart";
 import "package:only_bible_app/firebase_options.dart";
 import "package:flutter_native_splash/flutter_native_splash.dart";
 import "package:only_bible_app/app.dart";
-import "package:only_bible_app/providers/app_provider.dart";
-import "package:provider/provider.dart";
+import "package:only_bible_app/navigation.dart";
+import "package:only_bible_app/state.dart";
 
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -24,14 +24,9 @@ void main() async {
   };
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   usePathUrlStrategy();
-  final model = AppProvider();
-  await model.loadData();
-  final (book, chapter) = model.loadBookChapter();
-  runApp(
-    ChangeNotifierProvider.value(
-      value: model,
-      child: App(initialBook: book, initialChapter: chapter),
-    ),
-  );
+  await initState();
+  updateStatusBar(darkMode.value);
+  await loadBible();
+  runApp(const App());
   FlutterNativeSplash.remove();
 }

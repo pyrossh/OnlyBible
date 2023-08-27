@@ -2,24 +2,23 @@ import "package:flutter/gestures.dart";
 import "package:flutter/material.dart";
 import "package:flutter_swipe_detector/flutter_swipe_detector.dart";
 import "package:only_bible_app/models.dart";
-import "package:only_bible_app/providers/app_provider.dart";
-import "package:only_bible_app/utils.dart";
+import "package:only_bible_app/navigation.dart";
+import "package:only_bible_app/state.dart";
 
 class VersesView extends StatelessWidget {
-  final Book book;
   final Chapter chapter;
-  const VersesView({super.key, required this.book, required this.chapter});
+
+  const VersesView({super.key, required this.chapter});
 
   @override
   Widget build(BuildContext context) {
-    final app = AppProvider.of(context);
     final textStyle = DefaultTextStyle.of(context).style;
     return SwipeDetector(
       onSwipeLeft: (offset) {
-        context.appEvent.onNext(context, book.index, chapter.index);
+        nextChapter(context, bible.value, chapter.book, chapter.index);
       },
       onSwipeRight: (offset) {
-        context.appEvent.onPrevious(context, book.index, chapter.index);
+        previousChapter(context, bible.value, chapter.book, chapter.index);
       },
       child: Padding(
         padding: const EdgeInsets.only(left: 20, right: 20),
@@ -35,19 +34,14 @@ class VersesView extends StatelessWidget {
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text.rich(
-                  // scrollPhysics: const BouncingScrollPhysics(),
-                  // contextMenuBuilder: null,
-                  textScaleFactor: app.textScaleFactor,
+                  textScaleFactor: 1.1 + textScale.watch(context),
                   textAlign: TextAlign.left,
-                  // onSelectionChanged: (selection, _) {
-                  // },
                   TextSpan(
-                    style: app.fontBold
+                    style: fontBold.watch(context)
                         ? textStyle.copyWith(
                             fontWeight: FontWeight.w500,
                           )
                         : textStyle,
-                    // recognizer: TapAndPanGestureRecognizer()..onDragEnd = (e) => print("Hello"),
                     children: chapter.verses
                         .map(
                           (v) => [
@@ -57,13 +51,13 @@ class VersesView extends StatelessWidget {
                                 child: Text("${v.index + 1} ", style: Theme.of(context).textTheme.labelMedium),
                               ),
                             ),
-                            if (app.hasNote(v))
+                            if (hasNote(v))
                               WidgetSpan(
                                 child: Padding(
                                   padding: const EdgeInsets.only(left: 3, right: 3),
                                   child: GestureDetector(
                                     onTap: () {
-                                      app.showNoteField(context, v);
+                                      showNoteField(context, v);
                                     },
                                     child: const Icon(
                                       Icons.sticky_note_2_outlined,
@@ -75,11 +69,10 @@ class VersesView extends StatelessWidget {
                               ),
                             TextSpan(
                               text: "${v.text}\n",
-                              style: context.app.getHighlightStyle(context, v),
+                              style: getHighlightStyle(context, v),
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () {
-                                  context.appEvent.onVerseSelected(context, v);
-                                  // AppModel.ofEvent(context).showHighlightMenu(context, v, details.globalPosition);
+                                  onVerseSelected(context, v);
                                 },
                             ),
                             const WidgetSpan(
@@ -95,7 +88,7 @@ class VersesView extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(bottom: app.actionsShown ? 120 : 0),
+                padding: EdgeInsets.only(bottom: actionsShown.watch(context) ? 120 : 0),
               ),
             ],
           ),

@@ -1,6 +1,6 @@
 import "dart:convert";
 import "package:only_bible_app/dialog.dart";
-import "package:only_bible_app/providers/app_provider.dart";
+import "package:only_bible_app/state.dart";
 import "package:url_launcher/url_launcher.dart";
 import "package:flutter/foundation.dart" show defaultTargetPlatform, TargetPlatform;
 import "package:flutter/material.dart";
@@ -11,22 +11,24 @@ import "package:provider/provider.dart";
 
 extension MyIterable<E> on Iterable<E> {
   Iterable<E> sortedBy(Comparable Function(E e) key) => toList()..sort((a, b) => key(a).compareTo(key(b)));
+
+  Iterable<E> removeBy(bool Function(E e) key) => toList()..removeWhere(key);
+
+  Iterable<E> addBy(E e) => toList()..add(e);
 }
 
 extension AppContext on BuildContext {
   ThemeData get theme => Theme.of(this);
 
-  AppLocalizations get l => app.engTitles && app.locale.languageCode != "en"
+  AppLocalizations get l => engTitles.value && languageCode.value != "en"
       ? lookupAppLocalizations(const Locale("en"))
       : AppLocalizations.of(this)!;
 
-  AppLocalizations get lEvent => appEvent.engTitles && appEvent.locale.languageCode != "en"
+  AppLocalizations get lEvent => engTitles.value && languageCode.value != "en"
       ? lookupAppLocalizations(const Locale("en"))
       : AppLocalizations.of(this)!;
 
-  AppProvider get app => Provider.of(this, listen: true);
-
-  AppProvider get appEvent => Provider.of(this, listen: false);
+  get hasAudio => l.hasAudio == "true";
 
   double get actionsHeight {
     if (isIOS()) {

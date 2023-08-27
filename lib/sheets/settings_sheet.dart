@@ -1,4 +1,6 @@
 import "package:flutter/material.dart";
+import "package:only_bible_app/navigation.dart";
+import "package:only_bible_app/state.dart";
 import "package:only_bible_app/utils.dart";
 import "package:settings_ui/settings_ui.dart";
 
@@ -24,20 +26,20 @@ class SettingsSheet extends StatelessWidget {
             SettingsTile.navigation(
               leading: const Icon(Icons.book_outlined, color: Colors.blueAccent),
               title: Text(context.l.bibleTitle),
-              value: Text(context.app.bible.name),
-              onPressed: context.app.changeBible,
+              value: Text(bible.watch(context).name),
+              onPressed: changeBible,
             ),
             SettingsTile.navigation(
-              leading: const Icon(Icons.color_lens_outlined, color: Colors.pink),
+              leading: const Icon(Icons.color_lens_outlined, color: Colors.green),
               title: Text(context.l.themeTitle),
               trailing: ToggleButtons(
                 onPressed: (int index) {
-                  context.appEvent.toggleDarkMode();
+                  darkMode.set!();
                 },
                 highlightColor: Colors.transparent,
                 borderColor: Colors.grey,
                 borderRadius: const BorderRadius.all(Radius.circular(25)),
-                selectedColor: context.app.darkMode ? Colors.lightBlue.shade300 : Colors.yellowAccent.shade700,
+                selectedColor: darkMode.value ? Colors.lightBlue.shade300 : Colors.yellowAccent.shade700,
                 selectedBorderColor: Colors.grey,
                 color: Colors.grey,
                 fillColor: Colors.transparent,
@@ -45,7 +47,7 @@ class SettingsSheet extends StatelessWidget {
                   minHeight: 36.0,
                   minWidth: 50.0,
                 ),
-                isSelected: [!context.app.darkMode, context.app.darkMode],
+                isSelected: [!darkMode.value, darkMode.value],
                 children: const [
                   Icon(Icons.light_mode),
                   Icon(Icons.dark_mode),
@@ -56,7 +58,7 @@ class SettingsSheet extends StatelessWidget {
               title: Text(context.l.incrementFontTitle),
               leading: Icon(Icons.font_download, color: context.theme.colorScheme.onBackground),
               trailing: IconButton(
-                onPressed: context.appEvent.increaseFont,
+                onPressed: () => textScale.update!(0.1),
                 icon: const Icon(Icons.add_circle_outline, size: 32, color: Colors.redAccent),
               ),
             ),
@@ -64,21 +66,21 @@ class SettingsSheet extends StatelessWidget {
               title: Text(context.l.decrementFontTitle),
               leading: Icon(Icons.font_download, color: context.theme.colorScheme.onBackground),
               trailing: IconButton(
-                onPressed: context.appEvent.decreaseFont,
+                onPressed: () => textScale.update!(-0.1),
                 icon: const Icon(Icons.remove_circle_outline, size: 32, color: Colors.blueAccent),
               ),
             ),
             SettingsTile.switchTile(
-              initialValue: context.app.fontBold,
+              initialValue: fontBold.watch(context),
               leading: Icon(Icons.format_bold, color: context.theme.colorScheme.onBackground),
               title: Text(context.l.boldFontTitle),
-              onToggle: (value) => context.appEvent.toggleBold(),
+              onToggle: (value) => fontBold.set!(),
             ),
             SettingsTile.switchTile(
-              initialValue: context.app.engTitles,
+              initialValue: engTitles.watch(context),
               leading: Icon(Icons.abc, color: context.theme.colorScheme.onBackground),
               title: Text(context.l.engTitles),
-              onToggle: (value) => context.appEvent.toggleEngBookNames(),
+              onToggle: (value) => engTitles.set!(),
             ),
           ],
         ),
@@ -89,23 +91,23 @@ class SettingsSheet extends StatelessWidget {
             SettingsTile.navigation(
               leading: const Icon(Icons.policy_outlined, color: Colors.brown),
               title: Text(context.l.privacyPolicyTitle),
-              onPressed: context.appEvent.showPrivacyPolicy,
+              onPressed: showPrivacyPolicy,
             ),
             SettingsTile.navigation(
               leading: const Icon(Icons.share_outlined, color: Colors.blueAccent),
               title: Text(context.l.shareAppTitle),
-              onPressed: context.appEvent.shareAppLink,
+              onPressed: shareAppLink,
             ),
             if (!isDesktop()) // TODO: mabe support OSx if we release in that store
               SettingsTile.navigation(
                 leading: Icon(Icons.star, color: Colors.yellowAccent.shade700),
                 title: Text(context.l.rateAppTitle),
-                onPressed: context.appEvent.rateApp,
+                onPressed: rateApp,
               ),
             SettingsTile.navigation(
               leading: Icon(Icons.info_outline, color: context.theme.colorScheme.onBackground),
               title: Text(context.l.aboutUsTitle),
-              onPressed: context.appEvent.showAboutUs,
+              onPressed: showAboutUs,
             ),
           ],
         ),

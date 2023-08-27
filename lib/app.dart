@@ -2,15 +2,13 @@ import "package:flutter/material.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:only_bible_app/screens/bible_select_screen.dart";
 import "package:only_bible_app/screens/chapter_view_screen.dart";
+import "package:only_bible_app/state.dart";
 import "package:only_bible_app/theme.dart";
 import "package:only_bible_app/utils.dart";
 import "package:only_bible_app/widgets/scaffold_markdown.dart";
 
 class App extends StatelessWidget {
-  final int initialBook;
-  final int initialChapter;
-
-  const App({super.key, required this.initialBook, required this.initialChapter});
+  const App({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,10 +17,10 @@ class App extends StatelessWidget {
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       debugShowCheckedModeBanner: false,
-      themeMode: context.app.darkMode ? ThemeMode.dark : ThemeMode.light,
+      themeMode: darkMode.watch(context) ? ThemeMode.dark : ThemeMode.light,
       theme: lightTheme,
       darkTheme: darkTheme,
-      locale: context.app.locale,
+      locale: Locale(languageCode.watch(context)),
       // initialRoute: "",
       routes: {
         // TODO: maybe have a landing page
@@ -30,9 +28,12 @@ class App extends StatelessWidget {
         "/privacy-policy": (context) => const ScaffoldMarkdown(title: "Privacy Policy", file: "privacy-policy.md"),
         "/about-us": (context) => const ScaffoldMarkdown(title: "About Us", file: "about-us.md"),
       },
-      home: context.app.firstOpen
+      home: firstOpen.value
           ? const BibleSelectScreen()
-          : ChapterViewScreen(bookIndex: initialBook, chapterIndex: initialChapter),
+          : ChapterViewScreen(
+              bookIndex: savedBook.value,
+              chapterIndex: savedChapter.value,
+            ),
     );
   }
 }

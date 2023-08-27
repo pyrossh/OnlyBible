@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
-import "package:only_bible_app/providers/app_provider.dart";
+import "package:only_bible_app/navigation.dart";
+import "package:only_bible_app/state.dart";
 import "package:only_bible_app/utils.dart";
 import "package:only_bible_app/widgets/scaffold_menu.dart";
 import "package:only_bible_app/widgets/sliver_heading.dart";
@@ -14,7 +15,7 @@ class BibleSelectScreen extends StatelessWidget {
       child: CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [
-          SliverHeading(title: context.l.bibleSelectTitle, showClose: !context.app.firstOpen),
+          SliverHeading(title: context.l.bibleSelectTitle, showClose: !firstOpen.value),
           SliverTileGrid(
             listType: ListType.large,
             children: List.of(
@@ -28,10 +29,10 @@ class BibleSelectScreen extends StatelessWidget {
                   //   ],
                   // ),
                   onPressed: () {
-                    AppProvider.ofEvent(context).updateCurrentBible(context, Locale(l.localeName), l.languageTitle);
-                    if (context.appEvent.firstOpen) {
-                      context.appEvent.firstOpen = false;
-                      context.appEvent.pushBookChapter(context, 0, 0, null);
+                    updateCurrentBible(context, Locale(l.localeName), l.languageTitle);
+                    if (firstOpen.value) {
+                      firstOpen.set!();
+                      pushBookChapter(context, 0, 0, null);
                     } else {
                       Navigator.of(context).pop();
                     }

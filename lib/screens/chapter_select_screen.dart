@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:only_bible_app/models.dart";
+import "package:only_bible_app/navigation.dart";
 import "package:only_bible_app/utils.dart";
 import "package:only_bible_app/widgets/scaffold_menu.dart";
 import "package:only_bible_app/widgets/sliver_tile_grid.dart";
@@ -22,7 +23,7 @@ class ChapterSelectScreen extends StatelessWidget {
             children: List.generate(book.chapters.length, (index) {
               return TextButton(
                 child: Text("${index + 1}"),
-                onPressed: () => context.appEvent.replaceBookChapter(context, selectedBookIndex, index),
+                onPressed: () => replaceBookChapter(context, selectedBookIndex, index),
               );
             }),
           ),

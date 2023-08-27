@@ -1,8 +1,10 @@
 import "package:flutter/material.dart";
+import "package:only_bible_app/state.dart";
 import "package:only_bible_app/utils.dart";
 import "package:only_bible_app/widgets/chapter_app_bar.dart";
 import "package:only_bible_app/widgets/sidebar.dart";
 import "package:only_bible_app/widgets/verses_view.dart";
+import "package:provider/provider.dart";
 
 class ChapterViewScreen extends StatelessWidget {
   final int bookIndex;
@@ -29,7 +31,7 @@ class ChapterViewScreen extends StatelessWidget {
     //     );
     //   },
     // ),
-    final book = context.app.bible.books[bookIndex];
+    final book = bible.watch(context).books[bookIndex];
     final chapter = book.chapters[chapterIndex];
     return Scaffold(
       appBar: context.isWide ? null : ChapterAppBar(book: book, chapter: chapter),
@@ -48,14 +50,14 @@ class ChapterViewScreen extends StatelessWidget {
                           child: Divider(height: 5, indent: 20, endIndent: 20, thickness: 1.5),
                         ),
                         Flexible(
-                          child: VersesView(book: book, chapter: chapter),
+                          child: VersesView(chapter: chapter),
                         ),
                       ],
                     ),
                   ),
                 ],
               )
-            : VersesView(book: book, chapter: chapter),
+            : VersesView(chapter: chapter),
       ),
     );
   }

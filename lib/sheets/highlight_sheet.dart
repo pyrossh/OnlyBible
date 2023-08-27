@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:only_bible_app/state.dart";
 import "package:only_bible_app/theme.dart";
 import "package:only_bible_app/utils.dart";
 import "package:only_bible_app/widgets/highlight_button.dart";
@@ -9,11 +10,9 @@ class HighlightSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bottom = isIOS() ? 20.0 : 0.0;
-    final iconColor = context.app.darkMode ? Colors.white.withOpacity(0.9) : Colors.black.withOpacity(0.9);
+    final iconColor = darkMode.value ? Colors.white.withOpacity(0.9) : Colors.black.withOpacity(0.9);
     void onHighlight(int index) {
-      final verses = context.appEvent.selectedVerses;
-      context.appEvent.setHighlight(context, verses, index);
-      context.appEvent.closeActions(context);
+      setHighlight(context, index);
     }
 
     return Container(
@@ -25,27 +24,27 @@ class HighlightSheet extends StatelessWidget {
         children: [
           IconButton(
             padding: EdgeInsets.zero,
-            onPressed: () => context.appEvent.removeSelectedHighlights(context),
+            onPressed: () => removeHighlight(context),
             icon: Icon(Icons.cancel_outlined, size: 28, color: iconColor),
           ),
           HighlightButton(
             index: 0,
-            color: context.app.darkMode ? darkHighlights[0] : lightHighlights[0],
+            color: darkMode.value ? darkHighlights[0] : lightHighlights[0],
             onHighlightSelected: onHighlight,
           ),
           HighlightButton(
             index: 1,
-            color: context.app.darkMode ? darkHighlights[1] : lightHighlights[1],
+            color: darkMode.value ? darkHighlights[1] : lightHighlights[1],
             onHighlightSelected: onHighlight,
           ),
           HighlightButton(
             index: 2,
-            color: context.app.darkMode ? darkHighlights[2] : lightHighlights[2],
+            color: darkMode.value ? darkHighlights[2] : lightHighlights[2],
             onHighlightSelected: onHighlight,
           ),
           HighlightButton(
             index: 3,
-            color: context.app.darkMode ? darkHighlights[3] : lightHighlights[3],
+            color: darkMode.value ? darkHighlights[3] : lightHighlights[3],
             onHighlightSelected: onHighlight,
           ),
         ],

@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import "package:only_bible_app/dialog.dart";
-import "package:only_bible_app/providers/app_provider.dart";
+import "package:only_bible_app/navigation.dart";
+import "package:only_bible_app/state.dart";
 import "package:only_bible_app/utils.dart";
 
 class ActionsSheet extends StatelessWidget {
@@ -8,11 +9,10 @@ class ActionsSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final app = AppProvider.of(context);
     final bottom = isIOS() ? 20.0 : 0.0;
-    final iconColor = app.darkMode ? Colors.white.withOpacity(0.9) : Colors.black.withOpacity(0.9);
-    final audioIcon = app.isPlaying ? Icons.pause_circle_outline : Icons.play_circle_outline;
-    final audioEnabled = app.hasAudio(context);
+    final iconColor = darkMode.value ? Colors.white.withOpacity(0.9) : Colors.black.withOpacity(0.9);
+    final audioIcon = isPlaying.watch(context) ? Icons.pause_circle_outline : Icons.play_circle_outline;
+    final audioEnabled = context.hasAudio;
     return Container(
       height: context.actionsHeight,
       color: Theme.of(context).colorScheme.background,
@@ -22,19 +22,19 @@ class ActionsSheet extends StatelessWidget {
         children: [
           IconButton(
             padding: EdgeInsets.zero,
-            onPressed: () => context.appEvent.removeSelectedHighlights(context),
+            onPressed: () => removeHighlight(context),
             icon: Icon(Icons.cancel_outlined, size: 28, color: iconColor),
           ),
           IconButton(
             padding: EdgeInsets.zero,
-            onPressed: () => context.appEvent.showHighlights(context),
+            onPressed: () => showHighlights(context),
             icon: Icon(Icons.border_color_outlined, size: 28, color: iconColor),
           ),
           IconButton(
             padding: EdgeInsets.zero,
             onPressed: () {
               if (audioEnabled) {
-                context.appEvent.onPlay(context);
+                onPlay(context);
               } else {
                 showError(context, context.lEvent.audioNotAvailable);
               }
@@ -43,12 +43,12 @@ class ActionsSheet extends StatelessWidget {
           ),
           IconButton(
             padding: EdgeInsets.zero,
-            onPressed: () => context.appEvent.showNoteField(context, context.appEvent.selectedVerses.first),
+            onPressed: () => showNoteField(context, selectedVerses.value.first),
             icon: Icon(Icons.post_add_outlined, size: 34, color: iconColor),
           ),
           IconButton(
             padding: EdgeInsets.zero,
-            onPressed: () => context.appEvent.shareVerses(context),
+            onPressed: () => shareVerses(context, bible.value, selectedVerses.value),
             icon: Icon(Icons.share_outlined, size: 34, color: iconColor),
           ),
         ],

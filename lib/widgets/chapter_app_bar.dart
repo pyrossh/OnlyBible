@@ -1,5 +1,7 @@
 import "package:flutter/material.dart";
 import "package:only_bible_app/models.dart";
+import "package:only_bible_app/navigation.dart";
+import "package:only_bible_app/state.dart";
 import "package:only_bible_app/utils.dart";
 
 class ChapterAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -24,7 +26,7 @@ class ChapterAppBar extends StatelessWidget implements PreferredSizeWidget {
           children: [
             InkWell(
               enableFeedback: true,
-              onTap: () => context.appEvent.changeBook(context),
+              onTap: () => changeBook(context, bible.value),
               child: Row(
                 children: [
                   Text(
@@ -54,7 +56,7 @@ class ChapterAppBar extends StatelessWidget implements PreferredSizeWidget {
                       ),
                       icon: const Icon(Icons.chevron_left),
                       label: const Text("Prev"),
-                      onPressed: () => context.appEvent.onPrevious(context, book.index, chapter.index),
+                      onPressed: () => previousChapter(context, bible.value, book.index, chapter.index),
                     ),
                   if (isDesktop) const SizedBox(width: 10),
                   if (isDesktop)
@@ -68,7 +70,7 @@ class ChapterAppBar extends StatelessWidget implements PreferredSizeWidget {
                       ),
                       icon: const Icon(Icons.chevron_right),
                       label: const Text("Next"),
-                      onPressed: () => context.appEvent.onNext(context, book.index, chapter.index),
+                      onPressed: () => nextChapter(context, bible.value, book.index, chapter.index),
                     ),
                   if (isDesktop) const SizedBox(width: 20),
                   if (isDesktop)
@@ -86,15 +88,15 @@ class ChapterAppBar extends StatelessWidget implements PreferredSizeWidget {
                         ),
                       ),
                       icon: const Icon(Icons.book_outlined),
-                      label: Text(context.app.bible.name),
-                      onPressed: () => context.appEvent.changeBibleFromHeader(context),
+                      label: Text(bible.watch(context).name),
+                      onPressed: () => changeBibleFromHeader(context),
                     ),
                   Padding(
                     padding: const EdgeInsets.only(left: 10),
                     child: IconButton(
                       padding: EdgeInsets.zero,
                       icon: Icon(Icons.more_vert, size: isDesktop ? 28 : 24),
-                      onPressed: () => context.appEvent.showSettings(context),
+                      onPressed: () => showSettings(context),
                     ),
                   ),
                 ],
