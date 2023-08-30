@@ -20,10 +20,10 @@ class VersesView extends StatelessWidget {
       onSwipeRight: (offset) {
         previousChapter(context, bible.value, chapter.book, chapter.index);
       },
-      child: Padding(
-        padding: const EdgeInsets.only(left: 20, right: 20),
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
+      child: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Padding(
+          padding: const EdgeInsets.only(left: 20, right: 20),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
