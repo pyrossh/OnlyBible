@@ -2,40 +2,25 @@ import "package:flutter/material.dart";
 import "package:flutter/scheduler.dart";
 import "package:get_storage/get_storage.dart";
 
-late GetStorage localBox;
-
-ensureAtomsInitialized(GetStorage box) async {
-  localBox = box;
-  await localBox.initStorage;
-}
-
-class Cubit<T> extends ValueNotifier<T> {
-  Cubit(T initialState) : super(initialState);
-
-  void emit(T state) {
-    super.value = state;
-  }
-}
-
 class Atom<T> extends ValueNotifier<T> {
   final String key;
-  final bool persist;
+  final GetStorage? box;
   Function()? set;
   Function(T)? update;
 
-  Atom({required this.key, required T initialValue, this.persist = true, this.set, this.update})
-      : super(persist ? localBox.read<T>(key) ?? initialValue : initialValue);
+  Atom({required this.key, required T initialValue, this.box, this.set, this.update})
+      : super(box != null ? box.read<T>(key) ?? initialValue : initialValue);
 
   @override
   set value(T newValue) {
     super.value = newValue;
-    if (persist) {
+    if (box != null) {
       if (newValue == null) {
-        localBox.remove(key);
+        box!.remove(key);
       } else {
-        localBox.write(key, newValue);
+        box!.write(key, newValue);
       }
-      localBox.save();
+      box!.save();
     }
   }
 

@@ -12,17 +12,17 @@ import "package:only_bible_app/models.dart";
 import "package:only_bible_app/theme.dart";
 import "package:only_bible_app/utils.dart";
 import "package:only_bible_app/navigation.dart";
-import "package:only_bible_app/widgets/note_sheet.dart";
 
 final box = GetStorage("only-bible-app-prefs");
 final player = AudioPlayer();
 final noteTextController = TextEditingController();
 
 initState() async {
-  await ensureAtomsInitialized(box);
+  await box.initStorage;
 }
 
 final Atom<bool> firstOpen = Atom<bool>(
+  box: box,
   key: "firstOpen",
   initialValue: true,
   set: () {
@@ -31,6 +31,7 @@ final Atom<bool> firstOpen = Atom<bool>(
 );
 
 final Atom<String> languageCode = Atom<String>(
+  box: box,
   key: "languageCode",
   initialValue: "en",
   update: (String v) {
@@ -39,6 +40,7 @@ final Atom<String> languageCode = Atom<String>(
 );
 
 final Atom<String> bibleName = Atom<String>(
+  box: box,
   key: "bibleName",
   initialValue: "English",
   update: (String v) {
@@ -48,7 +50,6 @@ final Atom<String> bibleName = Atom<String>(
 
 final Atom<Bible> bible = Atom<Bible>(
   key: "bible",
-  persist: false,
   initialValue: Bible(name: "English"),
   update: (Bible v) {
     bible.value = v;
@@ -57,7 +58,6 @@ final Atom<Bible> bible = Atom<Bible>(
 
 final bibleCache = Atom<Future<Bible?>?>(
   key: "bible",
-  persist: false,
   initialValue: null,
 );
 
@@ -95,6 +95,7 @@ Future<Bible?> loadBible(String name) async {
 // }
 
 final Atom<bool> engTitles = Atom<bool>(
+  box: box,
   key: "engTitles",
   initialValue: false,
   set: () {
@@ -103,6 +104,7 @@ final Atom<bool> engTitles = Atom<bool>(
 );
 
 final Atom<bool> darkMode = Atom<bool>(
+  box: box,
   key: "darkMode",
   initialValue: false,
   set: () {
@@ -112,6 +114,7 @@ final Atom<bool> darkMode = Atom<bool>(
 );
 
 final Atom<bool> fontBold = Atom<bool>(
+  box: box,
   key: "fontBold",
   initialValue: false,
   set: () {
@@ -120,6 +123,7 @@ final Atom<bool> fontBold = Atom<bool>(
 );
 
 final Atom<double> textScale = Atom<double>(
+  box: box,
   key: "textScale",
   initialValue: 0,
   update: (double v) {
@@ -128,6 +132,7 @@ final Atom<double> textScale = Atom<double>(
 );
 
 final Atom<int> savedBook = Atom<int>(
+  box: box,
   key: "savedBook",
   initialValue: 0,
   update: (int v) {
@@ -136,6 +141,7 @@ final Atom<int> savedBook = Atom<int>(
 );
 
 final Atom<int> savedChapter = Atom<int>(
+  box: box,
   key: "savedChapter",
   initialValue: 0,
   update: (int v) {
@@ -146,7 +152,6 @@ final Atom<int> savedChapter = Atom<int>(
 final Atom<bool> isPlaying = Atom<bool>(
   key: "isPlaying",
   initialValue: false,
-  persist: false,
   update: (bool v) {
     isPlaying.value = v;
   },
@@ -155,7 +160,6 @@ final Atom<bool> isPlaying = Atom<bool>(
 final Atom<List<Verse>> selectedVerses = Atom<List<Verse>>(
   key: "selectedVerses",
   initialValue: [],
-  persist: false,
   update: (List<Verse> verses) {
     selectedVerses.value = verses;
     // selectedVerses.notifyChanged();
@@ -284,20 +288,6 @@ bool hasNote(Verse v) {
   return box.hasData("${v.book}:${v.chapter}:${v.index}:note");
 }
 
-showNoteField(BuildContext context, Verse v) {
-  final noteText = box.read("${v.book}:${v.chapter}:${v.index}:note") ?? "";
-  noteTextController.text = noteText;
-  showModalBottomSheet(
-    context: context,
-    isDismissible: true,
-    enableDrag: true,
-    showDragHandle: true,
-    useSafeArea: true,
-    isScrollControlled: true,
-    builder: (context) => NoteSheet(verse: v),
-  );
-}
-
 saveNote(BuildContext context, Verse v) {
   final note = noteTextController.text;
   box.write("${v.book}:${v.chapter}:${v.index}:note", note);
@@ -312,8 +302,4 @@ deleteNote(BuildContext context, Verse v) {
   hideNoteField(context);
   // TODO: hack to re-render this page
   selectedVerses.notifyChanged();
-}
-
-hideNoteField(BuildContext context) {
-  Navigator.of(context).pop();
 }

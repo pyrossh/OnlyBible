@@ -9,6 +9,7 @@ import "package:only_bible_app/sheets/highlight_sheet.dart";
 import "package:only_bible_app/sheets/settings_sheet.dart";
 import "package:only_bible_app/state.dart";
 import "package:only_bible_app/utils.dart";
+import "package:only_bible_app/widgets/note_sheet.dart";
 import "package:only_bible_app/widgets/scaffold_markdown.dart";
 import "package:share_plus/share_plus.dart";
 import "package:only_bible_app/atom.dart";
@@ -16,7 +17,6 @@ import "package:only_bible_app/atom.dart";
 final Atom<bool> actionsShown = Atom<bool>(
   key: "actionsShown",
   initialValue: false,
-  persist: false,
   update: (bool v) {
     actionsShown.value = v;
   },
@@ -25,7 +25,6 @@ final Atom<bool> actionsShown = Atom<bool>(
 final Atom<bool> highlightsShown = Atom<bool>(
   key: "highlightsShown",
   initialValue: false,
-  persist: false,
   update: (bool v) {
     highlightsShown.value = v;
   },
@@ -253,4 +252,22 @@ hideHighlights(BuildContext context) {
     highlightsShown.value = false;
     Navigator.of(context).pop();
   }
+}
+
+showNoteField(BuildContext context, Verse v) {
+  final noteText = box.read("${v.book}:${v.chapter}:${v.index}:note") ?? "";
+  noteTextController.text = noteText;
+  showModalBottomSheet(
+    context: context,
+    isDismissible: true,
+    enableDrag: true,
+    showDragHandle: true,
+    useSafeArea: true,
+    isScrollControlled: true,
+    builder: (context) => NoteSheet(verse: v),
+  );
+}
+
+hideNoteField(BuildContext context) {
+  Navigator.of(context).pop();
 }
