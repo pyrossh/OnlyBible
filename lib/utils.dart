@@ -1,9 +1,11 @@
+import "dart:typed_data";
 import "package:only_bible_app/dialog.dart";
 import "package:only_bible_app/state.dart";
 import "package:url_launcher/url_launcher.dart";
 import "package:flutter/foundation.dart" show defaultTargetPlatform, TargetPlatform;
 import "package:flutter/material.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
+import "package:flutter_azure_tts/flutter_azure_tts.dart";
 
 extension MyIterable<E> on Iterable<E> {
   Iterable<E> sortedBy(Comparable Function(E e) key) => toList()..sort((a, b) => key(a).compareTo(key(b)));
@@ -20,7 +22,7 @@ extension AppContext on BuildContext {
       ? lookupAppLocalizations(const Locale("en"))
       : AppLocalizations.of(this)!;
 
-  get hasAudio => l.hasAudio == "true";
+  get hasAudio => l.audioVoice != "";
 
   double get actionsHeight {
     if (isIOS()) {
@@ -142,4 +144,24 @@ bool isIOS() {
 
 bool isAndroid() {
   return defaultTargetPlatform == TargetPlatform.android;
+}
+
+Future<Uint8List> convertText(String langCode, String text) async {
+  final ttsResponse = await AzureTts.getTts(TtsParams(
+    voice: Voice(
+      name: "",
+      displayName: "",
+      localName: "",
+      shortName: langCode,
+      gender: "",
+      locale: langCode,
+      sampleRateHertz: AudioOutputFormat.audio48khz96kBitrateMonoMp3,
+      voiceType: "",
+      status: "",
+    ),
+    audioFormat: AudioOutputFormat.audio48khz96kBitrateMonoMp3,
+    rate: 0.90,
+    text: text,
+  ));
+  return ttsResponse.audio.buffer.asUint8List();
 }

@@ -1,7 +1,6 @@
 import "dart:convert";
 import "dart:developer";
 import "package:firebase_crashlytics/firebase_crashlytics.dart";
-import "package:firebase_storage/firebase_storage.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:get_storage/get_storage.dart";
@@ -62,6 +61,7 @@ final bibleCache = Atom<Future<Bible?>?>(
 );
 
 updateCurrentBible(BuildContext context, Locale l, String name) async {
+  hideActions(context);
   languageCode.value = l.languageCode;
   bibleName.update!(name);
   bibleCache.value = loadBible(name);
@@ -76,6 +76,10 @@ Future<Bible> getBibleFromAsset(String file) async {
     books: books,
   );
 }
+
+// CachedValue(
+// () => factorial(originalValue),
+// ).withDependency(() => originalValue)
 
 Future<Bible?> loadBible(String name) async {
   print("loadBible ${name}");
@@ -254,20 +258,39 @@ pause() async {
   isPlaying.value = false;
 }
 
+class BufferAudioSource extends StreamAudioSource {
+  final Uint8List _buffer;
+
+  BufferAudioSource(this._buffer);
+
+  @override
+  Future<StreamAudioResponse> request([int? start, int? end]) {
+    start = start ?? 0;
+    end = end ?? _buffer.length;
+
+    return Future.value(
+      StreamAudioResponse(
+        sourceLength: _buffer.length,
+        contentLength: end - start,
+        offset: start,
+        contentType: "audio/mpeg",
+        stream: Stream.value(List<int>.from(_buffer.skip(start).take(end - start))),
+      ),
+    );
+  }
+}
+
 onPlay(BuildContext context) async {
-  final versesToPlay = List.from(selectedVerses.value);
+  final versesToPlay = List<Verse>.from(selectedVerses.value);
   if (isPlaying.value) {
     pause();
   } else {
     isPlaying.value = true;
     for (final v in versesToPlay) {
-      final book = (v.book + 1).toString().padLeft(2, "0");
-      final chapter = (v.chapter + 1).toString().padLeft(3, "0");
-      final verseNo = (v.index + 1).toString().padLeft(3, "0");
-      final pathname = "${bibleName.value}/$book-$chapter-$verseNo.mp3";
+      final pathname = "${bibleName.value}|${v.book}|${v.chapter}|${v.index}";
       try {
-        final url = await FirebaseStorage.instance.ref(pathname).getDownloadURL();
-        await player.setUrl(url);
+        final list = await convertText(context.l.audioVoice, v.text);
+        await player.setAudioSource(BufferAudioSource(list));
         await player.play();
         await player.stop();
       } catch (err) {

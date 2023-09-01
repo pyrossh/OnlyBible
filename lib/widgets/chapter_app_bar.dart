@@ -32,6 +32,7 @@ class ChapterAppBar extends StatelessWidget implements PreferredSizeWidget {
                   Text(
                     "$bookName ${chapter.index + 1}",
                     style: Theme.of(context).textTheme.headlineMedium,
+                    key: const Key("bookTitle"),
                   ),
                   Icon(
                     Icons.expand_more,
