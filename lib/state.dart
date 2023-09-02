@@ -1,10 +1,10 @@
-import "dart:convert";
 import "dart:developer";
 import "package:firebase_crashlytics/firebase_crashlytics.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:get_storage/get_storage.dart";
 import "package:just_audio/just_audio.dart";
+import "package:only_bible_app/actions.dart";
 import "package:only_bible_app/atom.dart";
 import "package:only_bible_app/dialog.dart";
 import "package:only_bible_app/models.dart";
@@ -24,21 +24,21 @@ final bibleAtom = AsyncAtom(
   callback: loadBible,
 );
 
-final Atom<bool> firstOpen = Atom<bool>(
+final firstOpen = Atom2<bool, AppAction>(
   box: box,
   key: "firstOpen",
-  initialValue: true,
-  set: () {
-    firstOpen.value = false;
+  initialState: true,
+  reducer: {
+    FirstOpenDone: (state, action) => false,
   },
 );
 
-final Atom<String> languageCode = Atom<String>(
+final languageCode = Atom2<String, AppAction>(
   box: box,
   key: "languageCode",
-  initialValue: "en",
-  update: (String v) {
-    languageCode.value = v;
+  initialState: "en",
+  reducer: {
+    SetLanguageCode: (state, action) => (action as SetLanguageCode).code,
   },
 );
 
@@ -53,30 +53,10 @@ final Atom<String> bibleName = Atom<String>(
 
 updateCurrentBible(BuildContext context, String code, String name) async {
   hideActions(context);
-  languageCode.value = code;
+  dispatch(SetLanguageCode(code));
   bibleName.update!(name);
   pushBookChapter(context, name, 0, 0, null);
 }
-
-Future<Bible> loadBible(String name) async {
-  final bytes = await rootBundle.load("assets/bibles/$name.txt");
-  final books = getBibleFromText(name, utf8.decode(bytes.buffer.asUint8List(), allowMalformed: false));
-// await Future.delayed(Duration(seconds: 2));
-  return Bible(
-    name: name,
-    books: books,
-  );
-}
-
-// Trace customTrace;
-// if (!isDesktop()) {
-//   customTrace = FirebasePerformance.instance.newTrace("loadBible");
-//   await customTrace.start();
-// }
-// bibleLoading = Future.delayed(const Duration(seconds: 2)).then((value) => getBibleFromAsset(bibleName.value));
-// if (!isDesktop()) {
-//   await customTrace.stop();
-// }
 
 final Atom<bool> engTitles = Atom<bool>(
   box: box,

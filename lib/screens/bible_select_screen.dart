@@ -1,4 +1,6 @@
 import "package:flutter/material.dart";
+import "package:only_bible_app/actions.dart";
+import "package:only_bible_app/atom.dart";
 import "package:only_bible_app/state.dart";
 import "package:only_bible_app/utils.dart";
 import "package:only_bible_app/widgets/scaffold_menu.dart";
@@ -24,15 +26,15 @@ class BibleSelectScreen extends StatelessWidget {
                       ? Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(l.localeLanguageTitle),
-                            Text("(${l.languageTitle})", textScaleFactor: 0.7),
+                            Text(l.localeLanguageTitle, textScaleFactor: 1.3),
+                            Text("(${l.languageTitle})", textScaleFactor: 0.8),
                           ],
                         )
-                      : Text(l.languageTitle),
+                      : Text(l.languageTitle, textScaleFactor: 1.1),
                   onPressed: () {
                     if (firstOpen.value) {
-                      firstOpen.set!();
-                    } else {}
+                      dispatch(const FirstOpenDone());
+                    }
                     updateCurrentBible(context, l.localeName, l.languageTitle);
                   },
                 );

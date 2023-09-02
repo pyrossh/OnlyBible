@@ -1,5 +1,7 @@
-import "dart:typed_data";
+import "dart:convert";
+import "package:flutter/services.dart";
 import "package:only_bible_app/dialog.dart";
+import "package:only_bible_app/models.dart";
 import "package:only_bible_app/state.dart";
 import "package:url_launcher/url_launcher.dart";
 import "package:flutter/foundation.dart" show defaultTargetPlatform, TargetPlatform;
@@ -180,4 +182,14 @@ Future<Uint8List> convertText(String langCode, String text) async {
     text: text,
   ));
   return ttsResponse.audio.buffer.asUint8List();
+}
+
+Future<Bible> loadBible(String name) async {
+  final bytes = await rootBundle.load("assets/bibles/$name.txt");
+  final books = getBibleFromText(name, utf8.decode(bytes.buffer.asUint8List(), allowMalformed: false));
+// await Future.delayed(Duration(seconds: 2));
+  return Bible(
+    name: name,
+    books: books,
+  );
 }
