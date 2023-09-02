@@ -63,14 +63,21 @@ class Chapter {
 
 class Verse {
   final int index;
+  final String bibleName;
   final int book;
   final int chapter;
   final String text;
 
-  const Verse({required this.index, required this.text, required this.chapter, required this.book});
+  const Verse({
+    required this.index,
+    required this.text,
+    required this.bibleName,
+    required this.chapter,
+    required this.book,
+  });
 }
 
-List<Book> getBibleFromText(String text) {
+List<Book> getBibleFromText(String bibleName, String text) {
   final List<Book> books = [];
   final lines = text.split("\n");
   for (var (index, line) in lines.indexed) {
@@ -103,6 +110,7 @@ List<Book> getBibleFromText(String text) {
           Verse(
             index: verseNo - 1,
             text: verseText,
+            bibleName: bibleName,
             chapter: chapter - 1,
             book: book - 1,
           ),

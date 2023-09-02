@@ -1,4 +1,6 @@
 import "package:flutter/material.dart";
+import "package:flutter_bloc/flutter_bloc.dart";
+import "package:only_bible_app/blocs/bible_bloc.dart";
 import "package:only_bible_app/navigation.dart";
 import "package:only_bible_app/state.dart";
 import "package:only_bible_app/utils.dart";
@@ -29,6 +31,7 @@ class BibleSelectScreen extends StatelessWidget {
                   //   ],
                   // ),
                   onPressed: () {
+                    context.read<BibleBloc>().add(BibleEvent.load(l.languageTitle));
                     updateCurrentBible(context, Locale(l.localeName), l.languageTitle);
                     if (firstOpen.value) {
                       firstOpen.set!();

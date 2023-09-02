@@ -55,34 +55,23 @@ final Atom<Bible> bible = Atom<Bible>(
   },
 );
 
-final bibleCache = Atom<Future<Bible?>?>(
-  key: "bible",
-  initialValue: null,
-);
-
 updateCurrentBible(BuildContext context, Locale l, String name) async {
   hideActions(context);
   languageCode.value = l.languageCode;
   bibleName.update!(name);
-  bibleCache.value = loadBible(name);
 }
 
-Future<Bible> getBibleFromAsset(String file) async {
-  final bytes = await rootBundle.load("assets/bibles/$file.txt");
-  final books = getBibleFromText(utf8.decode(bytes.buffer.asUint8List(), allowMalformed: false));
+Future<Bible> getBibleFromAsset(String bibleName) async {
+  final bytes = await rootBundle.load("assets/bibles/$bibleName.txt");
+  final books = getBibleFromText(bibleName, utf8.decode(bytes.buffer.asUint8List(), allowMalformed: false));
   // await Future.delayed(Duration(seconds: 1));
   return Bible.withBooks(
-    name: bibleName.value,
+    name: bibleName,
     books: books,
   );
 }
 
-// CachedValue(
-// () => factorial(originalValue),
-// ).withDependency(() => originalValue)
-
 Future<Bible?> loadBible(String name) async {
-  print("loadBible ${name}");
   return getBibleFromAsset(name).then((value) {
     bible.update!(value);
     return value;

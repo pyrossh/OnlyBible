@@ -34,7 +34,6 @@ void main() async {
   );
   await initState();
   updateStatusBar(darkMode.value);
-  bibleCache.value = loadBible(bibleName.value);
   runApp(const App());
   FlutterNativeSplash.remove();
 }
