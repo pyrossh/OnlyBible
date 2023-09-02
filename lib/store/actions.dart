@@ -36,11 +36,12 @@ class SetPlaying implements AppAction {
   const SetPlaying(this.value);
 }
 
-class SetSelectedVerses implements AppAction {
-  final List<Verse> value;
+class SelectVerse implements AppAction {
+  final Verse verse;
 
-  const SetSelectedVerses(this.value);
+  const SelectVerse(this.verse);
 }
+
 
 class ClearSelectedVerses implements AppAction {
   const ClearSelectedVerses();

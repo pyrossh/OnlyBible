@@ -144,15 +144,19 @@ final isPlaying = Atom(
   },
 );
 
-final selectedVersesAtom = Atom(
+final selectedVersesAtom = Atom<List<Verse>, AppAction>(
   key: "selectedVerses",
-  initialState: List<Verse>.from([]),
+  initialState: [],
   reducer: (state, action) {
-    if (action is SetSelectedVerses) {
-      return action.value;
+    if (action is SelectVerse) {
+      if (isVerseSelected(action.verse)) {
+        return (state as List<Verse>).removeBy((it) => it.index == action.verse.index).toList();
+      } else {
+        return (state as List<Verse>).addBy(action.verse).toList();
+      }
     }
     if (action is ClearSelectedVerses) {
-      return [];
+      return List<Verse>.from([]);
     }
     return state;
   },
@@ -199,11 +203,7 @@ bool watchVerseSelected(BuildContext context, Verse v) {
 }
 
 void onVerseSelected(BuildContext context, Bible bible, Verse v) {
-  if (isVerseSelected(v)) {
-    dispatch(SetSelectedVerses(selectedVersesAtom.value.removeBy((it) => it.index == v.index).toList()));
-  } else {
-    dispatch(SetSelectedVerses(selectedVersesAtom.value.addBy(v).toList()));
-  }
+  dispatch(SelectVerse(v));
   if (selectedVersesAtom.value.isNotEmpty) {
     showActions(context, bible);
   }
