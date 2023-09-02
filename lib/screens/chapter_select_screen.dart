@@ -6,10 +6,11 @@ import "package:only_bible_app/widgets/sliver_tile_grid.dart";
 import "package:only_bible_app/widgets/sliver_heading.dart";
 
 class ChapterSelectScreen extends StatelessWidget {
+  final Bible bible;
   final Book book;
   final int selectedBookIndex;
 
-  const ChapterSelectScreen({super.key, required this.selectedBookIndex, required this.book});
+  const ChapterSelectScreen({super.key, required this.bible, required this.selectedBookIndex, required this.book});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +23,7 @@ class ChapterSelectScreen extends StatelessWidget {
             children: List.generate(book.chapters.length, (index) {
               return TextButton(
                 child: Text("${index + 1}"),
-                onPressed: () => replaceBookChapter(context, selectedBookIndex, index),
+                onPressed: () => replaceBookChapter(context, bible.name, selectedBookIndex, index),
               );
             }),
           ),

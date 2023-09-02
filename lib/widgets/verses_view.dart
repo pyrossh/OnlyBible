@@ -6,19 +6,20 @@ import "package:only_bible_app/navigation.dart";
 import "package:only_bible_app/state.dart";
 
 class VersesView extends StatelessWidget {
+  final Bible bible;
   final Chapter chapter;
 
-  const VersesView({super.key, required this.chapter});
+  const VersesView({super.key, required this.bible, required this.chapter});
 
   @override
   Widget build(BuildContext context) {
     final textStyle = DefaultTextStyle.of(context).style;
     return SwipeDetector(
       onSwipeLeft: (offset) {
-        nextChapter(context, bible.value, chapter.book, chapter.index);
+        nextChapter(context, bible, chapter.book, chapter.index);
       },
       onSwipeRight: (offset) {
-        previousChapter(context, bible.value, chapter.book, chapter.index);
+        previousChapter(context, bible, chapter.book, chapter.index);
       },
       child: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
@@ -57,7 +58,7 @@ class VersesView extends StatelessWidget {
                                   padding: const EdgeInsets.only(left: 3, right: 3),
                                   child: GestureDetector(
                                     onTap: () {
-                                      showNoteField(context, v);
+                                      showNoteField(context, bible, v);
                                     },
                                     child: const Icon(
                                       Icons.sticky_note_2_outlined,
@@ -72,7 +73,7 @@ class VersesView extends StatelessWidget {
                               style: getHighlightStyle(context, v),
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () {
-                                  onVerseSelected(context, v);
+                                  onVerseSelected(context, bible, v);
                                 },
                             ),
                             const WidgetSpan(

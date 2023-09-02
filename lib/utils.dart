@@ -7,12 +7,28 @@ import "package:flutter/material.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:flutter_azure_tts/flutter_azure_tts.dart";
 
-extension MyIterable<E> on Iterable<E> {
+extension IterableUtils<E> on Iterable<E> {
   Iterable<E> sortedBy(Comparable Function(E e) key) => toList()..sort((a, b) => key(a).compareTo(key(b)));
 
   Iterable<E> removeBy(bool Function(E e) key) => toList()..removeWhere(key);
 
   Iterable<E> addBy(E e) => toList()..add(e);
+}
+
+extension AsyncSnapshotUtils<E> on AsyncSnapshot<E> {
+  TResult when<TResult extends Object?>({
+    required TResult Function() loading,
+    required TResult Function(E? v) success,
+    required TResult Function() error,
+  }) {
+    if (hasError) {
+      return error();
+    }
+    if (connectionState == ConnectionState.done) {
+      return success(data);
+    }
+    return loading();
+  }
 }
 
 extension AppContext on BuildContext {

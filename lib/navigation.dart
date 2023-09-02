@@ -81,7 +81,7 @@ updateStatusBar(bool v) {
   }
 }
 
-pushBookChapter(BuildContext context, int book, int chapter, TextDirection? dir) {
+pushBookChapter(BuildContext context, String bibleName, int book, int chapter, TextDirection? dir) {
   savedBook.update!(book);
   savedChapter.update!(chapter);
   clearEvents(context);
@@ -89,18 +89,18 @@ pushBookChapter(BuildContext context, int book, int chapter, TextDirection? dir)
     createSlideRoute(
       context: context,
       slideDir: dir,
-      page: ChapterViewScreen(bookIndex: book, chapterIndex: chapter),
+      page: ChapterViewScreen(bibleName: bibleName, bookIndex: book, chapterIndex: chapter),
     ),
   );
 }
 
-replaceBookChapter(BuildContext context, int book, int chapter) {
+replaceBookChapter(BuildContext context, String bibleName, int book, int chapter) {
   savedBook.update!(book);
   savedChapter.update!(chapter);
   clearEvents(context);
   Navigator.of(context).pushReplacement(
     createNoTransitionPageRoute(
-      ChapterViewScreen(bookIndex: book, chapterIndex: chapter),
+      ChapterViewScreen(bibleName: bibleName, bookIndex: book, chapterIndex: chapter),
     ),
   );
 }
@@ -108,11 +108,11 @@ replaceBookChapter(BuildContext context, int book, int chapter) {
 nextChapter(BuildContext context, Bible bible, int book, int chapter) {
   final selectedBook = bible.books[book];
   if (selectedBook.chapters.length > chapter + 1) {
-    pushBookChapter(context, selectedBook.index, chapter + 1, TextDirection.ltr);
+    pushBookChapter(context, bible.name, selectedBook.index, chapter + 1, TextDirection.ltr);
   } else {
     if (selectedBook.index + 1 < bible.books.length) {
       final nextBook = bible.books[selectedBook.index + 1];
-      pushBookChapter(context, nextBook.index, 0, TextDirection.ltr);
+      pushBookChapter(context, bible.name, nextBook.index, 0, TextDirection.ltr);
     }
   }
 }
@@ -123,12 +123,12 @@ previousChapter(BuildContext context, Bible bible, int book, int chapter) {
     // if (Navigator.of(context).canPop()) {
     //   Navigator.of(context).pop();
     // } else {
-    pushBookChapter(context, selectedBook.index, chapter - 1, TextDirection.rtl);
+    pushBookChapter(context, bible.name, selectedBook.index, chapter - 1, TextDirection.rtl);
     // }
   } else {
     if (selectedBook.index - 1 >= 0) {
       final prevBook = bible.books[selectedBook.index - 1];
-      pushBookChapter(context, prevBook.index, prevBook.chapters.length - 1, TextDirection.rtl);
+      pushBookChapter(context, bible.name, prevBook.index, prevBook.chapters.length - 1, TextDirection.rtl);
     }
   }
 }
@@ -208,24 +208,24 @@ shareVerses(BuildContext context, Bible bible, List<Verse> verses) {
   Share.share("$title\n$text", subject: title);
 }
 
-showSettings(BuildContext context) {
+showSettings(BuildContext context, Bible bible) {
   showModalBottomSheet(
     context: context,
     isDismissible: true,
     enableDrag: true,
     showDragHandle: true,
     useSafeArea: true,
-    builder: (context) => const SettingsSheet(),
+    builder: (context) => SettingsSheet(bible: bible),
   );
 }
 
-showActions(BuildContext context) {
+showActions(BuildContext context, Bible bible) {
   if (!actionsShown.value) {
     actionsShown.value = true;
     Scaffold.of(context).showBottomSheet(
       enableDrag: false,
       clipBehavior: Clip.antiAliasWithSaveLayer,
-      (context) => const ActionsSheet(),
+      (context) => ActionsSheet(bible: bible),
     );
   }
 }
@@ -254,7 +254,7 @@ hideHighlights(BuildContext context) {
   }
 }
 
-showNoteField(BuildContext context, Verse v) {
+showNoteField(BuildContext context, Bible bible, Verse v) {
   final noteText = box.read("${v.book}:${v.chapter}:${v.index}:note") ?? "";
   noteTextController.text = noteText;
   showModalBottomSheet(
@@ -264,7 +264,7 @@ showNoteField(BuildContext context, Verse v) {
     showDragHandle: true,
     useSafeArea: true,
     isScrollControlled: true,
-    builder: (context) => NoteSheet(verse: v),
+    builder: (context) => NoteSheet(bible: bible, verse: v),
   );
 }
 

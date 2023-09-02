@@ -20,6 +20,10 @@ initState() async {
   await box.initStorage;
 }
 
+final bibleAtom = AsyncAtom(
+  callback: loadBible,
+);
+
 final Atom<bool> firstOpen = Atom<bool>(
   box: box,
   key: "firstOpen",
@@ -47,36 +51,23 @@ final Atom<String> bibleName = Atom<String>(
   },
 );
 
-final Atom<Bible> bible = Atom<Bible>(
-  key: "bible",
-  initialValue: Bible(name: "English"),
-  update: (Bible v) {
-    bible.value = v;
-  },
-);
-
-updateCurrentBible(BuildContext context, Locale l, String name) async {
+updateCurrentBible(BuildContext context, String code, String name) async {
   hideActions(context);
-  languageCode.value = l.languageCode;
+  languageCode.value = code;
   bibleName.update!(name);
+  pushBookChapter(context, name, 0, 0, null);
 }
 
-Future<Bible> getBibleFromAsset(String bibleName) async {
-  final bytes = await rootBundle.load("assets/bibles/$bibleName.txt");
-  final books = getBibleFromText(bibleName, utf8.decode(bytes.buffer.asUint8List(), allowMalformed: false));
-  // await Future.delayed(Duration(seconds: 1));
-  return Bible.withBooks(
-    name: bibleName,
+Future<Bible> loadBible(String name) async {
+  final bytes = await rootBundle.load("assets/bibles/$name.txt");
+  final books = getBibleFromText(name, utf8.decode(bytes.buffer.asUint8List(), allowMalformed: false));
+  // await Future.delayed(Duration(seconds: 2));
+  return Bible(
+    name: name,
     books: books,
   );
 }
 
-Future<Bible?> loadBible(String name) async {
-  return getBibleFromAsset(name).then((value) {
-    bible.update!(value);
-    return value;
-  });
-}
 // Trace customTrace;
 // if (!isDesktop()) {
 //   customTrace = FirebasePerformance.instance.newTrace("loadBible");
@@ -201,14 +192,14 @@ bool watchVerseSelected(BuildContext context, Verse v) {
   return selectedVerses.watch(context).any((el) => el.book == v.book && el.chapter == v.chapter && el.index == v.index);
 }
 
-void onVerseSelected(BuildContext context, Verse v) {
+void onVerseSelected(BuildContext context, Bible bible, Verse v) {
   if (isVerseSelected(v)) {
     selectedVerses.update!(selectedVerses.value.removeBy((it) => it.index == v.index).toList());
   } else {
     selectedVerses.update!(selectedVerses.value.addBy(v).toList());
   }
   if (selectedVerses.value.isNotEmpty) {
-    showActions(context);
+    showActions(context, bible);
   }
   if (selectedVerses.value.isEmpty) {
     hideActions(context);
@@ -269,14 +260,14 @@ class BufferAudioSource extends StreamAudioSource {
   }
 }
 
-onPlay(BuildContext context) async {
+onPlay(BuildContext context, Bible bible) async {
   final versesToPlay = List<Verse>.from(selectedVerses.value);
   if (isPlaying.value) {
     pause();
   } else {
     isPlaying.value = true;
     for (final v in versesToPlay) {
-      final pathname = "${bibleName.value}|${v.book}|${v.chapter}|${v.index}";
+      final pathname = "${bible.name}|${v.book}|${v.chapter}|${v.index}";
       try {
         final list = await convertText(context.l.audioVoice, v.text);
         await player.setAudioSource(BufferAudioSource(list));

@@ -65,41 +65,18 @@ class _ListenerWrapper {
   void Function()? listener;
 }
 
-class AsyncAtom<T> extends ValueNotifier<T> {
-  final T Function(T) callback;
+class AsyncAtom<P extends String, E extends Future> {
+  final Map<P, E> cache = {};
+  final E Function(P) callback;
 
-  AsyncAtom(super._value, this.callback);
+  AsyncAtom({required this.callback});
 
-  @override
-  get value {
-    return callback(this.value);
-  }
-
-  T watch(BuildContext context) {
-    final elementRef = WeakReference(context as Element);
-    final listenerWrapper = _ListenerWrapper();
-    listenerWrapper.listener = () {
-      assert(
-      SchedulerBinding.instance.schedulerPhase != SchedulerPhase.persistentCallbacks,
-      """
-            Do not mutate state (by setting the value of the ValueNotifier 
-            that you are subscribed to) during a `build` method. If you need 
-            to schedule a value update after `build` has completed, use 
-            `SchedulerBinding.instance.scheduleTask(updateTask, Priority.idle)`, 
-            `SchedulerBinding.addPostFrameCallback(updateTask)`, '
-          or similar.
-          """,
-      );
-      // If the element has not been garbage collected (causing
-      // `elementRef.target` to be null), or unmounted
-      if (elementRef.target?.mounted ?? false) {
-        // Mark the element as needing to be rebuilt
-        elementRef.target!.markNeedsBuild();
-      }
-      // Remove the listener -- only listen to one change per `build`
-      removeListener(listenerWrapper.listener!);
-    };
-    addListener(listenerWrapper.listener!);
-    return value;
+  E getValue(P param) {
+    if (cache.containsKey(param)) {
+      return cache[param]!;
+    }
+    final v = callback(param);
+    cache[param] = v;
+    return v;
   }
 }

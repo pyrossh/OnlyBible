@@ -4,9 +4,10 @@ import "package:only_bible_app/state.dart";
 import "package:only_bible_app/widgets/modal_button.dart";
 
 class NoteSheet extends StatelessWidget {
+  final Bible bible;
   final Verse verse;
 
-  const NoteSheet({super.key, required this.verse});
+  const NoteSheet({super.key, required this.verse, required this.bible});
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +24,7 @@ class NoteSheet extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(bottom: 5, left: 15),
             child: Text(
-              "Note on ${bible.watch(context).books[verse.book].name(context)} ${verse.chapter + 1}:${verse.index + 1}",
+              "Note on ${bible.books[verse.book].name(context)} ${verse.chapter + 1}:${verse.index + 1}",
               style: Theme.of(context).textTheme.headlineMedium,
             ),
           ),

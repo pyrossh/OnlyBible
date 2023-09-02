@@ -18,6 +18,7 @@ class BookSelectScreen extends StatelessWidget {
         transitionDuration: Duration.zero,
         reverseTransitionDuration: Duration.zero,
         pageBuilder: (context, _, __) => ChapterSelectScreen(
+          bible: bible,
           book: bible.books[index],
           selectedBookIndex: index,
         ),

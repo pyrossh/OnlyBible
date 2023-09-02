@@ -1,11 +1,13 @@
 import "package:flutter/material.dart";
+import "package:only_bible_app/models.dart";
 import "package:only_bible_app/navigation.dart";
 import "package:only_bible_app/state.dart";
 import "package:only_bible_app/utils.dart";
 import "package:settings_ui/settings_ui.dart";
 
 class SettingsSheet extends StatelessWidget {
-  const SettingsSheet({super.key});
+  final Bible bible;
+  const SettingsSheet({super.key, required this.bible});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +28,7 @@ class SettingsSheet extends StatelessWidget {
             SettingsTile.navigation(
               leading: const Icon(Icons.book_outlined, color: Colors.blueAccent),
               title: Text(context.l.bibleTitle),
-              value: Text(bible.watch(context).name),
+              value: Text(bible.name),
               onPressed: changeBible,
             ),
             SettingsTile.navigation(

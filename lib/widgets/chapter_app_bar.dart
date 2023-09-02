@@ -5,10 +5,11 @@ import "package:only_bible_app/state.dart";
 import "package:only_bible_app/utils.dart";
 
 class ChapterAppBar extends StatelessWidget implements PreferredSizeWidget {
+  final Bible bible;
   final Book book;
   final Chapter chapter;
 
-  const ChapterAppBar({super.key, required this.book, required this.chapter});
+  const ChapterAppBar({super.key, required this.book, required this.chapter, required this.bible});
 
   @override
   Size get preferredSize => const Size.fromHeight(40);
@@ -26,7 +27,7 @@ class ChapterAppBar extends StatelessWidget implements PreferredSizeWidget {
           children: [
             InkWell(
               enableFeedback: true,
-              onTap: () => changeBook(context, bible.value),
+              onTap: () => changeBook(context, bible),
               child: Row(
                 children: [
                   Text(
@@ -57,7 +58,7 @@ class ChapterAppBar extends StatelessWidget implements PreferredSizeWidget {
                       ),
                       icon: const Icon(Icons.chevron_left),
                       label: const Text("Prev"),
-                      onPressed: () => previousChapter(context, bible.value, book.index, chapter.index),
+                      onPressed: () => previousChapter(context, bible, book.index, chapter.index),
                     ),
                   if (isDesktop) const SizedBox(width: 10),
                   if (isDesktop)
@@ -71,7 +72,7 @@ class ChapterAppBar extends StatelessWidget implements PreferredSizeWidget {
                       ),
                       icon: const Icon(Icons.chevron_right),
                       label: const Text("Next"),
-                      onPressed: () => nextChapter(context, bible.value, book.index, chapter.index),
+                      onPressed: () => nextChapter(context, bible, book.index, chapter.index),
                     ),
                   if (isDesktop) const SizedBox(width: 20),
                   if (isDesktop)
@@ -89,7 +90,7 @@ class ChapterAppBar extends StatelessWidget implements PreferredSizeWidget {
                         ),
                       ),
                       icon: const Icon(Icons.book_outlined),
-                      label: Text(bible.watch(context).name),
+                      label: Text(bible.name),
                       onPressed: () => changeBibleFromHeader(context),
                     ),
                   Padding(
@@ -97,7 +98,7 @@ class ChapterAppBar extends StatelessWidget implements PreferredSizeWidget {
                     child: IconButton(
                       padding: EdgeInsets.zero,
                       icon: Icon(Icons.more_vert, size: isDesktop ? 28 : 24),
-                      onPressed: () => showSettings(context),
+                      onPressed: () => showSettings(context, bible),
                     ),
                   ),
                 ],
