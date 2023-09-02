@@ -68,14 +68,18 @@ class _ListenerWrapper {
 class AsyncAtom<P extends String, E extends Future> {
   final Map<P, E> cache = {};
   final E Function(P) callback;
+  final int cacheSize;
 
-  AsyncAtom({required this.callback});
+  AsyncAtom({required this.callback, this.cacheSize = 1});
 
   E getValue(P param) {
     if (cache.containsKey(param)) {
       return cache[param]!;
     }
     final v = callback(param);
+    if (cache.length >= cacheSize) {
+      cache.clear();
+    }
     cache[param] = v;
     return v;
   }

@@ -14,7 +14,7 @@ class ActionsSheet extends StatelessWidget {
     final bottom = isIOS() ? 20.0 : 0.0;
     final iconColor = darkMode.value ? Colors.white.withOpacity(0.9) : Colors.black.withOpacity(0.9);
     final audioIcon = isPlaying.watch(context) ? Icons.pause_circle_outline : Icons.play_circle_outline;
-    final audioEnabled = context.hasAudio;
+    final audioEnabled = context.currentLang.audioVoice != "";
     return Container(
       height: context.actionsHeight,
       color: Theme.of(context).colorScheme.background,

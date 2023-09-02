@@ -61,7 +61,7 @@ updateCurrentBible(BuildContext context, String code, String name) async {
 Future<Bible> loadBible(String name) async {
   final bytes = await rootBundle.load("assets/bibles/$name.txt");
   final books = getBibleFromText(name, utf8.decode(bytes.buffer.asUint8List(), allowMalformed: false));
-  // await Future.delayed(Duration(seconds: 2));
+// await Future.delayed(Duration(seconds: 2));
   return Bible(
     name: name,
     books: books,
@@ -146,7 +146,7 @@ final Atom<List<Verse>> selectedVerses = Atom<List<Verse>>(
   initialValue: [],
   update: (List<Verse> verses) {
     selectedVerses.value = verses;
-    // selectedVerses.notifyChanged();
+// selectedVerses.notifyChanged();
   },
 );
 
@@ -157,8 +157,8 @@ void clearSelections() {
 Color? getHighlight(Verse v) {
   final key = "${v.book}:${v.chapter}:${v.index}:highlight";
   if (box.hasData(key)) {
-    // box.remove(key);
-    // print(box.read(key));
+// box.remove(key);
+// print(box.read(key));
     final index = box.read<int>(key);
     if (index == null) {
       return null;
@@ -213,9 +213,9 @@ TextStyle getHighlightStyle(BuildContext context, Verse v) {
     );
   }
   if (darkMode.watch(context)) {
-    // return TextStyle(
-    //   color: getHighlight(v) ?? context.theme.colorScheme.onBackground,
-    // );
+// return TextStyle(
+//   color: getHighlight(v) ?? context.theme.colorScheme.onBackground,
+// );
     return TextStyle(
       backgroundColor: getHighlight(v)?.withOpacity(0.7),
       color: getHighlight(v) != null ? Colors.white : context.theme.colorScheme.onBackground,
@@ -269,7 +269,7 @@ onPlay(BuildContext context, Bible bible) async {
     for (final v in versesToPlay) {
       final pathname = "${bible.name}|${v.book}|${v.chapter}|${v.index}";
       try {
-        final list = await convertText(context.l.audioVoice, v.text);
+        final list = await convertText(context.currentLang.audioVoice, v.text);
         await player.setAudioSource(BufferAudioSource(list));
         await player.play();
         await player.stop();
@@ -303,6 +303,6 @@ deleteNote(BuildContext context, Verse v) {
   box.remove("${v.book}:${v.chapter}:${v.index}:note");
   box.save();
   hideNoteField(context);
-  // TODO: hack to re-render this page
+// TODO: hack to re-render this page
   selectedVerses.notifyChanged();
 }

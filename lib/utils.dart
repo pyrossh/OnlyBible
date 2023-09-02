@@ -38,7 +38,7 @@ extension AppContext on BuildContext {
       ? lookupAppLocalizations(const Locale("en"))
       : AppLocalizations.of(this)!;
 
-  get hasAudio => l.audioVoice != "";
+  AppLocalizations get currentLang => supportedLocalizations.firstWhere((el) => el.languageCode == languageCode.value);
 
   double get actionsHeight {
     if (isIOS()) {
