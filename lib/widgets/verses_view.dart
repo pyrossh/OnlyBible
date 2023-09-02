@@ -89,7 +89,7 @@ class VersesView extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(bottom: actionsShown.watch(context) ? 120 : 0),
+                padding: EdgeInsets.only(bottom: actionsShownAtom.watch(context) ? 120 : 0),
               ),
             ],
           ),

@@ -15,19 +15,25 @@ import "package:only_bible_app/widgets/scaffold_markdown.dart";
 import "package:share_plus/share_plus.dart";
 import "package:only_bible_app/atom.dart";
 
-final Atom<bool> actionsShown = Atom<bool>(
+final actionsShownAtom = Atom(
   key: "actionsShown",
-  initialValue: false,
-  update: (bool v) {
-    actionsShown.value = v;
+  initialState: false,
+  reducer: (state, action) {
+    if (action is SetActionsShown) {
+      return action.value;
+    }
+    return state;
   },
 );
 
-final Atom<bool> highlightsShown = Atom<bool>(
+final highlightsShownAtom = Atom(
   key: "highlightsShown",
-  initialValue: false,
-  update: (bool v) {
-    highlightsShown.value = v;
+  initialState: false,
+  reducer: (state, action) {
+    if (action is SetHighlightsShown) {
+      return action.value;
+    }
+    return state;
   },
 );
 
@@ -225,8 +231,8 @@ showSettings(BuildContext context, Bible bible) {
 }
 
 showActions(BuildContext context, Bible bible) {
-  if (!actionsShown.value) {
-    actionsShown.value = true;
+  if (!actionsShownAtom.value) {
+    dispatch(const SetActionsShown(true));
     Scaffold.of(context).showBottomSheet(
       enableDrag: false,
       clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -236,15 +242,15 @@ showActions(BuildContext context, Bible bible) {
 }
 
 hideActions(BuildContext context) {
-  if (actionsShown.value) {
-    actionsShown.value = false;
-    clearSelections();
+  if (actionsShownAtom.value) {
+    dispatch(const SetActionsShown(false));
+    dispatch(const ClearSelectedVerses());
     Navigator.of(context).pop();
   }
 }
 
 showHighlights(BuildContext context) {
-  highlightsShown.value = true;
+  dispatch(const SetHighlightsShown(true));
   Scaffold.of(context).showBottomSheet(
     enableDrag: false,
     clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -253,8 +259,8 @@ showHighlights(BuildContext context) {
 }
 
 hideHighlights(BuildContext context) {
-  if (highlightsShown.value) {
-    highlightsShown.value = false;
+  if (highlightsShownAtom.value) {
+    dispatch(const SetHighlightsShown(false));
     Navigator.of(context).pop();
   }
 }

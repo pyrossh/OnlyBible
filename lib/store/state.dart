@@ -24,7 +24,7 @@ final bibleAtom = AsyncAtom(
   callback: loadBible,
 );
 
-final firstOpenAtom = Atom2(
+final firstOpenAtom = Atom(
   box: box,
   key: "firstOpen",
   initialState: true,
@@ -36,7 +36,7 @@ final firstOpenAtom = Atom2(
   },
 );
 
-final languageCodeAtom = Atom2(
+final languageCodeAtom = Atom(
   box: box,
   key: "languageCode",
   initialState: "en",
@@ -48,7 +48,7 @@ final languageCodeAtom = Atom2(
   },
 );
 
-final bibleNameAtom = Atom2(
+final bibleNameAtom = Atom(
   box: box,
   key: "bibleName",
   initialState: "English",
@@ -60,7 +60,7 @@ final bibleNameAtom = Atom2(
   },
 );
 
-final engTitlesAtom = Atom2(
+final engTitlesAtom = Atom(
   box: box,
   key: "engTitles",
   initialState: false,
@@ -72,7 +72,7 @@ final engTitlesAtom = Atom2(
   },
 );
 
-final boldFontAtom = Atom2(
+final boldFontAtom = Atom(
   box: box,
   key: "boldFont",
   initialState: false,
@@ -84,7 +84,7 @@ final boldFontAtom = Atom2(
   },
 );
 
-final darkModeAtom = Atom2(
+final darkModeAtom = Atom(
   box: box,
   key: "darkMode",
   initialState: false,
@@ -97,7 +97,7 @@ final darkModeAtom = Atom2(
   },
 );
 
-final textScaleAtom = Atom2(
+final textScaleAtom = Atom(
   box: box,
   key: "textScale",
   initialState: 0.0,
@@ -109,7 +109,7 @@ final textScaleAtom = Atom2(
   },
 );
 
-final savedBookAtom = Atom2(
+final savedBookAtom = Atom(
   box: box,
   key: "savedBook",
   initialState: 0,
@@ -121,7 +121,7 @@ final savedBookAtom = Atom2(
   },
 );
 
-final savedChapterAtom = Atom2(
+final savedChapterAtom = Atom(
   box: box,
   key: "savedChapter",
   initialState: 0,
@@ -133,26 +133,30 @@ final savedChapterAtom = Atom2(
   },
 );
 
-final Atom<bool> isPlaying = Atom<bool>(
+final isPlaying = Atom(
   key: "isPlaying",
-  initialValue: false,
-  update: (bool v) {
-    isPlaying.value = v;
+  initialState: false,
+  reducer: (state, action) {
+    if (action is SetPlaying) {
+      return action.value;
+    }
+    return state;
   },
 );
 
-final Atom<List<Verse>> selectedVerses = Atom<List<Verse>>(
+final selectedVersesAtom = Atom(
   key: "selectedVerses",
-  initialValue: [],
-  update: (List<Verse> verses) {
-    selectedVerses.value = verses;
-// selectedVerses.notifyChanged();
+  initialState: List<Verse>.from([]),
+  reducer: (state, action) {
+    if (action is SetSelectedVerses) {
+      return action.value;
+    }
+    if (action is ClearSelectedVerses) {
+      return [];
+    }
+    return state;
   },
 );
-
-void clearSelections() {
-  selectedVerses.value.clear();
-}
 
 Color? getHighlight(Verse v) {
   final key = "${v.book}:${v.chapter}:${v.index}:highlight";
@@ -169,7 +173,7 @@ Color? getHighlight(Verse v) {
 }
 
 void setHighlight(BuildContext context, int index) {
-  for (final v in selectedVerses.value) {
+  for (final v in selectedVersesAtom.value) {
     box.write("${v.book}:${v.chapter}:${v.index}:highlight", index);
   }
   box.save();
@@ -177,7 +181,7 @@ void setHighlight(BuildContext context, int index) {
 }
 
 void removeHighlight(BuildContext context) {
-  for (final v in selectedVerses.value) {
+  for (final v in selectedVersesAtom.value) {
     box.remove("${v.book}:${v.chapter}:${v.index}:highlight");
   }
   box.save();
@@ -185,23 +189,25 @@ void removeHighlight(BuildContext context) {
 }
 
 bool isVerseSelected(Verse v) {
-  return selectedVerses.value.any((el) => el.book == v.book && el.chapter == v.chapter && el.index == v.index);
+  return selectedVersesAtom.value.any((el) => el.book == v.book && el.chapter == v.chapter && el.index == v.index);
 }
 
 bool watchVerseSelected(BuildContext context, Verse v) {
-  return selectedVerses.watch(context).any((el) => el.book == v.book && el.chapter == v.chapter && el.index == v.index);
+  return selectedVersesAtom
+      .watch(context)
+      .any((el) => el.book == v.book && el.chapter == v.chapter && el.index == v.index);
 }
 
 void onVerseSelected(BuildContext context, Bible bible, Verse v) {
   if (isVerseSelected(v)) {
-    selectedVerses.update!(selectedVerses.value.removeBy((it) => it.index == v.index).toList());
+    dispatch(SetSelectedVerses(selectedVersesAtom.value.removeBy((it) => it.index == v.index).toList()));
   } else {
-    selectedVerses.update!(selectedVerses.value.addBy(v).toList());
+    dispatch(SetSelectedVerses(selectedVersesAtom.value.addBy(v).toList()));
   }
-  if (selectedVerses.value.isNotEmpty) {
+  if (selectedVersesAtom.value.isNotEmpty) {
     showActions(context, bible);
   }
-  if (selectedVerses.value.isEmpty) {
+  if (selectedVersesAtom.value.isEmpty) {
     hideActions(context);
   }
 }
@@ -235,7 +241,7 @@ clearEvents(BuildContext context) {
 
 pause() async {
   await player.pause();
-  isPlaying.value = false;
+  dispatch(const SetPlaying(false));
 }
 
 class BufferAudioSource extends StreamAudioSource {
@@ -261,11 +267,11 @@ class BufferAudioSource extends StreamAudioSource {
 }
 
 onPlay(BuildContext context, Bible bible) async {
-  final versesToPlay = List<Verse>.from(selectedVerses.value);
+  final versesToPlay = List<Verse>.from(selectedVersesAtom.value);
   if (isPlaying.value) {
     pause();
   } else {
-    isPlaying.value = true;
+    dispatch(const SetPlaying(true));
     for (final v in versesToPlay) {
       final pathname = "${bible.name}|${v.book}|${v.chapter}|${v.index}";
       try {
@@ -304,5 +310,5 @@ deleteNote(BuildContext context, Verse v) {
   box.save();
   hideNoteField(context);
 // TODO: hack to re-render this page
-  selectedVerses.notifyChanged();
+  selectedVersesAtom.notifyChanged();
 }

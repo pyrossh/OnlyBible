@@ -40,12 +40,12 @@ class ActionsSheet extends StatelessWidget {
           ),
           IconButton(
             padding: EdgeInsets.zero,
-            onPressed: () => showNoteField(context, bible, selectedVerses.value.first),
+            onPressed: () => showNoteField(context, bible, selectedVersesAtom.value.first),
             icon: Icon(Icons.post_add_outlined, size: 34, color: iconColor),
           ),
           IconButton(
             padding: EdgeInsets.zero,
-            onPressed: () => shareVerses(context, bible, selectedVerses.value),
+            onPressed: () => shareVerses(context, bible, selectedVersesAtom.value),
             icon: Icon(Icons.share_outlined, size: 34, color: iconColor),
           ),
         ],

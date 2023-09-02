@@ -1,3 +1,5 @@
+import "package:only_bible_app/models.dart";
+
 sealed class AppAction {}
 
 class FirstOpenDone implements AppAction {}
@@ -10,7 +12,9 @@ class UpdateBible implements AppAction {
 }
 
 class ToggleEngTitles implements AppAction {}
+
 class ToggleBoldFont implements AppAction {}
+
 class ToggleDarkMode implements AppAction {}
 
 class UpdateTextScale implements AppAction {
@@ -24,4 +28,32 @@ class UpdateChapter implements AppAction {
   final int chapter;
 
   const UpdateChapter(this.book, this.chapter);
+}
+
+class SetPlaying implements AppAction {
+  final bool value;
+
+  const SetPlaying(this.value);
+}
+
+class SetSelectedVerses implements AppAction {
+  final List<Verse> value;
+
+  const SetSelectedVerses(this.value);
+}
+
+class ClearSelectedVerses implements AppAction {
+  const ClearSelectedVerses();
+}
+
+class SetActionsShown implements AppAction {
+  final bool value;
+
+  const SetActionsShown(this.value);
+}
+
+class SetHighlightsShown implements AppAction {
+  final bool value;
+
+  const SetHighlightsShown(this.value);
 }
