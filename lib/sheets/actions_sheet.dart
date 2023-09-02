@@ -1,5 +1,4 @@
 import "package:flutter/material.dart";
-import "package:only_bible_app/dialog.dart";
 import "package:only_bible_app/models.dart";
 import "package:only_bible_app/navigation.dart";
 import "package:only_bible_app/state.dart";
@@ -7,6 +6,7 @@ import "package:only_bible_app/utils.dart";
 
 class ActionsSheet extends StatelessWidget {
   final Bible bible;
+
   const ActionsSheet({super.key, required this.bible});
 
   @override
@@ -14,7 +14,6 @@ class ActionsSheet extends StatelessWidget {
     final bottom = isIOS() ? 20.0 : 0.0;
     final iconColor = darkMode.value ? Colors.white.withOpacity(0.9) : Colors.black.withOpacity(0.9);
     final audioIcon = isPlaying.watch(context) ? Icons.pause_circle_outline : Icons.play_circle_outline;
-    final audioEnabled = context.currentLang.audioVoice != "";
     return Container(
       height: context.actionsHeight,
       color: Theme.of(context).colorScheme.background,
@@ -35,13 +34,9 @@ class ActionsSheet extends StatelessWidget {
           IconButton(
             padding: EdgeInsets.zero,
             onPressed: () {
-              if (audioEnabled) {
-                onPlay(context, bible);
-              } else {
-                showError(context, context.l.audioNotAvailable);
-              }
+              onPlay(context, bible);
             },
-            icon: Icon(audioIcon, size: 34, color: audioEnabled ? iconColor : Colors.grey),
+            icon: Icon(audioIcon, size: 34, color: iconColor),
           ),
           IconButton(
             padding: EdgeInsets.zero,
