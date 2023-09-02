@@ -3,13 +3,16 @@ import "package:only_bible_app/utils.dart";
 
 enum ListType {
   small,
-  large;
+  large,
+  extraLarge;
 
   int crossAxisCount() {
     switch (this) {
       case ListType.small:
         return 5;
       case ListType.large:
+        return 2;
+      case ListType.extraLarge:
         return 2;
     }
   }
@@ -20,6 +23,8 @@ enum ListType {
         return isDesktop ? 1.8 : 1.4;
       case ListType.large:
         return isDesktop ? 5 : 4;
+      case ListType.extraLarge:
+        return isDesktop ? 3 : 2.8;
     }
   }
 }

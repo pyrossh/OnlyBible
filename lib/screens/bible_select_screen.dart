@@ -16,17 +16,19 @@ class BibleSelectScreen extends StatelessWidget {
         slivers: [
           SliverHeading(title: context.l.bibleSelectTitle, showClose: !firstOpen.value),
           SliverTileGrid(
-            listType: ListType.large,
+            listType: ListType.extraLarge,
             children: List.of(
               context.supportedLocalizations.map((l) {
                 return TextButton(
-                  child: Text(l.languageTitle),
-                  // child: Column(
-                  //   children: [
-                  //     Text(l.name),
-                  //     // Text("(${l.localName})"),
-                  //   ],
-                  // ),
+                  child: (l.localeLanguageTitle != l.languageTitle)
+                      ? Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(l.localeLanguageTitle),
+                            Text("(${l.languageTitle})", textScaleFactor: 0.7),
+                          ],
+                        )
+                      : Text(l.languageTitle),
                   onPressed: () {
                     if (firstOpen.value) {
                       firstOpen.set!();
