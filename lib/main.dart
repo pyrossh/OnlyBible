@@ -9,7 +9,7 @@ import "package:only_bible_app/firebase_options.dart";
 import "package:flutter_native_splash/flutter_native_splash.dart";
 import "package:only_bible_app/app.dart";
 import "package:only_bible_app/navigation.dart";
-import "package:only_bible_app/state.dart";
+import "package:only_bible_app/store/state.dart";
 
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -33,7 +33,7 @@ void main() async {
     withLogs: false,
   );
   await initState();
-  updateStatusBar(darkMode.value);
+  updateStatusBar(darkModeAtom.value);
   runApp(const App());
   FlutterNativeSplash.remove();
 }

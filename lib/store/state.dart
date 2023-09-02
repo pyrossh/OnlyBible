@@ -4,13 +4,13 @@ import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:get_storage/get_storage.dart";
 import "package:just_audio/just_audio.dart";
-import "package:only_bible_app/actions.dart";
 import "package:only_bible_app/atom.dart";
 import "package:only_bible_app/dialog.dart";
 import "package:only_bible_app/models.dart";
 import "package:only_bible_app/theme.dart";
 import "package:only_bible_app/utils.dart";
 import "package:only_bible_app/navigation.dart";
+import "package:only_bible_app/store/actions.dart";
 
 final box = GetStorage("only-bible-app-prefs");
 final player = AudioPlayer();
@@ -24,92 +24,112 @@ final bibleAtom = AsyncAtom(
   callback: loadBible,
 );
 
-final firstOpen = Atom2<bool, AppAction>(
+final firstOpenAtom = Atom2(
   box: box,
   key: "firstOpen",
   initialState: true,
-  reducer: {
-    FirstOpenDone: (state, action) => false,
+  reducer: (state, action) {
+    if (action is FirstOpenDone) {
+      return false;
+    }
+    return state;
   },
 );
 
-final languageCode = Atom2<String, AppAction>(
+final languageCodeAtom = Atom2(
   box: box,
   key: "languageCode",
   initialState: "en",
-  reducer: {
-    SetLanguageCode: (state, action) => (action as SetLanguageCode).code,
+  reducer: (state, action) {
+    if (action is UpdateBible) {
+      return action.code;
+    }
+    return state;
   },
 );
 
-final Atom<String> bibleName = Atom<String>(
+final bibleNameAtom = Atom2(
   box: box,
   key: "bibleName",
-  initialValue: "English",
-  update: (String v) {
-    bibleName.value = v;
+  initialState: "English",
+  reducer: (state, action) {
+    if (action is UpdateBible) {
+      return action.name;
+    }
+    return state;
   },
 );
 
-updateCurrentBible(BuildContext context, String code, String name) async {
-  hideActions(context);
-  dispatch(SetLanguageCode(code));
-  bibleName.update!(name);
-  pushBookChapter(context, name, 0, 0, null);
-}
-
-final Atom<bool> engTitles = Atom<bool>(
+final engTitlesAtom = Atom2(
   box: box,
   key: "engTitles",
-  initialValue: false,
-  set: () {
-    engTitles.value = !engTitles.value;
+  initialState: false,
+  reducer: (state, action) {
+    if (action is ToggleEngTitles) {
+      return !state;
+    }
+    return state;
   },
 );
 
-final Atom<bool> darkMode = Atom<bool>(
+final boldFontAtom = Atom2(
+  box: box,
+  key: "boldFont",
+  initialState: false,
+  reducer: (state, action) {
+    if (action is ToggleBoldFont) {
+      return !state;
+    }
+    return state;
+  },
+);
+
+final darkModeAtom = Atom2(
   box: box,
   key: "darkMode",
-  initialValue: false,
-  set: () {
-    darkMode.value = !darkMode.value;
-    updateStatusBar(darkMode.value);
+  initialState: false,
+  reducer: (state, action) {
+    if (action is ToggleDarkMode) {
+      updateStatusBar(!state);
+      return !state;
+    }
+    return state;
   },
 );
 
-final Atom<bool> fontBold = Atom<bool>(
-  box: box,
-  key: "fontBold",
-  initialValue: false,
-  set: () {
-    fontBold.value = !fontBold.value;
-  },
-);
-
-final Atom<double> textScale = Atom<double>(
+final textScaleAtom = Atom2(
   box: box,
   key: "textScale",
-  initialValue: 0,
-  update: (double v) {
-    textScale.value += v;
+  initialState: 0.0,
+  reducer: (state, action) {
+    if (action is UpdateTextScale) {
+      return state += action.value;
+    }
+    return state;
   },
 );
 
-final Atom<int> savedBook = Atom<int>(
+final savedBookAtom = Atom2(
   box: box,
   key: "savedBook",
-  initialValue: 0,
-  update: (int v) {
-    savedBook.value = v;
+  initialState: 0,
+  reducer: (state, action) {
+    if (action is UpdateChapter) {
+      return action.book;
+    }
+    return state;
   },
 );
 
-final Atom<int> savedChapter = Atom<int>(
+final savedChapterAtom = Atom2(
   box: box,
   key: "savedChapter",
-  initialValue: 0,
-  update: (int v) {
-    savedChapter.value = v;
+  initialState: 0,
+  reducer: (state, action) {
+    if (action is UpdateChapter) {
+      return action.chapter;
+    }
+    return state;
   },
 );
 
@@ -143,7 +163,7 @@ Color? getHighlight(Verse v) {
     if (index == null) {
       return null;
     }
-    return darkMode.value ? darkHighlights[index] : lightHighlights[index];
+    return darkModeAtom.value ? darkHighlights[index] : lightHighlights[index];
   }
   return null;
 }
@@ -189,10 +209,10 @@ void onVerseSelected(BuildContext context, Bible bible, Verse v) {
 TextStyle getHighlightStyle(BuildContext context, Verse v) {
   if (watchVerseSelected(context, v)) {
     return TextStyle(
-      backgroundColor: darkMode.value ? Colors.grey.shade800 : Colors.grey.shade200,
+      backgroundColor: darkModeAtom.value ? Colors.grey.shade800 : Colors.grey.shade200,
     );
   }
-  if (darkMode.watch(context)) {
+  if (darkModeAtom.watch(context)) {
 // return TextStyle(
 //   color: getHighlight(v) ?? context.theme.colorScheme.onBackground,
 // );

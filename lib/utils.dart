@@ -2,7 +2,7 @@ import "dart:convert";
 import "package:flutter/services.dart";
 import "package:only_bible_app/dialog.dart";
 import "package:only_bible_app/models.dart";
-import "package:only_bible_app/state.dart";
+import "package:only_bible_app/store/state.dart";
 import "package:url_launcher/url_launcher.dart";
 import "package:flutter/foundation.dart" show defaultTargetPlatform, TargetPlatform;
 import "package:flutter/material.dart";
@@ -36,11 +36,11 @@ extension AsyncSnapshotUtils<E> on AsyncSnapshot<E> {
 extension AppContext on BuildContext {
   ThemeData get theme => Theme.of(this);
 
-  AppLocalizations get l => engTitles.watch(this) && languageCode.watch(this) != "en"
+  AppLocalizations get l => engTitlesAtom.watch(this) && languageCodeAtom.watch(this) != "en"
       ? lookupAppLocalizations(const Locale("en"))
       : AppLocalizations.of(this)!;
 
-  AppLocalizations get currentLang => supportedLocalizations.firstWhere((el) => el.languageCode == languageCode.value);
+  AppLocalizations get currentLang => supportedLocalizations.firstWhere((el) => el.languageCode == languageCodeAtom.value);
 
   double get actionsHeight {
     if (isIOS()) {
@@ -193,3 +193,4 @@ Future<Bible> loadBible(String name) async {
     books: books,
   );
 }
+

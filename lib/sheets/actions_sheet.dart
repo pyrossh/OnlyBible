@@ -1,7 +1,7 @@
 import "package:flutter/material.dart";
 import "package:only_bible_app/models.dart";
 import "package:only_bible_app/navigation.dart";
-import "package:only_bible_app/state.dart";
+import 'package:only_bible_app/store/state.dart';
 import "package:only_bible_app/utils.dart";
 
 class ActionsSheet extends StatelessWidget {
@@ -12,7 +12,7 @@ class ActionsSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bottom = isIOS() ? 20.0 : 0.0;
-    final iconColor = darkMode.value ? Colors.white.withOpacity(0.9) : Colors.black.withOpacity(0.9);
+    final iconColor = darkModeAtom.value ? Colors.white.withOpacity(0.9) : Colors.black.withOpacity(0.9);
     final audioIcon = isPlaying.watch(context) ? Icons.pause_circle_outline : Icons.play_circle_outline;
     return Container(
       height: context.actionsHeight,

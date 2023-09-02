@@ -1,7 +1,7 @@
 import "package:flutter/material.dart";
 import "package:only_bible_app/models.dart";
 import "package:only_bible_app/navigation.dart";
-import "package:only_bible_app/state.dart";
+import 'package:only_bible_app/store/state.dart';
 import "package:only_bible_app/utils.dart";
 
 class ChapterAppBar extends StatelessWidget implements PreferredSizeWidget {

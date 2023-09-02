@@ -3,7 +3,7 @@ import "package:flutter/material.dart";
 import "package:flutter_swipe_detector/flutter_swipe_detector.dart";
 import "package:only_bible_app/models.dart";
 import "package:only_bible_app/navigation.dart";
-import "package:only_bible_app/state.dart";
+import 'package:only_bible_app/store/state.dart';
 
 class VersesView extends StatelessWidget {
   final Bible bible;
@@ -35,10 +35,10 @@ class VersesView extends StatelessWidget {
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text.rich(
-                  textScaleFactor: 1.1 + textScale.watch(context),
+                  textScaleFactor: 1.1 + textScaleAtom.watch(context),
                   textAlign: TextAlign.left,
                   TextSpan(
-                    style: fontBold.watch(context)
+                    style: boldFontAtom.watch(context)
                         ? textStyle.copyWith(
                             fontWeight: FontWeight.w500,
                           )

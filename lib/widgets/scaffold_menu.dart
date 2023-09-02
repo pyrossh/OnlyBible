@@ -1,5 +1,5 @@
 import "package:flutter/material.dart";
-import "package:only_bible_app/state.dart";
+import 'package:only_bible_app/store/state.dart';
 import "package:only_bible_app/utils.dart";
 
 class ScaffoldMenu extends StatelessWidget {
@@ -11,7 +11,7 @@ class ScaffoldMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final pageWidth = MediaQuery.of(context).size.width;
-    final isWide = context.isWide && !firstOpen.value;
+    final isWide = context.isWide && !firstOpenAtom.value;
     return Scaffold(
       backgroundColor: isWide ? Colors.transparent : context.theme.colorScheme.background,
       body: SafeArea(

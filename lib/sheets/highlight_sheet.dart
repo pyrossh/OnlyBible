@@ -1,5 +1,5 @@
 import "package:flutter/material.dart";
-import "package:only_bible_app/state.dart";
+import 'package:only_bible_app/store/state.dart';
 import "package:only_bible_app/theme.dart";
 import "package:only_bible_app/utils.dart";
 import "package:only_bible_app/widgets/highlight_button.dart";
@@ -10,7 +10,7 @@ class HighlightSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bottom = isIOS() ? 20.0 : 0.0;
-    final iconColor = darkMode.value ? Colors.white.withOpacity(0.9) : Colors.black.withOpacity(0.9);
+    final iconColor = darkModeAtom.value ? Colors.white.withOpacity(0.9) : Colors.black.withOpacity(0.9);
     void onHighlight(int index) {
       setHighlight(context, index);
     }
@@ -29,22 +29,22 @@ class HighlightSheet extends StatelessWidget {
           ),
           HighlightButton(
             index: 0,
-            color: darkMode.value ? darkHighlights[0] : lightHighlights[0],
+            color: darkModeAtom.value ? darkHighlights[0] : lightHighlights[0],
             onHighlightSelected: onHighlight,
           ),
           HighlightButton(
             index: 1,
-            color: darkMode.value ? darkHighlights[1] : lightHighlights[1],
+            color: darkModeAtom.value ? darkHighlights[1] : lightHighlights[1],
             onHighlightSelected: onHighlight,
           ),
           HighlightButton(
             index: 2,
-            color: darkMode.value ? darkHighlights[2] : lightHighlights[2],
+            color: darkModeAtom.value ? darkHighlights[2] : lightHighlights[2],
             onHighlightSelected: onHighlight,
           ),
           HighlightButton(
             index: 3,
-            color: darkMode.value ? darkHighlights[3] : lightHighlights[3],
+            color: darkModeAtom.value ? darkHighlights[3] : lightHighlights[3],
             onHighlightSelected: onHighlight,
           ),
         ],

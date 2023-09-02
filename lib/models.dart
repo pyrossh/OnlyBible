@@ -1,17 +1,14 @@
 import "package:flutter/material.dart";
-import "package:freezed_annotation/freezed_annotation.dart";
 import "package:only_bible_app/utils.dart";
-part "models.freezed.dart";
 
-@freezed
-class Bible with _$Bible {
+class Bible {
+  final String name;
+  final List<Book> books;
 
-  const Bible._();
-
-  const factory Bible({
-    required String name,
-    required List<Book> books,
-  }) = _Bible;
+  const Bible({
+    required this.name,
+    required this.books,
+  });
 
   String shortName() {
     return name.substring(0, 3).toUpperCase();
@@ -98,22 +95,22 @@ List<Book> getBibleFromText(String bibleName, String text) {
     }
     if (books[book - 1].chapters.length < chapter) {
       books[book - 1].chapters.add(
-        Chapter(
-          index: chapter - 1,
-          book: book - 1,
-          verses: [],
-        ),
-      );
+            Chapter(
+              index: chapter - 1,
+              book: book - 1,
+              verses: [],
+            ),
+          );
     }
     books[book - 1].chapters[chapter - 1].verses.add(
-      Verse(
-        index: verseNo - 1,
-        text: verseText,
-        bibleName: bibleName,
-        chapter: chapter - 1,
-        book: book - 1,
-      ),
-    );
+          Verse(
+            index: verseNo - 1,
+            text: verseText,
+            bibleName: bibleName,
+            chapter: chapter - 1,
+            book: book - 1,
+          ),
+        );
   }
   return books;
 }

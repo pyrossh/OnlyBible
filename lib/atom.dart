@@ -4,22 +4,17 @@ import "package:get_storage/get_storage.dart";
 
 final List<Atom2> atoms = [];
 
-void dispatch<A>(A a) {
+void dispatch<T, A>(A a) {
   for (final atom in atoms) {
-    final typeName = a.runtimeType.toString().replaceAll("_\$", "");
-    for (final entry in atom.reducer.entries) {
-      if (typeName == entry.key.toString()) {
-        final newValue = entry.value.call(atom.valueNotifier.value, a);
-        atom.valueNotifier.value = newValue;
-        if (atom.box != null) {
-          if (newValue == null) {
-            atom.box!.remove(atom.key);
-          } else {
-            atom.box!.write(atom.key, newValue);
-          }
-          atom.box!.save();
-        }
+    final newValue = atom.reducer(atom.valueNotifier.value, a);
+    atom.valueNotifier.value = newValue;
+    if (atom.box != null) {
+      if (newValue == null) {
+        atom.box!.remove(atom.key);
+      } else {
+        atom.box!.write(atom.key, newValue);
       }
+      atom.box!.save();
     }
   }
 }
@@ -28,7 +23,7 @@ class Atom2<T, A> {
   late ValueNotifier<T> valueNotifier;
   final String key;
   final GetStorage? box;
-  final Map<Type, dynamic Function(dynamic, dynamic)> reducer;
+  final dynamic Function(dynamic, dynamic) reducer;
 
   Atom2({required this.key, required T initialState, this.box, required this.reducer}) {
     valueNotifier = ValueNotifier(box != null ? box!.read<T>(key) ?? initialState : initialState);

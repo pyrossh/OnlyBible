@@ -1,7 +1,8 @@
 import "package:flutter/material.dart";
-import "package:only_bible_app/actions.dart";
+import "package:only_bible_app/navigation.dart";
+import "package:only_bible_app/store/actions.dart";
 import "package:only_bible_app/atom.dart";
-import "package:only_bible_app/state.dart";
+import "package:only_bible_app/store/state.dart";
 import "package:only_bible_app/utils.dart";
 import "package:only_bible_app/widgets/scaffold_menu.dart";
 import "package:only_bible_app/widgets/sliver_heading.dart";
@@ -16,7 +17,7 @@ class BibleSelectScreen extends StatelessWidget {
       child: CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [
-          SliverHeading(title: context.l.bibleSelectTitle, showClose: !firstOpen.value),
+          SliverHeading(title: context.l.bibleSelectTitle, showClose: !firstOpenAtom.value),
           SliverTileGrid(
             listType: ListType.extraLarge,
             children: List.of(
@@ -32,10 +33,16 @@ class BibleSelectScreen extends StatelessWidget {
                         )
                       : Text(l.languageTitle, textScaleFactor: 1.1),
                   onPressed: () {
-                    if (firstOpen.value) {
-                      dispatch(const FirstOpenDone());
+                    if (firstOpenAtom.value) {
+                      dispatch(FirstOpenDone());
                     }
-                    updateCurrentBible(context, l.localeName, l.languageTitle);
+                    updateCurrentBible(
+                      context,
+                      l.languageTitle,
+                      l.localeName,
+                      savedBookAtom.value,
+                      savedChapterAtom.value,
+                    );
                   },
                 );
               }),

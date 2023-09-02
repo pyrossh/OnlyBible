@@ -7,7 +7,8 @@ import "package:only_bible_app/screens/chapter_view_screen.dart";
 import "package:only_bible_app/sheets/actions_sheet.dart";
 import "package:only_bible_app/sheets/highlight_sheet.dart";
 import "package:only_bible_app/sheets/settings_sheet.dart";
-import "package:only_bible_app/state.dart";
+import "package:only_bible_app/store/actions.dart";
+import 'package:only_bible_app/store/state.dart';
 import "package:only_bible_app/utils.dart";
 import "package:only_bible_app/widgets/note_sheet.dart";
 import "package:only_bible_app/widgets/scaffold_markdown.dart";
@@ -82,8 +83,7 @@ updateStatusBar(bool v) {
 }
 
 pushBookChapter(BuildContext context, String bibleName, int book, int chapter, TextDirection? dir) {
-  savedBook.update!(book);
-  savedChapter.update!(chapter);
+  dispatch(UpdateChapter(book, chapter));
   clearEvents(context);
   Navigator.of(context).push(
     createSlideRoute(
@@ -95,8 +95,7 @@ pushBookChapter(BuildContext context, String bibleName, int book, int chapter, T
 }
 
 replaceBookChapter(BuildContext context, String bibleName, int book, int chapter) {
-  savedBook.update!(book);
-  savedChapter.update!(chapter);
+  dispatch(UpdateChapter(book, chapter));
   clearEvents(context);
   Navigator.of(context).pushReplacement(
     createNoTransitionPageRoute(
@@ -171,6 +170,12 @@ changeBook(BuildContext context, Bible bible) {
       BookSelectScreen(bible: bible),
     ),
   );
+}
+
+updateCurrentBible(BuildContext context, String name, String code, int book, int chapter) async {
+  hideActions(context);
+  dispatch(UpdateBible(name, code));
+  pushBookChapter(context, name, book, chapter, null);
 }
 
 shareAppLink(BuildContext context) {
