@@ -1,10 +1,12 @@
 import "dart:convert";
+import "package:flutter_dotenv/flutter_dotenv.dart";
+import "package:http/http.dart" as http;
 import "package:flutter/services.dart";
 import "package:only_bible_app/dialog.dart";
 import "package:only_bible_app/models.dart";
 import "package:only_bible_app/store/state.dart";
 import "package:url_launcher/url_launcher.dart";
-import "package:flutter/foundation.dart" show defaultTargetPlatform, TargetPlatform;
+import "package:flutter/foundation.dart" show TargetPlatform, defaultTargetPlatform, kDebugMode;
 import "package:flutter/material.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:flutter_azure_tts/flutter_azure_tts.dart";
@@ -40,7 +42,8 @@ extension AppContext on BuildContext {
       ? lookupAppLocalizations(const Locale("en"))
       : AppLocalizations.of(this)!;
 
-  AppLocalizations get currentLang => supportedLocalizations.firstWhere((el) => el.languageCode == languageCodeAtom.value);
+  AppLocalizations get currentLang =>
+      supportedLocalizations.firstWhere((el) => el.languageCode == languageCodeAtom.value);
 
   double get actionsHeight {
     if (isIOS()) {
@@ -194,3 +197,31 @@ Future<Bible> loadBible(String name) async {
   );
 }
 
+recordError(String message, StackTrace? stack) async {
+  if (kDebugMode) {
+    print("ERROR: $message");
+    print("ERROR STACK: ${stack.toString()}");
+    return;
+  }
+  await Future.delayed(Duration(seconds: 2));
+  final apiKey = dotenv.get("RESEND_API_KEY");
+  final url = Uri.https("api.resend.com", "/emails");
+  final response = await http.post(
+    url,
+    headers: {
+      "Authorization": "Bearer $apiKey",
+      "Content-Type": "application/json",
+    },
+    body: jsonEncode({
+      "from": "onboarding@resend.dev",
+      "to": "peter.john@sent.com",
+      "subject": "Error Stack trace",
+      "html":
+          "<div><p><strong>Error:</strong>$message</p><p><strong>StackTrace:</strong>${stack?.toString()}</p></div>",
+    }),
+  );
+  if (response.statusCode == 200) {
+    print("Response status: ${response.statusCode}");
+    print("Response body: ${response.body}");
+  }
+}

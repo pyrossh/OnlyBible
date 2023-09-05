@@ -1,5 +1,4 @@
 import "dart:developer";
-import "package:firebase_crashlytics/firebase_crashlytics.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:get_storage/get_storage.dart";
@@ -281,7 +280,7 @@ onPlay(BuildContext context, Bible bible) async {
         await player.stop();
       } catch (err) {
         log("Could not play audio", name: "play", error: (err.toString(), pathname));
-        FirebaseCrashlytics.instance.recordFlutterError(FlutterErrorDetails(exception: (err.toString(), pathname)));
+        recordError((err.toString(), pathname).toString(), null);
         if (context.mounted) {
           showError(context, context.l.audioError);
         }
