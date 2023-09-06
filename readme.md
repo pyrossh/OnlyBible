@@ -10,7 +10,7 @@ Most of the major Indian languages are supported such as Hindi, Kannada, Tamil, 
 ## Setup
 
 ```agsl
-brew install fluttter cocoapods firebase-cli
+brew install fluttter cocoapods
 ```
 
 ## Lint
@@ -20,7 +20,7 @@ dart fix --apply
 dart format lib
 ```
 
-## Build
+## Update icons
 
 ```agsl
 dart run flutter_launcher_icons
