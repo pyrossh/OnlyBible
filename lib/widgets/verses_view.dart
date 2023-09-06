@@ -14,6 +14,9 @@ class VersesView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textStyle = DefaultTextStyle.of(context).style;
+    // if (chapter.index == 2) {
+    //   throw Exception("123");
+    // }
     return SwipeDetector(
       onSwipeLeft: (offset) {
         nextChapter(context, bible, chapter.book, chapter.index);

@@ -2,10 +2,12 @@ import "package:flutter/material.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:only_bible_app/screens/bible_select_screen.dart";
 import "package:only_bible_app/screens/chapter_view_screen.dart";
-import 'package:only_bible_app/store/state.dart';
+import "package:only_bible_app/store/state.dart";
 import "package:only_bible_app/theme.dart";
 import "package:only_bible_app/utils.dart";
 import "package:only_bible_app/widgets/scaffold_markdown.dart";
+
+final globalNavigatorKey = GlobalKey<NavigatorState>();
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -13,6 +15,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: globalNavigatorKey,
       onGenerateTitle: (context) => context.l.title,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
