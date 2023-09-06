@@ -23,8 +23,6 @@ dart format lib
 ## Build
 
 ```agsl
-dart pub global activate flutterfire_cli
-flutterfire configure --project=only-bible-app
 dart run flutter_launcher_icons
 dart run flutter_native_splash:create
 ```
@@ -57,9 +55,6 @@ https://only-bible-app.web.app
 https://only-bible-app.firebaseapp.com/
 https://onlybible.app
 ```
-
-Note:
-> For crashanalytics to work in dev/debug mode in macos this has to be set DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 
 ## Bugs
 1. Swipe left should pop context if chapter/book index is previous to the current one to maintain scroll history.
