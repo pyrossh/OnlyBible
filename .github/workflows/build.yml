@@ -23,7 +23,8 @@ jobs:
           envkey_RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
       - run: flutter --version
       - run: flutter pub get
-      - run: flutter build web --web-renderer canvaskit --release
+      - run: cp .env build/web/assets
+      - run: flutter build web
       - uses: actions/upload-pages-artifact@v1
         with:
           path: build/web

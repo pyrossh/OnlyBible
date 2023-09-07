@@ -51,8 +51,6 @@ firebase deploy
 ## Web
 
 ```agsl
-https://only-bible-app.web.app
-https://only-bible-app.firebaseapp.com/
 https://onlybible.app
 ```
 
