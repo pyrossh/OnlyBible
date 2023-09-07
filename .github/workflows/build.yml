@@ -5,6 +5,10 @@ name: Build
       - master
 jobs:
   web:
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
