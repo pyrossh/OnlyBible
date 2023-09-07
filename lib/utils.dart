@@ -1,8 +1,8 @@
 import "dart:convert";
-import "package:flutter_dotenv/flutter_dotenv.dart";
 import "package:http/http.dart" as http;
 import "package:flutter/services.dart";
 import "package:only_bible_app/dialog.dart";
+import "package:only_bible_app/env.dart";
 import "package:only_bible_app/models.dart";
 import "package:only_bible_app/store/state.dart";
 import "package:url_launcher/url_launcher.dart";
@@ -203,13 +203,11 @@ recordError(String message, StackTrace? stack) async {
     print("ERROR STACK: ${stack.toString()}");
     return;
   }
-  await Future.delayed(Duration(seconds: 2));
-  final apiKey = dotenv.get("RESEND_API_KEY");
   final url = Uri.https("api.resend.com", "/emails");
   final response = await http.post(
     url,
     headers: {
-      "Authorization": "Bearer $apiKey",
+      "Authorization": "Bearer ${Env.resendApiKey}",
       "Content-Type": "application/json",
     },
     body: jsonEncode({

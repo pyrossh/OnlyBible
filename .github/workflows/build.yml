@@ -17,14 +17,9 @@ jobs:
           flutter-version: '3.13.0'
           channel: 'stable'
           cache: true
-      - uses: SpicyPizza/create-envfile@v2.0
-        with:
-          envkey_TTS_SUBSCRIPTION_KEY: ${{ secrets.TTS_SUBSCRIPTION_KEY }}
-          envkey_RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
       - run: flutter --version
       - run: flutter pub get
-      - run: flutter build web
-      - run: cp .env build/web/assets
+      - run: flutter build web --dart-define=TTS_SUBSCRIPTION_KEY=${{ secrets.TTS_SUBSCRIPTION_KEY }} --dart-define=RESEND_API_KEY=${{ secrets.RESEND_API_KEY }}
       - uses: actions/upload-pages-artifact@v1
         with:
           path: build/web

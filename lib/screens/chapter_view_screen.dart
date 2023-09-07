@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
 import "package:only_bible_app/models.dart";
-import 'package:only_bible_app/store/state.dart';
+import "package:only_bible_app/store/state.dart";
 import "package:only_bible_app/utils.dart";
 import "package:only_bible_app/widgets/chapter_app_bar.dart";
 import "package:only_bible_app/widgets/sidebar.dart";
