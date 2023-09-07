@@ -7,17 +7,17 @@ jobs:
   web:
     runs-on: ubuntu-latest
     steps:
-      - name: Make envfile
-        uses: SpicyPizza/create-envfile@v2.0
-        with:
-          envkey_TTS_SUBSCRIPTION_KEY: ${{ secrets.TTS_SUBSCRIPTION_KEY }}
-          envkey_RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
       - uses: actions/checkout@v3
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.13.0'
           channel: 'stable'
           cache: true
+      - name: Make envfile
+        uses: SpicyPizza/create-envfile@v2.0
+        env:
+          envkey_TTS_SUBSCRIPTION_KEY: ${{ secrets.TTS_SUBSCRIPTION_KEY }}
+          envkey_RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
       - run: flutter --version
       - run: flutter pub get
       - run: flutter build web
