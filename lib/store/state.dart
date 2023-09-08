@@ -1,11 +1,12 @@
 import "dart:developer";
+import "package:atoms_state/atoms_state.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:get_storage/get_storage.dart";
 import "package:just_audio/just_audio.dart";
-import "package:only_bible_app/atom.dart";
 import "package:only_bible_app/dialog.dart";
 import "package:only_bible_app/models.dart";
+import "package:only_bible_app/store/storage.dart";
 import "package:only_bible_app/theme.dart";
 import "package:only_bible_app/utils.dart";
 import "package:only_bible_app/navigation.dart";
@@ -14,6 +15,7 @@ import "package:only_bible_app/store/actions.dart";
 final box = GetStorage("only-bible-app-prefs");
 final player = AudioPlayer();
 final noteTextController = TextEditingController();
+final storage = FileStorage(box: box);
 
 initState() async {
   await box.initStorage;
@@ -24,7 +26,7 @@ final bibleAtom = AsyncAtom(
 );
 
 final firstOpenAtom = Atom(
-  box: box,
+  storage: storage,
   key: "firstOpen",
   initialState: true,
   reducer: (state, action) {
@@ -36,7 +38,7 @@ final firstOpenAtom = Atom(
 );
 
 final languageCodeAtom = Atom(
-  box: box,
+  storage: storage,
   key: "languageCode",
   initialState: "en",
   reducer: (state, action) {
@@ -48,7 +50,7 @@ final languageCodeAtom = Atom(
 );
 
 final bibleNameAtom = Atom(
-  box: box,
+  storage: storage,
   key: "bibleName",
   initialState: "English",
   reducer: (state, action) {
@@ -60,7 +62,7 @@ final bibleNameAtom = Atom(
 );
 
 final engTitlesAtom = Atom(
-  box: box,
+  storage: storage,
   key: "engTitles",
   initialState: false,
   reducer: (state, action) {
@@ -72,7 +74,7 @@ final engTitlesAtom = Atom(
 );
 
 final boldFontAtom = Atom(
-  box: box,
+  storage: storage,
   key: "boldFont",
   initialState: false,
   reducer: (state, action) {
@@ -84,7 +86,7 @@ final boldFontAtom = Atom(
 );
 
 final darkModeAtom = Atom(
-  box: box,
+  storage: storage,
   key: "darkMode",
   initialState: false,
   reducer: (state, action) {
@@ -97,7 +99,7 @@ final darkModeAtom = Atom(
 );
 
 final textScaleAtom = Atom(
-  box: box,
+  storage: storage,
   key: "textScale",
   initialState: 0.0,
   reducer: (state, action) {
@@ -109,7 +111,7 @@ final textScaleAtom = Atom(
 );
 
 final savedBookAtom = Atom(
-  box: box,
+  storage: storage,
   key: "savedBook",
   initialState: 0,
   reducer: (state, action) {
@@ -121,7 +123,7 @@ final savedBookAtom = Atom(
 );
 
 final savedChapterAtom = Atom(
-  box: box,
+  storage: storage,
   key: "savedChapter",
   initialState: 0,
   reducer: (state, action) {

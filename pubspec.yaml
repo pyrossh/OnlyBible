@@ -30,6 +30,7 @@ dependencies:
   package_info_plus: ^4.1.0
   flutter_azure_tts: ^0.1.6
   http: ^0.13.6
+  atoms_state: 0.0.2
 
 dev_dependencies:
   flutter_test:

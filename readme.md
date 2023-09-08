@@ -1,11 +1,26 @@
 # Only Bible App
 
-The only bible app you will ever need. No ads, No in-app purchases, No distractions.
+The only bible app you will ever need.
+No ads, No in-app purchases, No distractions.
 Optimized for reading and highlighting.
-Just the bibles which are freely available in the public domain.
+Only Bibles which are in the public domain are available.
 Verse by verse audio is also supported for some of the languages generated using Azure TTS.
 
-Most of the major Indian languages are supported such as Hindi, Kannada, Tamil, Malayalam, Nepali.
+### Languages Supported
+
+| Language  | Audio |
+|-----------|:-----:|
+| Bengali   |   ✅   |
+| English   |   ✅   |
+| Gujarati  |   ✅   |
+| Hindi     |   ✅   |
+| Kannada   |   ✅   |
+| Malayalam |   ✅   |
+| Nepali    |   ✅   |
+| Oriya     |   ❌   |
+| Punjabi   |   ❌   |
+| Tamil     |   ✅   |
+| Telugu    |   ✅   |
 
 ## Setup
 
@@ -55,6 +70,7 @@ https://onlybible.app
 ```
 
 ## Bugs
+
 1. Swipe left should pop context if chapter/book index is previous to the current one to maintain scroll history.
 
 ## Todo
@@ -62,3 +78,4 @@ https://onlybible.app
 1. Figure out history
 2. Add more text options compact/loose, line spacing
 3. Backups (File, Google Drive)
+4. Add Next/Prev/Home in bottom navigation as optional for mobile users

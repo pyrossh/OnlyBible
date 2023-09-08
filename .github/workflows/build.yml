@@ -20,6 +20,7 @@ jobs:
       - run: flutter --version
       - run: flutter pub get
       - run: flutter build web --dart-define=TTS_SUBSCRIPTION_KEY=${{ secrets.TTS_SUBSCRIPTION_KEY }} --dart-define=RESEND_API_KEY=${{ secrets.RESEND_API_KEY }}
+      - run: cp build/web/index.html build/web/privacy-policy.html
       - uses: actions/upload-pages-artifact@v1
         with:
           path: build/web
