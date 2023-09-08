@@ -1,3 +1,4 @@
+import "package:atoms_state/atoms_state.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:only_bible_app/models.dart";
@@ -8,12 +9,11 @@ import "package:only_bible_app/sheets/actions_sheet.dart";
 import "package:only_bible_app/sheets/highlight_sheet.dart";
 import "package:only_bible_app/sheets/settings_sheet.dart";
 import "package:only_bible_app/store/actions.dart";
-import 'package:only_bible_app/store/state.dart';
+import "package:only_bible_app/store/state.dart";
 import "package:only_bible_app/utils.dart";
 import "package:only_bible_app/widgets/note_sheet.dart";
 import "package:only_bible_app/widgets/scaffold_markdown.dart";
 import "package:share_plus/share_plus.dart";
-import "package:only_bible_app/atom.dart";
 
 final actionsShownAtom = Atom(
   key: "actionsShown",
