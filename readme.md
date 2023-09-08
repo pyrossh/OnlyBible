@@ -1,7 +1,9 @@
 # Only Bible App
 
 The only bible app you will ever need.
+
 No ads, No in-app purchases, No distractions.
+
 Optimized for reading and highlighting.
 Only Bibles which are in the public domain are available.
 Verse by verse audio is also supported for some of the languages generated using Azure TTS.

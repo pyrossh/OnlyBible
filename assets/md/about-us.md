@@ -1,5 +1,5 @@
-This app was created by me; Peter John, to be a minimally invasive Bible App as I got tired and fed up with the current trend
-of bible apps in the App Stores. Most of these apps try to upsell various materials of the bible. Now days they
+This app was created by me, to be a minimally invasive Bible App as I got tired and fed up with the current trend
+of bible apps in the app stores. Most of these apps try to upsell various materials of the bible. Now days they
 are also into the subscription business model else trying to get Ad revenue. This is all fueled more by the book publishers
 who make huge profits from the original Bible manuscripts by translating them and selling it instead of giving it for free.
 
