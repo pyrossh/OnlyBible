@@ -1,5 +1,5 @@
+import "package:atoms_state/atoms_state.dart";
 import "package:flutter/material.dart";
-import "package:only_bible_app/atom.dart";
 import "package:only_bible_app/models.dart";
 import "package:only_bible_app/navigation.dart";
 import "package:only_bible_app/store/actions.dart";
