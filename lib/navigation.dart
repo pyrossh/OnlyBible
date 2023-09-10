@@ -188,7 +188,7 @@ shareAppLink(BuildContext context) {
   if (isAndroid()) {
     Share.share(
       subject: "Only Bible App",
-      "https://play.google.com/store/apps/details?id=packageName",
+      "https://play.google.com/store/apps/details?id=sh.pyros.only_bible_app",
     );
   } else if (isIOS()) {
     Share.share(
@@ -205,7 +205,7 @@ shareAppLink(BuildContext context) {
 
 rateApp(BuildContext context) {
   if (isAndroid()) {
-    context.openUrl("https://play.google.com/store/apps/details?id=packageName");
+    context.openUrl("https://play.google.com/store/apps/details?id=sh.pyros.only_bible_app");
   } else if (isIOS()) {
     context.openUrl("https://apps.apple.com/us/app/only-bible-app/packageName");
   }
