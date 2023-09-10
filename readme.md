@@ -49,20 +49,12 @@ dart run flutter_native_splash:create
 ```agsl
 flutter clean
 flutter run
-firebase emulators:start
 ```
 
 ## Test
 
 ```agsl
 flutter test
-```
-
-## Deploy
-
-```agsl
-flutter build web
-firebase deploy
 ```
 
 ## Web
