@@ -99,16 +99,20 @@ class SettingsSheet extends StatelessWidget {
               onPressed: showPrivacyPolicy,
             ),
             SettingsTile.navigation(
+              leading: const Icon(Icons.description_outlined, color: Colors.blueGrey),
+              title: Text(context.l.termsAndConditionsTitle),
+              onPressed: showTermsAndConditions,
+            ),
+            SettingsTile.navigation(
               leading: const Icon(Icons.share_outlined, color: Colors.blueAccent),
               title: Text(context.l.shareAppTitle),
               onPressed: shareAppLink,
             ),
-            if (!isDesktop()) // TODO: mabe support OSx if we release in that store
-              SettingsTile.navigation(
-                leading: Icon(Icons.star, color: Colors.yellowAccent.shade700),
-                title: Text(context.l.rateAppTitle),
-                onPressed: rateApp,
-              ),
+            SettingsTile.navigation(
+              leading: Icon(Icons.star, color: Colors.yellowAccent.shade700),
+              title: Text(context.l.rateAppTitle),
+              onPressed: rateApp,
+            ),
             SettingsTile.navigation(
               leading: Icon(Icons.info_outline, color: context.theme.colorScheme.onBackground),
               title: Text(context.l.aboutUsTitle),

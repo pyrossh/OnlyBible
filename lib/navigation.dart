@@ -154,6 +154,14 @@ showPrivacyPolicy(BuildContext context) {
   );
 }
 
+showTermsAndConditions(BuildContext context) {
+  Navigator.of(context).push(
+    createNoTransitionPageRoute(
+      const ScaffoldMarkdown(title: "Terms and Conditions", file: "terms-and-conditions.md"),
+    ),
+  );
+}
+
 changeBible(BuildContext context) {
   Navigator.of(context).pushReplacement(
     createNoTransitionPageRoute(
@@ -208,6 +216,8 @@ rateApp(BuildContext context) {
     context.openUrl("https://play.google.com/store/apps/details?id=sh.pyros.only_bible_app");
   } else if (isIOS()) {
     context.openUrl("https://apps.apple.com/us/app/only-bible-app/packageName");
+  } else {
+    context.openUrl("https://apps.apple.com/us/app/only-bible-app/id123");
   }
 }
 
