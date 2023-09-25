@@ -217,7 +217,7 @@ rateApp(BuildContext context) {
   } else if (isIOS()) {
     context.openUrl("https://apps.apple.com/us/app/only-bible-app/packageName");
   } else {
-    context.openUrl("https://apps.apple.com/us/app/only-bible-app/id123");
+    context.openUrl("https://apps.apple.com/us/app/only-bible-app/id6467606465");
   }
 }
 
