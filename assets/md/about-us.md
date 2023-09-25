@@ -14,3 +14,6 @@ All the bibles used in this App are free and available in the public domain. Mos
 
 I also agree to and completely follow the [Copyrights Statement](https://www.wordproject.org/contact/new/copyrights.htm) of the Word project.
 
+**Contact Us**
+
+If you have any questions or feedback for us, please contact us at pyros2097@gmail.com.
