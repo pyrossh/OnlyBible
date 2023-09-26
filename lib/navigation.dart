@@ -201,7 +201,7 @@ shareAppLink(BuildContext context) {
   } else if (isIOS()) {
     Share.share(
       subject: "Only Bible App",
-      "https://apps.apple.com/us/app/hare-pro/id123",
+      "https://apps.apple.com/us/app/only-bible-app/id6467606465",
     );
   } else {
     Share.share(
@@ -215,7 +215,7 @@ rateApp(BuildContext context) {
   if (isAndroid()) {
     context.openUrl("https://play.google.com/store/apps/details?id=sh.pyros.only_bible_app");
   } else if (isIOS()) {
-    context.openUrl("https://apps.apple.com/us/app/only-bible-app/packageName");
+    context.openUrl("https://apps.apple.com/us/app/only-bible-app/id6467606465");
   } else {
     context.openUrl("https://apps.apple.com/us/app/only-bible-app/id6467606465");
   }

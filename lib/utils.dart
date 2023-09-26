@@ -5,6 +5,7 @@ import "package:only_bible_app/dialog.dart";
 import "package:only_bible_app/env.dart";
 import "package:only_bible_app/models.dart";
 import "package:only_bible_app/store/state.dart";
+import "package:package_info_plus/package_info_plus.dart";
 import "package:url_launcher/url_launcher.dart";
 import "package:flutter/foundation.dart" show TargetPlatform, defaultTargetPlatform, kDebugMode;
 import "package:flutter/material.dart";
@@ -198,6 +199,7 @@ Future<Bible> loadBible(String name) async {
 }
 
 recordError(String message, StackTrace? stack) async {
+  final packageInfo = await PackageInfo.fromPlatform();
   if (kDebugMode) {
     print("ERROR: $message");
     print("ERROR STACK: ${stack.toString()}");
@@ -214,8 +216,15 @@ recordError(String message, StackTrace? stack) async {
       "from": "onboarding@resend.dev",
       "to": "peter.john@sent.com",
       "subject": "Error Stack trace",
-      "html":
-          "<div><p><strong>Error:</strong>$message</p><p><strong>StackTrace:</strong>${stack?.toString()}</p></div>",
+      "html": """
+        <div>
+          <p><strong>OS:</strong>$defaultTargetPlatform</p>
+          <p><strong>App Version:</strong>${packageInfo.version}</p>
+          <p><strong>App Build Number:</strong>${packageInfo.buildSignature}</p>
+          <p><strong>Error:</strong>$message</p>
+          <p><strong>StackTrace:</strong>${stack?.toString()}</p>
+        </div>
+      """,
     }),
   );
   if (response.statusCode == 200) {
