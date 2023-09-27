@@ -1,5 +1,7 @@
 import "dart:developer";
+import "dart:io";
 import "package:atoms_state/atoms_state.dart";
+import "package:flutter/foundation.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:get_storage/get_storage.dart";
@@ -11,6 +13,7 @@ import "package:only_bible_app/theme.dart";
 import "package:only_bible_app/utils.dart";
 import "package:only_bible_app/navigation.dart";
 import "package:only_bible_app/store/actions.dart";
+import "package:path_provider/path_provider.dart";
 
 final box = GetStorage("only-bible-app-prefs");
 final player = AudioPlayer();
@@ -274,12 +277,22 @@ onPlay(BuildContext context, Bible bible) async {
   } else {
     dispatch(const SetPlaying(true));
     for (final v in versesToPlay) {
-      final pathname = "${bible.name}|${v.book}|${v.chapter}|${v.index}";
+      final directory = await getApplicationDocumentsDirectory();
+      final pathname = "${bible.name}_${v.book}_${v.chapter}_${v.index}";
+      final filepath = "${directory.path}/$pathname.mp3";
       try {
-        final list = await convertText(context.currentLang.audioVoice, v.text);
-        await player.setAudioSource(BufferAudioSource(list));
+        final data = await convertText(context.currentLang.audioVoice, v.text);
+        if (!kIsWeb) {
+          await File(filepath).writeAsBytes(data);
+          await player.setUrl("file:$filepath");
+        } else {
+          await player.setAudioSource(BufferAudioSource(data));
+        }
         await player.play();
         await player.stop();
+        if (!kIsWeb) {
+          await File(filepath).delete();
+        }
       } catch (err) {
         log("Could not play audio", name: "play", error: (err.toString(), pathname));
         recordError((err.toString(), pathname).toString(), null);
