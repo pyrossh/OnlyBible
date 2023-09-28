@@ -277,7 +277,7 @@ onPlay(BuildContext context, Bible bible) async {
   } else {
     dispatch(const SetPlaying(true));
     for (final v in versesToPlay) {
-      final directory = await getApplicationDocumentsDirectory();
+      final directory = await getTemporaryDirectory();
       final pathname = "${bible.name}_${v.book}_${v.chapter}_${v.index}";
       final filepath = "${directory.path}/$pathname.mp3";
       try {
