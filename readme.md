@@ -63,6 +63,26 @@ flutter test
 https://onlybible.app
 ```
 
+
+## Release Process
+Update version and build number in pubspec.yaml  ex: 1.0.7+1
+
+### macOS
+```
+flutter build macos --release --dart-define-from-file=.env
+open macos/Runner.xcworkspace
+```
+* Open Product under menu -> Click Archive (It will run the build process let it complete).
+* Run Validate -> custom
+* Run Distribute -> custom
+
+### iOS
+
+```
+flutter build ipa --release --dart-define-from-file=.env
+open build/ios/archive/MyApp.xcarchive
+```
+
 ## Bugs
 
 1. Swipe left should pop context if chapter/book index is previous to the current one to maintain scroll history.

@@ -21,11 +21,12 @@ jobs:
           flutter-version: '3.13.0'
           channel: 'stable'
           cache: true
-      - run: flutter build appbundle --debug --dart-define=TTS_SUBSCRIPTION_KEY=${{ secrets.TTS_SUBSCRIPTION_KEY }} --dart-define=RESEND_API_KEY=${{ secrets.RESEND_API_KEY }}
-      - run: flutter build ios --release --no-codesign --dart-define=TTS_SUBSCRIPTION_KEY=${{ secrets.TTS_SUBSCRIPTION_KEY }} --dart-define=RESEND_API_KEY=${{ secrets.RESEND_API_KEY }}
+      - run: echo -e "TTS_SUBSCRIPTION_KEY=${{ secrets.TTS_SUBSCRIPTION_KEY }}\nRESEND_API_KEY=${{ secrets.RESEND_API_KEY }}" > .env
+      - run: flutter build appbundle --debug --dart-define-from-file=.env
+      - run: flutter build ios --release --no-codesign --dart-define-from-file=.env
       - run: flutter config --enable-macos-desktop
-      - run: flutter build macos --release --dart-define=TTS_SUBSCRIPTION_KEY=${{ secrets.TTS_SUBSCRIPTION_KEY }} --dart-define=RESEND_API_KEY=${{ secrets.RESEND_API_KEY }}
-      - run: flutter build web --dart-define=TTS_SUBSCRIPTION_KEY=${{ secrets.TTS_SUBSCRIPTION_KEY }} --dart-define=RESEND_API_KEY=${{ secrets.RESEND_API_KEY }}
+      - run: flutter build macos --release --dart-define-from-file=.env
+      - run: flutter build web --dart-define-from-file=.env
       - run: cp build/web/index.html build/web/privacy-policy.html
       - run: cp build/web/index.html build/web/about-us.html
       - uses: actions/upload-pages-artifact@v1
