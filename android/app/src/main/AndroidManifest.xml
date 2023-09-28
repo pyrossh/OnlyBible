@@ -2,8 +2,7 @@
     <application
         android:label="Only Bible"
         android:name="${applicationName}"
-        android:icon="@mipmap/app_icon"
-        android:usesCleartextTraffic="true">
+        android:icon="@mipmap/app_icon">
         <activity
             android:name=".MainActivity"
             android:exported="true"
