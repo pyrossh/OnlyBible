@@ -185,7 +185,6 @@ void setHighlight(BuildContext context, int index) {
     box.write("${v.book}:${v.chapter}:${v.index}:highlight", index);
   }
   box.save();
-  hideActions(context);
 }
 
 void removeHighlight(BuildContext context) {
@@ -193,7 +192,6 @@ void removeHighlight(BuildContext context) {
     box.remove("${v.book}:${v.chapter}:${v.index}:highlight");
   }
   box.save();
-  hideActions(context);
 }
 
 bool isVerseSelected(Verse v) {
@@ -208,12 +206,6 @@ bool watchVerseSelected(BuildContext context, Verse v) {
 
 void onVerseSelected(BuildContext context, Bible bible, Verse v) {
   dispatch(SelectVerse(v));
-  if (selectedVersesAtom.value.isNotEmpty) {
-    showActions(context, bible);
-  }
-  if (selectedVersesAtom.value.isEmpty) {
-    hideActions(context);
-  }
 }
 
 TextStyle getHighlightStyle(BuildContext context, Verse v) {
@@ -240,7 +232,6 @@ clearEvents(BuildContext context) {
   if (isPlaying.value) {
     pause();
   }
-  hideActions(context);
 }
 
 pause() async {
@@ -316,7 +307,6 @@ saveNote(BuildContext context, Verse v) {
   box.write("${v.book}:${v.chapter}:${v.index}:note", note);
   box.save();
   hideNoteField(context);
-  hideActions(context);
 }
 
 deleteNote(BuildContext context, Verse v) {

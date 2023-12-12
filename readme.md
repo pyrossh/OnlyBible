@@ -28,6 +28,7 @@ Verse by verse audio is also supported for some of the languages generated using
 
 ```agsl
 brew install fluttter cocoapods
+dart pub global activate flutter_distributor
 ```
 
 ## Lint
@@ -40,8 +41,8 @@ dart format lib
 ## Update icons
 
 ```agsl
-dart run flutter_launcher_icons
-dart run flutter_native_splash:create
+flutter pub run flutter_launcher_icons
+flutter pub run flutter_native_splash:create
 ```
 
 ## Run

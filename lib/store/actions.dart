@@ -46,15 +46,3 @@ class SelectVerse implements AppAction {
 class ClearSelectedVerses implements AppAction {
   const ClearSelectedVerses();
 }
-
-class SetActionsShown implements AppAction {
-  final bool value;
-
-  const SetActionsShown(this.value);
-}
-
-class SetHighlightsShown implements AppAction {
-  final bool value;
-
-  const SetHighlightsShown(this.value);
-}

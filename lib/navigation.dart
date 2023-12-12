@@ -5,37 +5,13 @@ import "package:only_bible_app/models.dart";
 import "package:only_bible_app/screens/bible_select_screen.dart";
 import "package:only_bible_app/screens/book_select_screen.dart";
 import "package:only_bible_app/screens/chapter_view_screen.dart";
-import "package:only_bible_app/sheets/actions_sheet.dart";
-import "package:only_bible_app/sheets/highlight_sheet.dart";
-import "package:only_bible_app/sheets/settings_sheet.dart";
+import 'package:only_bible_app/widgets/settings_sheet.dart';
 import "package:only_bible_app/store/actions.dart";
 import "package:only_bible_app/store/state.dart";
 import "package:only_bible_app/utils.dart";
 import "package:only_bible_app/widgets/note_sheet.dart";
 import "package:only_bible_app/widgets/scaffold_markdown.dart";
 import "package:share_plus/share_plus.dart";
-
-final actionsShownAtom = Atom(
-  key: "actionsShown",
-  initialState: false,
-  reducer: (state, action) {
-    if (action is SetActionsShown) {
-      return action.value;
-    }
-    return state;
-  },
-);
-
-final highlightsShownAtom = Atom(
-  key: "highlightsShown",
-  initialState: false,
-  reducer: (state, action) {
-    if (action is SetHighlightsShown) {
-      return action.value;
-    }
-    return state;
-  },
-);
 
 createNoTransitionPageRoute(Widget page) {
   return PageRouteBuilder(
@@ -187,7 +163,6 @@ changeBook(BuildContext context, Bible bible) {
 }
 
 updateCurrentBible(BuildContext context, String name, String code, int book, int chapter) async {
-  hideActions(context);
   dispatch(UpdateBible(name, code));
   pushBookChapter(context, name, book, chapter, null);
 }
@@ -238,41 +213,6 @@ showSettings(BuildContext context, Bible bible) {
     useSafeArea: true,
     builder: (context) => SettingsSheet(bible: bible),
   );
-}
-
-showActions(BuildContext context, Bible bible) {
-  if (!actionsShownAtom.value) {
-    dispatch(const SetActionsShown(true));
-    Scaffold.of(context).showBottomSheet(
-      enableDrag: false,
-      clipBehavior: Clip.antiAliasWithSaveLayer,
-      (context) => ActionsSheet(bible: bible),
-    );
-  }
-}
-
-hideActions(BuildContext context) {
-  if (actionsShownAtom.value) {
-    dispatch(const SetActionsShown(false));
-    dispatch(const ClearSelectedVerses());
-    Navigator.of(context).pop();
-  }
-}
-
-showHighlights(BuildContext context) {
-  dispatch(const SetHighlightsShown(true));
-  Scaffold.of(context).showBottomSheet(
-    enableDrag: false,
-    clipBehavior: Clip.antiAliasWithSaveLayer,
-    (context) => const HighlightSheet(),
-  );
-}
-
-hideHighlights(BuildContext context) {
-  if (highlightsShownAtom.value) {
-    dispatch(const SetHighlightsShown(false));
-    Navigator.of(context).pop();
-  }
 }
 
 showNoteField(BuildContext context, Bible bible, Verse v) {
