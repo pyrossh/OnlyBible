@@ -33,6 +33,9 @@ showError(BuildContext context, String message) {
 }
 
 showReportError(BuildContext context, String message, StackTrace? st) {
+  if (message.contains("LateInitializationError") || message.contains("HardwareKeyboard")) {
+    return;
+  }
   showDialog(
     context: context,
     builder: (_) {

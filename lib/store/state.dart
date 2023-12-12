@@ -15,9 +15,12 @@ import "package:only_bible_app/navigation.dart";
 import "package:only_bible_app/store/actions.dart";
 import "package:path_provider/path_provider.dart";
 
+import "../widgets/menu.dart";
+
 final box = GetStorage("only-bible-app-prefs");
 final player = AudioPlayer();
 final noteTextController = TextEditingController();
+final ContextMenuController contextMenuController = ContextMenuController();
 final storage = FileStorage(box: box);
 
 initState() async {
@@ -185,7 +188,9 @@ void setHighlight(BuildContext context, int index) {
     box.write("${v.book}:${v.chapter}:${v.index}:highlight", index);
   }
   box.save();
-  hideActions(context);
+  // hideActions(context);
+  // dispatch(const ClearSelectedVerses());
+  // contextMenuController.remove();
 }
 
 void removeHighlight(BuildContext context) {
@@ -206,13 +211,20 @@ bool watchVerseSelected(BuildContext context, Verse v) {
       .any((el) => el.book == v.book && el.chapter == v.chapter && el.index == v.index);
 }
 
-void onVerseSelected(BuildContext context, Bible bible, Verse v) {
+void onVerseSelected(BuildContext context, Bible bible, Verse v, Offset pos) {
   dispatch(SelectVerse(v));
   if (selectedVersesAtom.value.isNotEmpty) {
-    showActions(context, bible);
+    // showActions(context, bible);
+    contextMenuController.show(
+      context: context,
+      contextMenuBuilder: (BuildContext context) {
+        return Menu(anchor: pos);
+      },
+    );
   }
   if (selectedVersesAtom.value.isEmpty) {
-    hideActions(context);
+    contextMenuController.remove();
+    // hideActions(context);
   }
 }
 

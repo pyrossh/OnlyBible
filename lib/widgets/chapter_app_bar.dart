@@ -1,7 +1,6 @@
 import "package:flutter/material.dart";
 import "package:only_bible_app/models.dart";
 import "package:only_bible_app/navigation.dart";
-import 'package:only_bible_app/store/state.dart';
 import "package:only_bible_app/utils.dart";
 
 class ChapterAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -30,17 +29,41 @@ class ChapterAppBar extends StatelessWidget implements PreferredSizeWidget {
               onTap: () => changeBook(context, bible),
               child: Row(
                 children: [
-                  Text(
-                    "$bookName ${chapter.index + 1}",
-                    style: Theme.of(context).textTheme.headlineMedium,
-                    key: const Key("bookTitle"),
-                  ),
                   Icon(
-                    Icons.expand_more,
-                    size: 28,
+                    Icons.sort,
+                    size: 24,
                     color: Theme.of(context).textTheme.headlineMedium!.color,
                   ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 2),
+                    child: Text(
+                      bookName,
+                      style: Theme.of(context).textTheme.headlineMedium,
+                      key: const Key("bookTitle"),
+                    ),
+                  ),
                 ],
+              ),
+            ),
+            InkWell(
+              enableFeedback: true,
+              onTap: () => changeChapter(context, bible, book),
+              child: Padding(
+                padding: EdgeInsets.only(left: 12),
+                child: Row(
+                  children: [
+                    Text(
+                      "${chapter.index + 1}",
+                      style: Theme.of(context).textTheme.headlineMedium,
+                      key: const Key("bookChapter"),
+                    ),
+                    Icon(
+                      Icons.expand_more,
+                      size: 24,
+                      color: Theme.of(context).textTheme.headlineMedium!.color,
+                    ),
+                  ],
+                ),
               ),
             ),
             Expanded(

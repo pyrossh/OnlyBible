@@ -4,6 +4,7 @@ import "package:flutter/services.dart";
 import "package:only_bible_app/models.dart";
 import "package:only_bible_app/screens/bible_select_screen.dart";
 import "package:only_bible_app/screens/book_select_screen.dart";
+import "package:only_bible_app/screens/chapter_select_screen.dart";
 import "package:only_bible_app/screens/chapter_view_screen.dart";
 import "package:only_bible_app/sheets/actions_sheet.dart";
 import "package:only_bible_app/sheets/highlight_sheet.dart";
@@ -182,6 +183,21 @@ changeBook(BuildContext context, Bible bible) {
   Navigator.of(context).push(
     createNoTransitionPageRoute(
       BookSelectScreen(bible: bible),
+    ),
+  );
+}
+
+changeChapter(BuildContext context, Bible bible, Book book) {
+  Navigator.of(context).pushReplacement(
+    PageRouteBuilder(
+      opaque: false,
+      transitionDuration: Duration.zero,
+      reverseTransitionDuration: Duration.zero,
+      pageBuilder: (context, _, __) => ChapterSelectScreen(
+        bible: bible,
+        book: book,
+        selectedBookIndex: book.index,
+      ),
     ),
   );
 }

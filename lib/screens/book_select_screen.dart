@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:only_bible_app/navigation.dart";
 import "package:only_bible_app/utils.dart";
 import "package:only_bible_app/widgets/scaffold_menu.dart";
 import "package:only_bible_app/screens/chapter_select_screen.dart";
@@ -12,18 +13,7 @@ class BookSelectScreen extends StatelessWidget {
   const BookSelectScreen({super.key, required this.bible});
 
   onBookSelected(BuildContext context, int index) {
-    Navigator.of(context).pushReplacement(
-      PageRouteBuilder(
-        opaque: false,
-        transitionDuration: Duration.zero,
-        reverseTransitionDuration: Duration.zero,
-        pageBuilder: (context, _, __) => ChapterSelectScreen(
-          bible: bible,
-          book: bible.books[index],
-          selectedBookIndex: index,
-        ),
-      ),
-    );
+    changeChapter(context, bible, bible.books[index]);
   }
 
   @override

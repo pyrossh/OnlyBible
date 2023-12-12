@@ -4,12 +4,13 @@ import "package:flutter_swipe_detector/flutter_swipe_detector.dart";
 import "package:only_bible_app/models.dart";
 import "package:only_bible_app/navigation.dart";
 import 'package:only_bible_app/store/state.dart';
+import "package:only_bible_app/widgets/menu.dart";
 
 class VersesView extends StatelessWidget {
   final Bible bible;
   final Chapter chapter;
 
-  const VersesView({super.key, required this.bible, required this.chapter});
+  VersesView({super.key, required this.bible, required this.chapter});
 
   @override
   Widget build(BuildContext context) {
@@ -75,8 +76,8 @@ class VersesView extends StatelessWidget {
                               text: "${v.text}\n",
                               style: getHighlightStyle(context, v),
                               recognizer: TapGestureRecognizer()
-                                ..onTap = () {
-                                  onVerseSelected(context, bible, v);
+                                ..onTapUp = (details) {
+                                  onVerseSelected(context, bible, v, details.localPosition);
                                 },
                             ),
                             const WidgetSpan(
