@@ -3,7 +3,7 @@ import "package:flutter/material.dart";
 import "package:flutter_swipe_detector/flutter_swipe_detector.dart";
 import "package:only_bible_app/models.dart";
 import "package:only_bible_app/navigation.dart";
-import 'package:only_bible_app/store/state.dart';
+import "package:only_bible_app/store/state.dart";
 
 class VersesView extends StatelessWidget {
   final Bible bible;
@@ -55,22 +55,6 @@ class VersesView extends StatelessWidget {
                                 child: Text("${v.index + 1} ", style: Theme.of(context).textTheme.labelMedium),
                               ),
                             ),
-                            if (hasNote(v))
-                              WidgetSpan(
-                                child: Padding(
-                                  padding: const EdgeInsets.only(left: 3, right: 3),
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      showNoteField(context, bible, v);
-                                    },
-                                    child: const Icon(
-                                      Icons.sticky_note_2_outlined,
-                                      size: 18,
-                                      color: Colors.blue,
-                                    ),
-                                  ),
-                                ),
-                              ),
                             TextSpan(
                               text: "${v.text}\n",
                               style: getHighlightStyle(context, v),

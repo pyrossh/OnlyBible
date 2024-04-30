@@ -18,18 +18,9 @@ jobs:
           java-version: '11'
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.13.0'
+          flutter-version: '3.19.6'
           channel: 'stable'
           cache: true
       - run: echo -e "TTS_SUBSCRIPTION_KEY=${{ secrets.TTS_SUBSCRIPTION_KEY }}\nRESEND_API_KEY=${{ secrets.RESEND_API_KEY }}" > .env
       - run: flutter build appbundle --debug --dart-define-from-file=.env
       - run: flutter build ios --release --no-codesign --dart-define-from-file=.env
-      - run: flutter config --enable-macos-desktop
-      - run: flutter build macos --release --dart-define-from-file=.env
-      - run: flutter build web --dart-define-from-file=.env
-      - run: cp build/web/index.html build/web/privacy-policy.html
-      - run: cp build/web/index.html build/web/about-us.html
-      - uses: actions/upload-pages-artifact@v1
-        with:
-          path: build/web
-      - uses: actions/deploy-pages@v2

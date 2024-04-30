@@ -224,7 +224,7 @@ rateApp(BuildContext context) {
 shareVerses(BuildContext context, Bible bible, List<Verse> verses) {
   final name = bible.books[verses.first.book].name(context);
   final chapter = verses.first.chapter + 1;
-  final title = "$name $chapter: ${verses.map((e) => e.index + 1).join(", ")}";
+  final title = "$name $chapter:${verses.map((e) => e.index + 1).join(", ")}";
   final text = verses.map((e) => e.text).join("\n");
   Share.share("$title\n$text", subject: title);
 }
