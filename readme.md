@@ -48,8 +48,11 @@ dart run flutter_native_splash:create
 
 ```agsl
 flutter clean
-flutter run
+flutter run --dart-define-from-file=.env
 ```
+
+## IntelliJ IDE
+Add additional run arguments `--dart-define-from-file=.env`
 
 ## Test
 
@@ -65,22 +68,26 @@ https://onlybible.app
 
 
 ## Release Process
-Update version and build number in pubspec.yaml  ex: 1.0.7+1
+Update version and build number in pubspec.yaml  ex: 1.0.7
 
-### macOS
+### android
+
 ```
-flutter build macos --release --dart-define-from-file=.env
-open macos/Runner.xcworkspace
+flutter build appbundle --release --dart-define-from-file=.env
+
+# copy file from /build/app/outputs/bundle/release/app.aab
 ```
-* Open Product under menu -> Click Archive (It will run the build process let it complete).
-* Run Validate -> custom
-* Run Distribute -> custom
 
 ### iOS
 
+Make sure you've added a Distribution certificate to the system keystore and download it and install it
+Make sure you create an App Store provisioning profile for this certificate and download it and install it
+Add you Apple Developer Team account in xCode and open ios/Runner.xcworkspace and under Runner Project,
+Runner Target, Signing Tab, Release Tab, select that provisioning profile and Team and Certificate.
+
 ```
 flutter build ipa --release --dart-define-from-file=.env
-open build/ios/archive/MyApp.xcarchive
+# open build/ios/archive/MyApp.xcarchive
 ```
 
 ## Bugs
@@ -91,5 +98,4 @@ open build/ios/archive/MyApp.xcarchive
 
 1. Figure out history
 2. Add more text options compact/loose, line spacing
-3. Backups (File, Google Drive)
 4. Add Next/Prev/Home in bottom navigation as optional for mobile users

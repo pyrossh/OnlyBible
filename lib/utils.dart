@@ -214,7 +214,7 @@ recordError(String message, StackTrace? stack) async {
     },
     body: jsonEncode({
       "from": "onboarding@resend.dev",
-      "to": "peter.john@sent.com",
+      "to": "pyros2097@gmail.com",
       "subject": "Error Stack trace",
       "html": """
         <div>
