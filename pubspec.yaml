@@ -1,7 +1,7 @@
 name: only_bible_app
 description: The only bible app you will ever need
 publish_to: 'none'
-version: 1.0.3+6
+version: 1.0.4+2
 
 environment:
   sdk: '>=3.0.6 <4.0.0'

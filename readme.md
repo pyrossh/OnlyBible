@@ -68,14 +68,14 @@ https://onlybible.app
 
 
 ## Release Process
-Update version and build number in pubspec.yaml  ex: 1.0.7
+Update version and build number in pubspec.yaml  ex: 1.0.7+1
 
 ### android
 
 ```
 flutter build appbundle --release --dart-define-from-file=.env
 
-# copy file from /build/app/outputs/bundle/release/app.aab
+# copy file from build/app/outputs/bundle/release/app-release.aab
 ```
 
 ### iOS
@@ -87,7 +87,6 @@ Runner Target, Signing Tab, Release Tab, select that provisioning profile and Te
 
 ```
 flutter build ipa --release --dart-define-from-file=.env
-# open build/ios/archive/MyApp.xcarchive
 ```
 
 ## Bugs
