@@ -24,3 +24,32 @@ jobs:
       - run: echo -e "TTS_SUBSCRIPTION_KEY=${{ secrets.TTS_SUBSCRIPTION_KEY }}\nRESEND_API_KEY=${{ secrets.RESEND_API_KEY }}" > .env
       - run: flutter build appbundle --debug --dart-define-from-file=.env
       - run: flutter build ios --release --no-codesign --dart-define-from-file=.env
+
+  website-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: 'build/'
+
+  website-deploy:
+    needs: website-build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
