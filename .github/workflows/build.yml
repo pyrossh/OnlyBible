@@ -42,7 +42,7 @@ jobs:
       - run: npm run build
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: 'build/'
+          path: 'website/build/'
 
   website-deploy:
     needs: website-build
