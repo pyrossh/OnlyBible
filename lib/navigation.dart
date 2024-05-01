@@ -152,7 +152,7 @@ showAboutUs(BuildContext context) {
   Navigator.of(context).push(
     createNoTransitionPageRoute(
       const WebViewScreen(
-        url: "https://only-bible-app.odoo.com/about-us",
+        url: "https://onlybible.app/about-us",
       ),
     ),
   );
@@ -162,7 +162,7 @@ showPrivacyPolicy(BuildContext context) {
   Navigator.of(context).push(
     createNoTransitionPageRoute(
       const WebViewScreen(
-        url: "https://only-bible-app.odoo.com/privacy-policy",
+        url: "https://onlybible.app/privacy-policy",
       ),
     ),
   );
@@ -172,7 +172,7 @@ showTermsAndConditions(BuildContext context) {
   Navigator.of(context).push(
     createNoTransitionPageRoute(
       const WebViewScreen(
-        url: "https://only-bible-app.odoo.com/terms-and-conditions",
+        url: "https://onlybible.app/terms-and-conditions",
       ),
     ),
   );
