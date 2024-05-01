@@ -70,13 +70,14 @@ https://onlybible.app
 ## Release Process
 Increment the patch/minor version in pubspec.yaml for iOS  ex: 1.0.7
 Increment versionCode in pubspec.yaml for android  ex: +9
+Create file android/fastlane/metadata/android/en-GB/changelogs/$versionCode.txt and add change details
+Update file ios/fastlane/metadata/en-US/release_notes.txt
 
 ### android
 
 ```
 flutter build appbundle --release --dart-define-from-file=.env
-
-# copy file from build/app/outputs/bundle/release/app-release.aab
+fastlane supply --aab ../build/app/outputs/bundle/release/app-release.aab
 ```
 
 ### iOS
@@ -88,6 +89,7 @@ Runner Target, Signing Tab, Release Tab, select that provisioning profile and Te
 
 ```
 flutter build ipa --release --dart-define-from-file=.env
+fastlane deliver  --ipa "../build/ios/ipa/only-bible-app.ipa" --automatic_release --submit_for_review
 ```
 
 ## Bugs

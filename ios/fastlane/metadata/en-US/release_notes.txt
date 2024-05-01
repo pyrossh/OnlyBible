@@ -1,2 +1,2 @@
-Removed notes feature
-Fixed some issues
+Remove markdown
+Improve audio loading
