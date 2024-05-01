@@ -11,8 +11,7 @@ import "package:only_bible_app/sheets/settings_sheet.dart";
 import "package:only_bible_app/store/actions.dart";
 import "package:only_bible_app/store/state.dart";
 import "package:only_bible_app/utils.dart";
-import "package:only_bible_app/widgets/note_sheet.dart";
-import "package:only_bible_app/widgets/scaffold_markdown.dart";
+import "package:only_bible_app/screens/webview_screen.dart";
 import "package:share_plus/share_plus.dart";
 
 final actionsShownAtom = Atom(
@@ -46,7 +45,10 @@ createNoTransitionPageRoute(Widget page) {
   );
 }
 
-createSlideRoute({required BuildContext context, TextDirection? slideDir, required Widget page}) {
+createSlideRoute(
+    {required BuildContext context,
+    TextDirection? slideDir,
+    required Widget page}) {
   if (context.isWide || slideDir == null) {
     return PageRouteBuilder(
       pageBuilder: (context, _, __) {
@@ -88,24 +90,28 @@ updateStatusBar(bool v) {
   }
 }
 
-pushBookChapter(BuildContext context, String bibleName, int book, int chapter, TextDirection? dir) {
+pushBookChapter(BuildContext context, String bibleName, int book, int chapter,
+    TextDirection? dir) {
   dispatch(UpdateChapter(book, chapter));
   clearEvents(context);
   Navigator.of(context).push(
     createSlideRoute(
       context: context,
       slideDir: dir,
-      page: ChapterViewScreen(bibleName: bibleName, bookIndex: book, chapterIndex: chapter),
+      page: ChapterViewScreen(
+          bibleName: bibleName, bookIndex: book, chapterIndex: chapter),
     ),
   );
 }
 
-replaceBookChapter(BuildContext context, String bibleName, int book, int chapter) {
+replaceBookChapter(
+    BuildContext context, String bibleName, int book, int chapter) {
   dispatch(UpdateChapter(book, chapter));
   clearEvents(context);
   Navigator.of(context).pushReplacement(
     createNoTransitionPageRoute(
-      ChapterViewScreen(bibleName: bibleName, bookIndex: book, chapterIndex: chapter),
+      ChapterViewScreen(
+          bibleName: bibleName, bookIndex: book, chapterIndex: chapter),
     ),
   );
 }
@@ -113,11 +119,13 @@ replaceBookChapter(BuildContext context, String bibleName, int book, int chapter
 nextChapter(BuildContext context, Bible bible, int book, int chapter) {
   final selectedBook = bible.books[book];
   if (selectedBook.chapters.length > chapter + 1) {
-    pushBookChapter(context, bible.name, selectedBook.index, chapter + 1, TextDirection.ltr);
+    pushBookChapter(context, bible.name, selectedBook.index, chapter + 1,
+        TextDirection.ltr);
   } else {
     if (selectedBook.index + 1 < bible.books.length) {
       final nextBook = bible.books[selectedBook.index + 1];
-      pushBookChapter(context, bible.name, nextBook.index, 0, TextDirection.ltr);
+      pushBookChapter(
+          context, bible.name, nextBook.index, 0, TextDirection.ltr);
     }
   }
 }
@@ -128,12 +136,14 @@ previousChapter(BuildContext context, Bible bible, int book, int chapter) {
     // if (Navigator.of(context).canPop()) {
     //   Navigator.of(context).pop();
     // } else {
-    pushBookChapter(context, bible.name, selectedBook.index, chapter - 1, TextDirection.rtl);
+    pushBookChapter(context, bible.name, selectedBook.index, chapter - 1,
+        TextDirection.rtl);
     // }
   } else {
     if (selectedBook.index - 1 >= 0) {
       final prevBook = bible.books[selectedBook.index - 1];
-      pushBookChapter(context, bible.name, prevBook.index, prevBook.chapters.length - 1, TextDirection.rtl);
+      pushBookChapter(context, bible.name, prevBook.index,
+          prevBook.chapters.length - 1, TextDirection.rtl);
     }
   }
 }
@@ -141,7 +151,9 @@ previousChapter(BuildContext context, Bible bible, int book, int chapter) {
 showAboutUs(BuildContext context) {
   Navigator.of(context).push(
     createNoTransitionPageRoute(
-      const ScaffoldMarkdown(title: "About Us", file: "about-us.md"),
+      const WebViewScreen(
+        url: "https://only-bible-app.odoo.com/about-us",
+      ),
     ),
   );
 }
@@ -149,7 +161,9 @@ showAboutUs(BuildContext context) {
 showPrivacyPolicy(BuildContext context) {
   Navigator.of(context).push(
     createNoTransitionPageRoute(
-      const ScaffoldMarkdown(title: "Privacy Policy", file: "privacy-policy.md"),
+      const WebViewScreen(
+        url: "https://only-bible-app.odoo.com/privacy-policy",
+      ),
     ),
   );
 }
@@ -157,7 +171,9 @@ showPrivacyPolicy(BuildContext context) {
 showTermsAndConditions(BuildContext context) {
   Navigator.of(context).push(
     createNoTransitionPageRoute(
-      const ScaffoldMarkdown(title: "Terms and Conditions", file: "terms-and-conditions.md"),
+      const WebViewScreen(
+        url: "https://only-bible-app.odoo.com/terms-and-conditions",
+      ),
     ),
   );
 }
@@ -186,7 +202,8 @@ changeBook(BuildContext context, Bible bible) {
   );
 }
 
-updateCurrentBible(BuildContext context, String name, String code, int book, int chapter) async {
+updateCurrentBible(BuildContext context, String name, String code, int book,
+    int chapter) async {
   hideActions(context);
   dispatch(UpdateBible(name, code));
   pushBookChapter(context, name, book, chapter, null);
@@ -198,26 +215,23 @@ shareAppLink(BuildContext context) {
       subject: "Only Bible App",
       "https://play.google.com/store/apps/details?id=sh.pyros.only_bible_app",
     );
-  } else if (isIOS()) {
-    Share.share(
-      subject: "Only Bible App",
-      "https://apps.apple.com/us/app/only-bible-app/id6467606465",
-    );
   } else {
     Share.share(
       subject: "Only Bible App",
-      "https://onlybible.app",
+      "https://apps.apple.com/us/app/only-bible-app/id6467606465",
     );
   }
 }
 
 rateApp(BuildContext context) {
   if (isAndroid()) {
-    context.openUrl("https://play.google.com/store/apps/details?id=sh.pyros.only_bible_app");
-  } else if (isIOS()) {
-    context.openUrl("https://apps.apple.com/us/app/only-bible-app/id6467606465");
+    context.openUrl(
+      "https://play.google.com/store/apps/details?id=sh.pyros.only_bible_app",
+    );
   } else {
-    context.openUrl("https://apps.apple.com/us/app/only-bible-app/id6467606465");
+    context.openUrl(
+      "https://apps.apple.com/us/app/only-bible-app/id6467606465",
+    );
   }
 }
 
@@ -273,22 +287,4 @@ hideHighlights(BuildContext context) {
     dispatch(const SetHighlightsShown(false));
     Navigator.of(context).pop();
   }
-}
-
-showNoteField(BuildContext context, Bible bible, Verse v) {
-  final noteText = box.read("${v.book}:${v.chapter}:${v.index}:note") ?? "";
-  noteTextController.text = noteText;
-  showModalBottomSheet(
-    context: context,
-    isDismissible: true,
-    enableDrag: true,
-    showDragHandle: true,
-    useSafeArea: true,
-    isScrollControlled: true,
-    builder: (context) => NoteSheet(bible: bible, verse: v),
-  );
-}
-
-hideNoteField(BuildContext context) {
-  Navigator.of(context).pop();
 }

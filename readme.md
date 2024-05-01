@@ -68,7 +68,8 @@ https://onlybible.app
 
 
 ## Release Process
-Update version and build number in pubspec.yaml  ex: 1.0.7+1
+Increment the patch/minor version in pubspec.yaml for iOS  ex: 1.0.7
+Increment versionCode in pubspec.yaml for android  ex: +9
 
 ### android
 

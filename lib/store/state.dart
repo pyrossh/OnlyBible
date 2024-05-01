@@ -1,7 +1,5 @@
 import "dart:developer";
-import "dart:io";
 import "package:atoms_state/atoms_state.dart";
-import "package:flutter/foundation.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:get_storage/get_storage.dart";
@@ -154,7 +152,9 @@ final selectedVersesAtom = Atom<List<Verse>, AppAction>(
   reducer: (state, action) {
     if (action is SelectVerse) {
       if (isVerseSelected(action.verse)) {
-        return (state as List<Verse>).removeBy((it) => it.index == action.verse.index).toList();
+        return (state as List<Verse>)
+            .removeBy((it) => it.index == action.verse.index)
+            .toList();
       } else {
         return (state as List<Verse>).addBy(action.verse).toList();
       }
@@ -197,13 +197,13 @@ void removeHighlight(BuildContext context) {
 }
 
 bool isVerseSelected(Verse v) {
-  return selectedVersesAtom.value.any((el) => el.book == v.book && el.chapter == v.chapter && el.index == v.index);
+  return selectedVersesAtom.value.any((el) =>
+      el.book == v.book && el.chapter == v.chapter && el.index == v.index);
 }
 
 bool watchVerseSelected(BuildContext context, Verse v) {
-  return selectedVersesAtom
-      .watch(context)
-      .any((el) => el.book == v.book && el.chapter == v.chapter && el.index == v.index);
+  return selectedVersesAtom.watch(context).any((el) =>
+      el.book == v.book && el.chapter == v.chapter && el.index == v.index);
 }
 
 void onVerseSelected(BuildContext context, Bible bible, Verse v) {
@@ -219,7 +219,8 @@ void onVerseSelected(BuildContext context, Bible bible, Verse v) {
 TextStyle getHighlightStyle(BuildContext context, Verse v) {
   if (watchVerseSelected(context, v)) {
     return TextStyle(
-      backgroundColor: darkModeAtom.value ? Colors.grey.shade800 : Colors.grey.shade200,
+      backgroundColor:
+          darkModeAtom.value ? Colors.grey.shade800 : Colors.grey.shade200,
     );
   }
   if (darkModeAtom.watch(context)) {
@@ -228,7 +229,9 @@ TextStyle getHighlightStyle(BuildContext context, Verse v) {
 // );
     return TextStyle(
       backgroundColor: getHighlight(v)?.withOpacity(0.7),
-      color: getHighlight(v) != null ? Colors.white : context.theme.colorScheme.onBackground,
+      color: getHighlight(v) != null
+          ? Colors.white
+          : context.theme.colorScheme.onBackground,
     );
   }
   return TextStyle(
@@ -264,7 +267,8 @@ class BufferAudioSource extends StreamAudioSource {
         contentLength: end - start,
         offset: start,
         contentType: "audio/mpeg",
-        stream: Stream.value(List<int>.from(_buffer.skip(start).take(end - start))),
+        stream:
+            Stream.value(List<int>.from(_buffer.skip(start).take(end - start))),
       ),
     );
   }
@@ -279,22 +283,17 @@ onPlay(BuildContext context, Bible bible) async {
     for (final v in versesToPlay) {
       final directory = await getTemporaryDirectory();
       final pathname = "${bible.name}_${v.book}_${v.chapter}_${v.index}";
-      final filepath = "${directory.path}/$pathname.mp3";
       try {
         final data = await convertText(context.currentLang.audioVoice, v.text);
-        if (!kIsWeb) {
-          await File(filepath).writeAsBytes(data);
-          await player.setUrl("file:$filepath");
-        } else {
-          await player.setAudioSource(BufferAudioSource(data));
-        }
+        await player.setAudioSource(BufferAudioSource(data));
         await player.play();
         await player.stop();
-        if (!kIsWeb) {
-          await File(filepath).delete();
-        }
       } catch (err) {
-        log("Could not play audio", name: "play", error: (err.toString(), pathname));
+        log(
+          "Could not play audio",
+          name: "play",
+          error: (err.toString(), pathname),
+        );
         recordError((err.toString(), pathname).toString(), null);
         if (context.mounted) {
           showError(context, context.l.audioError);
@@ -305,24 +304,4 @@ onPlay(BuildContext context, Bible bible) async {
       }
     }
   }
-}
-
-bool hasNote(Verse v) {
-  return box.hasData("${v.book}:${v.chapter}:${v.index}:note");
-}
-
-saveNote(BuildContext context, Verse v) {
-  final note = noteTextController.text;
-  box.write("${v.book}:${v.chapter}:${v.index}:note", note);
-  box.save();
-  hideNoteField(context);
-  hideActions(context);
-}
-
-deleteNote(BuildContext context, Verse v) {
-  box.remove("${v.book}:${v.chapter}:${v.index}:note");
-  box.save();
-  hideNoteField(context);
-// TODO: hack to re-render this page
-  selectedVersesAtom.notifyChanged();
 }

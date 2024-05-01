@@ -1,7 +1,7 @@
 name: only_bible_app
 description: The only bible app you will ever need
 publish_to: 'none'
-version: 1.0.4+2
+version: 1.0.4+9
 
 environment:
   sdk: '>=3.0.6 <4.0.0'
@@ -16,8 +16,6 @@ dependencies:
   intl: any
   path_provider: ^2.0.15
   just_audio: ^0.9.34
-  just_audio_windows: ^0.2.0
-  just_audio_mpv: ^0.1.7
   shared_preferences: ^2.2.0
   flutter_native_splash: ^2.3.1
   flutter_swipe_detector: ^2.0.0
@@ -25,12 +23,12 @@ dependencies:
   settings_ui: ^2.0.2
   get_storage: ^2.1.1
   share_plus: ^7.1.0
-  flutter_markdown: ^0.6.17+1
   url_launcher: ^6.1.12
   package_info_plus: ^4.1.0
   flutter_azure_tts: ^0.1.6
   http: ^0.13.6
   atoms_state: 0.0.2
+  webview_flutter: ^4.7.0
 
 dev_dependencies:
   flutter_test:
@@ -47,7 +45,6 @@ flutter:
   assets:
     - assets/bibles/
     - assets/fonts/
-    - assets/md/
   fonts:
     - family: Roboto
       fonts:

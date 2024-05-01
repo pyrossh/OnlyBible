@@ -154,12 +154,6 @@ extension AppContext on BuildContext {
   }
 }
 
-bool isDesktop() {
-  return defaultTargetPlatform == TargetPlatform.macOS ||
-      defaultTargetPlatform == TargetPlatform.windows ||
-      defaultTargetPlatform == TargetPlatform.linux;
-}
-
 bool isIOS() {
   return defaultTargetPlatform == TargetPlatform.iOS;
 }
