@@ -128,28 +128,7 @@
 		<div
 			class="not-prose flex items-center mt-10 sm:mt-20 sm:flex-row [&>picture]:flex [&>picture]:justify-center sm:[&>picture]:justify-end"
 		>
-			<enhanced:img
-				class="w-9/12"
-				data-hs-overlay="#hs-unstyled-modal"
-				src={lightPng}
-				alt="app screenshot"
-			/>
-			<div
-				id="hs-unstyled-modal"
-				class="hs-overlay hidden size-full fixed top-0 start-0 z-[60] overflow-x-hidden overflow-y-auto pointer-events-none"
-			>
-				<div
-					class="hs-overlay-open:opacity-100 hs-overlay-open:duration-500 opacity-0 transition-all sm:max-w-lg sm:w-full m-3 sm:mx-auto"
-				>
-					<div class="pointer-events-auto">
-						<enhanced:img
-							data-hs-overlay="#hs-unstyled-modal"
-							src={lightPng}
-							alt="app light screen shot"
-						/>
-					</div>
-				</div>
-			</div>
+			<enhanced:img class="w-9/12" src={lightPng} alt="app screenshot" />
 		</div>
 		<div class="sm:hidden">
 			<Intro />
