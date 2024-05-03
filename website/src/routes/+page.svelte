@@ -113,7 +113,7 @@
 					rel="noopener noreferrer"
 					target="blank"
 				>
-					<PlayStoreIcon class="w-52 sm:w-44" />
+					<PlayStoreIcon class="w-44" />
 				</a>
 				<a
 					class="mt-6 sm:mt-0"
@@ -121,7 +121,7 @@
 					rel="noopener noreferrer"
 					target="blank"
 				>
-					<AppStoreIcon class="w-52 sm:w-44" />
+					<AppStoreIcon class="w-44" />
 				</a>
 			</div>
 			<!-- End Buttons -->
