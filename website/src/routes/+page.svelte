@@ -1,4 +1,6 @@
 <script>
+	import PlayStoreIcon from '$lib/icons/playstore.svg';
+	import AppStoreIcon from '$lib/icons/appstore.svg';
 	import logoPng from '../../../assets/icon.png';
 </script>
 
@@ -104,30 +106,22 @@
 			</p>
 
 			<!-- Buttons -->
-			<div class="flex">
+			<div class="flex flex-col sm:flex-row">
 				<a
-					class="mr-2 -ml-3"
+					class="mt-4 sm:mt-0 sm:mr-2"
 					href="https://play.google.com/store/apps/details?id=sh.pyros.only_bible_app"
 					rel="noopener noreferrer"
 					target="blank"
 				>
-					<img
-						class="w-52 sm:w-72"
-						alt="Get it on Google Play"
-						src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png"
-					/>
+					<PlayStoreIcon class="w-52 sm:w-44" />
 				</a>
 				<a
-					class="mt-3"
+					class="mt-6 sm:mt-0"
 					href="https://apps.apple.com/us/app/only-bible-app/id6467606465?itsct=apps_box_badge&amp;itscg=30200"
 					rel="noopener noreferrer"
 					target="blank"
 				>
-					<img
-						class="w-40 sm:w-60"
-						src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us?size=250x83&amp;releaseDate=1695600000"
-						alt="Download on the App Store"
-					/>
+					<AppStoreIcon class="w-52 sm:w-44" />
 				</a>
 			</div>
 			<!-- End Buttons -->
