@@ -98,27 +98,30 @@
 	<!-- ========== HERO ========== -->
 	<div class="flex flex-1 flex-col-reverse sm:flex-row items-center mt-10 sm:mt-0">
 		<div class="flex flex-col items-center sm:items-start">
-			<div class="hidden sm:block sm:mb-10">
+			<div class="hidden sm:block sm:mb-4">
 				<Intro />
 			</div>
 			<!-- Buttons -->
-			<div class="flex flex-col sm:flex-row">
-				<a
-					class="mt-4 sm:mt-0 sm:mr-2"
-					href="https://play.google.com/store/apps/details?id=sh.pyros.only_bible_app"
-					rel="noopener noreferrer"
-					target="blank"
-				>
-					<PlayStoreIcon class="w-44" />
-				</a>
-				<a
-					class="mt-6 sm:mt-0"
-					href="https://apps.apple.com/us/app/only-bible-app/id6467606465?itsct=apps_box_badge&amp;itscg=30200"
-					rel="noopener noreferrer"
-					target="blank"
-				>
-					<AppStoreIcon class="w-44" />
-				</a>
+			<div class="flex flex-col items-center sm:items-start">
+				<h3 class="m-0 my-4">Download it now</h3>
+				<div class="flex flex-col sm:flex-row">
+					<a
+						class="mt-4 sm:mt-0 sm:mr-2"
+						href="https://play.google.com/store/apps/details?id=sh.pyros.only_bible_app"
+						rel="noopener noreferrer"
+						target="blank"
+					>
+						<PlayStoreIcon class="w-48 sm:w-44" />
+					</a>
+					<a
+						class="mt-8 sm:mt-0"
+						href="https://apps.apple.com/us/app/only-bible-app/id6467606465?itsct=apps_box_badge&amp;itscg=30200"
+						rel="noopener noreferrer"
+						target="blank"
+					>
+						<AppStoreIcon class="w-48 sm:w-44" />
+					</a>
+				</div>
 			</div>
 			<!-- End Buttons -->
 		</div>
@@ -138,7 +141,7 @@
 	<!-- ========== END HERO ========== -->
 
 	<!-- ========== FOOTER ========== -->
-	<footer class="text-center py-5 sm:mt-20">
+	<footer class="text-center py-5 mt-20">
 		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 			<p class="text-sm text-gray-300 dark:text-neutral-400">
 				Copyright © 2024 <a
