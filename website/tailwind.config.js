@@ -9,7 +9,7 @@ export default {
       typography: ({ theme }) => ({
         DEFAULT: {
           css: {
-            maxWidth: "50rem",
+            maxWidth: "70rem",
             h1: {
               fontWeight: "500",
               marginTop: "1rem",

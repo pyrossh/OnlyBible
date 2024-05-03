@@ -1,6 +1,8 @@
 <script>
 	import PlayStoreIcon from '$lib/icons/playstore.svg?component';
 	import AppStoreIcon from '$lib/icons/appstore.svg?component';
+	import lightPng from '$lib/images/light.png?enhanced';
+	import darkPng from '$lib/images/dark.png?enhanced';
 	import logoPng from '../../../assets/icon.png';
 </script>
 
@@ -128,8 +130,50 @@
 		</div>
 		<!-- End Col -->
 		<div class="flex flex-1 items-center sm:flex-row">
-			<img class="w-6/12 sm:w-8/12" src="/images/light.png" alt="app light screen shot" />
-			<img class="w-6/12 sm:w-8/12" src="/images/dark.png" alt="app dark screen shot" />
+			<enhanced:img
+				class="cursor-zoom-in"
+				data-hs-overlay="#hs-unstyled-modal"
+				src={lightPng}
+				alt="app light screen shot"
+			/>
+			<div
+				id="hs-unstyled-modal"
+				class="hs-overlay hidden size-full fixed top-0 start-0 z-[60] overflow-x-hidden overflow-y-auto pointer-events-none"
+			>
+				<div
+					class="hs-overlay-open:opacity-100 hs-overlay-open:duration-500 opacity-0 transition-all sm:max-w-lg sm:w-full m-3 sm:mx-auto"
+				>
+					<div class="pointer-events-auto">
+						<enhanced:img
+							data-hs-overlay="#hs-unstyled-modal"
+							src={lightPng}
+							alt="app light screen shot"
+						/>
+					</div>
+				</div>
+			</div>
+			<enhanced:img
+				data-hs-overlay="#hs-unstyled-modal-2"
+				class="cursor-zoom-in"
+				src={darkPng}
+				alt="app dark screen shot"
+			/>
+			<div
+				id="hs-unstyled-modal-2"
+				class="hs-overlay hidden size-full fixed top-0 start-0 z-[60] overflow-x-hidden overflow-y-auto pointer-events-none"
+			>
+				<div
+					class="hs-overlay-open:opacity-100 hs-overlay-open:duration-500 opacity-0 transition-all sm:max-w-lg sm:w-full m-3 sm:mx-auto"
+				>
+					<div class="pointer-events-auto">
+						<enhanced:img
+							data-hs-overlay="#hs-unstyled-modal"
+							src={darkPng}
+							alt="app dark screen shot"
+						/>
+					</div>
+				</div>
+			</div>
 		</div>
 		<!-- End Col -->
 	</div>
