@@ -127,16 +127,16 @@
 			<!-- End Buttons -->
 		</div>
 		<!-- End Col -->
-		<div class="flex flex-1 flex-col items-center sm:flex-row">
-			<img class="w-10/12 sm:w-8/12" src="/images/light.png" alt="app light screen shot" />
-			<img class="w-10/12 sm:w-8/12" src="/images/dark.png" alt="app dark screen shot" />
+		<div class="flex flex-1 items-center sm:flex-row">
+			<img class="w-6/12 sm:w-8/12" src="/images/light.png" alt="app light screen shot" />
+			<img class="w-6/12 sm:w-8/12" src="/images/dark.png" alt="app dark screen shot" />
 		</div>
 		<!-- End Col -->
 	</div>
 	<!-- ========== END HERO ========== -->
 
 	<!-- ========== FOOTER ========== -->
-	<footer class="text-center py-5 mt-20">
+	<footer class="text-center py-5 sm:mt-20">
 		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 			<p class="text-sm text-gray-300 dark:text-neutral-400">
 				Copyright © 2024 <a
