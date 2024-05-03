@@ -2,7 +2,6 @@
 	import PlayStoreIcon from '$lib/icons/playstore.svg?component';
 	import AppStoreIcon from '$lib/icons/appstore.svg?component';
 	import lightPng from '$lib/images/light.png?enhanced';
-	import darkPng from '$lib/images/dark.png?enhanced';
 	import logoPng from '../../../assets/icon.png';
 </script>
 
@@ -11,7 +10,7 @@
 	<meta name="description" content="The only bible app you will ever need" />
 </svelte:head>
 
-<main class="flex flex-col text-black mx-4 items">
+<main class="flex flex-col mx-4 h-full">
 	<!-- ========== HEADER ========== -->
 	<header class="text-sm mt-4">
 		<nav class="sm:flex sm:flex-1 sm:items-center sm:justify-between" aria-label="Global">
@@ -27,7 +26,7 @@
 				<div class="sm:hidden">
 					<button
 						type="button"
-						class="hs-collapse-toggle p-2 inline-flex justify-center items-center gap-2 rounded-lg border border-gray-700 hover:border-gray-600 font-medium text-gray-300 hover:text-white shadow-sm align-middle focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-blue-600 transition-all text-sm dark:border-neutral-700 dark:hover:border-neutral-600"
+						class="hs-collapse-toggle p-2 inline-flex justify-center items-center rounded-lg border border-gray-200 hover:border-gray-100 font-medium text-gray-200 hover:text-white shadow-sm"
 						data-hs-collapse="#navbar-collapse-with-animation"
 						aria-controls="navbar-collapse-with-animation"
 						aria-label="Toggle navigation"
@@ -96,16 +95,18 @@
 	<!-- ========== END HEADER ========== -->
 
 	<!-- ========== HERO ========== -->
-	<div class="flex flex-col sm:flex-row mt-12">
-		<div class="flex flex-1 flex-col items-center sm:items-start mt-8">
+	<div class="flex flex-1 flex-col sm:flex-row items-center mt-20 sm:mt-0">
+		<div class="flex flex-col items-center sm:items-start">
 			<h1
-				class="text-3xl font-bold text-center sm:text-left text-gray-300 sm:text-4xl lg:leading-tight dark:text-white"
+				class="m-0 text-3xl font-bold text-center sm:text-left sm:text-4xl lg:leading-tight text-white"
 			>
 				The only bible app you will ever need
 			</h1>
-			<p class="mt-3 text-lg text-center sm:text-left text-gray-300 dark:text-neutral-400">
-				No ads, No in-app purchases, No distractions.
-			</p>
+			<div class="flex flex-row gap-2 sm:flex-col mb-10 text-lg text-neutral-100 mt-5">
+				<span>No ads,</span>
+				<span>No in-app purchases,</span>
+				<span>No distractions.</span>
+			</div>
 
 			<!-- Buttons -->
 			<div class="flex flex-col sm:flex-row">
@@ -129,12 +130,16 @@
 			<!-- End Buttons -->
 		</div>
 		<!-- End Col -->
-		<div class="flex flex-1 items-center sm:flex-row">
+		<!-- Slider -->
+		<!-- End Slider -->
+		<div
+			class="not-prose flex items-center mt-20 sm:flex-row [&>picture]:flex [&>picture]:justify-center sm:[&>picture]:justify-end"
+		>
 			<enhanced:img
-				class="cursor-zoom-in"
+				class="w-9/12"
 				data-hs-overlay="#hs-unstyled-modal"
 				src={lightPng}
-				alt="app light screen shot"
+				alt="app screenshot"
 			/>
 			<div
 				id="hs-unstyled-modal"
@@ -148,28 +153,6 @@
 							data-hs-overlay="#hs-unstyled-modal"
 							src={lightPng}
 							alt="app light screen shot"
-						/>
-					</div>
-				</div>
-			</div>
-			<enhanced:img
-				data-hs-overlay="#hs-unstyled-modal-2"
-				class="cursor-zoom-in"
-				src={darkPng}
-				alt="app dark screen shot"
-			/>
-			<div
-				id="hs-unstyled-modal-2"
-				class="hs-overlay hidden size-full fixed top-0 start-0 z-[60] overflow-x-hidden overflow-y-auto pointer-events-none"
-			>
-				<div
-					class="hs-overlay-open:opacity-100 hs-overlay-open:duration-500 opacity-0 transition-all sm:max-w-lg sm:w-full m-3 sm:mx-auto"
-				>
-					<div class="pointer-events-auto">
-						<enhanced:img
-							data-hs-overlay="#hs-unstyled-modal"
-							src={darkPng}
-							alt="app dark screen shot"
 						/>
 					</div>
 				</div>

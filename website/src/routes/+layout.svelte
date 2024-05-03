@@ -7,7 +7,7 @@
 	});
 </script>
 
-<div class="prose mx-auto">
+<div class="prose mx-auto h-full">
 	<slot />
 </div>
 
