@@ -3,6 +3,7 @@
 	import AppStoreIcon from '$lib/icons/appstore.svg?component';
 	import lightPng from '$lib/images/light.png?enhanced';
 	import logoPng from '../../../assets/icon.png';
+	import Intro from '$lib/components/intro.svelte';
 </script>
 
 <svelte:head>
@@ -95,19 +96,11 @@
 	<!-- ========== END HEADER ========== -->
 
 	<!-- ========== HERO ========== -->
-	<div class="flex flex-1 flex-col sm:flex-row items-center mt-20 sm:mt-0">
+	<div class="flex flex-1 flex-col-reverse sm:flex-row items-center mt-10 sm:mt-0">
 		<div class="flex flex-col items-center sm:items-start">
-			<h1
-				class="m-0 text-3xl font-bold text-center sm:text-left sm:text-4xl lg:leading-tight text-white"
-			>
-				The only bible app you will ever need
-			</h1>
-			<div class="flex flex-row gap-2 sm:flex-col mb-10 text-lg text-neutral-100 mt-5">
-				<span>No ads,</span>
-				<span>No in-app purchases,</span>
-				<span>No distractions.</span>
+			<div class="hidden sm:block sm:mb-10">
+				<Intro />
 			</div>
-
 			<!-- Buttons -->
 			<div class="flex flex-col sm:flex-row">
 				<a
@@ -133,7 +126,7 @@
 		<!-- Slider -->
 		<!-- End Slider -->
 		<div
-			class="not-prose flex items-center mt-20 sm:flex-row [&>picture]:flex [&>picture]:justify-center sm:[&>picture]:justify-end"
+			class="not-prose flex items-center mt-10 sm:mt-20 sm:flex-row [&>picture]:flex [&>picture]:justify-center sm:[&>picture]:justify-end"
 		>
 			<enhanced:img
 				class="w-9/12"
@@ -157,6 +150,9 @@
 					</div>
 				</div>
 			</div>
+		</div>
+		<div class="sm:hidden">
+			<Intro />
 		</div>
 		<!-- End Col -->
 	</div>
