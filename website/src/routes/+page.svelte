@@ -1,6 +1,6 @@
 <script>
-	import PlayStoreIcon from '$lib/icons/playstore.svg';
-	import AppStoreIcon from '$lib/icons/appstore.svg';
+	import PlayStoreIcon from '$lib/icons/playstore.svg?component';
+	import AppStoreIcon from '$lib/icons/appstore.svg?component';
 	import logoPng from '../../../assets/icon.png';
 </script>
 
