@@ -1,5 +1,4 @@
 import "package:flutter/material.dart";
-import "package:only_bible_app/utils.dart";
 
 enum ListType {
   small,
@@ -17,14 +16,14 @@ enum ListType {
     }
   }
 
-  double childAspectRatio(bool isDesktop) {
+  double childAspectRatio() {
     switch (this) {
       case ListType.small:
-        return isDesktop ? 1.8 : 1.4;
+        return 1.4;
       case ListType.large:
-        return isDesktop ? 5 : 4;
+        return  4;
       case ListType.extraLarge:
-        return isDesktop ? 3 : 2.8;
+        return 2.8;
     }
   }
 }
@@ -37,14 +36,13 @@ class SliverTileGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final spacing = context.isWide ? 16.0 : 12.0;
     return SliverPadding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       sliver: SliverGrid.count(
         crossAxisCount: listType.crossAxisCount(),
-        crossAxisSpacing: spacing,
-        mainAxisSpacing: spacing,
-        childAspectRatio: listType.childAspectRatio(context.isWide),
+        crossAxisSpacing: 12.0,
+        mainAxisSpacing: 12.0,
+        childAspectRatio: listType.childAspectRatio(),
         children: children,
       ),
     );

@@ -77,7 +77,8 @@ class CustomLocale {
   final String localName;
   final List<String> bookNames;
 
-  const CustomLocale(this.languageCode, this.countryCode, this.name, this.localName, this.bookNames);
+  const CustomLocale(this.languageCode, this.countryCode, this.name,
+      this.localName, this.bookNames);
 }
 
 const locales = [
@@ -833,12 +834,14 @@ const locales = [
 
 void main() {
   for (var loc in locales) {
-    final data = File("./lib/l10n/app_${loc.languageCode}.arb").readAsStringSync();
+    final data =
+        File("./lib/l10n/app_${loc.languageCode}.arb").readAsStringSync();
     final map = jsonDecode(data);
     for (var (index, el) in keys.indexed) {
       map[el] = loc.bookNames[index];
     }
     const encoder = JsonEncoder.withIndent("  ");
-    File("./lib/l10n/app_${loc.languageCode}.arb").writeAsStringSync(encoder.convert(map));
+    File("./lib/l10n/app_${loc.languageCode}.arb")
+        .writeAsStringSync(encoder.convert(map));
   }
 }

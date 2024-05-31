@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:only_bible_app/navigation.dart";
 import "package:only_bible_app/utils.dart";
 import "package:only_bible_app/widgets/scaffold_menu.dart";
 import "package:only_bible_app/screens/chapter_select_screen.dart";
@@ -12,6 +13,10 @@ class BookSelectScreen extends StatelessWidget {
   const BookSelectScreen({super.key, required this.bible});
 
   onBookSelected(BuildContext context, int index) {
+    final book = bible.books[index];
+    if (book.chapters.length == 1) {
+      return replaceBookChapter(context, bible.name, index, 0);
+    }
     Navigator.of(context).pushReplacement(
       PageRouteBuilder(
         opaque: false,
@@ -19,7 +24,7 @@ class BookSelectScreen extends StatelessWidget {
         reverseTransitionDuration: Duration.zero,
         pageBuilder: (context, _, __) => ChapterSelectScreen(
           bible: bible,
-          book: bible.books[index],
+          book: book,
           selectedBookIndex: index,
         ),
       ),
@@ -37,7 +42,7 @@ class BookSelectScreen extends StatelessWidget {
             children: List.of(
               bible.getOldBooks().map((book) {
                 return TextButton(
-                  child: Text(book.shortName(context)),
+                  child: Text(book.shortName(context.bookNames[book.index])),
                   onPressed: () => onBookSelected(context, book.index),
                 );
               }),
@@ -48,7 +53,7 @@ class BookSelectScreen extends StatelessWidget {
             children: List.of(
               bible.getNewBooks().map((book) {
                 return TextButton(
-                  child: Text(book.shortName(context)),
+                  child: Text(book.shortName(context.bookNames[book.index])),
                   onPressed: () => onBookSelected(context, book.index),
                 );
               }),

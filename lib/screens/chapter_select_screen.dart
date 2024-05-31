@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import "package:only_bible_app/models.dart";
 import "package:only_bible_app/navigation.dart";
+import "package:only_bible_app/utils.dart";
 import "package:only_bible_app/widgets/scaffold_menu.dart";
 import "package:only_bible_app/widgets/sliver_tile_grid.dart";
 import "package:only_bible_app/widgets/sliver_heading.dart";
@@ -18,7 +19,7 @@ class ChapterSelectScreen extends StatelessWidget {
       child: CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [
-          SliverHeading(title: book.name(context), showClose: true),
+          SliverHeading(title: context.bookNames[book.index], showClose: true),
           SliverTileGrid(
             children: List.generate(book.chapters.length, (index) {
               return TextButton(

@@ -29,6 +29,7 @@ dependencies:
   http: ^0.13.6
   atoms_state: 0.0.2
   webview_flutter: ^4.7.0
+  app_review: ^2.1.1+1
 
 dev_dependencies:
   flutter_test:

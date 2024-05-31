@@ -1,5 +1,5 @@
 import "package:flutter/material.dart";
-import 'package:only_bible_app/store/state.dart';
+import "package:only_bible_app/store/state.dart";
 import "package:only_bible_app/theme.dart";
 import "package:only_bible_app/utils.dart";
 import "package:only_bible_app/widgets/highlight_button.dart";
@@ -20,7 +20,7 @@ class HighlightSheet extends StatelessWidget {
       color: context.theme.colorScheme.background,
       padding: EdgeInsets.only(left: 20, right: 20, bottom: bottom),
       child: Row(
-        mainAxisAlignment: context.isWide ? MainAxisAlignment.spaceEvenly : MainAxisAlignment.spaceAround,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           IconButton(
             padding: EdgeInsets.zero,

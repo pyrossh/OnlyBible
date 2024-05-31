@@ -1,9 +1,11 @@
 import "package:atoms_state/atoms_state.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
+import "package:app_review/app_review.dart";
 import "package:only_bible_app/models.dart";
 import "package:only_bible_app/screens/bible_select_screen.dart";
 import "package:only_bible_app/screens/book_select_screen.dart";
+import "package:only_bible_app/screens/chapter_select_screen.dart";
 import "package:only_bible_app/screens/chapter_view_screen.dart";
 import "package:only_bible_app/sheets/actions_sheet.dart";
 import "package:only_bible_app/sheets/highlight_sheet.dart";
@@ -45,11 +47,12 @@ createNoTransitionPageRoute(Widget page) {
   );
 }
 
-createSlideRoute(
-    {required BuildContext context,
-    TextDirection? slideDir,
-    required Widget page}) {
-  if (context.isWide || slideDir == null) {
+createSlideRoute({
+  required BuildContext context,
+  TextDirection? slideDir,
+  required Widget page,
+}) {
+  if (slideDir == null) {
     return PageRouteBuilder(
       pageBuilder: (context, _, __) {
         return page;
@@ -105,13 +108,20 @@ pushBookChapter(BuildContext context, String bibleName, int book, int chapter,
 }
 
 replaceBookChapter(
-    BuildContext context, String bibleName, int book, int chapter) {
+  BuildContext context,
+  String bibleName,
+  int book,
+  int chapter,
+) {
   dispatch(UpdateChapter(book, chapter));
   clearEvents(context);
   Navigator.of(context).pushReplacement(
     createNoTransitionPageRoute(
       ChapterViewScreen(
-          bibleName: bibleName, bookIndex: book, chapterIndex: chapter),
+        bibleName: bibleName,
+        bookIndex: book,
+        chapterIndex: chapter,
+      ),
     ),
   );
 }
@@ -202,6 +212,14 @@ changeBook(BuildContext context, Bible bible) {
   );
 }
 
+changeChapter(BuildContext context, Bible bible, Book book, int index) {
+  Navigator.of(context).push(
+    createNoTransitionPageRoute(
+      ChapterSelectScreen(bible: bible, book: book, selectedBookIndex: index),
+    ),
+  );
+}
+
 updateCurrentBible(BuildContext context, String name, String code, int book,
     int chapter) async {
   hideActions(context);
@@ -223,24 +241,21 @@ shareAppLink(BuildContext context) {
   }
 }
 
-rateApp(BuildContext context) {
-  if (isAndroid()) {
-    context.openUrl(
-      "https://play.google.com/store/apps/details?id=sh.pyros.only_bible_app",
-    );
-  } else {
-    context.openUrl(
-      "https://apps.apple.com/us/app/only-bible-app/id6467606465",
-    );
-  }
+rateApp(BuildContext context) async {
+  await AppReview.requestReview;
 }
 
-shareVerses(BuildContext context, Bible bible, List<Verse> verses) {
-  final name = bible.books[verses.first.book].name(context);
+shareVerses(BuildContext context, Bible bible, List<Verse> verses) async {
+  final name = context.bookNames[verses.first.book];
   final chapter = verses.first.chapter + 1;
-  final title = "$name $chapter:${verses.map((e) => e.index + 1).join(", ")}";
+  final items = verses.sortedBy((e) => e.index).map((e) => e.index + 1);
+  final versesThrough =
+      items.length >= 3 ? "${items.first}-${items.last}" : items.join(",");
+  final version = context.currentLang.languageCode == "en" ? "KJV" : "";
+  final title = "$name $chapter:$versesThrough $version";
   final text = verses.map((e) => e.text).join("\n");
-  Share.share("$title\n$text", subject: title);
+  await Share.share("$title\n$text", subject: title);
+  hideActions(context);
 }
 
 showSettings(BuildContext context, Bible bible) {

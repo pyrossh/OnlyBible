@@ -162,7 +162,7 @@ final lightTheme = ThemeData(
     ),
     headlineMedium: TextStyle(
       color: lightColorScheme.onBackground,
-      fontSize: 18,
+      fontSize: 19,
       fontWeight: FontWeight.w500,
       letterSpacing: 0.5,
     ),

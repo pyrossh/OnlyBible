@@ -68,10 +68,10 @@ https://onlybible.app
 
 
 ## Release Process
-Increment the patch/minor version in pubspec.yaml for iOS  ex: 1.0.7
-Increment versionCode in pubspec.yaml for android  ex: +9
-Create file android/fastlane/metadata/android/en-GB/changelogs/$versionCode.txt and add change details
-Update file ios/fastlane/metadata/en-US/release_notes.txt
+* Increment the patch/minor version in pubspec.yaml for iOS  ex: 1.0.7
+* Increment versionCode in pubspec.yaml for android  ex: +9
+* Create file android/fastlane/metadata/android/en-GB/changelogs/$versionCode.txt and add change details
+* Update file ios/fastlane/metadata/en-US/release_notes.txt
 
 ### android
 
@@ -82,22 +82,19 @@ fastlane supply --aab ../build/app/outputs/bundle/release/app-release.aab
 
 ### iOS
 
-Make sure you've added a Distribution certificate to the system keystore and download it and install it
-Make sure you create an App Store provisioning profile for this certificate and download it and install it
-Add you Apple Developer Team account in xCode and open ios/Runner.xcworkspace and under Runner Project,
-Runner Target, Signing Tab, Release Tab, select that provisioning profile and Team and Certificate.
+* Make sure you've added a Distribution certificate to the system keystore and download it and install it
+* Make sure you create an App Store provisioning profile for this certificate and download it and install it
+* Add you Apple Developer Team account in xCode and open ios/Runner.xcworkspace and under Runner Project,
+* Runner Target, Signing Tab, Release Tab, select that provisioning profile and Team and Certificate.
 
 ```
 flutter build ipa --release --dart-define-from-file=.env
 fastlane deliver  --ipa "../build/ios/ipa/only-bible-app.ipa" --automatic_release --submit_for_review
 ```
 
-## Bugs
-
-1. Swipe left should pop context if chapter/book index is previous to the current one to maintain scroll history.
-
 ## Todo
-
-1. Figure out history
-2. Add more text options compact/loose, line spacing
-4. Add Next/Prev/Home in bottom navigation as optional for mobile users
+1. Swipe left should pop context if chapter/book index is previous to the current one to maintain scroll history. 
+5. Fix rate us link not opening properly in android
+6. Add search action button
+7. Add red letter words.
+8. Improve Settings screen (similar to ESV bible app)

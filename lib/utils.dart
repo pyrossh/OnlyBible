@@ -50,18 +50,7 @@ extension AppContext on BuildContext {
     if (isIOS()) {
       return 80.0;
     }
-    if (isWide) {
-      return 60;
-    }
     return 50.0;
-  }
-
-  bool get isWide {
-    if (defaultTargetPlatform == TargetPlatform.android || defaultTargetPlatform == TargetPlatform.iOS) {
-      return false;
-    }
-    final width = MediaQuery.of(this).size.width;
-    return width > 700;
   }
 
   List<AppLocalizations> get supportedLocalizations {

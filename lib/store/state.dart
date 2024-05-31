@@ -216,8 +216,8 @@ void onVerseSelected(BuildContext context, Bible bible, Verse v) {
   }
 }
 
-TextStyle getHighlightStyle(BuildContext context, Verse v) {
-  if (watchVerseSelected(context, v)) {
+TextStyle getHighlightStyle(BuildContext context, Verse v, bool heading) {
+  if (!heading && watchVerseSelected(context, v)) {
     return TextStyle(
       backgroundColor:
           darkModeAtom.value ? Colors.grey.shade800 : Colors.grey.shade200,

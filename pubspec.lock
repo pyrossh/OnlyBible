@@ -17,6 +17,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.13.0"
+  app_review:
+    dependency: "direct main"
+    description:
+      name: app_review
+      sha256: "5dc2725949f526a654f752f423e31669ee3343272491f6947167b457875489b1"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.1+1"
   archive:
     dependency: transitive
     description:
@@ -572,6 +580,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.0"
+  package_info:
+    dependency: transitive
+    description:
+      name: package_info
+      sha256: "6c07d9d82c69e16afeeeeb6866fe43985a20b3b50df243091bfc4a4ad2b03b75"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.2"
   package_info_plus:
     dependency: "direct main"
     description:

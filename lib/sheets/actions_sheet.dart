@@ -19,7 +19,7 @@ class ActionsSheet extends StatelessWidget {
       color: Theme.of(context).colorScheme.background,
       padding: EdgeInsets.only(left: 20, right: 20, bottom: bottom),
       child: Row(
-        mainAxisAlignment: context.isWide ? MainAxisAlignment.spaceEvenly : MainAxisAlignment.spaceAround,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           IconButton(
             padding: EdgeInsets.zero,

@@ -10,7 +10,6 @@ class WebViewScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..setBackgroundColor(const Color(0x00000000))
       ..loadRequest(Uri.parse(url));
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,

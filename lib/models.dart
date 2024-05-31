@@ -1,6 +1,3 @@
-import "package:flutter/material.dart";
-import "package:only_bible_app/utils.dart";
-
 class Bible {
   final String name;
   final List<Book> books;
@@ -32,16 +29,11 @@ class Book {
     required this.chapters,
   });
 
-  String name(BuildContext context) {
-    return context.bookNames[index];
-  }
-
   bool isOldTestament() => index < 39;
 
   bool isNewTestament() => index >= 39;
 
-  String shortName(BuildContext context) {
-    final name = this.name(context);
+  String shortName(String name) {
     if (name[0] == "1" || name[0] == "2" || name[0] == "3") {
       return "${name[0]}${name[2].toUpperCase()}${name.substring(3, 4).toLowerCase()}";
     }
@@ -54,7 +46,8 @@ class Chapter {
   final int book;
   final List<Verse> verses;
 
-  const Chapter({required this.index, required this.verses, required this.book});
+  const Chapter(
+      {required this.index, required this.verses, required this.book});
 }
 
 class Verse {
@@ -62,14 +55,16 @@ class Verse {
   final String bibleName;
   final int book;
   final int chapter;
+  String heading;
   final String text;
 
-  const Verse({
+  Verse({
     required this.index,
     required this.text,
     required this.bibleName,
     required this.chapter,
     required this.book,
+    required this.heading,
   });
 }
 
@@ -81,34 +76,37 @@ List<Book> getBibleFromText(String bibleName, String text) {
     if (lines.length - 1 == index) {
       continue;
     }
-    var book = int.parse(line.substring(0, 2));
-    var chapter = int.parse(line.substring(3, 6));
-    var verseNo = int.parse(line.substring(7, 10));
-    var verseText = line.substring(11);
-    if (books.length < book) {
+    final arr = line.split("|");
+    final book = int.parse(arr[0]);
+    final chapter = int.parse(arr[1]);
+    final verseNo = int.parse(arr[2]);
+    final heading = arr[3];
+    final verseText = arr[4];
+    if (books.length < book + 1) {
       books.add(
         Book(
-          index: book - 1,
+          index: book,
           chapters: [],
         ),
       );
     }
-    if (books[book - 1].chapters.length < chapter) {
-      books[book - 1].chapters.add(
+    if (books[book].chapters.length < chapter + 1) {
+      books[book].chapters.add(
             Chapter(
-              index: chapter - 1,
-              book: book - 1,
+              index: chapter,
+              book: book,
               verses: [],
             ),
           );
     }
-    books[book - 1].chapters[chapter - 1].verses.add(
+    books[book].chapters[chapter].verses.add(
           Verse(
-            index: verseNo - 1,
-            text: verseText,
+            index: verseNo,
             bibleName: bibleName,
-            chapter: chapter - 1,
-            book: book - 1,
+            chapter: chapter,
+            book: book,
+            text: verseText,
+            heading: heading,
           ),
         );
   }
