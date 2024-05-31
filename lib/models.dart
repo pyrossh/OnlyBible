@@ -77,11 +77,11 @@ List<Book> parseBible(String bibleName, String text) {
       continue;
     }
     final arr = line.split("|");
-    final book = int.parse(arr[0])-1;
-    final chapter = int.parse(arr[1])-1;
-    final verseNo = int.parse(arr[2])-1;
-    final heading = "";
-    final verseText = arr.sublist(3, arr.length).join("|");
+    final book = int.parse(arr[0]);
+    final chapter = int.parse(arr[1]);
+    final verseNo = int.parse(arr[2]);
+    final heading = arr[3];
+    final verseText = arr.sublist(4, arr.length).join("|");
     if (books.length < book + 1) {
       books.add(
         Book(
