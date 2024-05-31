@@ -173,7 +173,7 @@ Future<Uint8List> convertText(String langCode, String text) async {
 
 Future<Bible> loadBible(String name) async {
   final bytes = await rootBundle.load("assets/bibles/$name.txt");
-  final books = getBibleFromText(name, utf8.decode(bytes.buffer.asUint8List(), allowMalformed: false));
+  final books = parseBible(name, utf8.decode(bytes.buffer.asUint8List(), allowMalformed: false));
 // await Future.delayed(Duration(seconds: 2));
   return Bible(
     name: name,

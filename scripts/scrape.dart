@@ -131,31 +131,28 @@ Future<List<Heading>> fetchPage(String book, int chapterIndex) async {
 
 void main() async {
   print("starting");
-  const bibleName = "English";
+  const bibleName = "Telugu";
   const outputFilename = "./assets/bibles/${bibleName}2.txt";
   if (File(outputFilename).existsSync()) {
     File(outputFilename).deleteSync();
   }
   final outputFile = File(outputFilename).openWrite();
   final bibleTxt = await File("./assets/bibles/$bibleName.txt").readAsString();
-  final books = getBibleFromText("English", bibleTxt);
+  final books = parseBible(bibleName, bibleTxt);
   for (var (bookIndex, book) in books.indexed) {
     for (var (chapterIndex, chapter) in book.chapters.indexed) {
-      // if (bookIndex == 18 && (chapterIndex == 72)) {
-      final els = await fetchPage(booksNames[book.index], chapterIndex + 1);
-      print(els);
+      // final els = await fetchPage(booksNames[book.index], chapterIndex + 1);
       for (var (verse) in chapter.verses) {
-        for (var el in els) {
-          if (el.vIndex == verse.index) {
-            verse.heading = el.text;
-          }
-        }
+        // for (var el in els) {
+        //   if (el.vIndex == verse.index) {
+        //     verse.heading = el.text;
+        //   }
+        // }
         outputFile.writeln(
           "${book.index}|${chapter.index}|${verse.index}|${verse.heading}|${verse.text}",
         );
       }
     }
-    // }
   }
   await outputFile.flush();
   await outputFile.close();
