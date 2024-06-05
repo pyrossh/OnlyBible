@@ -1,4 +1,5 @@
 [versions]
+accompanistSystemuicontroller = "0.27.0"
 agp = "8.4.0"
 foundation = "1.6.7"
 kotlin = "1.9.0"
@@ -11,14 +12,17 @@ lifecycleRuntimeKtx = "2.6.1"
 activityCompose = "1.8.0"
 composeBom = "2023.08.00"
 navigationFragmentKtx = "2.7.7"
+uiTextGoogleFonts = "1.6.7"
 uiUtilAndroid = "1.6.7"
 
 [libraries]
+accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanistSystemuicontroller" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "foundation" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationFragmentKtx" }
 androidx-navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigationFragmentKtx" }
 androidx-navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigationFragmentKtx" }
+androidx-ui-text-google-fonts = { module = "androidx.compose.ui:ui-text-google-fonts", version.ref = "uiTextGoogleFonts" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }

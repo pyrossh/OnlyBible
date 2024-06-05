@@ -72,4 +72,6 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.androidx.foundation)
+    implementation(libs.accompanist.systemuicontroller)
+    implementation(libs.androidx.ui.text.google.fonts)
 }

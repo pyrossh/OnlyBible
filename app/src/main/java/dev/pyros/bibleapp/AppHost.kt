@@ -3,6 +3,10 @@ package dev.pyros.bibleapp
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -12,7 +16,13 @@ import androidx.navigation.navArgument
 @Composable
 fun AppHost(verses: List<Verse>) {
     val navController = rememberNavController()
-    Drawer(navController = navController) { openDrawer ->
+    var bookIndex by rememberSaveable {
+        mutableIntStateOf(0)
+    }
+    val setBookIndex = { v: Int ->
+        bookIndex = v
+    }
+    Drawer(navController, bookIndex, setBookIndex) { openDrawer ->
         NavHost(
             navController = navController,
             startDestination = "/books/{book}/chapters/{chapter}",

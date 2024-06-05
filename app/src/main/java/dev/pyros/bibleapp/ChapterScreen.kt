@@ -6,17 +6,23 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.AnchoredDraggableState
 import androidx.compose.foundation.gestures.DraggableAnchors
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.absolutePadding
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerValue
@@ -40,6 +46,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
@@ -47,13 +55,16 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontSynthesis
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import bookNames
+import fontFamily
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 
 enum class DragAnchors {
@@ -77,7 +88,7 @@ fun ChapterScreen(
     bookIndex: Int,
     chapterIndex: Int,
     navController: NavController,
-    openDrawer: () -> Job,
+    openDrawer: (MenuType) -> Job,
 ) {
     val chapters =
         verses.filter { it.bookIndex == bookIndex }.map { it.chapterIndex }.distinct();
@@ -110,19 +121,6 @@ fun ChapterScreen(
         verses.filter { it.bookIndex == bookIndex && it.chapterIndex == chapterIndex };
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = {
-            TopAppBar(
-                colors = topAppBarColors(
-                    containerColor = Color(0xFFFFFFFF),
-                    titleContentColor = Color(0xFF000000),
-                ),
-                title = {
-                    Surface(onClick = { openDrawer() }) {
-                        Text("Genesis ${chapterIndex + 1}")
-                    }
-                },
-            )
-        }
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -143,29 +141,79 @@ fun ChapterScreen(
                     }
                 }
         ) {
-            chapterVerses.map {
-                Text(
-                    modifier = Modifier.padding(bottom = 4.dp),
-                    text = buildAnnotatedString {
-                        withStyle(
-                            style = SpanStyle(
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.W500,
-                                color = Color(0xFF9A1111),
-                            )
-                        ) {
-                            append((it.verseIndex + 1).toString() + " ")
-                        }
-                        withStyle(
-                            style = SpanStyle(
-                                fontSize = 18.sp,
-                                fontWeight = FontWeight.W400,
-                            )
-                        ) {
-                            append(it.text)
-                        }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Row(
+                    horizontalArrangement = Arrangement.Start,
+                ) {
+                    Surface(onClick = { openDrawer(MenuType.Book) }) {
+                        Text(bookNames[bookIndex], style = TextStyle(
+                            fontSize = 22.sp,
+                            fontWeight = FontWeight.W500,
+                            color = Color.Black,
+                        ))
+
                     }
-                )
+                    Surface(onClick = { openDrawer(MenuType.Chapter) }) {
+                        Text(
+                            "${chapterIndex + 1}", style = TextStyle(
+                                fontSize = 22.sp,
+                                fontWeight = FontWeight.W500,
+                                color = Color.Black,
+                            )
+                        )
+                    }
+                }
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End,
+                ) {
+                    IconButton(onClick = {  }) {
+                        Icon(Icons.Outlined.MoreVert, "Close")
+                    }
+                }
+            }
+            chapterVerses.map {
+                var isSelected by rememberSaveable {
+                    mutableStateOf(false)
+                }
+                val background = if (isSelected) Color(0xFFEEEEEE) else MaterialTheme.colorScheme.background
+                Surface(onClick = { isSelected = !isSelected }, interactionSource = MutableInteractionSource()) {
+                    Text(
+                        modifier = Modifier.padding(bottom = 12.dp),
+                        text = buildAnnotatedString {
+                            withStyle(
+                                style = SpanStyle(
+                                    background = background,
+                                    fontFamily = fontFamily,
+                                    fontSize = 14.sp,
+                                    color = Color(0xFF9A1111),
+//                                    fontSize = if (it.verseIndex == 0) 24.sp else 14.sp,
+                                    fontWeight = FontWeight.W600,
+//                                    color = if (it.verseIndex == 0) Color.Black else Color(0xFF9A1111),
+                                )
+                            ) {
+                                append("${it.verseIndex + 1} ")
+//                                append(if (it.verseIndex == 0) "${chapterIndex + 1} " else "${it.verseIndex + 1} ")
+                            }
+                            withStyle(
+                                style = SpanStyle(
+                                    background = background,
+//                                    fontFamily = fontFamily,
+                                    fontFamily = FontFamily.Serif,
+                                    fontSize = 15.sp,
+                                    fontWeight = FontWeight.W400,
+                                    color = Color.Black,
+                                )
+                            ) {
+                                append(it.text)
+                            }
+                        }
+                    )
+                }
             }
         }
     }

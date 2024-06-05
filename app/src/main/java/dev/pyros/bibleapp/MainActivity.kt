@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import bookNames
 import dev.pyros.bibleapp.ui.theme.BibleAppTheme
 import java.io.BufferedReader
 
@@ -28,7 +29,7 @@ fun parseBibleTxt(name: String, buffer: BufferedReader): List<Verse> {
         val verseText = arr.subList(4, arr.size).joinToString("|")
         Verse(
             bookIndex = book,
-            bookName = name,
+            bookName = bookNames[book],
             chapterIndex = chapter,
             verseIndex = verseNo,
             heading = heading,
