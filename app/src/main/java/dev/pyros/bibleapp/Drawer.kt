@@ -92,6 +92,60 @@ fun NonlazyGrid(
     }
 }
 
+//@Composable
+//private fun DropDownSample() {
+//    var expanded by remember { mutableStateOf(false) }
+//    var touchPoint: Offset by remember { mutableStateOf(Offset.Zero) }
+//    val density = LocalDensity.current
+//
+//    BoxWithConstraints(
+//        Modifier
+//            .fillMaxSize()
+//            .background(Color.Cyan)
+//            .pointerInput(Unit) {
+//                detectTapGestures {
+//                    Log.d("TAG", "onCreate: ${it}")
+//                    touchPoint = it
+//                    expanded = true
+//
+//                }
+//
+//            }
+//    ) {
+//        val (xDp, yDp) = with(density) {
+//            (touchPoint.x.toDp()) to (touchPoint.y.toDp())
+//        }
+//        DropdownMenu(
+//            expanded = expanded,
+//            offset = DpOffset(xDp, -maxHeight + yDp),
+//            onDismissRequest = {
+//                expanded = false
+//            }
+//        ) {
+//
+//            DropdownMenuItem(
+//                onClick = {
+//                    expanded = false
+//                },
+//                interactionSource = MutableInteractionSource(),
+//                text = {
+//                    Text("Copy")
+//                }
+//            )
+//
+//            DropdownMenuItem(
+//                onClick = {
+//                    expanded = false
+//                },
+//                interactionSource = MutableInteractionSource(),
+//                text = {
+//                    Text("Get Balance")
+//                }
+//            )
+//        }
+//    }
+//}
+
 @Composable
 fun Drawer(
     navController: NavController,
@@ -101,6 +155,9 @@ fun Drawer(
 ) {
     val scope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    var localBookIndex by rememberSaveable {
+        mutableStateOf(bookIndex)
+    }
     var menuType by rememberSaveable {
         mutableStateOf(MenuType.Chapter)
     }
@@ -176,15 +233,15 @@ fun Drawer(
                                         when (menuType) {
                                             MenuType.Bible -> ""
                                             MenuType.Book -> {
-                                                setBookIndex(c)
+                                                localBookIndex = c
                                                 menuType = MenuType.Chapter
 //                                                navController.navigate(route = "/books/${c}/chapters/0")
                                             }
                                             MenuType.Chapter -> {
-                                                navController.navigate(route = "/books/${bookIndex}/chapters/${c}")
+                                                navController.navigate(route = "/books/${localBookIndex}/chapters/${c}")
+                                                drawerState.close();
                                             }
                                         }
-                                        drawerState.close();
                                     }
                                 }) {
                                 Text(
