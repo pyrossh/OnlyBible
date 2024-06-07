@@ -1,16 +1,19 @@
+import com.android.build.gradle.tasks.asJavaVersion
+
 plugins {
     alias(libs.plugins.android.application)
+    alias(libs.plugins.compose.compiler)
     alias(libs.plugins.jetbrains.kotlin.android)
-    id("org.jetbrains.kotlin.plugin.serialization") version "1.7.20"
+    alias(libs.plugins.secrets.gradle.plugin)
 }
 
 android {
-    namespace = "dev.pyros.bibleapp"
+    namespace = "dev.pyrossh.onlyBible"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "dev.pyros.bibleapp"
-        minSdk = 28
+        applicationId = "dev.pyrossh.onlyBible"
+        minSdk = 32
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -31,23 +34,25 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = "1.8"
+        sourceCompatibility = JavaLanguageVersion.of(11).asJavaVersion()
+        targetCompatibility = JavaLanguageVersion.of(11).asJavaVersion()
     }
     buildFeatures {
         compose = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
+        buildConfig = true
     }
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    kotlinOptions {
+        jvmTarget = JavaLanguageVersion.of(11).toString()
+    }
+}
+
+composeCompiler {
+    enableStrongSkippingMode = true
 }
 
 dependencies {
@@ -74,4 +79,6 @@ dependencies {
     implementation(libs.androidx.foundation)
     implementation(libs.accompanist.systemuicontroller)
     implementation(libs.androidx.ui.text.google.fonts)
+    implementation(libs.client.sdk)
+    implementation(libs.kotlinx.coroutines.core)
 }
