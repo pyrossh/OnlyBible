@@ -1,7 +1,13 @@
 package dev.pyros.bibleapp
 
+import android.annotation.SuppressLint
+import android.util.Log
+import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -18,6 +24,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DrawerDefaults
 import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalDrawerSheet
@@ -26,22 +34,27 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import bookNames
-import chapterSizes
+import androidx.navigation.NavOptions
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
@@ -92,77 +105,77 @@ fun NonlazyGrid(
     }
 }
 
-//@Composable
-//private fun DropDownSample() {
-//    var expanded by remember { mutableStateOf(false) }
-//    var touchPoint: Offset by remember { mutableStateOf(Offset.Zero) }
-//    val density = LocalDensity.current
-//
-//    BoxWithConstraints(
-//        Modifier
-//            .fillMaxSize()
-//            .background(Color.Cyan)
-//            .pointerInput(Unit) {
-//                detectTapGestures {
-//                    Log.d("TAG", "onCreate: ${it}")
-//                    touchPoint = it
-//                    expanded = true
-//
-//                }
-//
-//            }
-//    ) {
-//        val (xDp, yDp) = with(density) {
-//            (touchPoint.x.toDp()) to (touchPoint.y.toDp())
-//        }
-//        DropdownMenu(
-//            expanded = expanded,
-//            offset = DpOffset(xDp, -maxHeight + yDp),
-//            onDismissRequest = {
-//                expanded = false
-//            }
-//        ) {
-//
-//            DropdownMenuItem(
-//                onClick = {
-//                    expanded = false
-//                },
-//                interactionSource = MutableInteractionSource(),
-//                text = {
-//                    Text("Copy")
-//                }
-//            )
-//
-//            DropdownMenuItem(
-//                onClick = {
-//                    expanded = false
-//                },
-//                interactionSource = MutableInteractionSource(),
-//                text = {
-//                    Text("Get Balance")
-//                }
-//            )
-//        }
-//    }
-//}
+@SuppressLint("UnrememberedMutableInteractionSource")
+@Composable
+fun DropDownSample() {
+    var expanded by remember { mutableStateOf(false) }
+    var touchPoint: Offset by remember { mutableStateOf(Offset.Zero) }
+    val density = LocalDensity.current
+
+    BoxWithConstraints(
+        Modifier
+            .fillMaxSize()
+            .background(Color.Cyan)
+            .pointerInput(Unit) {
+                detectTapGestures {
+                    Log.d("TAG", "onCreate: ${it}")
+                    touchPoint = it
+                    expanded = true
+
+                }
+
+            }
+    ) {
+        val (xDp, yDp) = with(density) {
+            (touchPoint.x.toDp()) to (touchPoint.y.toDp())
+        }
+        DropdownMenu(
+            expanded = expanded,
+            offset = DpOffset(xDp, -maxHeight + yDp),
+            onDismissRequest = {
+                expanded = false
+            }
+        ) {
+
+            DropdownMenuItem(
+                onClick = {
+                    expanded = false
+                },
+                interactionSource = MutableInteractionSource(),
+                text = {
+                    Text("Copy")
+                }
+            )
+
+            DropdownMenuItem(
+                onClick = {
+                    expanded = false
+                },
+                interactionSource = MutableInteractionSource(),
+                text = {
+                    Text("Get Balance")
+                }
+            )
+        }
+    }
+}
 
 @Composable
 fun Drawer(
     navController: NavController,
-    bookIndex: Int,
-    setBookIndex: (Int) -> Unit,
-    content: @Composable ((MenuType) -> Job) -> Unit
+    content: @Composable ((MenuType, Int) -> Job) -> Unit
 ) {
     val scope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-    var localBookIndex by rememberSaveable {
-        mutableStateOf(bookIndex)
+    var bookIndex by rememberSaveable {
+        mutableIntStateOf(0)
     }
     var menuType by rememberSaveable {
         mutableStateOf(MenuType.Chapter)
     }
-    val openDrawer = { m: MenuType ->
+    val openDrawer = { m: MenuType, b: Int ->
         menuType = m
+        bookIndex = b
         scope.launch {
             drawerState.apply {
                 if (isClosed) open() else close()
@@ -216,8 +229,8 @@ fun Drawer(
                         items(
                             when (menuType) {
                                 MenuType.Bible -> 1
-                                MenuType.Book -> bookNames.size
-                                MenuType.Chapter -> chapterSizes[bookIndex]
+                                MenuType.Book -> Verse.bookNames.size
+                                MenuType.Chapter -> Verse.chapterSizes[bookIndex]
                             }
                         ) { c ->
                             Button(
@@ -233,12 +246,11 @@ fun Drawer(
                                         when (menuType) {
                                             MenuType.Bible -> ""
                                             MenuType.Book -> {
-                                                localBookIndex = c
+                                                bookIndex = c
                                                 menuType = MenuType.Chapter
-//                                                navController.navigate(route = "/books/${c}/chapters/0")
                                             }
                                             MenuType.Chapter -> {
-                                                navController.navigate(route = "/books/${localBookIndex}/chapters/${c}")
+                                                navController.navigate(route = "/books/${bookIndex}/chapters/${c}")
                                                 drawerState.close();
                                             }
                                         }
@@ -254,7 +266,7 @@ fun Drawer(
                                     ),
                                     text = when (menuType) {
                                         MenuType.Bible -> ""
-                                        MenuType.Book -> shortName(bookNames[c])
+                                        MenuType.Book -> shortName(Verse.bookNames[c])
                                         MenuType.Chapter -> "${c + 1}"
                                     }
                                 )

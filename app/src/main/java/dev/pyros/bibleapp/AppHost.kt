@@ -1,12 +1,9 @@
 package dev.pyros.bibleapp
 
+import Verse
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -16,38 +13,32 @@ import androidx.navigation.navArgument
 @Composable
 fun AppHost(verses: List<Verse>) {
     val navController = rememberNavController()
-    var bookIndex by rememberSaveable {
-        mutableIntStateOf(0)
-    }
-    val setBookIndex = { v: Int ->
-        bookIndex = v
-    }
-    Drawer(navController, bookIndex, setBookIndex) { openDrawer ->
+    Drawer(navController) { openDrawer ->
         NavHost(
             navController = navController,
             startDestination = "/books/{book}/chapters/{chapter}",
             enterTransition = {
                 slideIntoContainer(
                     AnimatedContentTransitionScope.SlideDirection.Left,
-                    tween(500),
+                    tween(400),
                 )
             },
 //            exitTransition = {
 //                slideOutOfContainer(
 //                    AnimatedContentTransitionScope.SlideDirection.Left,
-//                    tween(500),
+//                    tween(300),
 //                )
 //            },
             popEnterTransition = {
                 slideIntoContainer(
                     AnimatedContentTransitionScope.SlideDirection.Right,
-                    tween(500),
+                    tween(400),
                 )
             },
             popExitTransition = {
                 slideOutOfContainer(
                     AnimatedContentTransitionScope.SlideDirection.Right,
-                    tween(500),
+                    tween(400),
                 )
             }
         ) {
