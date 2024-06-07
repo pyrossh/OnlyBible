@@ -120,24 +120,31 @@ fun ChapterScreen(
 //                            println("END " + dragAmount);
                             if (dragAmount < 0) {
                                 val pair = Verse.getForwardPair(bookIndex, chapterIndex)
-                                navController.navigate(route = "/books/${pair.first}/chapters/${pair.second}")
+                                navController.navigate(route = "/books/${pair.first}/chapters/${pair.second}?dir=left")
                             } else if (dragAmount > 0) {
                                 val pair = Verse.getBackwardPair(bookIndex, chapterIndex)
-                                if (navController.currentBackStackEntry?.arguments != null) {
+                                if (navController.previousBackStackEntry != null) {
                                     val previousBook =
-                                        navController.currentBackStackEntry?.arguments?.getInt("book")
+                                        navController.previousBackStackEntry?.arguments?.getInt("book")
                                             ?: 0
                                     val previousChapter =
-                                        navController.currentBackStackEntry?.arguments?.getInt("chapter")
+                                        navController.previousBackStackEntry?.arguments?.getInt("chapter")
                                             ?: 0
+//                                    println("currentBackStackEntry ${previousBook} ${previousChapter} || ${pair.first} ${pair.second}")
                                     if (previousBook == pair.first && previousChapter == pair.second) {
+                                        println("Popped")
                                         navController.popBackStack()
+                                    } else {
+                                        navController.navigate(
+                                            route = "/books/${pair.first}/chapters/${pair.second}?dir=right",
+                                        )
                                     }
+                                } else {
+//                                    println("navigated navigate")
+                                    navController.navigate(
+                                        route = "/books/${pair.first}/chapters/${pair.second}?dir=right",
+                                    )
                                 }
-                                navController.popBackStack(
-                                    route = "/books/${pair.first}/chapters/${pair.second}",
-                                    inclusive = false,
-                                )
                             }
                         },
                         onHorizontalDrag = { change, da ->
@@ -209,7 +216,7 @@ fun ChapterScreen(
                 }
                 Text(
                     modifier = Modifier
-                        .padding(bottom = 10.dp)
+                        .padding(bottom = 16.dp)
                         .onGloballyPositioned { coordinates ->
                             val boundsInWindow = coordinates.boundsInWindow()
                             selectedVerseBounds = coordinates.boundsInWindow()
@@ -229,33 +236,26 @@ fun ChapterScreen(
                                 }
                             )
                         },
+                    style = TextStyle(
+                        background = background,
+                        fontFamily = fontFamily,
+                        color = Color.Black,
+                        fontWeight = FontWeight.W400,
+                        fontSize = 16.sp,
+                        lineHeight = 22.sp,
+                        letterSpacing = 0.sp,
+                    ),
                     text = buildAnnotatedString {
                         withStyle(
                             style = SpanStyle(
-                                background = background,
-                                fontFamily = fontFamily,
-                                fontSize = 14.sp,
+                                fontSize = 13.sp,
                                 color = Color(0xFF9A1111),
-//                                    fontSize = if (it.verseIndex == 0) 24.sp else 14.sp,
-                                fontWeight = FontWeight.W600,
-//                                    color = if (it.verseIndex == 0) Color.Black else Color(0xFF9A1111),
+                                fontWeight = FontWeight.W700,
                             )
                         ) {
                             append("${v.verseIndex + 1} ")
-//                                append(if (it.verseIndex == 0) "${chapterIndex + 1} " else "${it.verseIndex + 1} ")
                         }
-                        withStyle(
-                            style = SpanStyle(
-                                background = background,
-                                fontFamily = fontFamily,
-//                                    fontFamily = FontFamily.Serif,
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Normal,
-                                color = Color.Black,
-                            )
-                        ) {
-                            append(v.text)
-                        }
+                        append(v.text)
                     }
                 )
             }

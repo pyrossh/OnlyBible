@@ -246,7 +246,7 @@ fun Drawer(
                                                 menuType = MenuType.Chapter
                                             }
                                             MenuType.Chapter -> {
-                                                navController.navigate(route = "/books/${bookIndex}/chapters/${c}")
+                                                navController.navigate(route = "/books/${bookIndex}/chapters/${c}?dir=left")
                                                 drawerState.close();
                                             }
                                         }

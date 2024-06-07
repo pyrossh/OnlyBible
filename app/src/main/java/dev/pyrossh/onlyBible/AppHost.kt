@@ -16,43 +16,49 @@ fun AppHost(verses: List<Verse>) {
     Drawer(navController) { openDrawer ->
         NavHost(
             navController = navController,
-            startDestination = "/books/{book}/chapters/{chapter}",
-            enterTransition = {
-                slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Left,
-                    tween(400),
-                )
-            },
+            startDestination = "/books/0/chapters/0?dir=left",
+        ) {
+            composable(
+                route = "/books/{book}/chapters/{chapter}?dir={dir}",
+                arguments = listOf(
+                    navArgument("book") { type = NavType.IntType },
+                    navArgument("chapter") { type = NavType.IntType },
+                    navArgument("dir") { type = NavType.StringType },
+                ),
+                enterTransition = {
+                    val dir = this.targetState.arguments?.getString("dir") ?: "left"
+                    val slideDirection = when (dir) {
+                        "left" -> AnimatedContentTransitionScope.SlideDirection.Left
+                        else -> AnimatedContentTransitionScope.SlideDirection.Right
+                    }
+                    slideIntoContainer(
+                        slideDirection,
+                        tween(400),
+                    )
+                },
 //            exitTransition = {
 //                slideOutOfContainer(
 //                    AnimatedContentTransitionScope.SlideDirection.Left,
 //                    tween(300),
 //                )
 //            },
-            popEnterTransition = {
-                slideIntoContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Right,
-                    tween(400),
-                )
-            },
-            popExitTransition = {
-                slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Right,
-                    tween(400),
-                )
-            }
-        ) {
-            composable(
-                route = "/books/{book}/chapters/{chapter}",
-                arguments = listOf(
-                    navArgument("book") { type = NavType.IntType },
-                    navArgument("chapter") { type = NavType.IntType },
-                )
+                popEnterTransition = {
+                    slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Right,
+                        tween(400),
+                    )
+                },
+                popExitTransition = {
+                    slideOutOfContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Right,
+                        tween(400),
+                    )
+                }
             ) {
                 ChapterScreen(
                     verses = verses,
-                    bookIndex = it.arguments?.getInt("book") ?: 0,
-                    chapterIndex = it.arguments?.getInt("chapter") ?: 0,
+                    bookIndex = it.arguments?.getInt("book")!!,
+                    chapterIndex = it.arguments?.getInt("chapter")!!,
                     navController = navController,
                     openDrawer = openDrawer,
                 )
