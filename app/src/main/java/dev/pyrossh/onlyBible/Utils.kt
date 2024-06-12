@@ -1,4 +1,5 @@
-
+import android.content.Context
+import android.content.Intent
 import com.microsoft.cognitiveservices.speech.SpeechConfig
 import com.microsoft.cognitiveservices.speech.SpeechSynthesizer
 import dev.pyrossh.onlyBible.BuildConfig
@@ -40,4 +41,20 @@ suspend fun convertVersesToSpeech(scope: CoroutineScope, verses: List<Verse>) {
             """.trimIndent()
         ).wait()
     }
+}
+
+fun shareVerses(context: Context, verses: List<Verse>) {
+    val items = verses.sortedBy { it.verseIndex }
+    val versesThrough =
+        if (items.size >= 3) "${items.first().verseIndex + 1}-${items.last().verseIndex + 1}" else items.map { it.verseIndex + 1 }
+            .joinToString(",");
+    val title = "${verses[0].bookName} ${verses[0].chapterIndex + 1}:${versesThrough}"
+    val text = verses.joinToString("\n") { it.text };
+    val sendIntent = Intent().apply {
+        action = Intent.ACTION_SEND
+        putExtra(Intent.EXTRA_TEXT, "${title}\n${text}")
+        type = "text/plain"
+    }
+    val shareIntent = Intent.createChooser(sendIntent, null)
+    context.startActivity(shareIntent)
 }

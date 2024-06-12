@@ -14,6 +14,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.MoreVert
+import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -35,6 +36,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.boundsInWindow
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -43,11 +45,10 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import convertVersesToSpeech
 import fontFamily
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
+import shareVerses
 
 // TODO: once androidx.navigation 2.8.0 is released
 @Serializable
@@ -65,6 +66,7 @@ fun ChapterScreen(
     navController: NavController,
     openDrawer: (MenuType, Int) -> Job,
 ) {
+    val context = LocalContext.current;
     val scope = rememberCoroutineScope()
     var selectedVerseBounds: Rect by remember { mutableStateOf(Rect.Zero) }
     var selectedVerses by rememberSaveable {
@@ -186,10 +188,18 @@ fun ChapterScreen(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.End,
                 ) {
-                    IconButton(onClick = {
-                        scope.launch {
-                            convertVersesToSpeech(scope, selectedVerses.sortedBy { it.verseIndex })
+                    if (selectedVerses.isNotEmpty()) {
+                        IconButton(onClick = {
+                            shareVerses(context, selectedVerses)
+                            selectedVerses = listOf()
+                        }) {
+                            Icon(Icons.Outlined.Share, "Share")
                         }
+                    }
+                    IconButton(onClick = {
+//                        scope.launch {
+//                            convertVersesToSpeech(scope, selectedVerses.sortedBy { it.verseIndex })
+//                        }
                     }) {
                         Icon(Icons.Outlined.MoreVert, "Close")
                     }
