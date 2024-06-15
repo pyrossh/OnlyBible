@@ -65,6 +65,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.material.icons.extended)
     implementation(libs.androidx.ui.util.android)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
@@ -81,4 +82,5 @@ dependencies {
     implementation(libs.androidx.ui.text.google.fonts)
     implementation(libs.client.sdk)
     implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.androidx.datastore.preferences)
 }

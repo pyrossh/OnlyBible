@@ -9,7 +9,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import java.util.concurrent.Future
 
-
 val speechService = SpeechSynthesizer(
     SpeechConfig.fromSubscription(
         BuildConfig.subscriptionKey,

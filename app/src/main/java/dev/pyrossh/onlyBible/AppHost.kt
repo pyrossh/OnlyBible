@@ -1,14 +1,20 @@
 package dev.pyrossh.onlyBible
 
 import Verse
+import android.content.Context
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
 @Composable
 fun AppHost(verses: List<Verse>) {
@@ -64,22 +70,5 @@ fun AppHost(verses: List<Verse>) {
                 )
             }
         }
-
-//    val scope = rememberCoroutineScope()
-//    val sheetState = rememberModalBottomSheetState()
-//    var showBottomSheet by rememberSaveable { mutableStateOf(false) }
-//    val showSheet = {
-//        showBottomSheet = true
-//    }
-//    if (showBottomSheet) {
-//        ModalBottomSheet(
-//            onDismissRequest = {
-//                showBottomSheet = false
-//            },
-//            sheetState = sheetState
-//        ) {
-//            Text("All Chapters")
-//        }
-//    }
     }
 }
