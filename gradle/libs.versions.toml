@@ -15,7 +15,7 @@ lifecycleRuntimeKtx = "2.8.1"
 activityCompose = "1.9.0"
 composeBom = "2024.05.00"
 materialIconsExtended = "1.6.8"
-navigationFragmentKtx = "2.7.7"
+navigationFragmentKtx = "2.8.0-beta03"
 secretsGradlePlugin = "2.0.1"
 uiTextGoogleFonts = "1.6.7"
 uiUtilAndroid = "1.6.7"
@@ -53,5 +53,6 @@ secrets-gradle-plugin = { module = "com.google.android.libraries.mapsplatform.se
 android-application = { id = "com.android.application", version.ref = "agp" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlinx-serializer = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin"}
+kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 secrets-gradle-plugin = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "secretsGradlePlugin" }
-

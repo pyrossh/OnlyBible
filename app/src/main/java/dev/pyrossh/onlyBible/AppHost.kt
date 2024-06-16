@@ -1,44 +1,28 @@
 package dev.pyrossh.onlyBible
 
 import Verse
-import android.content.Context
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.preferencesDataStore
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
-
-val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
+import androidx.navigation.toRoute
 
 @Composable
 fun AppHost(verses: List<Verse>) {
     val navController = rememberNavController()
+    val state = LocalState.current!!
     Drawer(navController) { openDrawer ->
         NavHost(
             navController = navController,
-            startDestination = "/books/0/chapters/0?dir=left",
+            startDestination = ChapterScreenProps(state.getBookIndex(), state.getChapterIndex())
         ) {
-            composable(
-                route = "/books/{book}/chapters/{chapter}?dir={dir}",
-                arguments = listOf(
-                    navArgument("book") { type = NavType.IntType },
-                    navArgument("chapter") { type = NavType.IntType },
-                    navArgument("dir") { type = NavType.StringType },
-                ),
+            composable<ChapterScreenProps>(
                 enterTransition = {
-                    val dir = this.targetState.arguments?.getString("dir") ?: "left"
-                    val slideDirection = when (dir) {
-                        "left" -> AnimatedContentTransitionScope.SlideDirection.Left
-                        else -> AnimatedContentTransitionScope.SlideDirection.Right
-                    }
+                    val props = this.targetState.toRoute<ChapterScreenProps>()
                     slideIntoContainer(
-                        slideDirection,
+                        Dir.valueOf(props.dir).slideDirection(),
                         tween(400),
                     )
                 },
@@ -61,10 +45,13 @@ fun AppHost(verses: List<Verse>) {
                     )
                 }
             ) {
+                val props = it.toRoute<ChapterScreenProps>()
+                state.setBookIndex(props.bookIndex)
+                state.setChapterIndex(props.chapterIndex)
                 ChapterScreen(
                     verses = verses,
-                    bookIndex = it.arguments?.getInt("book")!!,
-                    chapterIndex = it.arguments?.getInt("chapter")!!,
+                    bookIndex = props.bookIndex,
+                    chapterIndex = props.chapterIndex,
                     navController = navController,
                     openDrawer = openDrawer,
                 )

@@ -1,13 +1,7 @@
 package dev.pyrossh.onlyBible
 
 import Verse
-import android.annotation.SuppressLint
-import android.util.Log
-import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -15,6 +9,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyGridItemScope
+import androidx.compose.foundation.lazy.grid.LazyGridScope
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -22,8 +19,6 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalDrawerSheet
@@ -34,19 +29,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -66,59 +56,10 @@ fun shortName(name: String): String {
     return "${name[0].uppercase()}${name.substring(1, 3).lowercase()}"
 }
 
-@SuppressLint("UnrememberedMutableInteractionSource")
-@Composable
-fun DropDownSample() {
-    var expanded by remember { mutableStateOf(false) }
-    var touchPoint: Offset by remember { mutableStateOf(Offset.Zero) }
-    val density = LocalDensity.current
-
-    BoxWithConstraints(
-        Modifier
-            .fillMaxSize()
-            .background(Color.Cyan)
-            .pointerInput(Unit) {
-                detectTapGestures {
-                    Log.d("TAG", "onCreate: ${it}")
-                    touchPoint = it
-                    expanded = true
-
-                }
-
-            }
-    ) {
-        val (xDp, yDp) = with(density) {
-            (touchPoint.x.toDp()) to (touchPoint.y.toDp())
-        }
-        DropdownMenu(
-            expanded = expanded,
-            offset = DpOffset(xDp, -maxHeight + yDp),
-            onDismissRequest = {
-                expanded = false
-            }
-        ) {
-
-            DropdownMenuItem(
-                onClick = {
-                    expanded = false
-                },
-                interactionSource = MutableInteractionSource(),
-                text = {
-                    Text("Copy")
-                }
-            )
-
-            DropdownMenuItem(
-                onClick = {
-                    expanded = false
-                },
-                interactionSource = MutableInteractionSource(),
-                text = {
-                    Text("Get Balance")
-                }
-            )
-        }
-    }
+fun LazyGridScope.header(
+    content: @Composable LazyGridItemScope.() -> Unit
+) {
+    item(span = { GridItemSpan(this.maxLineSpan) }, content = content)
 }
 
 @Composable
@@ -157,80 +98,104 @@ fun Drawer(
                         .fillMaxSize()
                         .padding(horizontal = 16.dp),
                 ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        Text(
-                            "Select a ${menuType.name.lowercase()}",
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.W500
-                        )
-                        IconButton(onClick = {
-                            scope.launch {
-                                drawerState.close();
-                            }
-                        }) {
-                            Icon(Icons.Filled.Close, "Close")
-                        }
+                    if (menuType == MenuType.Bible) {
                     }
-                    LazyVerticalGrid(
-                        modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.spacedBy(10.dp),
-                        horizontalArrangement = Arrangement.spacedBy(10.dp),
-                        columns = GridCells.Fixed(
-                            count = when (menuType) {
-                                MenuType.Bible -> 2
-                                MenuType.Book -> 4
-                                MenuType.Chapter -> 5
-                            }
-                        )
-                    ) {
-                        items(
-                            when (menuType) {
-                                MenuType.Bible -> 1
-                                MenuType.Book -> Verse.bookNames.size
-                                MenuType.Chapter -> Verse.chapterSizes[bookIndex]
-                            }
-                        ) { c ->
-                            Button(
-                                shape = RoundedCornerShape(2.dp),
-                                colors = ButtonDefaults.buttonColors(
-                                    containerColor = Color(0xFFEAE9E9),
-                                    contentColor = Color.Black,
-                                ),
-                                contentPadding = PaddingValues(4.dp),
-                                elevation = ButtonDefaults.elevatedButtonElevation(),
-                                onClick = {
-                                    scope.launch {
-                                        when (menuType) {
-                                            MenuType.Bible -> ""
-                                            MenuType.Book -> {
-                                                bookIndex = c
-                                                menuType = MenuType.Chapter
-                                            }
-                                            MenuType.Chapter -> {
-                                                navController.navigate(route = "/books/${bookIndex}/chapters/${c}?dir=left")
+                    if (menuType == MenuType.Book) {
+                        LazyVerticalGrid(
+                            modifier = Modifier.fillMaxSize(),
+                            verticalArrangement = Arrangement.spacedBy(10.dp),
+                            horizontalArrangement = Arrangement.spacedBy(10.dp),
+                            columns = GridCells.Fixed(5)
+                        ) {
+                            header {
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.SpaceBetween,
+                                        verticalAlignment = Alignment.CenterVertically,
+                                    ) {
+                                        Text(
+                                            text = "Old Testament",
+                                            fontSize = 18.sp,
+                                            fontWeight = FontWeight.W500
+                                        )
+                                        IconButton(onClick = {
+                                            scope.launch {
                                                 drawerState.close();
                                             }
+                                        }) {
+                                            Icon(Icons.Filled.Close, "Close")
                                         }
                                     }
-                                }) {
-                                Text(
-                                    modifier = Modifier.padding(bottom = 4.dp),
-                                    style = TextStyle(
-//                                        fontFamily = FontFamily.Monospace,
+                            }
+                            items(39) { b ->
+                                QuickButton(shortName(Verse.bookNames[b])) {
+                                    bookIndex = b
+                                    menuType = MenuType.Chapter
+                                }
+                            }
+                            header {
+                                Row(
+                                    modifier = Modifier.padding(top = 16.dp, bottom = 8.dp),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically,
+                                ) {
+                                    Text(
+                                        text = "New Testament",
                                         fontSize = 18.sp,
-                                        fontWeight = FontWeight.W500,
-                                        color = Color(0xFF8A4242)
-                                    ),
-                                    text = when (menuType) {
-                                        MenuType.Bible -> ""
-                                        MenuType.Book -> shortName(Verse.bookNames[c])
-                                        MenuType.Chapter -> "${c + 1}"
+                                        fontWeight = FontWeight.W500
+                                    )
+                                }
+                            }
+                            items(27) { i ->
+                                val b = 39 + i
+                                QuickButton(shortName(Verse.bookNames[b])) {
+                                    bookIndex = b
+                                    menuType = MenuType.Chapter
+                                }
+                            }
+                        }
+                    }
+
+                    if (menuType == MenuType.Chapter) {
+                        LazyVerticalGrid(
+                            modifier = Modifier.fillMaxSize(),
+                            verticalArrangement = Arrangement.spacedBy(10.dp),
+                            horizontalArrangement = Arrangement.spacedBy(10.dp),
+                            columns = GridCells.Fixed(5)
+                        ) {
+                            header {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically,
+                                ) {
+                                    Text(
+                                        text = Verse.bookNames[bookIndex],
+                                        fontSize = 20.sp,
+                                        fontWeight = FontWeight.W500
+                                    )
+                                    IconButton(onClick = {
+                                        scope.launch {
+                                            drawerState.close();
+                                        }
+                                    }) {
+                                        Icon(Icons.Filled.Close, "Close")
                                     }
-                                )
+                                }
+                            }
+
+                            items(Verse.chapterSizes[bookIndex]) { c ->
+                                QuickButton("${c + 1}") {
+                                    scope.launch {
+                                        navController.navigate(
+                                            ChapterScreenProps(
+                                                bookIndex = bookIndex,
+                                                chapterIndex = c,
+                                            )
+                                        )
+                                        drawerState.close();
+                                    }
+                                }
                             }
                         }
                     }
@@ -239,5 +204,29 @@ fun Drawer(
         },
     ) {
         content(openDrawer)
+    }
+}
+
+@Composable
+fun QuickButton(text: String, onClick: () -> Unit) {
+    Button(
+        shape = RoundedCornerShape(2.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = Color(0xFFEAE9E9),
+            contentColor = Color.Black,
+        ),
+        contentPadding = PaddingValues(4.dp),
+        elevation = ButtonDefaults.elevatedButtonElevation(),
+        onClick = onClick
+    ) {
+        Text(
+            modifier = Modifier.padding(bottom = 4.dp),
+            style = TextStyle(
+                fontSize = 18.sp,
+                fontWeight = FontWeight.W500,
+                color = Color(0xFF8A4242)
+            ),
+            text = text,
+        )
     }
 }

@@ -151,6 +151,7 @@ data class Verse(
             1,
             22
         )
+
         fun parseFromBibleTxt(name: String, buffer: BufferedReader): List<Verse> {
             Log.i("loading", "parsing bible $name")
             return buffer.readLines().filter { it.isNotEmpty() }.map {
@@ -187,9 +188,9 @@ data class Verse(
                 return Pair(book, chapter - 1)
             }
             if (book - 1 >= 0) {
-                return Pair(book-1, chapterSizes[book-1]-1)
+                return Pair(book - 1, chapterSizes[book - 1] - 1)
             }
-            return Pair(bookNames.size-1, chapterSizes[bookNames.size-1]-1)
+            return Pair(bookNames.size - 1, chapterSizes[bookNames.size - 1] - 1)
         }
     }
 }
