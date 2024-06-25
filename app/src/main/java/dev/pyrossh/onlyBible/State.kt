@@ -9,6 +9,7 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.GenericFontFamily
 import androidx.lifecycle.ViewModel
+import java.util.Locale
 
 val LocalState = staticCompositionLocalOf<State?> { null }
 
@@ -26,8 +27,16 @@ enum class FontType {
     }
 }
 
-class State(p: SharedPreferences) : ViewModel() {
+enum class ThemeType {
+    Light,
+    Warm,
+    Dark,
+    Auto
+}
+
+class State(p: SharedPreferences, val bibles: List<String>, val reload: () -> Unit) : ViewModel() {
     private val prefs: SharedPreferences = p
+    var isLoading by mutableStateOf(false)
     var showBottomSheet by mutableStateOf(false)
     var fontType by mutableStateOf(
         FontType.valueOf(
@@ -36,6 +45,28 @@ class State(p: SharedPreferences) : ViewModel() {
     )
     var fontSizeDelta by mutableIntStateOf(prefs.getInt("fontSizeDelta", 0))
     var boldEnabled by mutableStateOf(prefs.getBoolean("bold", false))
+    var themeType by mutableStateOf(prefs.getString("themeType", ThemeType.Auto.name))
+
+    fun getThemeType(): Int {
+        return prefs.getInt("themeType", 0)
+    }
+
+    fun setThemeType(v: ThemeType) {
+        val editor = prefs.edit()
+        editor.putString("themeType", v.name)
+        editor.apply()
+    }
+
+    fun getBibleName(): String {
+        val defValue = Locale.getDefault().displayLanguage
+        return prefs.getString("bibleName", defValue) ?: defValue
+    }
+
+    fun setBibleName(v: String) {
+        val editor = prefs.edit()
+        editor.putString("bibleName", v)
+        editor.apply()
+    }
 
     fun getBookIndex(): Int {
         return prefs.getInt("bookIndex", 0)

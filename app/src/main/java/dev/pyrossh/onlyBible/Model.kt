@@ -9,12 +9,10 @@ data class Verse(
     val heading: String,
     val text: String,
 ) {
-    fun isOldTestament() = bookIndex < 39;
-    fun isNewTestament() = bookIndex >= 39;
 
     companion object {
 
-        val bookNames = listOf(
+        val engTitles = listOf(
             "Genesis",
             "Exodus",
             "Leviticus",
@@ -83,6 +81,7 @@ data class Verse(
             "Revelation",
         )
 
+        val booksCount = 66;
         val chapterSizes = listOf(
             50,
             40,
@@ -156,14 +155,15 @@ data class Verse(
             Log.i("loading", "parsing bible $name")
             return buffer.readLines().filter { it.isNotEmpty() }.map {
                 val arr = it.split("|")
-                val book = arr[0].toInt()
-                val chapter = arr[1].toInt()
-                val verseNo = arr[2].toInt()
-                val heading = arr[3]
-                val verseText = arr.subList(4, arr.size).joinToString("|")
+                val bookName = arr[0]
+                val book = arr[1].toInt()
+                val chapter = arr[2].toInt()
+                val verseNo = arr[3].toInt()
+                val heading = arr[4]
+                val verseText = arr.subList(5, arr.size).joinToString("|")
                 Verse(
                     bookIndex = book,
-                    bookName = bookNames[book],
+                    bookName = bookName,
                     chapterIndex = chapter,
                     verseIndex = verseNo,
                     heading = heading,
@@ -177,7 +177,7 @@ data class Verse(
             if (sizes > chapter + 1) {
                 return Pair(book, chapter + 1)
             }
-            if (book + 1 < bookNames.size) {
+            if (book + 1 < booksCount) {
                 return Pair(book + 1, 0)
             }
             return Pair(0, 0)
@@ -190,7 +190,7 @@ data class Verse(
             if (book - 1 >= 0) {
                 return Pair(book - 1, chapterSizes[book - 1] - 1)
             }
-            return Pair(bookNames.size - 1, chapterSizes[bookNames.size - 1] - 1)
+            return Pair(booksCount - 1, chapterSizes[booksCount - 1] - 1)
         }
     }
 }

@@ -20,6 +20,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -60,7 +61,8 @@ fun TextSettingsBottomSheet() {
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    text = "Text Settings", fontSize = 20.sp, fontWeight = FontWeight.W500
+                    text = "Text Settings",
+                    style = MaterialTheme.typography.titleLarge,
                 )
                 Row(horizontalArrangement = Arrangement.End) {
                     IconButton(onClick = {
@@ -90,13 +92,13 @@ fun TextSettingsBottomSheet() {
                         state.updateFontSize(state.fontSizeDelta - 1)
                     }) {
                     Column(
-                        modifier = Modifier.background(Color(0xFFFAFAFA)),
+                        modifier = Modifier.background(MaterialTheme.colorScheme.background),
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Icon(
                             imageVector = Icons.Filled.FormatSize,
-                            contentDescription = "Bold",
+                            contentDescription = "Decrease Font Size",
                             modifier = Modifier.size(14.dp),
                         )
                     }
@@ -111,13 +113,13 @@ fun TextSettingsBottomSheet() {
                         state.updateFontSize(state.fontSizeDelta + 1)
                     }) {
                     Column(
-                        modifier = Modifier.background(Color(0xFFFAFAFA)),
+                        modifier = Modifier.background(MaterialTheme.colorScheme.background),
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Icon(
                             imageVector = Icons.Filled.FormatSize,
-                            contentDescription = "Bold"
+                            contentDescription = "Increase Font size"
                         )
                     }
                 }
@@ -131,13 +133,14 @@ fun TextSettingsBottomSheet() {
                         state.updateBoldEnabled(!state.boldEnabled)
                     }) {
                     Column(
-                        modifier = Modifier.background(Color(0xFFFAFAFA)),
+                        modifier = Modifier.background(MaterialTheme.colorScheme.background),
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Icon(
                             imageVector = Icons.Filled.FormatBold,
-                            contentDescription = "Bold"
+                            contentDescription = "Bold",
+                            tint = if (state.boldEnabled) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground,
                         )
                     }
                 }
@@ -149,7 +152,7 @@ fun TextSettingsBottomSheet() {
                         .weight(1f),
                     onClick = {}) {
                     Column(
-                        modifier = Modifier.background(Color(0xFFFAFAFA)),
+                        modifier = Modifier.background(MaterialTheme.colorScheme.background),
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
@@ -170,7 +173,7 @@ fun TextSettingsBottomSheet() {
                 FontType.entries.map {
                     Surface(shape = RoundedCornerShape(8.dp),
                         border = if (state.fontType == it) BorderStroke(
-                            2.dp, Color(0xFF72abbf)
+                            2.dp, MaterialTheme.colorScheme.primary
                         ) else null,
                         modifier = Modifier
                             .fillMaxWidth()
@@ -181,7 +184,9 @@ fun TextSettingsBottomSheet() {
                             state.updateFontType(it)
                         }) {
                         Column(
-                            modifier = Modifier.background(Color(0xFFFAFAFA)),
+                            modifier = Modifier.background(
+                                MaterialTheme.colorScheme.background
+                            ),
                             verticalArrangement = Arrangement.Center,
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
@@ -189,7 +194,8 @@ fun TextSettingsBottomSheet() {
                                 text = it.name, style = TextStyle(
                                     fontFamily = it.family(),
                                     fontSize = 18.sp,
-                                    fontWeight = FontWeight.Medium,
+                                    fontWeight = FontWeight.W600,
+                                    color = MaterialTheme.colorScheme.onBackground,
                                 )
                             )
                         }
@@ -208,7 +214,7 @@ fun TextSettingsBottomSheet() {
                 // #424547 on dark
                 Surface(shape = RoundedCornerShape(8.dp),
                     border = BorderStroke(
-                        2.dp, Color(0xFF72abbf)
+                        2.dp, MaterialTheme.colorScheme.primary
                     ),
                     modifier = Modifier
                         .fillMaxWidth()

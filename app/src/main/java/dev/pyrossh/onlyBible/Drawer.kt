@@ -13,11 +13,11 @@ import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyGridItemScope
 import androidx.compose.foundation.lazy.grid.LazyGridScope
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -34,7 +34,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -64,9 +63,11 @@ fun LazyGridScope.header(
 
 @Composable
 fun Drawer(
+    bookNames: List<String>,
     navController: NavController,
     content: @Composable ((MenuType, Int) -> Job) -> Unit
 ) {
+    val state = LocalState.current!!
     val scope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     var bookIndex by rememberSaveable {
@@ -89,8 +90,6 @@ fun Drawer(
         drawerState = drawerState,
         drawerContent = {
             ModalDrawerSheet(
-                drawerContainerColor = Color.White,
-                drawerContentColor = Color.Black,
                 drawerTonalElevation = 0.dp,
             ) {
                 Column(
@@ -99,6 +98,52 @@ fun Drawer(
                         .padding(horizontal = 16.dp),
                 ) {
                     if (menuType == MenuType.Bible) {
+                        LazyVerticalGrid(
+                            modifier = Modifier.fillMaxSize(),
+                            verticalArrangement = Arrangement.spacedBy(10.dp),
+                            horizontalArrangement = Arrangement.spacedBy(10.dp),
+                            columns = GridCells.Fixed(2)
+                        ) {
+                            header {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically,
+                                ) {
+                                    Text(
+                                        text = "Select a bible",
+                                        fontSize = 20.sp,
+                                        fontWeight = FontWeight.W500
+                                    )
+                                    IconButton(onClick = {
+                                        scope.launch {
+                                            drawerState.close();
+                                        }
+                                    }) {
+                                        Icon(Icons.Filled.Close, "Close")
+                                    }
+                                }
+                            }
+                            items(state.bibles) { b ->
+                                QuickButton(b) {
+                                    scope.launch {
+                                        drawerState.close();
+                                        state.isLoading = true;
+                                        state.setBibleName(b)
+                                        state.reload()
+                                    }
+//                                    scope.launch {
+//                                        navController.navigate(
+//                                            ChapterScreenProps(
+//                                                bookIndex = bookIndex,
+//                                                chapterIndex = 0,
+//                                            )
+//                                        )
+//                                        drawerState.close();
+//                                    }
+                                }
+                            }
+                        }
                     }
                     if (menuType == MenuType.Book) {
                         LazyVerticalGrid(
@@ -128,7 +173,7 @@ fun Drawer(
                                     }
                             }
                             items(39) { b ->
-                                QuickButton(shortName(Verse.bookNames[b])) {
+                                QuickButton(shortName(bookNames[b])) {
                                     bookIndex = b
                                     menuType = MenuType.Chapter
                                 }
@@ -148,7 +193,7 @@ fun Drawer(
                             }
                             items(27) { i ->
                                 val b = 39 + i
-                                QuickButton(shortName(Verse.bookNames[b])) {
+                                QuickButton(shortName(bookNames[b])) {
                                     bookIndex = b
                                     menuType = MenuType.Chapter
                                 }
@@ -170,7 +215,7 @@ fun Drawer(
                                     verticalAlignment = Alignment.CenterVertically,
                                 ) {
                                     Text(
-                                        text = Verse.bookNames[bookIndex],
+                                        text = bookNames[bookIndex],
                                         fontSize = 20.sp,
                                         fontWeight = FontWeight.W500
                                     )
@@ -211,20 +256,13 @@ fun Drawer(
 fun QuickButton(text: String, onClick: () -> Unit) {
     Button(
         shape = RoundedCornerShape(2.dp),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = Color(0xFFEAE9E9),
-            contentColor = Color.Black,
-        ),
         contentPadding = PaddingValues(4.dp),
-        elevation = ButtonDefaults.elevatedButtonElevation(),
         onClick = onClick
     ) {
         Text(
-            modifier = Modifier.padding(bottom = 4.dp),
             style = TextStyle(
                 fontSize = 18.sp,
                 fontWeight = FontWeight.W500,
-                color = Color(0xFF8A4242)
             ),
             text = text,
         )

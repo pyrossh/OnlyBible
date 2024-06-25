@@ -2,32 +2,36 @@ package dev.pyrossh.onlyBible
 
 import Verse
 import android.annotation.SuppressLint
+import android.graphics.Typeface
 import android.os.Parcelable
+import android.text.Html
+import android.text.style.BulletSpan
+import android.text.style.ForegroundColorSpan
+import android.text.style.StyleSpan
 import androidx.compose.animation.AnimatedContentTransitionScope
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.text.selection.DisableSelection
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FaceRetouchingNatural
 import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.Share
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -44,6 +48,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
@@ -77,11 +82,11 @@ enum class Dir : Parcelable {
     }
 }
 
-
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("MutableCollectionMutableState")
 @Composable
 fun ChapterScreen(
+    bookNames: List<String>,
     verses: List<Verse>,
     bookIndex: Int,
     chapterIndex: Int,
@@ -101,99 +106,42 @@ fun ChapterScreen(
     }
     val chapterVerses =
         verses.filter { it.bookIndex == bookIndex && it.chapterIndex == chapterIndex }
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
-    ) { innerPadding ->
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(12.dp),
+    LoadingBox(isLoading = state.isLoading) {
+        Scaffold(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .padding(horizontal = 16.dp)
-                .pointerInput(Unit) {
-                    detectHorizontalDragGestures(onDragEnd = {
-//                            println("END " + dragAmount);
-                        if (dragAmount < 0) {
-                            val pair = Verse.getForwardPair(bookIndex, chapterIndex)
-                            navController.navigate(
-                                ChapterScreenProps(
-                                    bookIndex = pair.first,
-                                    chapterIndex = pair.second,
-                                )
-                            )
-                        } else if (dragAmount > 0) {
-                            val pair = Verse.getBackwardPair(bookIndex, chapterIndex)
-                            if (navController.previousBackStackEntry != null) {
-                                val previousBook =
-                                    navController.previousBackStackEntry?.arguments?.getInt("book")
-                                        ?: 0
-                                val previousChapter =
-                                    navController.previousBackStackEntry?.arguments?.getInt("chapter")
-                                        ?: 0
-//                                    println("currentBackStackEntry ${previousBook} ${previousChapter} || ${pair.first} ${pair.second}")
-                                if (previousBook == pair.first && previousChapter == pair.second) {
-                                    println("Popped")
-                                    navController.popBackStack()
-                                } else {
-                                    navController.navigate(
-                                        ChapterScreenProps(
-                                            bookIndex = pair.first,
-                                            chapterIndex = pair.second,
-                                            dir = Dir.Right.name,
-                                        )
+                .fillMaxSize(),
+            topBar = {
+                TopAppBar(
+                    modifier = Modifier
+                        .height(72.dp),
+//                    .padding(vertical = 8.dp),
+                    title = {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxSize(),
+                            horizontalArrangement = Arrangement.Start,
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Row(
+                                horizontalArrangement = Arrangement.Start,
+                            ) {
+                                Surface(onClick = { openDrawer(MenuType.Book, bookIndex) }) {
+                                    Text(
+                                        text = bookNames[bookIndex],
+                                        style = MaterialTheme.typography.headlineLarge,
+                                    )
+
+                                }
+                                Surface(onClick = { openDrawer(MenuType.Chapter, bookIndex) }) {
+                                    Text(
+                                        text = "${chapterIndex + 1}",
+                                        style = MaterialTheme.typography.headlineLarge,
                                     )
                                 }
-                            } else {
-//                                    println("navigated navigate")
-                                navController.navigate(
-                                    ChapterScreenProps(
-                                        bookIndex = pair.first,
-                                        chapterIndex = pair.second,
-                                        dir = Dir.Right.name
-                                    )
-                                )
                             }
                         }
-                    }, onHorizontalDrag = { change, da ->
-                        dragAmount = da
-                        change.consume()
-                    })
-                }) {
-            stickyHeader {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(Color.White),
-                    horizontalArrangement = Arrangement.Start,
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Row(
-                        horizontalArrangement = Arrangement.Start,
-                    ) {
-                        Surface(onClick = { openDrawer(MenuType.Book, bookIndex) }) {
-                            Text(
-                                Verse.bookNames[bookIndex], style = TextStyle(
-                                    fontSize = 22.sp,
-                                    fontWeight = FontWeight.W500,
-                                    color = Color.Black,
-                                )
-                            )
-
-                        }
-                        Surface(onClick = { openDrawer(MenuType.Chapter, bookIndex) }) {
-                            Text(
-                                "${chapterIndex + 1}", style = TextStyle(
-                                    fontSize = 22.sp,
-                                    fontWeight = FontWeight.W500,
-                                    color = Color.Black,
-                                )
-                            )
-                        }
-                    }
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.End,
-                    ) {
+                    },
+                    actions = {
                         if (selectedVerses.isNotEmpty()) {
                             IconButton(onClick = {
                                 scope.launch {
@@ -212,6 +160,12 @@ fun ChapterScreen(
                                 Icon(Icons.Outlined.Share, "Share")
                             }
                         }
+                        Surface(onClick = { openDrawer(MenuType.Bible, bookIndex) }) {
+                            Text(
+                                text = state.getBibleName(),
+                                style = MaterialTheme.typography.headlineSmall,
+                            )
+                        }
                         Box(modifier = Modifier.wrapContentSize(Alignment.TopEnd)) {
                             IconButton(onClick = {
                                 state.showSheet()
@@ -219,12 +173,107 @@ fun ChapterScreen(
                                 Icon(Icons.Outlined.MoreVert, "More")
                             }
                         }
-                    }
-                }
-            }
-            items(chapterVerses) { v ->
-                if (v.heading.isNotEmpty()) {
-                    DisableSelection {
+                    },
+                )
+            },
+//        bottomBar = {
+//            if (selectedVerses.isNotEmpty()) {
+//                BottomAppBar(
+//                    actions = {
+//                        IconButton(onClick = { /* do something */ }) {
+//                            Icon(
+//                                Icons.Filled.Circle,
+//                                contentDescription = "",
+//                                modifier = Modifier.size(64.dp),
+//                                tint = Color.Yellow
+//                            )
+//                        }
+//                        IconButton(onClick = { /* do something */ }) {
+//                            Icon(
+//                                Icons.Filled.Circle,
+//                                contentDescription = "",
+//                                modifier = Modifier.size(64.dp),
+//                                tint = Color.Blue,
+//                            )
+//                        }
+//                        IconButton(onClick = { /* do something */ }) {
+//                            Icon(
+//                                Icons.Filled.Circle,
+//                                contentDescription = "",
+//                                modifier = Modifier.size(64.dp),
+//                                tint = Color.Cyan,
+//                            )
+//                        }
+//                        IconButton(onClick = { /* do something */ }) {
+//                            Icon(
+//                                Icons.Filled.Circle,
+//                                contentDescription = "",
+//                                modifier = Modifier.size(64.dp),
+//                                tint = Color.Magenta,
+//                            )
+//                        }
+//                    },
+//                )
+//            }
+//        },
+        ) { innerPadding ->
+            LazyColumn(
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
+                    .padding(horizontal = 16.dp)
+                    .pointerInput(Unit) {
+                        detectHorizontalDragGestures(onDragEnd = {
+//                            println("END " + dragAmount);
+                            if (dragAmount < 0) {
+                                val pair = Verse.getForwardPair(bookIndex, chapterIndex)
+                                navController.navigate(
+                                    ChapterScreenProps(
+                                        bookIndex = pair.first,
+                                        chapterIndex = pair.second,
+                                    )
+                                )
+                            } else if (dragAmount > 0) {
+                                val pair = Verse.getBackwardPair(bookIndex, chapterIndex)
+                                if (navController.previousBackStackEntry != null) {
+                                    val previousBook =
+                                        navController.previousBackStackEntry?.arguments?.getInt("book")
+                                            ?: 0
+                                    val previousChapter =
+                                        navController.previousBackStackEntry?.arguments?.getInt("chapter")
+                                            ?: 0
+//                                    println("currentBackStackEntry ${previousBook} ${previousChapter} || ${pair.first} ${pair.second}")
+                                    if (previousBook == pair.first && previousChapter == pair.second) {
+                                        println("Popped")
+                                        navController.popBackStack()
+                                    } else {
+                                        navController.navigate(
+                                            ChapterScreenProps(
+                                                bookIndex = pair.first,
+                                                chapterIndex = pair.second,
+                                                dir = Dir.Right.name,
+                                            )
+                                        )
+                                    }
+                                } else {
+//                                    println("navigated navigate")
+                                    navController.navigate(
+                                        ChapterScreenProps(
+                                            bookIndex = pair.first,
+                                            chapterIndex = pair.second,
+                                            dir = Dir.Right.name
+                                        )
+                                    )
+                                }
+                            }
+                        }, onHorizontalDrag = { change, da ->
+                            dragAmount = da
+                            change.consume()
+                        })
+                    }) {
+                items(chapterVerses) { v ->
+                    if (v.heading.isNotEmpty()) {
                         Text(
                             modifier = Modifier.padding(
                                 top = if (v.verseIndex != 0) 12.dp else 0.dp, bottom = 12.dp
@@ -233,45 +282,82 @@ fun ChapterScreen(
                                 fontFamily = fontFamily,
                                 fontSize = (16 + state.fontSizeDelta).sp,
                                 fontWeight = FontWeight.W700,
-                                color = Color.Black,
+                                color = MaterialTheme.typography.headlineMedium.color,
                             ),
-                            text = v.heading.replace("<br>", "\n\n"),
+                            text = v.heading
                         )
                     }
+                    val isSelected = selectedVerses.contains(v);
+                    val background =
+                        if (isSelected) Color(0xFFEEEEEE) else MaterialTheme.colorScheme.background
+                    Text(modifier = Modifier
+                        .clickable {
+                            selectedVerses = if (selectedVerses.contains(v)) {
+                                selectedVerses - v
+                            } else {
+                                selectedVerses + v
+                            }
+                        },
+                        style = TextStyle(
+                            background = background,
+                            fontFamily = fontFamily,
+                            color = Color.Black,
+                            fontWeight = boldWeight,
+                            fontSize = (16 + state.fontSizeDelta).sp,
+                            lineHeight = (22 + state.fontSizeDelta).sp,
+                            letterSpacing = 0.sp,
+                        ),
+                        text = buildAnnotatedString {
+                            val spanned = Html.fromHtml(v.text, Html.FROM_HTML_MODE_COMPACT)
+                            val spans = spanned.getSpans(0, spanned.length, Any::class.java)
+                            val verseNo = "${v.verseIndex + 1} "
+                            withStyle(
+                                style = SpanStyle(
+                                    fontSize = (13 + state.fontSizeDelta).sp,
+                                    color = Color(0xFF9A1111),
+                                    fontWeight = FontWeight.W700,
+                                )
+                            ) {
+                                append(verseNo)
+                            }
+                            append(spanned.toString())
+                            spans
+                                .filter { it !is BulletSpan }
+                                .forEach { span ->
+                                    val start = spanned.getSpanStart(span)
+                                    val end = spanned.getSpanEnd(span)
+                                    when (span) {
+                                        is ForegroundColorSpan -> span.spanStyle()
+                                        is StyleSpan -> span.spanStyle()
+                                        else -> {
+                                            null
+                                        }
+                                    }?.let { spanStyle ->
+                                        addStyle(
+                                            spanStyle,
+                                            start + verseNo.length - 1,
+                                            end + verseNo.length
+                                        )
+                                    }
+                                }
+                        }
+                    )
                 }
-                val isSelected = selectedVerses.contains(v);
-                val background =
-                    if (isSelected) Color(0xFFEEEEEE) else MaterialTheme.colorScheme.background
-                Text(modifier = Modifier
-                    .clickable {
-                        selectedVerses = if (selectedVerses.contains(v)) {
-                            selectedVerses - v
-                        } else {
-                            selectedVerses + v
-                        }
-                    },
-                    style = TextStyle(
-                        background = background,
-                        fontFamily = fontFamily,
-                        color = Color.Black,
-                        fontWeight = boldWeight,
-                        fontSize = (16 + state.fontSizeDelta).sp,
-                        lineHeight = (22 + state.fontSizeDelta).sp,
-                        letterSpacing = 0.sp,
-                    ),
-                    text = buildAnnotatedString {
-                        withStyle(
-                            style = SpanStyle(
-                                fontSize = (13 + state.fontSizeDelta).sp,
-                                color = Color(0xFF9A1111),
-                                fontWeight = FontWeight.W700,
-                            )
-                        ) {
-                            append("${v.verseIndex + 1} ")
-                        }
-                        append(v.text)
-                    })
             }
         }
     }
+}
+
+internal fun ForegroundColorSpan.spanStyle(): SpanStyle =
+    SpanStyle(color = Color(foregroundColor))
+
+internal fun StyleSpan.spanStyle(): SpanStyle? = when (style) {
+    Typeface.BOLD -> SpanStyle(fontWeight = FontWeight.Bold)
+    Typeface.ITALIC -> SpanStyle(fontStyle = FontStyle.Italic)
+    Typeface.BOLD_ITALIC -> SpanStyle(
+        fontWeight = FontWeight.Bold,
+        fontStyle = FontStyle.Italic,
+    )
+
+    else -> null
 }

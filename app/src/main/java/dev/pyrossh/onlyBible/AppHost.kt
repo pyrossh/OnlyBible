@@ -13,7 +13,8 @@ import androidx.navigation.toRoute
 fun AppHost(verses: List<Verse>) {
     val navController = rememberNavController()
     val state = LocalState.current!!
-    Drawer(navController) { openDrawer ->
+    val bookNames = verses.distinctBy { it.bookName }.map { it.bookName }
+    Drawer(bookNames, navController) { openDrawer ->
         NavHost(
             navController = navController,
             startDestination = ChapterScreenProps(state.getBookIndex(), state.getChapterIndex())
@@ -49,6 +50,7 @@ fun AppHost(verses: List<Verse>) {
                 state.setBookIndex(props.bookIndex)
                 state.setChapterIndex(props.chapterIndex)
                 ChapterScreen(
+                    bookNames = bookNames,
                     verses = verses,
                     bookIndex = props.bookIndex,
                     chapterIndex = props.chapterIndex,
