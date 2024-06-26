@@ -1,38 +1,17 @@
 package dev.pyrossh.onlyBible
 
+import FontType
 import android.content.SharedPreferences
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.staticCompositionLocalOf
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.GenericFontFamily
 import androidx.lifecycle.ViewModel
+import dev.pyrossh.onlyBible.ui.theme.ThemeType
 import java.util.Locale
 
 val LocalState = staticCompositionLocalOf<State?> { null }
-
-enum class FontType {
-    Sans,
-    Serif,
-    Mono;
-
-    fun family(): GenericFontFamily {
-        return when (this) {
-            Sans -> FontFamily.SansSerif
-            Serif -> FontFamily.Serif
-            Mono -> FontFamily.Monospace
-        }
-    }
-}
-
-enum class ThemeType {
-    Light,
-    Warm,
-    Dark,
-    Auto
-}
 
 class State(p: SharedPreferences, val bibles: List<String>, val reload: () -> Unit) : ViewModel() {
     private val prefs: SharedPreferences = p
@@ -45,16 +24,20 @@ class State(p: SharedPreferences, val bibles: List<String>, val reload: () -> Un
     )
     var fontSizeDelta by mutableIntStateOf(prefs.getInt("fontSizeDelta", 0))
     var boldEnabled by mutableStateOf(prefs.getBoolean("bold", false))
-    var themeType by mutableStateOf(prefs.getString("themeType", ThemeType.Auto.name))
+    var themeType by mutableStateOf(
+        ThemeType.valueOf(
+            prefs.getString(
+                "themeType",
+                ThemeType.Auto.name
+            ) ?: ThemeType.Auto.name
+        )
+    )
 
-    fun getThemeType(): Int {
-        return prefs.getInt("themeType", 0)
-    }
-
-    fun setThemeType(v: ThemeType) {
+    fun updateTheme(v: ThemeType) {
         val editor = prefs.edit()
         editor.putString("themeType", v.name)
         editor.apply()
+        reload()
     }
 
     fun getBibleName(): String {
@@ -66,6 +49,7 @@ class State(p: SharedPreferences, val bibles: List<String>, val reload: () -> Un
         val editor = prefs.edit()
         editor.putString("bibleName", v)
         editor.apply()
+        reload()
     }
 
     fun getBookIndex(): Int {
@@ -116,5 +100,4 @@ class State(p: SharedPreferences, val bibles: List<String>, val reload: () -> Un
         editor.putString("fontType", v.name)
         editor.apply()
     }
-
 }

@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 enum class MenuType {
@@ -127,20 +128,12 @@ fun Drawer(
                             items(state.bibles) { b ->
                                 QuickButton(b) {
                                     scope.launch {
-                                        drawerState.close();
-                                        state.isLoading = true;
+                                        drawerState.close()
+                                        state.isLoading = true
+                                        delay(500L)
+                                    }.invokeOnCompletion {
                                         state.setBibleName(b)
-                                        state.reload()
                                     }
-//                                    scope.launch {
-//                                        navController.navigate(
-//                                            ChapterScreenProps(
-//                                                bookIndex = bookIndex,
-//                                                chapterIndex = 0,
-//                                            )
-//                                        )
-//                                        drawerState.close();
-//                                    }
                                 }
                             }
                         }
@@ -153,24 +146,24 @@ fun Drawer(
                             columns = GridCells.Fixed(5)
                         ) {
                             header {
-                                    Row(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        horizontalArrangement = Arrangement.SpaceBetween,
-                                        verticalAlignment = Alignment.CenterVertically,
-                                    ) {
-                                        Text(
-                                            text = "Old Testament",
-                                            fontSize = 18.sp,
-                                            fontWeight = FontWeight.W500
-                                        )
-                                        IconButton(onClick = {
-                                            scope.launch {
-                                                drawerState.close();
-                                            }
-                                        }) {
-                                            Icon(Icons.Filled.Close, "Close")
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically,
+                                ) {
+                                    Text(
+                                        text = "Old Testament",
+                                        fontSize = 18.sp,
+                                        fontWeight = FontWeight.W500
+                                    )
+                                    IconButton(onClick = {
+                                        scope.launch {
+                                            drawerState.close();
                                         }
+                                    }) {
+                                        Icon(Icons.Filled.Close, "Close")
                                     }
+                                }
                             }
                             items(39) { b ->
                                 QuickButton(shortName(bookNames[b])) {

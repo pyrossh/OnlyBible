@@ -1,5 +1,6 @@
 package dev.pyrossh.onlyBible
 
+import FontType
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -29,12 +30,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dev.pyrossh.onlyBible.ui.theme.ThemeType
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
@@ -44,11 +45,14 @@ fun TextSettingsBottomSheet() {
     val sheetState = rememberModalBottomSheetState()
     val state = LocalState.current!!
     return ModalBottomSheet(
+        sheetState = sheetState,
         onDismissRequest = {
             scope.launch {
+                sheetState.hide()
+            }.invokeOnCompletion {
                 state.closeSheet()
             }
-        }, sheetState = sheetState
+        },
     ) {
         Column(
             modifier = Modifier
@@ -67,6 +71,8 @@ fun TextSettingsBottomSheet() {
                 Row(horizontalArrangement = Arrangement.End) {
                     IconButton(onClick = {
                         scope.launch {
+                            sheetState.hide()
+                        }.invokeOnCompletion {
                             state.closeSheet()
                         }
                     }) {
@@ -171,7 +177,8 @@ fun TextSettingsBottomSheet() {
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 FontType.entries.map {
-                    Surface(shape = RoundedCornerShape(8.dp),
+                    Surface(
+                        shape = RoundedCornerShape(8.dp),
                         border = if (state.fontType == it) BorderStroke(
                             2.dp, MaterialTheme.colorScheme.primary
                         ) else null,
@@ -209,79 +216,31 @@ fun TextSettingsBottomSheet() {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                // #72abbf on active
-                // #ebe0c7 on yellow
-                // #424547 on dark
-                Surface(shape = RoundedCornerShape(8.dp),
-                    border = BorderStroke(
-                        2.dp, MaterialTheme.colorScheme.primary
-                    ),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(80.dp)
-                        .padding(end = 16.dp)
-                        .weight(1f),
-                    onClick = {}) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.text_theme),
-                        contentDescription = "Light",
-                        tint = Color(0xFF424547),
+                ThemeType.entries.map { t ->
+                    Surface(
+                        shape = RoundedCornerShape(8.dp),
+                        border = if (state.themeType == t) BorderStroke(
+                            2.dp, MaterialTheme.colorScheme.primary
+                        ) else null,
                         modifier = Modifier
-                            .background(Color.White)
-                            .padding(8.dp)
-                    )
-                }
-                Surface(shape = RoundedCornerShape(8.dp),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(80.dp)
-                        .padding(end = 16.dp)
-                        .weight(1f),
-                    onClick = {}) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.text_theme),
-                        contentDescription = "Warm",
-                        tint = Color(0xFF424547),
-                        modifier = Modifier
-                            .background(Color(0xFFe5e0d1))
-                            .padding(8.dp)
-                    )
-                }
-                Surface(shape = RoundedCornerShape(8.dp),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(80.dp)
-                        .padding(end = 16.dp)
-                        .weight(1f),
-                    onClick = {}) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.text_theme),
-                        contentDescription = "Dark",
-                        tint = Color(0xFFd3d7da),
-                        modifier = Modifier
-                            .background(Color(0xFF2c2e30))
-                            .padding(8.dp)
-                    )
-                }
-                Surface(shape = RoundedCornerShape(8.dp),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(80.dp)
-                        .padding(end = 16.dp)
-                        .weight(1f),
-                    onClick = {}) {
-                    Column(
-                        modifier = Modifier.background(Color(0xFFFAFAFA)),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
+                            .fillMaxWidth()
+                            .height(80.dp)
+                            .padding(end = 16.dp)
+                            .weight(1f),
+                        onClick = {
+                            scope.launch {
+                                sheetState.hide()
+                                state.isLoading = true
+                                delay(500L)
+                            }.invokeOnCompletion {
+                                state.closeSheet()
+                                state.updateTheme(t)
+                            }
+                        }
                     ) {
-                        Text(
-                            text = "Auto", style = TextStyle(
-                                fontSize = 18.sp,
-                                fontWeight = FontWeight.Medium,
-                            )
-                        )
+                        t.Icon()
                     }
+
                 }
             }
         }

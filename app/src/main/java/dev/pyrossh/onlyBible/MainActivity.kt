@@ -19,26 +19,16 @@ class MainActivity : ComponentActivity() {
         val prefs = applicationContext.getSharedPreferences("settings", Context.MODE_PRIVATE)
         val bibles =
             assets.list("bibles")?.map { it.replace("bibles/", "").replace(".txt", "") } ?: listOf()
-        val reload = {
-            recreate()
-//            finish();
-//            overrideActivityTransition(0, 0, 0);
-//            startActivity(intent);
-//            overrideActivityTransition(0, 0, 0);
-//            finish();
-//            startActivity(intent);
-        }
-        val state = State(prefs, bibles, reload)
+        val state = State(prefs, bibles) { recreate() }
         val bibleName = state.getBibleName()
         val fileName = bibles.find { it.contains(bibleName) } ?: "English"
         val verses = Verse.parseFromBibleTxt(
             bibleName,
             assets.open("bibles/${fileName}.txt").bufferedReader()
         )
-
         setContent {
-            AppTheme {
-                CompositionLocalProvider(LocalState provides state) {
+            CompositionLocalProvider(LocalState provides state) {
+                AppTheme {
                     AppHost(
                         verses = verses
                     )

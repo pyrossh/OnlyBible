@@ -16,7 +16,7 @@ import androidx.compose.ui.draw.alpha
 @Composable
 fun LoadingBox(
     modifier: Modifier = Modifier,
-    isLoading: Boolean = false,
+    isLoading: Boolean,
     content: @Composable() () -> Unit
 ) {
     Box(

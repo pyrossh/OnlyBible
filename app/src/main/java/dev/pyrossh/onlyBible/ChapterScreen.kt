@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
@@ -112,8 +111,8 @@ fun ChapterScreen(
                 .fillMaxSize(),
             topBar = {
                 TopAppBar(
-                    modifier = Modifier
-                        .height(72.dp),
+//                    modifier = Modifier
+//                        .height(90.dp),
 //                    .padding(vertical = 8.dp),
                     title = {
                         Row(
@@ -289,7 +288,7 @@ fun ChapterScreen(
                     }
                     val isSelected = selectedVerses.contains(v);
                     val background =
-                        if (isSelected) Color(0xFFEEEEEE) else MaterialTheme.colorScheme.background
+                        if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.background
                     Text(modifier = Modifier
                         .clickable {
                             selectedVerses = if (selectedVerses.contains(v)) {
@@ -301,7 +300,7 @@ fun ChapterScreen(
                         style = TextStyle(
                             background = background,
                             fontFamily = fontFamily,
-                            color = Color.Black,
+                            color = MaterialTheme.typography.bodyMedium.color,
                             fontWeight = boldWeight,
                             fontSize = (16 + state.fontSizeDelta).sp,
                             lineHeight = (22 + state.fontSizeDelta).sp,
