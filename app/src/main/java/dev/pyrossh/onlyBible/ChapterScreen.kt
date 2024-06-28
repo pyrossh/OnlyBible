@@ -11,16 +11,17 @@ import android.text.style.StyleSpan
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.FaceRetouchingNatural
+import androidx.compose.material.icons.outlined.FaceRetouchingNatural
 import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -28,8 +29,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -94,6 +95,7 @@ fun ChapterScreen(
 ) {
     val context = LocalContext.current
     val state = LocalState.current!!
+    val darkTheme = isDarkMode()
     val fontFamily = state.fontType.family()
     val boldWeight = if (state.boldEnabled) FontWeight.W700 else FontWeight.W400
     val scope = rememberCoroutineScope()
@@ -103,6 +105,7 @@ fun ChapterScreen(
     var dragAmount by remember {
         mutableFloatStateOf(0.0f)
     }
+    val buttonInteractionSource = remember { MutableInteractionSource() }
     val chapterVerses =
         verses.filter { it.bookIndex == bookIndex && it.chapterIndex == chapterIndex }
     LoadingBox(isLoading = state.isLoading) {
@@ -111,32 +114,36 @@ fun ChapterScreen(
                 .fillMaxSize(),
             topBar = {
                 TopAppBar(
-//                    modifier = Modifier
-//                        .height(90.dp),
-//                    .padding(vertical = 8.dp),
+                    modifier = Modifier
+                        .height(72.dp),
                     title = {
                         Row(
                             modifier = Modifier
-                                .fillMaxSize(),
+                                .fillMaxWidth(),
                             horizontalArrangement = Arrangement.Start,
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
-                            Row(
-                                horizontalArrangement = Arrangement.Start,
-                            ) {
-                                Surface(onClick = { openDrawer(MenuType.Book, bookIndex) }) {
-                                    Text(
-                                        text = bookNames[bookIndex],
-                                        style = MaterialTheme.typography.headlineLarge,
+                            Text(
+                                modifier = Modifier
+//                                    .padding(end = 16.dp)
+                                    .clickable {
+                                        openDrawer(MenuType.Book, bookIndex)
+                                    },
+                                text = bookNames[bookIndex],
+                                style = TextStyle(
+                                    fontSize = 22.sp,
+                                    fontWeight = FontWeight.W500,
+                                    color = MaterialTheme.colorScheme.primary,
+                                )
+                            )
+                            TextButton(onClick = { openDrawer(MenuType.Chapter, bookIndex) }) {
+                                Text(
+                                    text = "${chapterIndex + 1}",
+                                    style = TextStyle(
+                                        fontSize = 22.sp,
+                                        fontWeight = FontWeight.W500,
                                     )
-
-                                }
-                                Surface(onClick = { openDrawer(MenuType.Chapter, bookIndex) }) {
-                                    Text(
-                                        text = "${chapterIndex + 1}",
-                                        style = MaterialTheme.typography.headlineLarge,
-                                    )
-                                }
+                                )
                             }
                         }
                     },
@@ -150,27 +157,34 @@ fun ChapterScreen(
                                     selectedVerses = listOf()
                                 }
                             }) {
-                                Icon(Icons.Filled.FaceRetouchingNatural, "Share")
+                                Icon(
+                                    imageVector = Icons.Outlined.FaceRetouchingNatural,
+                                    contentDescription = "Audio",
+                                )
                             }
                             IconButton(onClick = {
                                 shareVerses(context, selectedVerses)
                                 selectedVerses = listOf()
                             }) {
-                                Icon(Icons.Outlined.Share, "Share")
+                                Icon(
+                                    imageVector = Icons.Outlined.Share,
+                                    contentDescription = "Share",
+                                )
                             }
                         }
-                        Surface(onClick = { openDrawer(MenuType.Bible, bookIndex) }) {
+                        TextButton(onClick = { openDrawer(MenuType.Bible, bookIndex) }) {
                             Text(
-                                text = state.getBibleName(),
-                                style = MaterialTheme.typography.headlineSmall,
+                                text = state.getBibleName().substring(0, 2).uppercase(),
+                                style = TextStyle(
+                                    fontSize = 18.sp,
+                                    fontWeight = FontWeight.W500,
+                                ),
                             )
                         }
-                        Box(modifier = Modifier.wrapContentSize(Alignment.TopEnd)) {
-                            IconButton(onClick = {
-                                state.showSheet()
-                            }) {
-                                Icon(Icons.Outlined.MoreVert, "More")
-                            }
+                        IconButton(onClick = {
+                            state.showSheet()
+                        }) {
+                            Icon(Icons.Outlined.MoreVert, "More")
                         }
                     },
                 )
@@ -287,23 +301,31 @@ fun ChapterScreen(
                         )
                     }
                     val isSelected = selectedVerses.contains(v);
-                    val background =
-                        if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.background
-                    Text(modifier = Modifier
-                        .clickable {
-                            selectedVerses = if (selectedVerses.contains(v)) {
-                                selectedVerses - v
-                            } else {
-                                selectedVerses + v
-                            }
-                        },
+                    Text(
+                        modifier = Modifier
+                            .clickable(
+                                interactionSource = buttonInteractionSource,
+                                indication = null
+                            ) {
+                                selectedVerses = if (selectedVerses.contains(v)) {
+                                    selectedVerses - v
+                                } else {
+                                    selectedVerses + v
+                                }
+                            },
                         style = TextStyle(
-                            background = background,
+                            background = if (isSelected)
+                                MaterialTheme.colorScheme.outline
+                            else
+                                Color.Unspecified,
                             fontFamily = fontFamily,
-                            color = MaterialTheme.typography.bodyMedium.color,
+                            color = if (darkTheme)
+                                Color(0xFFBCBCBC)
+                            else
+                                Color(0xFF000104),
                             fontWeight = boldWeight,
-                            fontSize = (16 + state.fontSizeDelta).sp,
-                            lineHeight = (22 + state.fontSizeDelta).sp,
+                            fontSize = (17 + state.fontSizeDelta).sp,
+                            lineHeight = (23 + state.fontSizeDelta).sp,
                             letterSpacing = 0.sp,
                         ),
                         text = buildAnnotatedString {
@@ -313,7 +335,8 @@ fun ChapterScreen(
                             withStyle(
                                 style = SpanStyle(
                                     fontSize = (13 + state.fontSizeDelta).sp,
-                                    color = Color(0xFF9A1111),
+                                    color = if (darkTheme) Color(0xFFBBBBBB)
+                                    else Color(0xFFA20101),
                                     fontWeight = FontWeight.W700,
                                 )
                             ) {
@@ -326,8 +349,21 @@ fun ChapterScreen(
                                     val start = spanned.getSpanStart(span)
                                     val end = spanned.getSpanEnd(span)
                                     when (span) {
-                                        is ForegroundColorSpan -> span.spanStyle()
-                                        is StyleSpan -> span.spanStyle()
+                                        is ForegroundColorSpan ->
+                                            if (darkTheme) SpanStyle(color = Color(0xFFFF636B))
+                                            else SpanStyle(color = Color(0xFFFF0000))
+
+                                        is StyleSpan -> when (span.style) {
+                                            Typeface.BOLD -> SpanStyle(fontWeight = FontWeight.Bold)
+                                            Typeface.ITALIC -> SpanStyle(fontStyle = FontStyle.Italic)
+                                            Typeface.BOLD_ITALIC -> SpanStyle(
+                                                fontWeight = FontWeight.Bold,
+                                                fontStyle = FontStyle.Italic,
+                                            )
+
+                                            else -> null
+                                        }
+
                                         else -> {
                                             null
                                         }
@@ -345,18 +381,4 @@ fun ChapterScreen(
             }
         }
     }
-}
-
-internal fun ForegroundColorSpan.spanStyle(): SpanStyle =
-    SpanStyle(color = Color(foregroundColor))
-
-internal fun StyleSpan.spanStyle(): SpanStyle? = when (style) {
-    Typeface.BOLD -> SpanStyle(fontWeight = FontWeight.Bold)
-    Typeface.ITALIC -> SpanStyle(fontStyle = FontStyle.Italic)
-    Typeface.BOLD_ITALIC -> SpanStyle(
-        fontWeight = FontWeight.Bold,
-        fontStyle = FontStyle.Italic,
-    )
-
-    else -> null
 }

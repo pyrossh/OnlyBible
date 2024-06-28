@@ -8,7 +8,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.CompositionLocalProvider
-import dev.pyrossh.onlyBible.ui.theme.AppTheme
 
 class MainActivity : ComponentActivity() {
 

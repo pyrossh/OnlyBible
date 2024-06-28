@@ -1,6 +1,5 @@
 package dev.pyrossh.onlyBible
 
-import FontType
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -34,7 +33,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import dev.pyrossh.onlyBible.ui.theme.ThemeType
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -45,6 +43,7 @@ fun TextSettingsBottomSheet() {
     val sheetState = rememberModalBottomSheetState()
     val state = LocalState.current!!
     return ModalBottomSheet(
+        tonalElevation = 2.dp,
         sheetState = sheetState,
         onDismissRequest = {
             scope.launch {
@@ -66,7 +65,11 @@ fun TextSettingsBottomSheet() {
             ) {
                 Text(
                     text = "Text Settings",
-                    style = MaterialTheme.typography.titleLarge,
+                    style = TextStyle(
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.W600,
+                        color = MaterialTheme.colorScheme.onBackground,
+                    )
                 )
                 Row(horizontalArrangement = Arrangement.End) {
                     IconButton(onClick = {
@@ -198,7 +201,8 @@ fun TextSettingsBottomSheet() {
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Text(
-                                text = it.name, style = TextStyle(
+                                text = it.name,
+                                style = TextStyle(
                                     fontFamily = it.family(),
                                     fontSize = 18.sp,
                                     fontWeight = FontWeight.W600,
@@ -224,7 +228,7 @@ fun TextSettingsBottomSheet() {
                         ) else null,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(80.dp)
+                            .height(60.dp)
                             .padding(end = 16.dp)
                             .weight(1f),
                         onClick = {
@@ -238,7 +242,7 @@ fun TextSettingsBottomSheet() {
                             }
                         }
                     ) {
-                        t.Icon()
+                        t.ThemeIcon(state.themeType)
                     }
 
                 }

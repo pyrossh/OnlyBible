@@ -1,14 +1,15 @@
 package dev.pyrossh.onlyBible
 
-import FontType
 import android.content.SharedPreferences
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.lifecycle.ViewModel
-import dev.pyrossh.onlyBible.ui.theme.ThemeType
 import java.util.Locale
 
 val LocalState = staticCompositionLocalOf<State?> { null }
@@ -100,4 +101,10 @@ class State(p: SharedPreferences, val bibles: List<String>, val reload: () -> Un
         editor.putString("fontType", v.name)
         editor.apply()
     }
+}
+
+@Composable
+@ReadOnlyComposable
+fun isDarkMode(): Boolean {
+    return LocalState.current!!.themeType == ThemeType.Dark || (LocalState.current!!.themeType == ThemeType.Auto && isSystemInDarkTheme())
 }
