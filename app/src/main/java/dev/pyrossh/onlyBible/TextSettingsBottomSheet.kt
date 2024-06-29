@@ -41,7 +41,7 @@ import kotlinx.coroutines.launch
 fun TextSettingsBottomSheet() {
     val scope = rememberCoroutineScope()
     val sheetState = rememberModalBottomSheetState()
-    val state = LocalState.current!!
+    val state = LocalSettings.current!!
     return ModalBottomSheet(
         tonalElevation = 2.dp,
         sheetState = sheetState,

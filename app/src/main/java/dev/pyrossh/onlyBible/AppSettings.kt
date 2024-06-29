@@ -12,7 +12,7 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.lifecycle.ViewModel
 import java.util.Locale
 
-val LocalState = staticCompositionLocalOf<State?> { null }
+val LocalSettings = staticCompositionLocalOf<State?> { null }
 
 class State(p: SharedPreferences, val bibles: List<String>, val reload: () -> Unit) : ViewModel() {
     private val prefs: SharedPreferences = p
@@ -106,5 +106,5 @@ class State(p: SharedPreferences, val bibles: List<String>, val reload: () -> Un
 @Composable
 @ReadOnlyComposable
 fun isDarkMode(): Boolean {
-    return LocalState.current!!.themeType == ThemeType.Dark || (LocalState.current!!.themeType == ThemeType.Auto && isSystemInDarkTheme())
+    return LocalSettings.current!!.themeType == ThemeType.Dark || (LocalSettings.current!!.themeType == ThemeType.Auto && isSystemInDarkTheme())
 }

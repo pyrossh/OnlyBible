@@ -5,7 +5,6 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -108,7 +107,7 @@ fun AppTheme(
     content: @Composable() () -> Unit
 ) {
     val context = LocalContext.current
-    val state = LocalState.current!!
+    val state = LocalSettings.current!!
     val darkTheme = isSystemInDarkTheme()
     val systemUiController = rememberSystemUiController()
     val colorScheme = when {

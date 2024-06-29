@@ -12,7 +12,7 @@ import androidx.navigation.toRoute
 @Composable
 fun AppHost(verses: List<Verse>) {
     val navController = rememberNavController()
-    val state = LocalState.current!!
+    val state = LocalSettings.current!!
     val bookNames = verses.distinctBy { it.bookName }.map { it.bookName }
     Drawer(bookNames, navController) { openDrawer ->
         NavHost(

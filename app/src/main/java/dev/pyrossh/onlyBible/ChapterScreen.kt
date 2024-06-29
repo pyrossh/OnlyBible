@@ -26,7 +26,6 @@ import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -94,7 +93,7 @@ fun ChapterScreen(
     openDrawer: (MenuType, Int) -> Job,
 ) {
     val context = LocalContext.current
-    val state = LocalState.current!!
+    val state = LocalSettings.current!!
     val darkTheme = isDarkMode()
     val fontFamily = state.fontType.family()
     val boldWeight = if (state.boldEnabled) FontWeight.W700 else FontWeight.W400
@@ -105,7 +104,6 @@ fun ChapterScreen(
     var dragAmount by remember {
         mutableFloatStateOf(0.0f)
     }
-    val buttonInteractionSource = remember { MutableInteractionSource() }
     val chapterVerses =
         verses.filter { it.bookIndex == bookIndex && it.chapterIndex == chapterIndex }
     LoadingBox(isLoading = state.isLoading) {
@@ -124,11 +122,9 @@ fun ChapterScreen(
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
                             Text(
-                                modifier = Modifier
-//                                    .padding(end = 16.dp)
-                                    .clickable {
-                                        openDrawer(MenuType.Book, bookIndex)
-                                    },
+                                modifier = Modifier.clickable {
+                                    openDrawer(MenuType.Book, bookIndex)
+                                },
                                 text = bookNames[bookIndex],
                                 style = TextStyle(
                                     fontSize = 22.sp,
@@ -149,7 +145,7 @@ fun ChapterScreen(
                     },
                     actions = {
                         if (selectedVerses.isNotEmpty()) {
-                            IconButton(onClick = {
+                            TextButton(onClick = {
                                 scope.launch {
                                     convertVersesToSpeech(scope,
                                         selectedVerses.sortedBy { it.verseIndex })
@@ -162,7 +158,7 @@ fun ChapterScreen(
                                     contentDescription = "Audio",
                                 )
                             }
-                            IconButton(onClick = {
+                            TextButton(onClick = {
                                 shareVerses(context, selectedVerses)
                                 selectedVerses = listOf()
                             }) {
@@ -181,9 +177,10 @@ fun ChapterScreen(
                                 ),
                             )
                         }
-                        IconButton(onClick = {
-                            state.showSheet()
-                        }) {
+                        TextButton(
+                            onClick = {
+                                state.showSheet()
+                            }) {
                             Icon(Icons.Outlined.MoreVert, "More")
                         }
                     },
@@ -295,12 +292,13 @@ fun ChapterScreen(
                                 fontFamily = fontFamily,
                                 fontSize = (16 + state.fontSizeDelta).sp,
                                 fontWeight = FontWeight.W700,
-                                color = MaterialTheme.typography.headlineMedium.color,
+                                color = MaterialTheme.colorScheme.primary,
                             ),
                             text = v.heading
                         )
                     }
                     val isSelected = selectedVerses.contains(v);
+                    val buttonInteractionSource = remember { MutableInteractionSource() }
                     Text(
                         modifier = Modifier
                             .clickable(

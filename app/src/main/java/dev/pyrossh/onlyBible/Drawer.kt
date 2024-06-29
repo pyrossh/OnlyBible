@@ -21,7 +21,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Text
@@ -69,7 +68,7 @@ fun Drawer(
     navController: NavController,
     content: @Composable ((MenuType, Int) -> Job) -> Unit
 ) {
-    val state = LocalState.current!!
+    val state = LocalSettings.current!!
     val scope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     var bookIndex by rememberSaveable {

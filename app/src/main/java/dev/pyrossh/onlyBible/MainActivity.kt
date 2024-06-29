@@ -26,7 +26,7 @@ class MainActivity : ComponentActivity() {
             assets.open("bibles/${fileName}.txt").bufferedReader()
         )
         setContent {
-            CompositionLocalProvider(LocalState provides state) {
+            CompositionLocalProvider(LocalSettings provides state) {
                 AppTheme {
                     AppHost(
                         verses = verses
