@@ -13,9 +13,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.FormatBold
 import androidx.compose.material.icons.filled.FormatLineSpacing
 import androidx.compose.material.icons.filled.FormatSize
+import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -33,7 +35,9 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import kotlinx.coroutines.delay
+import dev.pyrossh.onlyBible.ThemeType.Auto
+import dev.pyrossh.onlyBible.ThemeType.Dark
+import dev.pyrossh.onlyBible.ThemeType.Light
 import kotlinx.coroutines.launch
 
 @Composable
@@ -41,7 +45,10 @@ import kotlinx.coroutines.launch
 fun TextSettingsBottomSheet() {
     val scope = rememberCoroutineScope()
     val sheetState = rememberModalBottomSheetState()
-    val state = LocalSettings.current!!
+    val settings = LocalSettings.current!!
+    val fontSizeDelta = 0
+    val (fontType, setFontType) = rememberFontType()
+    val (themeType, setThemeType) = rememberThemeType()
     return ModalBottomSheet(
         tonalElevation = 2.dp,
         sheetState = sheetState,
@@ -49,7 +56,7 @@ fun TextSettingsBottomSheet() {
             scope.launch {
                 sheetState.hide()
             }.invokeOnCompletion {
-                state.closeSheet()
+                settings.closeSheet()
             }
         },
     ) {
@@ -76,7 +83,7 @@ fun TextSettingsBottomSheet() {
                         scope.launch {
                             sheetState.hide()
                         }.invokeOnCompletion {
-                            state.closeSheet()
+                            settings.closeSheet()
                         }
                     }) {
                         Icon(Icons.Filled.Close, "Close")
@@ -98,7 +105,7 @@ fun TextSettingsBottomSheet() {
                         .padding(end = 16.dp)
                         .weight(1f),
                     onClick = {
-                        state.updateFontSize(state.fontSizeDelta - 1)
+//                        settings.updateFontSize(fontSizeDelta - 1)
                     }) {
                     Column(
                         modifier = Modifier.background(MaterialTheme.colorScheme.background),
@@ -119,7 +126,7 @@ fun TextSettingsBottomSheet() {
                         .padding(end = 16.dp)
                         .weight(1f),
                     onClick = {
-                        state.updateFontSize(state.fontSizeDelta + 1)
+//                        settings.updateFontSize(fontSizeDelta + 1)
                     }) {
                     Column(
                         modifier = Modifier.background(MaterialTheme.colorScheme.background),
@@ -139,7 +146,7 @@ fun TextSettingsBottomSheet() {
                         .padding(end = 16.dp)
                         .weight(1f),
                     onClick = {
-                        state.updateBoldEnabled(!state.boldEnabled)
+//                        settings.updateBoldEnabled(!settings.boldEnabled)
                     }) {
                     Column(
                         modifier = Modifier.background(MaterialTheme.colorScheme.background),
@@ -149,7 +156,7 @@ fun TextSettingsBottomSheet() {
                         Icon(
                             imageVector = Icons.Filled.FormatBold,
                             contentDescription = "Bold",
-                            tint = if (state.boldEnabled) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground,
+//                            tint = if (settings.boldEnabled) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground,
                         )
                     }
                 }
@@ -182,7 +189,7 @@ fun TextSettingsBottomSheet() {
                 FontType.entries.map {
                     Surface(
                         shape = RoundedCornerShape(8.dp),
-                        border = if (state.fontType == it) BorderStroke(
+                        border = if (fontType == it) BorderStroke(
                             2.dp, MaterialTheme.colorScheme.primary
                         ) else null,
                         modifier = Modifier
@@ -191,7 +198,7 @@ fun TextSettingsBottomSheet() {
                             .padding(end = 16.dp)
                             .weight(1f),
                         onClick = {
-                            state.updateFontType(it)
+                            setFontType(it)
                         }) {
                         Column(
                             modifier = Modifier.background(
@@ -206,7 +213,10 @@ fun TextSettingsBottomSheet() {
                                     fontFamily = it.family(),
                                     fontSize = 18.sp,
                                     fontWeight = FontWeight.W600,
-                                    color = MaterialTheme.colorScheme.onBackground,
+                                    color = if (fontType == it)
+                                        MaterialTheme.colorScheme.primary
+                                    else
+                                        MaterialTheme.colorScheme.onSurface,
                                 )
                             )
                         }
@@ -220,12 +230,20 @@ fun TextSettingsBottomSheet() {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                ThemeType.entries.map { t ->
+                ThemeType.entries.map {
                     Surface(
                         shape = RoundedCornerShape(8.dp),
-                        border = if (state.themeType == t) BorderStroke(
+                        border = if (themeType == it) BorderStroke(
                             2.dp, MaterialTheme.colorScheme.primary
                         ) else null,
+                        color = if (themeType == it)
+                            MaterialTheme.colorScheme.primary
+                        else
+                            MaterialTheme.colorScheme.onSurface,
+                        contentColor = if (themeType == it)
+                            MaterialTheme.colorScheme.primary
+                        else
+                            MaterialTheme.colorScheme.onSurface,
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(60.dp)
@@ -234,17 +252,45 @@ fun TextSettingsBottomSheet() {
                         onClick = {
                             scope.launch {
                                 sheetState.hide()
-                                state.isLoading = true
-                                delay(500L)
-                            }.invokeOnCompletion {
-                                state.closeSheet()
-                                state.updateTheme(t)
+                                settings.closeSheet()
+                                setThemeType(it)
                             }
                         }
                     ) {
-                        t.ThemeIcon(state.themeType)
-                    }
+                        when (it) {
+                            Light -> Icon(
+                                imageVector = Icons.Filled.LightMode,
+                                contentDescription = "Light",
+                                modifier = Modifier
+                                    .background(MaterialTheme.colorScheme.background)
+                                    .padding(12.dp)
+                            )
 
+                            Dark -> Icon(
+                                imageVector = Icons.Filled.DarkMode,
+                                contentDescription = "Dark",
+                                modifier = Modifier
+                                    .background(MaterialTheme.colorScheme.background)
+                                    .padding(12.dp)
+                            )
+
+                            Auto -> Column(
+                                modifier = Modifier.background(
+                                    color = MaterialTheme.colorScheme.background,
+                                ),
+                                verticalArrangement = Arrangement.Center,
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Text(
+                                    text = "Auto",
+                                    style = TextStyle(
+                                        fontSize = 18.sp,
+                                        fontWeight = FontWeight.Medium,
+                                    ),
+                                )
+                            }
+                        }
+                    }
                 }
             }
         }

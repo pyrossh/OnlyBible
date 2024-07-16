@@ -85,4 +85,6 @@ dependencies {
     implementation(libs.client.sdk)
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.androidx.datastore.preferences)
+    implementation(libs.androidx.core.splashscreen)
+    implementation(libs.compose.remember.preference)
 }

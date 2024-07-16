@@ -1,6 +1,5 @@
 package dev.pyrossh.onlyBible
 
-import Verse
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -34,13 +33,13 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 enum class MenuType {
@@ -62,12 +61,27 @@ fun LazyGridScope.header(
     item(span = { GridItemSpan(this.maxLineSpan) }, content = content)
 }
 
+val bibles = listOf(
+    "Bengali",
+    "English",
+    "Gujarati",
+    "Hindi",
+    "Kannada",
+    "Malayalam",
+    "Nepali",
+    "Oriya",
+    "Punjabi",
+    "Tamil",
+    "Telugu"
+)
+
 @Composable
-fun Drawer(
+fun AppDrawer(
     bookNames: List<String>,
     navController: NavController,
     content: @Composable ((MenuType, Int) -> Job) -> Unit
 ) {
+    val context = LocalContext.current
     val state = LocalSettings.current!!
     val scope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -125,14 +139,11 @@ fun Drawer(
                                     }
                                 }
                             }
-                            items(state.bibles) { b ->
+                            items(bibles) { b ->
                                 QuickButton(b) {
+                                    state.setBibleName(context, b)
                                     scope.launch {
                                         drawerState.close()
-                                        state.isLoading = true
-                                        delay(500L)
-                                    }.invokeOnCompletion {
-                                        state.setBibleName(b)
                                     }
                                 }
                             }
