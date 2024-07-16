@@ -38,6 +38,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -77,12 +78,11 @@ val bibles = listOf(
 
 @Composable
 fun AppDrawer(
-    bookNames: List<String>,
+    model: AppViewModel = viewModel(),
     navController: NavController,
     content: @Composable ((MenuType, Int) -> Job) -> Unit
 ) {
     val context = LocalContext.current
-    val state = LocalSettings.current!!
     val scope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     var bookIndex by rememberSaveable {
@@ -141,7 +141,7 @@ fun AppDrawer(
                             }
                             items(bibles) { b ->
                                 QuickButton(b) {
-                                    state.setBibleName(context, b)
+                                    model.setBibleName(context, b)
                                     scope.launch {
                                         drawerState.close()
                                     }
@@ -177,7 +177,7 @@ fun AppDrawer(
                                 }
                             }
                             items(39) { b ->
-                                QuickButton(shortName(bookNames[b])) {
+                                QuickButton(shortName(model.bookNames[b])) {
                                     bookIndex = b
                                     menuType = MenuType.Chapter
                                 }
@@ -197,7 +197,7 @@ fun AppDrawer(
                             }
                             items(27) { i ->
                                 val b = 39 + i
-                                QuickButton(shortName(bookNames[b])) {
+                                QuickButton(shortName(model.bookNames[b])) {
                                     bookIndex = b
                                     menuType = MenuType.Chapter
                                 }
@@ -219,7 +219,7 @@ fun AppDrawer(
                                     verticalAlignment = Alignment.CenterVertically,
                                 ) {
                                     Text(
-                                        text = bookNames[bookIndex],
+                                        text = model.bookNames[bookIndex],
                                         fontSize = 20.sp,
                                         fontWeight = FontWeight.W500
                                     )

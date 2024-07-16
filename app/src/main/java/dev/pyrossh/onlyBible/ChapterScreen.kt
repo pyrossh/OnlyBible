@@ -11,6 +11,7 @@ import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -86,19 +87,17 @@ enum class Dir : Parcelable {
 @SuppressLint("MutableCollectionMutableState")
 @Composable
 fun ChapterScreen(
-    bookNames: List<String>,
-    verses: List<Verse>,
+    model: AppViewModel,
     bookIndex: Int,
     chapterIndex: Int,
     navController: NavController,
     openDrawer: (MenuType, Int) -> Job,
 ) {
     val context = LocalContext.current
-    val state = LocalSettings.current!!
-    val darkTheme = isDarkMode()
-    val (fontType) = rememberFontType()
-    val fontSizeDelta = 0 // state.fontSizeDelta
-    val boldWeight = FontWeight.W400 //if (state.boldEnabled) FontWeight.W700 else FontWeight.W400
+    val darkTheme = model.isDarkTheme(isSystemInDarkTheme())
+    val fontType = FontType.valueOf(model.fontType)
+    val fontSizeDelta = model.fontSizeDelta
+    val boldWeight = if (model.fontBoldEnabled) FontWeight.W700 else FontWeight.W400
     val scope = rememberCoroutineScope()
     var selectedVerses by rememberSaveable {
         mutableStateOf(listOf<Verse>())
@@ -107,7 +106,7 @@ fun ChapterScreen(
         mutableFloatStateOf(0.0f)
     }
     val chapterVerses =
-        verses.filter { it.bookIndex == bookIndex && it.chapterIndex == chapterIndex }
+        model.verses.filter { it.bookIndex == bookIndex && it.chapterIndex == chapterIndex }
     val headingColor = MaterialTheme.colorScheme.onSurface // MaterialTheme.colorScheme.primary,
     Scaffold(
         modifier = Modifier
@@ -127,7 +126,7 @@ fun ChapterScreen(
                             modifier = Modifier.clickable {
                                 openDrawer(MenuType.Book, bookIndex)
                             },
-                            text = bookNames[bookIndex],
+                            text = model.bookNames[bookIndex],
                             style = TextStyle(
                                 fontSize = 22.sp,
                                 fontWeight = FontWeight.W500,
@@ -175,18 +174,23 @@ fun ChapterScreen(
                     }
                     TextButton(onClick = { openDrawer(MenuType.Bible, bookIndex) }) {
                         Text(
-                            text = state.uiState.value.bibleName.substring(0, 2).uppercase(),
+                            text = model.bibleName.substring(0, 2).uppercase(),
                             style = TextStyle(
                                 fontSize = 18.sp,
                                 fontWeight = FontWeight.W500,
+                                color = headingColor,
                             ),
                         )
                     }
                     TextButton(
                         onClick = {
-                            state.showSheet()
+                            model.showSheet()
                         }) {
-                        Icon(Icons.Outlined.MoreVert, "More")
+                        Icon(
+                            imageVector = Icons.Outlined.MoreVert,
+                            contentDescription = "More",
+                            tint = headingColor,
+                        )
                     }
                 },
             )

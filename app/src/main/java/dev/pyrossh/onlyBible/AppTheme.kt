@@ -12,6 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.GenericFontFamily
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 enum class FontType {
@@ -53,14 +54,15 @@ fun getColorScheme(context: Context, themeType: ThemeType, darkTheme: Boolean): 
 
 @Composable
 fun AppTheme(
+    model: AppViewModel = viewModel(),
     content: @Composable() () -> Unit
 ) {
     val context = LocalContext.current
     val darkTheme = isSystemInDarkTheme()
     val systemUiController = rememberSystemUiController()
-    val (themeType) = rememberThemeType()
+    val themeType = ThemeType.valueOf(model.themeType)
     val colorScheme = getColorScheme(context, themeType, darkTheme)
-    LaunchedEffect(key1 = themeType) {
+    LaunchedEffect(key1 = model.themeType) {
         systemUiController.setSystemBarsColor(
             color = colorScheme.background
         )

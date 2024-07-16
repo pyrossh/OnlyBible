@@ -35,6 +35,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.pyrossh.onlyBible.ThemeType.Auto
 import dev.pyrossh.onlyBible.ThemeType.Dark
 import dev.pyrossh.onlyBible.ThemeType.Light
@@ -42,13 +43,11 @@ import kotlinx.coroutines.launch
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun TextSettingsBottomSheet() {
+fun TextSettingsBottomSheet(model: AppViewModel = viewModel()) {
     val scope = rememberCoroutineScope()
     val sheetState = rememberModalBottomSheetState()
-    val settings = LocalSettings.current!!
-    val fontSizeDelta = 0
-    val (fontType, setFontType) = rememberFontType()
-    val (themeType, setThemeType) = rememberThemeType()
+    val themeType = ThemeType.valueOf(model.themeType)
+    val fontType = FontType.valueOf(model.fontType)
     return ModalBottomSheet(
         tonalElevation = 2.dp,
         sheetState = sheetState,
@@ -56,7 +55,7 @@ fun TextSettingsBottomSheet() {
             scope.launch {
                 sheetState.hide()
             }.invokeOnCompletion {
-                settings.closeSheet()
+                model.closeSheet()
             }
         },
     ) {
@@ -83,7 +82,7 @@ fun TextSettingsBottomSheet() {
                         scope.launch {
                             sheetState.hide()
                         }.invokeOnCompletion {
-                            settings.closeSheet()
+                            model.closeSheet()
                         }
                     }) {
                         Icon(Icons.Filled.Close, "Close")
@@ -105,7 +104,7 @@ fun TextSettingsBottomSheet() {
                         .padding(end = 16.dp)
                         .weight(1f),
                     onClick = {
-//                        settings.updateFontSize(fontSizeDelta - 1)
+                        model.fontSizeDelta -= 1
                     }) {
                     Column(
                         modifier = Modifier.background(MaterialTheme.colorScheme.background),
@@ -126,7 +125,7 @@ fun TextSettingsBottomSheet() {
                         .padding(end = 16.dp)
                         .weight(1f),
                     onClick = {
-//                        settings.updateFontSize(fontSizeDelta + 1)
+                        model.fontSizeDelta += 1
                     }) {
                     Column(
                         modifier = Modifier.background(MaterialTheme.colorScheme.background),
@@ -146,7 +145,7 @@ fun TextSettingsBottomSheet() {
                         .padding(end = 16.dp)
                         .weight(1f),
                     onClick = {
-//                        settings.updateBoldEnabled(!settings.boldEnabled)
+                        model.fontBoldEnabled = !model.fontBoldEnabled
                     }) {
                     Column(
                         modifier = Modifier.background(MaterialTheme.colorScheme.background),
@@ -198,7 +197,7 @@ fun TextSettingsBottomSheet() {
                             .padding(end = 16.dp)
                             .weight(1f),
                         onClick = {
-                            setFontType(it)
+                            model.fontType = it.name
                         }) {
                         Column(
                             modifier = Modifier.background(
@@ -252,8 +251,8 @@ fun TextSettingsBottomSheet() {
                         onClick = {
                             scope.launch {
                                 sheetState.hide()
-                                settings.closeSheet()
-                                setThemeType(it)
+                                model.closeSheet()
+                                model.themeType = it.name
                             }
                         }
                     ) {

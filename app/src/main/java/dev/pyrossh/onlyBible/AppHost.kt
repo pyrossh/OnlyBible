@@ -15,6 +15,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -22,12 +23,11 @@ import androidx.navigation.toRoute
 import dev.burnoo.compose.rememberpreference.rememberIntPreference
 
 @Composable
-fun AppHost() {
+fun AppHost(model: AppViewModel = viewModel()) {
     val navController = rememberNavController()
     var bookIndex by rememberIntPreference(keyName = "bookIndex", initialValue = 0, defaultValue = 0)
     var chapterIndex by rememberIntPreference(keyName = "chapterIndex", initialValue = 0, defaultValue = 0)
-    val model = LocalSettings.current!!
-    if (model.uiState.value.isLoading) {
+    if (model.isLoading) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -42,8 +42,8 @@ fun AppHost() {
             }
         }
     } else {
-        val bookNames = model.uiState.value.verses.distinctBy { it.bookName }.map { it.bookName }
-        AppDrawer(bookNames, navController) { openDrawer ->
+        val bookNames = model.verses.distinctBy { it.bookName }.map { it.bookName }
+        AppDrawer(navController = navController) { openDrawer ->
             NavHost(
                 navController = navController,
                 startDestination = ChapterScreenProps(bookIndex, chapterIndex)
@@ -82,8 +82,7 @@ fun AppHost() {
                         chapterIndex = props.chapterIndex
                     }
                     ChapterScreen(
-                        bookNames = bookNames,
-                        verses = model.uiState.value.verses,
+                        model = model,
                         bookIndex = props.bookIndex,
                         chapterIndex = props.chapterIndex,
                         navController = navController,

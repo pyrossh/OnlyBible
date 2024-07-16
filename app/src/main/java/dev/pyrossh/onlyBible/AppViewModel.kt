@@ -1,50 +1,82 @@
 package dev.pyrossh.onlyBible
 
+import android.app.Application
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
-import androidx.compose.runtime.State
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.staticCompositionLocalOf
-import androidx.lifecycle.ViewModel
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.preferencesDataStore
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.microsoft.cognitiveservices.speech.SpeechConfig
 import com.microsoft.cognitiveservices.speech.SpeechSynthesizer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.IOException
 import java.util.concurrent.Future
 
-val LocalSettings = staticCompositionLocalOf<AppViewModel?> { null }
+internal val Context.dataStore by preferencesDataStore(name = "onlyBible")
 
-data class UiState(
-    val isLoading: Boolean,
-    val isOnError: Boolean,
-    val bibleName: String,
-    val verses: List<Verse>,
-)
-
-class AppViewModel() : ViewModel() {
-
-    private fun getPrefs(context: Context): SharedPreferences {
-        return context.getSharedPreferences("settings", Context.MODE_PRIVATE)
-    }
-
-    private val _uiState = mutableStateOf(
-        UiState(
-            isLoading = true,
-            isOnError = false,
-            bibleName = "English",
-            verses = listOf(),
-        )
-    )
-    val uiState: State<UiState> = _uiState
+class AppViewModel(application: Application) : AndroidViewModel(application) {
+    private val context
+        get() = getApplication<Application>()
+    var isLoading by mutableStateOf(true)
+    var isOnError by mutableStateOf(false)
+    var bibleName by mutableStateOf("English")
+    var verses by mutableStateOf(listOf<Verse>())
+    var bookNames by mutableStateOf(listOf<String>())
     var showBottomSheet by mutableStateOf(false)
+    var themeType by preferenceMutableState(
+        coroutineScope = viewModelScope,
+        context = context,
+        keyName = "themeType",
+        initialValue = ThemeType.Auto.name,
+        defaultValue = ThemeType.Auto.name,
+        getPreferencesKey = ::stringPreferencesKey,
+    )
+    var fontType by preferenceMutableState(
+        coroutineScope = viewModelScope,
+        context = context,
+        keyName = "fontType",
+        initialValue = FontType.Sans.name,
+        defaultValue = FontType.Sans.name,
+        getPreferencesKey = ::stringPreferencesKey,
+    )
+    var fontSizeDelta by preferenceMutableState(
+        coroutineScope = viewModelScope,
+        context = context,
+        keyName = "fontSizeDelta",
+        initialValue = 0,
+        defaultValue = 0,
+        getPreferencesKey = ::intPreferencesKey,
+    )
+    var fontBoldEnabled by preferenceMutableState(
+        coroutineScope = viewModelScope,
+        context = context,
+        keyName = "fontBoldEnabled",
+        initialValue = false,
+        defaultValue = false,
+        getPreferencesKey = ::booleanPreferencesKey,
+    )
+
+
+    fun isDarkTheme(isSystemDark: Boolean): Boolean {
+        val themeType = ThemeType.valueOf(themeType)
+        return themeType == ThemeType.Dark || (themeType == ThemeType.Auto && isSystemDark)
+    }
 
     fun showSheet() {
         showBottomSheet = true
@@ -55,26 +87,21 @@ class AppViewModel() : ViewModel() {
     }
 
     fun setBibleName(context: Context, b: String) {
-        _uiState.value = uiState.value.copy(
-            bibleName = b,
-        )
-        getPrefs(context).edit().putString("bibleName", b).apply()
+        bibleName = b
+        context.getSharedPreferences("settings", Context.MODE_PRIVATE).edit().putString("bibleName", b).apply()
         loadBible(context)
     }
-
 
     fun loadBible(context: Context) {
         viewModelScope.launch(Dispatchers.IO) {
             launch(Dispatchers.Main) {
-                _uiState.value = uiState.value.copy(
-                    isLoading = true,
-                    isOnError = false,
-                )
+                isLoading = true
+                isOnError = false
             }
             try {
                 val buffer =
-                    context.assets.open("bibles/${_uiState.value.bibleName}.txt").bufferedReader()
-                val verses = buffer.readLines().filter { it.isNotEmpty() }.map {
+                    context.assets.open("bibles/${bibleName}.txt").bufferedReader()
+                val localVerses = buffer.readLines().filter { it.isNotEmpty() }.map {
                     val arr = it.split("|")
                     val bookName = arr[0]
                     val book = arr[1].toInt()
@@ -92,19 +119,16 @@ class AppViewModel() : ViewModel() {
                     )
                 }
                 launch(Dispatchers.Main) {
-                    _uiState.value = uiState.value.copy(
-                        isLoading = false,
-                        isOnError = false,
-                        verses = verses
-                    )
+                    isLoading = false
+                    isOnError = false
+                    verses = localVerses
+                    bookNames = localVerses.distinctBy { it.bookName }.map { it.bookName }
                 }
             } catch (e: IOException) {
                 e.printStackTrace()
                 launch(Dispatchers.Main) {
-                    _uiState.value = uiState.value.copy(
-                        isLoading = false,
-                        isOnError = true,
-                    )
+                    isLoading = false
+                    isOnError = true
                 }
             }
         }
@@ -169,4 +193,50 @@ fun shareVerses(context: Context, verses: List<Verse>) {
     }
     val shareIntent = Intent.createChooser(sendIntent, null)
     context.startActivity(shareIntent)
+}
+
+private inline fun <reified T, reified NNT : T> preferenceMutableState(
+    coroutineScope: CoroutineScope,
+    context: Context,
+    keyName: String,
+    initialValue: T,
+    defaultValue: T,
+    getPreferencesKey: (keyName: String) -> Preferences.Key<NNT>,
+): MutableState<T> {
+    val snapshotMutableState: MutableState<T> = mutableStateOf(initialValue)
+    val key: Preferences.Key<NNT> = getPreferencesKey(keyName)
+    coroutineScope.launch {
+        context.dataStore.data
+            .map { if (it[key] == null) defaultValue else it[key] }
+            .distinctUntilChanged()
+            .collectLatest {
+                withContext(Dispatchers.Main) {
+                    snapshotMutableState.value = it as T
+                }
+            }
+    }
+    return object : MutableState<T> {
+        override var value: T
+            get() = snapshotMutableState.value
+            set(value) {
+                val rollbackValue = snapshotMutableState.value
+                snapshotMutableState.value = value
+                coroutineScope.launch {
+                    try {
+                        context.dataStore.edit {
+                            if (value != null) {
+                                it[key] = value as NNT
+                            } else {
+                                it.remove(key)
+                            }
+                        }
+                    } catch (e: Exception) {
+                        snapshotMutableState.value = rollbackValue
+                    }
+                }
+            }
+
+        override fun component1() = value
+        override fun component2(): (T) -> Unit = { value = it }
+    }
 }
