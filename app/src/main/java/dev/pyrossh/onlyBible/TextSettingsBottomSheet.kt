@@ -35,7 +35,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.pyrossh.onlyBible.ThemeType.Auto
 import dev.pyrossh.onlyBible.ThemeType.Dark
 import dev.pyrossh.onlyBible.ThemeType.Light
@@ -43,7 +42,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun TextSettingsBottomSheet(model: AppViewModel = viewModel()) {
+fun TextSettingsBottomSheet(model: AppViewModel) {
     val scope = rememberCoroutineScope()
     val sheetState = rememberModalBottomSheetState()
     val themeType = ThemeType.valueOf(model.themeType)

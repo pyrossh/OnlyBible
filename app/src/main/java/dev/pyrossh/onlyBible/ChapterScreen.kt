@@ -1,6 +1,5 @@
 package dev.pyrossh.onlyBible
 
-import android.annotation.SuppressLint
 import android.graphics.Typeface
 import android.os.Parcelable
 import android.text.Html
@@ -95,7 +94,6 @@ enum class Dir : Parcelable {
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
-@SuppressLint("MutableCollectionMutableState")
 @Composable
 fun ChapterScreen(
     model: AppViewModel,

@@ -7,7 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
@@ -19,17 +19,16 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         lifecycleScope.launch {
-            applicationContext.dataStore.data.collectLatest {
-                model.initData(it)
-                model.loadBible(applicationContext)
-            }
+            val data = applicationContext.dataStore.data.first()
+            model.initData(data)
+            model.loadBible(applicationContext)
         }
         splashScreen.setKeepOnScreenCondition { model.isLoading }
         setContent {
             AppTheme {
                 AppHost()
                 if (model.showBottomSheet) {
-                    TextSettingsBottomSheet()
+                    TextSettingsBottomSheet(model = model)
                 }
             }
         }

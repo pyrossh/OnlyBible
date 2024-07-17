@@ -38,7 +38,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -78,7 +77,7 @@ val bibles = listOf(
 
 @Composable
 fun AppDrawer(
-    model: AppViewModel = viewModel(),
+    model: AppViewModel,
     navController: NavController,
     content: @Composable ((MenuType, Int) -> Job) -> Unit
 ) {

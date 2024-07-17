@@ -99,7 +99,6 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         getPreferencesKey = ::booleanPreferencesKey,
     )
 
-
     fun isDarkTheme(isSystemDark: Boolean): Boolean {
         val themeType = ThemeType.valueOf(themeType)
         return themeType == ThemeType.Dark || (themeType == ThemeType.Auto && isSystemDark)
@@ -125,6 +124,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun loadBible(context: Context) {
+        println("LoadBible")
         viewModelScope.launch(Dispatchers.IO) {
             launch(Dispatchers.Main) {
                 isLoading = true

@@ -22,12 +22,14 @@ import androidx.navigation.toRoute
 fun AppHost(model: AppViewModel = viewModel()) {
     val navController = rememberNavController()
     Box(
-        modifier = Modifier.fillMaxSize().let {
-            if (model.isLoading) it.alpha(0.5f) else it
-        }
+        modifier = Modifier
+            .fillMaxSize()
+            .let {
+                if (model.isLoading) it.alpha(0.5f) else it
+            }
     ) {
         if (model.verses.isNotEmpty()) {
-            AppDrawer(navController = navController) { openDrawer ->
+            AppDrawer(model = model, navController = navController) { openDrawer ->
                 NavHost(
                     navController = navController,
                     startDestination = ChapterScreenProps(model.bookIndex, model.chapterIndex)
