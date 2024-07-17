@@ -1,5 +1,9 @@
 package dev.pyrossh.onlyBible
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
+
 const val BOOKS_COUNT = 66;
 
 val engTitles = listOf(
@@ -71,6 +75,8 @@ val engTitles = listOf(
     "Revelation",
 )
 
+@Serializable
+@Parcelize
 data class Verse(
     val bookIndex: Int,
     val bookName: String,
@@ -78,7 +84,7 @@ data class Verse(
     val verseIndex: Int,
     val heading: String,
     val text: String,
-) {
+) : Parcelable {
 
     fun toSSML(): String {
         return """

@@ -204,7 +204,7 @@ fun ChapterScreen(
                     containerColor = Color.Transparent,
                     contentPadding = PaddingValues(0.dp),
                     modifier = Modifier
-                        .height(80.dp),
+                        .height(104.dp),
                     actions = {
                         Surface(
                             color = Color.Transparent,
@@ -262,14 +262,12 @@ fun ChapterScreen(
 //                                    )
 //                                }
                                 IconButton(onClick = {
-                                    scope.launch(Dispatchers.IO) {
-                                        shareVerses(
-                                            context,
-                                            selectedVerses.sortedBy { it.verseIndex })
-                                    }
+                                    shareVerses(
+                                        context,
+                                        selectedVerses.sortedBy { it.verseIndex })
                                 }) {
                                     Icon(
-                                        modifier = Modifier.size(36.dp),
+                                        modifier = Modifier.size(32.dp),
                                         imageVector = Icons.Outlined.Share,
                                         contentDescription = "Share",
                                     )
