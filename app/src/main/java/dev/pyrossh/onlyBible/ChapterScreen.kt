@@ -40,6 +40,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -61,6 +62,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.microsoft.cognitiveservices.speech.SpeechSynthesisEventArgs
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -114,11 +116,23 @@ fun ChapterScreen(
     var isPlaying by rememberSaveable {
         mutableStateOf(false)
     }
-    var playingJob by rememberSaveable {
-        mutableStateOf<Job?>(null)
-    }
     var dragAmount by remember {
         mutableFloatStateOf(0.0f)
+    }
+    DisposableEffect(Unit) {
+        val started = { _: Any, _: SpeechSynthesisEventArgs ->
+            isPlaying = true
+        }
+        val completed = { _: Any, _: SpeechSynthesisEventArgs ->
+            isPlaying = false
+        }
+        model.speechService.SynthesisStarted.addEventListener(started)
+        model.speechService.SynthesisCompleted.addEventListener(completed)
+
+        onDispose {
+            model.speechService.SynthesisStarted.removeEventListener(started)
+            model.speechService.SynthesisCompleted.removeEventListener(completed)
+        }
     }
     val chapterVerses =
         model.verses.filter { it.bookIndex == bookIndex && it.chapterIndex == chapterIndex }
@@ -220,19 +234,12 @@ fun ChapterScreen(
                                 }
                                 IconButton(onClick = {
                                     if (isPlaying) {
-                                        isPlaying = false
-                                        playingJob?.cancel()
+                                        model.speechService.StopSpeakingAsync()
                                     } else {
-                                        isPlaying = true
-                                        playingJob = scope.launch(Dispatchers.IO) {
+                                        scope.launch(Dispatchers.IO) {
                                             for (v in selectedVerses.sortedBy { it.verseIndex }) {
-                                                if (playingJob?.isActive == true) {
-                                                    convertVerseToSpeech(v)
-                                                }
+                                                model.speechService.StartSpeakingSsml(v.toSSML())
                                             }
-                                        }
-                                        playingJob?.invokeOnCompletion {
-                                            isPlaying = false
                                         }
                                     }
                                 }) {

@@ -31,6 +31,12 @@ internal val Context.dataStore by preferencesDataStore(name = "onlyBible")
 class AppViewModel(application: Application) : AndroidViewModel(application) {
     private val context
         get() = getApplication<Application>()
+    val speechService = SpeechSynthesizer(
+        SpeechConfig.fromSubscription(
+            BuildConfig.subscriptionKey,
+            "centralindia"
+        )
+    )
     var isLoading by mutableStateOf(true)
     var isOnError by mutableStateOf(false)
     var verses by mutableStateOf(listOf<Verse>())
@@ -159,41 +165,6 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
     }
-}
-
-val speechService = SpeechSynthesizer(
-    SpeechConfig.fromSubscription(
-        BuildConfig.subscriptionKey,
-        "centralindia"
-    )
-)
-
-//suspend fun <T> Future<T>.wait(timeoutMs: Int = 30000): T? {
-//    val start = System.currentTimeMillis()
-//    while (!isDone) {
-//        if (System.currentTimeMillis() - start > timeoutMs)
-//            return null
-//        delay(500)
-//    }
-//    return withContext(Dispatchers.IO) {
-//        get()
-//    }
-//}
-
-fun convertVerseToSpeech(v: Verse) {
-    speechService.SpeakSsml(
-        """
-        <speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="en-US">
-            <voice name="en-US-AvaMultilingualNeural">
-                ${v.text}
-            </voice>
-        </speak>
-        """.trimIndent()
-    )
-}
-
-fun stopVerses(scope: CoroutineScope, verses: List<Verse>) {
-    //TODOD
 }
 
 fun shareVerses(context: Context, verses: List<Verse>) {

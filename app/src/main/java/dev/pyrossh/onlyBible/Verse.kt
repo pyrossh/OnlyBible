@@ -80,6 +80,16 @@ data class Verse(
     val text: String,
 ) {
 
+    fun toSSML(): String {
+        return """
+            <speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="en-US">
+                <voice name="en-US-AvaMultilingualNeural">
+                    ${text}
+                </voice>
+            </speak>
+            """.trimIndent()
+    }
+
     companion object {
         val chapterSizes = listOf(
             50,
