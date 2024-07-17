@@ -6,6 +6,9 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
 
@@ -15,7 +18,12 @@ class MainActivity : ComponentActivity() {
         val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        model.loadBible(applicationContext)
+        lifecycleScope.launch {
+            applicationContext.dataStore.data.collectLatest {
+                model.initData(it)
+                model.loadBible(applicationContext)
+            }
+        }
         splashScreen.setKeepOnScreenCondition { model.isLoading }
         setContent {
             AppTheme {

@@ -35,10 +35,33 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         get() = getApplication<Application>()
     var isLoading by mutableStateOf(true)
     var isOnError by mutableStateOf(false)
-    var bibleName by mutableStateOf("English")
     var verses by mutableStateOf(listOf<Verse>())
     var bookNames by mutableStateOf(listOf<String>())
     var showBottomSheet by mutableStateOf(false)
+    var bibleName by preferenceMutableState(
+        coroutineScope = viewModelScope,
+        context = context,
+        keyName = "bibleName",
+        initialValue = "English",
+        defaultValue = "English",
+        getPreferencesKey = ::stringPreferencesKey,
+    )
+    var bookIndex by preferenceMutableState(
+        coroutineScope = viewModelScope,
+        context = context,
+        keyName = "bookIndex",
+        initialValue = 0,
+        defaultValue = 0,
+        getPreferencesKey = ::intPreferencesKey,
+    )
+    var chapterIndex by preferenceMutableState(
+        coroutineScope = viewModelScope,
+        context = context,
+        keyName = "chapterIndex",
+        initialValue = 0,
+        defaultValue = 0,
+        getPreferencesKey = ::intPreferencesKey,
+    )
     var themeType by preferenceMutableState(
         coroutineScope = viewModelScope,
         context = context,
@@ -88,8 +111,13 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
 
     fun setBibleName(context: Context, b: String) {
         bibleName = b
-        context.getSharedPreferences("settings", Context.MODE_PRIVATE).edit().putString("bibleName", b).apply()
+        context.getSharedPreferences("settings", Context.MODE_PRIVATE).edit()
+            .putString("bibleName", b).apply()
         loadBible(context)
+    }
+
+    fun initData(p: Preferences) {
+        bibleName = p[stringPreferencesKey("bibleName")] ?: "English"
     }
 
     fun loadBible(context: Context) {
