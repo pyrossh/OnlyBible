@@ -40,8 +40,7 @@ fun getColorScheme(context: Context, themeType: ThemeType, darkTheme: Boolean): 
         themeType == ThemeType.Light || (themeType == ThemeType.Auto && !darkTheme) ->
             dynamicLightColorScheme(context).copy(
                 outline = Color.LightGray,
-
-                )
+            )
 
         else ->
             dynamicDarkColorScheme(context).copy(

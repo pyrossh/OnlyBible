@@ -13,21 +13,29 @@ import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.FaceRetouchingNatural
+import androidx.compose.material.icons.outlined.Cancel
 import androidx.compose.material.icons.outlined.MoreVert
+import androidx.compose.material.icons.outlined.PauseCircle
+import androidx.compose.material.icons.outlined.PlayCircle
 import androidx.compose.material.icons.outlined.Share
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -53,6 +61,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
@@ -102,6 +111,12 @@ fun ChapterScreen(
     var selectedVerses by rememberSaveable {
         mutableStateOf(listOf<Verse>())
     }
+    var isPlaying by rememberSaveable {
+        mutableStateOf(false)
+    }
+    var playingJob by rememberSaveable {
+        mutableStateOf<Job?>(null)
+    }
     var dragAmount by remember {
         mutableFloatStateOf(0.0f)
     }
@@ -146,32 +161,6 @@ fun ChapterScreen(
                     }
                 },
                 actions = {
-                    if (selectedVerses.isNotEmpty()) {
-                        TextButton(onClick = {
-                            scope.launch {
-                                convertVersesToSpeech(
-                                    scope,
-                                    selectedVerses.sortedBy { it.verseIndex },
-                                )
-                            }.invokeOnCompletion {
-                                selectedVerses = listOf()
-                            }
-                        }) {
-                            Icon(
-                                imageVector = Icons.Outlined.FaceRetouchingNatural,
-                                contentDescription = "Audio",
-                            )
-                        }
-                        TextButton(onClick = {
-                            shareVerses(context, selectedVerses)
-                            selectedVerses = listOf()
-                        }) {
-                            Icon(
-                                imageVector = Icons.Outlined.Share,
-                                contentDescription = "Share",
-                            )
-                        }
-                    }
                     TextButton(onClick = { openDrawer(MenuType.Bible, bookIndex) }) {
                         Text(
                             text = model.bibleName.substring(0, 2).uppercase(),
@@ -195,10 +184,90 @@ fun ChapterScreen(
                 },
             )
         },
-//        bottomBar = {
-//            if (selectedVerses.isNotEmpty()) {
-//                BottomAppBar(
-//                    actions = {
+        bottomBar = {
+            if (selectedVerses.isNotEmpty()) {
+                BottomAppBar(
+                    containerColor = Color.Transparent,
+                    contentPadding = PaddingValues(0.dp),
+                    modifier = Modifier
+                        .height(80.dp),
+                    actions = {
+                        Surface(
+                            color = Color.Transparent,
+                            contentColor = MaterialTheme.colorScheme.primary,
+                        ) {
+                            HorizontalDivider(
+                                color = MaterialTheme.colorScheme.outline,
+                                modifier = Modifier
+                                    .height(1.dp)
+                                    .padding(bottom = 12.dp)
+                                    .fillMaxWidth()
+                            )
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxSize(),
+                                horizontalArrangement = Arrangement.SpaceAround,
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                IconButton(onClick = {
+                                    selectedVerses = listOf()
+                                }) {
+                                    Icon(
+                                        modifier = Modifier.size(36.dp),
+                                        imageVector = Icons.Outlined.Cancel,
+                                        contentDescription = "Clear",
+                                    )
+                                }
+                                IconButton(onClick = {
+                                    if (isPlaying) {
+                                        isPlaying = false
+                                        playingJob?.cancel()
+                                    } else {
+                                        isPlaying = true
+                                        playingJob = scope.launch(Dispatchers.IO) {
+                                            for (v in selectedVerses.sortedBy { it.verseIndex }) {
+                                                if (playingJob?.isActive == true) {
+                                                    convertVerseToSpeech(v)
+                                                }
+                                            }
+                                        }
+                                        playingJob?.invokeOnCompletion {
+                                            isPlaying = false
+                                        }
+                                    }
+                                }) {
+                                    Icon(
+                                        modifier = Modifier.size(36.dp),
+                                        imageVector = if (isPlaying)
+                                            Icons.Outlined.PauseCircle
+                                        else
+                                            Icons.Outlined.PlayCircle,
+                                        contentDescription = "Audio",
+                                    )
+                                }
+//                                IconButton(onClick = {
+//                                    shareVerses(context, selectedVerses)
+//                                }) {
+//                                    Icon(
+//                                        modifier = Modifier.size(48.dp),
+//                                        imageVector = Icons.Outlined.Edit,
+//                                        contentDescription = "Highlight",
+//                                    )
+//                                }
+                                IconButton(onClick = {
+                                    scope.launch(Dispatchers.IO) {
+                                        shareVerses(
+                                            context,
+                                            selectedVerses.sortedBy { it.verseIndex })
+                                    }
+                                }) {
+                                    Icon(
+                                        modifier = Modifier.size(36.dp),
+                                        imageVector = Icons.Outlined.Share,
+                                        contentDescription = "Share",
+                                    )
+                                }
+                            }
 //                        IconButton(onClick = { /* do something */ }) {
 //                            Icon(
 //                                Icons.Filled.Circle,
@@ -231,10 +300,11 @@ fun ChapterScreen(
 //                                tint = Color.Magenta,
 //                            )
 //                        }
-//                    },
-//                )
-//            }
-//        },
+                        }
+                    },
+                )
+            }
+        },
     ) { innerPadding ->
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(12.dp),

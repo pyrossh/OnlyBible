@@ -19,14 +19,12 @@ import com.microsoft.cognitiveservices.speech.SpeechConfig
 import com.microsoft.cognitiveservices.speech.SpeechSynthesizer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.IOException
-import java.util.concurrent.Future
 
 internal val Context.dataStore by preferencesDataStore(name = "onlyBible")
 
@@ -170,32 +168,28 @@ val speechService = SpeechSynthesizer(
     )
 )
 
-suspend fun <T> Future<T>.wait(timeoutMs: Int = 30000): T? {
-    val start = System.currentTimeMillis()
-    while (!isDone) {
-        if (System.currentTimeMillis() - start > timeoutMs)
-            return null
-        delay(500)
-    }
-    return withContext(Dispatchers.IO) {
-        get()
-    }
-}
+//suspend fun <T> Future<T>.wait(timeoutMs: Int = 30000): T? {
+//    val start = System.currentTimeMillis()
+//    while (!isDone) {
+//        if (System.currentTimeMillis() - start > timeoutMs)
+//            return null
+//        delay(500)
+//    }
+//    return withContext(Dispatchers.IO) {
+//        get()
+//    }
+//}
 
-suspend fun convertVersesToSpeech(scope: CoroutineScope, verses: List<Verse>) {
-    withContext(Dispatchers.IO) {
-        for (v in verses) {
-            speechService.SpeakSsmlAsync(
-                """
-            <speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="en-US">
-                <voice name="en-US-AvaMultilingualNeural">
-                    ${v.text}
-                </voice>
-            </speak>
-            """.trimIndent()
-            )
-        }
-    }
+fun convertVerseToSpeech(v: Verse) {
+    speechService.SpeakSsml(
+        """
+        <speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="en-US">
+            <voice name="en-US-AvaMultilingualNeural">
+                ${v.text}
+            </voice>
+        </speak>
+        """.trimIndent()
+    )
 }
 
 fun stopVerses(scope: CoroutineScope, verses: List<Verse>) {
@@ -203,9 +197,8 @@ fun stopVerses(scope: CoroutineScope, verses: List<Verse>) {
 }
 
 fun shareVerses(context: Context, verses: List<Verse>) {
-    val items = verses.sortedBy { it.verseIndex }
     val versesThrough =
-        if (items.size >= 3) "${items.first().verseIndex + 1}-${items.last().verseIndex + 1}" else items.map { it.verseIndex + 1 }
+        if (verses.size >= 3) "${verses.first().verseIndex + 1}-${verses.last().verseIndex + 1}" else verses.map { it.verseIndex + 1 }
             .joinToString(",");
     val title = "${verses[0].bookName} ${verses[0].chapterIndex + 1}:${versesThrough}"
     val text = verses.joinToString("\n") {
