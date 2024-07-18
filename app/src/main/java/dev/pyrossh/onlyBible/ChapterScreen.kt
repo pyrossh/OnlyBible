@@ -46,6 +46,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -152,6 +153,8 @@ fun ChapterScreen(
     val fontType = FontType.valueOf(model.fontType)
     val fontSizeDelta = model.fontSizeDelta
     val boldWeight = if (model.fontBoldEnabled) FontWeight.W700 else FontWeight.W400
+    val chapterVerses =
+        model.verses.filter { it.bookIndex == bookIndex && it.chapterIndex == chapterIndex }
     val scope = rememberCoroutineScope()
     var selectedVerses by rememberSaveable {
         mutableStateOf(listOf<Verse>())
@@ -174,8 +177,9 @@ fun ChapterScreen(
             model.speechService.SynthesisCompleted.removeEventListener(completed)
         }
     }
-    val chapterVerses =
-        model.verses.filter { it.bookIndex == bookIndex && it.chapterIndex == chapterIndex }
+    LaunchedEffect(key1 = chapterVerses) {
+        selectedVerses = listOf()
+    }
     val headingColor = MaterialTheme.colorScheme.onSurface // MaterialTheme.colorScheme.primary,
     val view = LocalView.current
     val window = (view.context as Activity).window

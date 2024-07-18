@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="Theme.BibleAppSplash" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenAnimatedIcon">@drawable/anim_icon</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/cross_2</item>
         <item name="windowSplashScreenBackground">@color/splash_bg</item>
         <item name="postSplashScreenTheme">@style/Theme.BibleApp</item>
     </style>

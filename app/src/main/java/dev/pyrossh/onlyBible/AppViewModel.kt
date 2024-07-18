@@ -1,10 +1,8 @@
 package dev.pyrossh.onlyBible
 
 import android.app.Application
-import android.app.UiModeManager
 import android.content.Context
 import android.content.Intent
-import android.content.res.Configuration
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -76,7 +74,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         0,
         0
     )
-    var uiMode by mutableIntStateOf(Configuration.UI_MODE_NIGHT_NO)
+    var uiMode by mutableIntStateOf(0)
     var fontType by preferenceMutableState(
         coroutineScope = viewModelScope,
         context = context,
