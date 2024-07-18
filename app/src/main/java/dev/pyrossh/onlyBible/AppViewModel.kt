@@ -3,6 +3,7 @@ package dev.pyrossh.onlyBible
 import android.app.Application
 import android.content.Context
 import android.content.Intent
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -68,6 +69,10 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         defaultValue = 0,
         getPreferencesKey = ::intPreferencesKey,
     )
+    var scrollState = LazyListState(
+        0,
+        0
+    )
     var themeType by preferenceMutableState(
         coroutineScope = viewModelScope,
         context = context,
@@ -121,6 +126,14 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
 
     fun initData(p: Preferences) {
         bibleName = p[stringPreferencesKey("bibleName")] ?: "English"
+        scrollState = LazyListState(
+            p[intPreferencesKey("scrollIndex")] ?: 0,
+            p[intPreferencesKey("scrollOffset")] ?: 0
+        )
+    }
+
+    fun resetScrollState() {
+        scrollState = LazyListState(0, 0)
     }
 
     fun loadBible(context: Context) {

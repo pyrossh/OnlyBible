@@ -17,10 +17,57 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import dev.pyrossh.onlyBible.domain.Verse
 
 @Composable
 fun AppHost(model: AppViewModel = viewModel()) {
     val navController = rememberNavController()
+    val navigateToChapter = { props: ChapterScreenProps ->
+        model.resetScrollState()
+        navController.navigate(props)
+    }
+    val onSwipeLeft = {
+        val pair = Verse.getForwardPair(model.bookIndex, model.chapterIndex)
+        navigateToChapter(
+            ChapterScreenProps(
+                bookIndex = pair.first,
+                chapterIndex = pair.second,
+            )
+        )
+    }
+    val onSwipeRight = {
+        val pair = Verse.getBackwardPair(model.bookIndex, model.chapterIndex)
+        if (navController.previousBackStackEntry != null) {
+            val previousBook =
+                navController.previousBackStackEntry?.arguments?.getInt("book")
+                    ?: 0
+            val previousChapter =
+                navController.previousBackStackEntry?.arguments?.getInt("chapter")
+                    ?: 0
+//                                    println("currentBackStackEntry ${previousBook} ${previousChapter} || ${pair.first} ${pair.second}")
+            if (previousBook == pair.first && previousChapter == pair.second) {
+                println("Popped")
+                navController.popBackStack()
+            } else {
+                navController.navigate(
+                    ChapterScreenProps(
+                        bookIndex = pair.first,
+                        chapterIndex = pair.second,
+                        dir = Dir.Right.name,
+                    )
+                )
+            }
+        } else {
+            println("navigated navigate")
+            navController.navigate(
+                ChapterScreenProps(
+                    bookIndex = pair.first,
+                    chapterIndex = pair.second,
+                    dir = Dir.Right.name
+                )
+            )
+        }
+    }
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -29,7 +76,7 @@ fun AppHost(model: AppViewModel = viewModel()) {
             }
     ) {
         if (model.verses.isNotEmpty()) {
-            AppDrawer(model = model, navController = navController) { openDrawer ->
+            AppDrawer(model = model, navigateToChapter = navigateToChapter) { openDrawer ->
                 NavHost(
                     navController = navController,
                     startDestination = ChapterScreenProps(model.bookIndex, model.chapterIndex)
@@ -70,9 +117,10 @@ fun AppHost(model: AppViewModel = viewModel()) {
                         }
                         ChapterScreen(
                             model = model,
+                            onSwipeLeft = onSwipeLeft,
+                            onSwipeRight = onSwipeRight,
                             bookIndex = props.bookIndex,
                             chapterIndex = props.chapterIndex,
-                            navController = navController,
                             openDrawer = openDrawer,
                         )
                     }

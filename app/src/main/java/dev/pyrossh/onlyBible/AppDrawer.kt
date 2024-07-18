@@ -38,7 +38,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import dev.pyrossh.onlyBible.domain.Bible
 import dev.pyrossh.onlyBible.domain.Verse
 import kotlinx.coroutines.Job
@@ -66,7 +65,7 @@ fun LazyGridScope.header(
 @Composable
 fun AppDrawer(
     model: AppViewModel,
-    navController: NavController,
+    navigateToChapter: (ChapterScreenProps) -> Unit,
     content: @Composable ((MenuType, Int) -> Job) -> Unit
 ) {
     val context = LocalContext.current
@@ -224,7 +223,7 @@ fun AppDrawer(
                             items(Verse.chapterSizes[bookIndex]) { c ->
                                 QuickButton("${c + 1}") {
                                     scope.launch {
-                                        navController.navigate(
+                                        navigateToChapter(
                                             ChapterScreenProps(
                                                 bookIndex = bookIndex,
                                                 chapterIndex = c,

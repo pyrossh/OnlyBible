@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Cancel
@@ -45,7 +46,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -66,7 +66,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import com.microsoft.cognitiveservices.speech.SpeechSynthesisEventArgs
 import dev.pyrossh.onlyBible.domain.Bible
 import dev.pyrossh.onlyBible.domain.Verse
@@ -138,9 +137,10 @@ suspend fun PointerInputScope.detectSwipe(
 @Composable
 fun ChapterScreen(
     model: AppViewModel,
+    onSwipeLeft: () -> Unit,
+    onSwipeRight: () -> Any,
     bookIndex: Int,
     chapterIndex: Int,
-    navController: NavController,
     openDrawer: (MenuType, Int) -> Job,
 ) {
     val context = LocalContext.current
@@ -154,9 +154,6 @@ fun ChapterScreen(
     }
     var isPlaying by rememberSaveable {
         mutableStateOf(false)
-    }
-    var dragAmount by remember {
-        mutableFloatStateOf(0.0f)
     }
     DisposableEffect(Unit) {
         val started = { _: Any, _: SpeechSynthesisEventArgs ->
@@ -322,6 +319,9 @@ fun ChapterScreen(
         },
     ) { innerPadding ->
         LazyColumn(
+            state = rememberSaveable(saver = LazyListState.Saver) {
+                model.scrollState
+            },
             verticalArrangement = Arrangement.spacedBy(12.dp),
             modifier = Modifier
                 .fillMaxSize()
@@ -329,48 +329,8 @@ fun ChapterScreen(
                 .padding(horizontal = 16.dp)
                 .pointerInput(Unit) {
                     detectSwipe(
-                        onSwipeLeft = {
-                            val pair = Verse.getForwardPair(bookIndex, chapterIndex)
-                            navController.navigate(
-                                ChapterScreenProps(
-                                    bookIndex = pair.first,
-                                    chapterIndex = pair.second,
-                                )
-                            )
-                        },
-                        onSwipeRight = {
-                            val pair = Verse.getBackwardPair(bookIndex, chapterIndex)
-                            if (navController.previousBackStackEntry != null) {
-                                val previousBook =
-                                    navController.previousBackStackEntry?.arguments?.getInt("book")
-                                        ?: 0
-                                val previousChapter =
-                                    navController.previousBackStackEntry?.arguments?.getInt("chapter")
-                                        ?: 0
-//                                    println("currentBackStackEntry ${previousBook} ${previousChapter} || ${pair.first} ${pair.second}")
-                                if (previousBook == pair.first && previousChapter == pair.second) {
-                                    println("Popped")
-                                    navController.popBackStack()
-                                } else {
-                                    navController.navigate(
-                                        ChapterScreenProps(
-                                            bookIndex = pair.first,
-                                            chapterIndex = pair.second,
-                                            dir = Dir.Right.name,
-                                        )
-                                    )
-                                }
-                            } else {
-//                                    println("navigated navigate")
-                                navController.navigate(
-                                    ChapterScreenProps(
-                                        bookIndex = pair.first,
-                                        chapterIndex = pair.second,
-                                        dir = Dir.Right.name
-                                    )
-                                )
-                            }
-                        },
+                        onSwipeLeft = onSwipeLeft,
+                        onSwipeRight = { onSwipeRight() },
                     )
                 }) {
             items(chapterVerses) { v ->
