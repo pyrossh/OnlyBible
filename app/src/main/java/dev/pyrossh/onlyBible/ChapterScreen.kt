@@ -62,6 +62,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.microsoft.cognitiveservices.speech.SpeechSynthesisEventArgs
+import dev.pyrossh.onlyBible.domain.Bible
+import dev.pyrossh.onlyBible.domain.Verse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -175,7 +177,7 @@ fun ChapterScreen(
                 actions = {
                     TextButton(onClick = { openDrawer(MenuType.Bible, bookIndex) }) {
                         Text(
-                            text = model.bibleName.substring(0, 2).uppercase(),
+                            text = Bible.valueOf(model.bibleName).code.uppercase(),
                             style = TextStyle(
                                 fontSize = 18.sp,
                                 fontWeight = FontWeight.W500,
@@ -206,7 +208,7 @@ fun ChapterScreen(
                     actions = {
                         Surface(
                             color = Color.Transparent,
-                            contentColor = MaterialTheme.colorScheme.primary,
+//                            contentColor = MaterialTheme.colorScheme.primary,
                         ) {
                             HorizontalDivider(
                                 color = MaterialTheme.colorScheme.outline,
@@ -250,15 +252,6 @@ fun ChapterScreen(
                                         contentDescription = "Audio",
                                     )
                                 }
-//                                IconButton(onClick = {
-//                                    shareVerses(context, selectedVerses)
-//                                }) {
-//                                    Icon(
-//                                        modifier = Modifier.size(48.dp),
-//                                        imageVector = Icons.Outlined.Edit,
-//                                        contentDescription = "Highlight",
-//                                    )
-//                                }
                                 IconButton(onClick = {
                                     shareVerses(
                                         context,
@@ -271,36 +264,12 @@ fun ChapterScreen(
                                     )
                                 }
                             }
-//                        IconButton(onClick = { /* do something */ }) {
+//                        IconButton(onClick = {}) {
 //                            Icon(
 //                                Icons.Filled.Circle,
 //                                contentDescription = "",
 //                                modifier = Modifier.size(64.dp),
 //                                tint = Color.Yellow
-//                            )
-//                        }
-//                        IconButton(onClick = { /* do something */ }) {
-//                            Icon(
-//                                Icons.Filled.Circle,
-//                                contentDescription = "",
-//                                modifier = Modifier.size(64.dp),
-//                                tint = Color.Blue,
-//                            )
-//                        }
-//                        IconButton(onClick = { /* do something */ }) {
-//                            Icon(
-//                                Icons.Filled.Circle,
-//                                contentDescription = "",
-//                                modifier = Modifier.size(64.dp),
-//                                tint = Color.Cyan,
-//                            )
-//                        }
-//                        IconButton(onClick = { /* do something */ }) {
-//                            Icon(
-//                                Icons.Filled.Circle,
-//                                contentDescription = "",
-//                                modifier = Modifier.size(64.dp),
-//                                tint = Color.Magenta,
 //                            )
 //                        }
                         }

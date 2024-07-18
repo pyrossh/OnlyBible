@@ -1,4 +1,4 @@
-package dev.pyrossh.onlyBible
+package dev.pyrossh.onlyBible.domain
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
@@ -78,6 +78,7 @@ val engTitles = listOf(
 @Serializable
 @Parcelize
 data class Verse(
+    val bible: Bible,
     val bookIndex: Int,
     val bookName: String,
     val chapterIndex: Int,
@@ -89,8 +90,8 @@ data class Verse(
     fun toSSML(): String {
         return """
             <speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="en-US">
-                <voice name="en-US-AvaMultilingualNeural">
-                    ${text}
+                <voice name="${bible.voiceName}">
+                    $text
                 </voice>
             </speak>
             """.trimIndent()

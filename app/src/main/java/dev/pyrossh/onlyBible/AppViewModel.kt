@@ -17,6 +17,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.microsoft.cognitiveservices.speech.SpeechConfig
 import com.microsoft.cognitiveservices.speech.SpeechSynthesizer
+import dev.pyrossh.onlyBible.domain.Bible
+import dev.pyrossh.onlyBible.domain.Verse
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
@@ -112,10 +114,8 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         showBottomSheet = false
     }
 
-    fun setBibleName(context: Context, b: String) {
-        bibleName = b
-        context.getSharedPreferences("settings", Context.MODE_PRIVATE).edit()
-            .putString("bibleName", b).apply()
+    fun setBibleName(context: Context, b: Bible) {
+        bibleName = b.name
         loadBible(context)
     }
 
@@ -131,8 +131,9 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
                 isOnError = false
             }
             try {
+                val b = Bible.valueOf(bibleName)
                 val buffer =
-                    context.assets.open("bibles/${bibleName}.txt").bufferedReader()
+                    context.assets.open("bibles/${b.fileName}.txt").bufferedReader()
                 val localVerses = buffer.readLines().filter { it.isNotEmpty() }.map {
                     val arr = it.split("|")
                     val bookName = arr[0]
@@ -142,6 +143,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
                     val heading = arr[4]
                     val verseText = arr.subList(5, arr.size).joinToString("|")
                     Verse(
+                        bible = b,
                         bookIndex = book,
                         bookName = bookName,
                         chapterIndex = chapter,

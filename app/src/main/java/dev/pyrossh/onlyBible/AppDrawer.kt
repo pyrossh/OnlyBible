@@ -39,6 +39,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import dev.pyrossh.onlyBible.domain.Bible
+import dev.pyrossh.onlyBible.domain.Verse
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
@@ -60,20 +62,6 @@ fun LazyGridScope.header(
 ) {
     item(span = { GridItemSpan(this.maxLineSpan) }, content = content)
 }
-
-val bibles = listOf(
-    "Bengali",
-    "English",
-    "Gujarati",
-    "Hindi",
-    "Kannada",
-    "Malayalam",
-    "Nepali",
-    "Oriya",
-    "Punjabi",
-    "Tamil",
-    "Telugu"
-)
 
 @Composable
 fun AppDrawer(
@@ -109,7 +97,8 @@ fun AppDrawer(
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(horizontal = 16.dp),
+                        .padding(horizontal = 16.dp)
+                        .padding(bottom = 16.dp),
                 ) {
                     if (menuType == MenuType.Bible) {
                         LazyVerticalGrid(
@@ -138,8 +127,8 @@ fun AppDrawer(
                                     }
                                 }
                             }
-                            items(bibles) { b ->
-                                QuickButton(b) {
+                            items(Bible.entries.toTypedArray()) { b ->
+                                QuickButton(b.displayName) {
                                     model.setBibleName(context, b)
                                     scope.launch {
                                         drawerState.close()
