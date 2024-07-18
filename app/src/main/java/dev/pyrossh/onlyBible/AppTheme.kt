@@ -1,8 +1,9 @@
 package dev.pyrossh.onlyBible
 
-import android.content.Context
+import android.content.res.Configuration.UI_MODE_NIGHT_MASK
+import android.content.res.Configuration.UI_MODE_NIGHT_NO
+import android.content.res.Configuration.UI_MODE_NIGHT_UNDEFINED
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
@@ -29,26 +30,9 @@ enum class FontType {
     }
 }
 
-enum class ThemeType {
-    Light,
-    Dark,
-    Auto;
-}
-
-fun getColorScheme(context: Context, themeType: ThemeType, darkTheme: Boolean): ColorScheme {
-    return when {
-        themeType == ThemeType.Light || (themeType == ThemeType.Auto && !darkTheme) ->
-            dynamicLightColorScheme(context).copy(
-                outline = Color.LightGray,
-            )
-
-        else ->
-            dynamicDarkColorScheme(context).copy(
-                background = Color(0xFF090F12),
-                surface = Color(0xFF090F12),
-                outline = Color(0xAA5D4979),
-            )
-    }
+fun isLightTheme(uiMode: Int, isSystemDark: Boolean): Boolean {
+    val maskedMode = uiMode and UI_MODE_NIGHT_MASK
+    return maskedMode == UI_MODE_NIGHT_NO || (maskedMode == UI_MODE_NIGHT_UNDEFINED && !isSystemDark)
 }
 
 @Composable
@@ -57,15 +41,20 @@ fun AppTheme(
     content: @Composable() () -> Unit
 ) {
     val context = LocalContext.current
-    val darkTheme = isSystemInDarkTheme()
     val systemUiController = rememberSystemUiController()
-    val themeType = ThemeType.valueOf(model.themeType)
-    val colorScheme = getColorScheme(context, themeType, darkTheme)
-    LaunchedEffect(key1 = model.themeType) {
-//        val view = LocalView.current
-//        val window = (view.context as Activity).window
-//        window.statusBarColor = colorScheme.primary.toArgb()
-//        WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
+    val colorScheme = if (isLightTheme(model.uiMode, isSystemInDarkTheme()))
+        dynamicLightColorScheme(context).copy(
+            onSurface = Color.Black,
+            outline = Color.LightGray,
+        )
+    else
+        dynamicDarkColorScheme(context).copy(
+            background = Color(0xFF090F12),
+            surface = Color(0xFF090F12),
+            outline = Color(0xAA5D4979),
+        )
+    println("AppTheme ${model.uiMode}")
+    LaunchedEffect(key1 = model.uiMode) {
         systemUiController.setSystemBarsColor(
             color = colorScheme.background
         )

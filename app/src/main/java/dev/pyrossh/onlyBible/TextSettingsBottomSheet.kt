@@ -1,5 +1,11 @@
 package dev.pyrossh.onlyBible
 
+import android.app.UiModeManager
+import android.content.Context.UI_MODE_SERVICE
+import android.content.res.Configuration
+import android.content.res.Configuration.UI_MODE_NIGHT_NO
+import android.content.res.Configuration.UI_MODE_NIGHT_UNDEFINED
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -31,21 +37,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import dev.pyrossh.onlyBible.ThemeType.Auto
-import dev.pyrossh.onlyBible.ThemeType.Dark
-import dev.pyrossh.onlyBible.ThemeType.Light
 import kotlinx.coroutines.launch
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun TextSettingsBottomSheet(model: AppViewModel) {
+    val uiModeManager = LocalContext.current.getSystemService(UI_MODE_SERVICE) as UiModeManager
+    val uiMode = model.uiMode and Configuration.UI_MODE_NIGHT_MASK
     val scope = rememberCoroutineScope()
     val sheetState = rememberModalBottomSheetState()
-    val themeType = ThemeType.valueOf(model.themeType)
     val fontType = FontType.valueOf(model.fontType)
     return ModalBottomSheet(
         tonalElevation = 2.dp,
@@ -228,17 +233,17 @@ fun TextSettingsBottomSheet(model: AppViewModel) {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                ThemeType.entries.map {
+                listOf(UI_MODE_NIGHT_NO, UI_MODE_NIGHT_YES, UI_MODE_NIGHT_UNDEFINED).map {
                     Surface(
                         shape = RoundedCornerShape(8.dp),
-                        border = if (themeType == it) BorderStroke(
+                        border = if (uiMode == it) BorderStroke(
                             2.dp, MaterialTheme.colorScheme.primary
                         ) else null,
-                        color = if (themeType == it)
+                        color = if (uiMode == it)
                             MaterialTheme.colorScheme.primary
                         else
                             MaterialTheme.colorScheme.onSurface,
-                        contentColor = if (themeType == it)
+                        contentColor = if (uiMode == it)
                             MaterialTheme.colorScheme.primary
                         else
                             MaterialTheme.colorScheme.onSurface,
@@ -251,12 +256,24 @@ fun TextSettingsBottomSheet(model: AppViewModel) {
                             scope.launch {
                                 sheetState.hide()
                                 model.closeSheet()
-                                model.themeType = it.name
+                                when (it) {
+                                    UI_MODE_NIGHT_NO -> uiModeManager.setApplicationNightMode(
+                                        UiModeManager.MODE_NIGHT_NO
+                                    )
+
+                                    UI_MODE_NIGHT_YES -> uiModeManager.setApplicationNightMode(
+                                        UiModeManager.MODE_NIGHT_YES
+                                    )
+
+                                    UI_MODE_NIGHT_UNDEFINED -> uiModeManager.setApplicationNightMode(
+                                        UiModeManager.MODE_NIGHT_AUTO
+                                    )
+                                }
                             }
                         }
                     ) {
                         when (it) {
-                            Light -> Icon(
+                            UI_MODE_NIGHT_NO -> Icon(
                                 imageVector = Icons.Filled.LightMode,
                                 contentDescription = "Light",
                                 modifier = Modifier
@@ -264,7 +281,7 @@ fun TextSettingsBottomSheet(model: AppViewModel) {
                                     .padding(12.dp)
                             )
 
-                            Dark -> Icon(
+                            UI_MODE_NIGHT_YES -> Icon(
                                 imageVector = Icons.Filled.DarkMode,
                                 contentDescription = "Dark",
                                 modifier = Modifier
@@ -272,7 +289,7 @@ fun TextSettingsBottomSheet(model: AppViewModel) {
                                     .padding(12.dp)
                             )
 
-                            Auto -> Column(
+                            UI_MODE_NIGHT_UNDEFINED -> Column(
                                 modifier = Modifier.background(
                                     color = MaterialTheme.colorScheme.background,
                                 ),

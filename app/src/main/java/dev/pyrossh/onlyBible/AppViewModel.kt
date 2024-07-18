@@ -1,11 +1,14 @@
 package dev.pyrossh.onlyBible
 
 import android.app.Application
+import android.app.UiModeManager
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.datastore.preferences.core.Preferences
@@ -73,14 +76,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         0,
         0
     )
-    var themeType by preferenceMutableState(
-        coroutineScope = viewModelScope,
-        context = context,
-        keyName = "themeType",
-        initialValue = ThemeType.Auto.name,
-        defaultValue = ThemeType.Auto.name,
-        getPreferencesKey = ::stringPreferencesKey,
-    )
+    var uiMode by mutableIntStateOf(Configuration.UI_MODE_NIGHT_NO)
     var fontType by preferenceMutableState(
         coroutineScope = viewModelScope,
         context = context,
@@ -106,10 +102,6 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         getPreferencesKey = ::booleanPreferencesKey,
     )
 
-    fun isDarkTheme(isSystemDark: Boolean): Boolean {
-        val themeType = ThemeType.valueOf(themeType)
-        return themeType == ThemeType.Dark || (themeType == ThemeType.Auto && isSystemDark)
-    }
 
     fun showSheet() {
         showBottomSheet = true
@@ -125,6 +117,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun initData(p: Preferences) {
+        uiMode  = context.applicationContext.resources.configuration.uiMode
         bibleName = p[stringPreferencesKey("bibleName")] ?: "English"
         scrollState = LazyListState(
             p[intPreferencesKey("scrollIndex")] ?: 0,

@@ -148,7 +148,7 @@ fun ChapterScreen(
     openDrawer: (MenuType, Int) -> Job,
 ) {
     val context = LocalContext.current
-    val darkTheme = model.isDarkTheme(isSystemInDarkTheme())
+    val isLight = isLightTheme(model.uiMode, isSystemInDarkTheme())
     val fontType = FontType.valueOf(model.fontType)
     val fontSizeDelta = model.fontSizeDelta
     val boldWeight = if (model.fontBoldEnabled) FontWeight.W700 else FontWeight.W400
@@ -245,12 +245,15 @@ fun ChapterScreen(
         },
         bottomBar = {
             val bottomOffset = WindowInsets.navigationBars.getBottom(LocalDensity.current)
-            val bottomPadding = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+            val bottomPadding =
+                WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
             AnimatedVisibility(
-                modifier = Modifier.height(104.dp).padding(bottom = bottomPadding),
+                modifier = Modifier
+                    .height(104.dp)
+                    .padding(bottom = bottomPadding),
                 visible = selectedVerses.isNotEmpty(),
-                enter = slideInVertically(initialOffsetY = {  it/2 + bottomOffset }),
-                exit = slideOutVertically(targetOffsetY = {  it/2 + bottomOffset }),
+                enter = slideInVertically(initialOffsetY = { it / 2 + bottomOffset }),
+                exit = slideOutVertically(targetOffsetY = { it / 2 + bottomOffset }),
             ) {
                 Surface(
                     modifier = Modifier,
@@ -373,10 +376,10 @@ fun ChapterScreen(
                         else
                             Color.Unspecified,
                         fontFamily = fontType.family(),
-                        color = if (darkTheme)
-                            Color(0xFFBCBCBC)
+                        color = if (isLight)
+                            Color(0xFF000104)
                         else
-                            Color(0xFF000104),
+                            Color(0xFFBCBCBC),
                         fontWeight = boldWeight,
                         fontSize = (17 + fontSizeDelta).sp,
                         lineHeight = (23 + fontSizeDelta).sp,
@@ -389,9 +392,10 @@ fun ChapterScreen(
                         withStyle(
                             style = SpanStyle(
                                 fontSize = (13 + fontSizeDelta).sp,
-                                color = if (darkTheme)
-                                    Color(0xFFCCCCCC)
-                                else Color(0xFFA20101),
+                                color = if (isLight)
+                                    Color(0xFFA20101)
+                                else
+                                    Color(0xFFCCCCCC),
                                 fontWeight = FontWeight.W700,
                             )
                         ) {
@@ -405,8 +409,8 @@ fun ChapterScreen(
                                 val end = spanned.getSpanEnd(span)
                                 when (span) {
                                     is ForegroundColorSpan ->
-                                        if (darkTheme) SpanStyle(color = Color(0xFFFF636B))
-                                        else SpanStyle(color = Color(0xFFFF0000))
+                                        if (isLight) SpanStyle(color = Color(0xFFFF0000))
+                                        else SpanStyle(color = Color(0xFFFF636B))
 
                                     is StyleSpan -> when (span.style) {
                                         Typeface.BOLD -> SpanStyle(fontWeight = FontWeight.Bold)

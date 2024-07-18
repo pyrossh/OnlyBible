@@ -1,7 +1,6 @@
 package dev.pyrossh.onlyBible
 
 import android.animation.ObjectAnimator
-import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
 import android.view.animation.AccelerateInterpolator
@@ -22,12 +21,6 @@ class MainActivity : ComponentActivity() {
     private val model by viewModels<AppViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        val isSystemDark = applicationContext.resources.configuration.uiMode  and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
-//        if (isSystemDark) {
-//            setTheme(R.style.Theme_BibleAppSplashDark)
-//        } else {
-//            setTheme(R.style.Theme_BibleAppSplashLight)
-//        }
         val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -53,6 +46,9 @@ class MainActivity : ComponentActivity() {
                 }
                 start()
             }
+        }
+        addOnConfigurationChangedListener {
+            model.uiMode = it.uiMode
         }
         setContent {
             AppTheme {
