@@ -1,9 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.BibleAppSplash" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenAnimatedIcon">@drawable/cross_2</item>
+    <style name="Theme.BibleAppSplashLight" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenAnimatedIcon">@drawable/anim_icon</item>
+        <item name="windowSplashScreenBackground">#FFFFFF</item>
+        <item name="postSplashScreenTheme">@style/Theme.MaterialComponents.Light.NoActionBar</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+    <style name="Theme.BibleAppSplashDark" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenAnimatedIcon">@drawable/anim_icon</item>
         <item name="windowSplashScreenBackground">#000000</item>
-        <item name="postSplashScreenTheme">@style/Theme.BibleApp</item>
+        <item name="postSplashScreenTheme">@style/Theme.AppCompat.DayNight.DarkActionBar</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
     <style name="Theme.BibleApp" parent="android:Theme.Material.Light.NoActionBar" />
 </resources>

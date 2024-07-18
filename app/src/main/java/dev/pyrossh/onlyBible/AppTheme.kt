@@ -62,6 +62,10 @@ fun AppTheme(
     val themeType = ThemeType.valueOf(model.themeType)
     val colorScheme = getColorScheme(context, themeType, darkTheme)
     LaunchedEffect(key1 = model.themeType) {
+//        val view = LocalView.current
+//        val window = (view.context as Activity).window
+//        window.statusBarColor = colorScheme.primary.toArgb()
+//        WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
         systemUiController.setSystemBarsColor(
             color = colorScheme.background
         )

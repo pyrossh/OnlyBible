@@ -1,5 +1,6 @@
 package dev.pyrossh.onlyBible
 
+import android.app.Activity
 import android.graphics.Typeface
 import android.os.Parcelable
 import android.text.Html
@@ -15,11 +16,13 @@ import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -31,7 +34,6 @@ import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.PauseCircle
 import androidx.compose.material.icons.outlined.PlayCircle
 import androidx.compose.material.icons.outlined.Share
-import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -58,6 +60,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.PointerInputScope
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -173,6 +177,11 @@ fun ChapterScreen(
     val chapterVerses =
         model.verses.filter { it.bookIndex == bookIndex && it.chapterIndex == chapterIndex }
     val headingColor = MaterialTheme.colorScheme.onSurface // MaterialTheme.colorScheme.primary,
+    val view = LocalView.current
+    val window = (view.context as Activity).window
+//    WindowInsets.Companion.navigationBars.getBottom()
+//    WindowInsets.safeContent.getBottom()
+//    WindowCompat.getInsetsController(window, view).systemBarsBehavior
     Scaffold(
         modifier = Modifier
             .fillMaxSize(),
@@ -235,75 +244,73 @@ fun ChapterScreen(
             )
         },
         bottomBar = {
+            val bottomOffset = WindowInsets.navigationBars.getBottom(LocalDensity.current)
+            val bottomPadding = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
             AnimatedVisibility(
+                modifier = Modifier.height(104.dp).padding(bottom = bottomPadding),
                 visible = selectedVerses.isNotEmpty(),
-                enter = slideInVertically(initialOffsetY = { it }),
-                exit = slideOutVertically(targetOffsetY = { it }),
+                enter = slideInVertically(initialOffsetY = {  it/2 + bottomOffset }),
+                exit = slideOutVertically(targetOffsetY = {  it/2 + bottomOffset }),
             ) {
-                BottomAppBar(
-                    containerColor = Color.Transparent,
-                    contentPadding = PaddingValues(0.dp),
-                    modifier = Modifier
-                        .height(104.dp),
-                    actions = {
-                        Surface(
-                            color = Color.Transparent,
+                Surface(
+                    modifier = Modifier,
+                    color = Color.Transparent,
 //                            contentColor = MaterialTheme.colorScheme.primary,
-                        ) {
-                            HorizontalDivider(
-                                color = MaterialTheme.colorScheme.outline,
-                                modifier = Modifier
-                                    .height(1.dp)
-                                    .padding(bottom = 12.dp)
-                                    .fillMaxWidth()
+                ) {
+                    HorizontalDivider(
+                        color = MaterialTheme.colorScheme.outline,
+                        modifier = Modifier
+                            .height(1.dp)
+                            .padding(bottom = 12.dp)
+                            .fillMaxWidth()
+                    )
+                    Row(
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        horizontalArrangement = Arrangement.SpaceAround,
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        IconButton(onClick = {
+                            selectedVerses = listOf()
+                        }) {
+                            Icon(
+                                modifier = Modifier.size(36.dp),
+                                imageVector = Icons.Outlined.Cancel,
+                                contentDescription = "Clear",
                             )
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxSize(),
-                                horizontalArrangement = Arrangement.SpaceAround,
-                                verticalAlignment = Alignment.CenterVertically,
-                            ) {
-                                IconButton(onClick = {
-                                    selectedVerses = listOf()
-                                }) {
-                                    Icon(
-                                        modifier = Modifier.size(36.dp),
-                                        imageVector = Icons.Outlined.Cancel,
-                                        contentDescription = "Clear",
-                                    )
-                                }
-                                IconButton(onClick = {
-                                    if (isPlaying) {
-                                        model.speechService.StopSpeakingAsync()
-                                    } else {
-                                        scope.launch(Dispatchers.IO) {
-                                            for (v in selectedVerses.sortedBy { it.verseIndex }) {
-                                                model.speechService.StartSpeakingSsml(v.toSSML())
-                                            }
-                                        }
+                        }
+                        IconButton(onClick = {
+                            if (isPlaying) {
+                                model.speechService.StopSpeakingAsync()
+                            } else {
+                                scope.launch(Dispatchers.IO) {
+                                    for (v in selectedVerses.sortedBy { it.verseIndex }) {
+                                        model.speechService.StartSpeakingSsml(v.toSSML())
                                     }
-                                }) {
-                                    Icon(
-                                        modifier = Modifier.size(36.dp),
-                                        imageVector = if (isPlaying)
-                                            Icons.Outlined.PauseCircle
-                                        else
-                                            Icons.Outlined.PlayCircle,
-                                        contentDescription = "Audio",
-                                    )
-                                }
-                                IconButton(onClick = {
-                                    shareVerses(
-                                        context,
-                                        selectedVerses.sortedBy { it.verseIndex })
-                                }) {
-                                    Icon(
-                                        modifier = Modifier.size(32.dp),
-                                        imageVector = Icons.Outlined.Share,
-                                        contentDescription = "Share",
-                                    )
                                 }
                             }
+                        }) {
+                            Icon(
+                                modifier = Modifier.size(36.dp),
+                                imageVector = if (isPlaying)
+                                    Icons.Outlined.PauseCircle
+                                else
+                                    Icons.Outlined.PlayCircle,
+                                contentDescription = "Audio",
+                            )
+                        }
+                        IconButton(onClick = {
+                            shareVerses(
+                                context,
+                                selectedVerses.sortedBy { it.verseIndex })
+                        }) {
+                            Icon(
+                                modifier = Modifier.size(32.dp),
+                                imageVector = Icons.Outlined.Share,
+                                contentDescription = "Share",
+                            )
+                        }
+                    }
 //                        IconButton(onClick = {}) {
 //                            Icon(
 //                                Icons.Filled.Circle,
@@ -312,9 +319,7 @@ fun ChapterScreen(
 //                                tint = Color.Yellow
 //                            )
 //                        }
-                        }
-                    },
-                )
+                }
             }
         },
     ) { innerPadding ->
