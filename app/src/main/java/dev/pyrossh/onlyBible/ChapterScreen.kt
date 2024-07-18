@@ -7,6 +7,9 @@ import android.text.style.BulletSpan
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
 import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -199,7 +202,11 @@ fun ChapterScreen(
             )
         },
         bottomBar = {
-            if (selectedVerses.isNotEmpty()) {
+            AnimatedVisibility(
+                visible = selectedVerses.isNotEmpty(),
+                enter = slideInVertically(initialOffsetY = { it }),
+                exit = slideOutVertically(targetOffsetY = { it }),
+            ) {
                 BottomAppBar(
                     containerColor = Color.Transparent,
                     contentPadding = PaddingValues(0.dp),

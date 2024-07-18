@@ -42,13 +42,14 @@ fun AppHost(model: AppViewModel = viewModel()) {
                                 tween(400),
                             )
                         },
-//                exitTransition = {
-//                    val props = this.targetState.toRoute<ChapterScreenProps>()
-//                    slideOutOfContainer(
-//                        Dir.valueOf(props.dir).slideDirection(),
-//                        tween(400),
-//                    )
-//                },
+//                        exitTransition = {
+//                            fadeOut()
+//                            val props = this.targetState.toRoute<ChapterScreenProps>()
+//                            slideOutOfContainer(
+//                                Dir.valueOf(props.dir).slideDirection(),
+//                                tween(400),
+//                            )
+//                        },
                         popEnterTransition = {
                             slideIntoContainer(
                                 AnimatedContentTransitionScope.SlideDirection.Right,
