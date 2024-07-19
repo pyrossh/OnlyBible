@@ -1,14 +1,19 @@
 package dev.pyrossh.onlyBible
 
 import android.app.Application
+import android.app.LocaleManager
 import android.content.Context
 import android.content.Intent
+import android.os.Build
+import android.os.LocaleList
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.core.os.LocaleListCompat
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
@@ -19,7 +24,6 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.microsoft.cognitiveservices.speech.SpeechConfig
 import com.microsoft.cognitiveservices.speech.SpeechSynthesizer
-import dev.pyrossh.onlyBible.domain.Bible
 import dev.pyrossh.onlyBible.domain.Verse
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -29,6 +33,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.IOException
+import java.util.Locale
 
 internal val Context.dataStore by preferencesDataStore(name = "onlyBible")
 
@@ -46,14 +51,6 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     var verses by mutableStateOf(listOf<Verse>())
     var bookNames by mutableStateOf(listOf<String>())
     var showBottomSheet by mutableStateOf(false)
-    var bibleName by preferenceMutableState(
-        coroutineScope = viewModelScope,
-        context = context,
-        keyName = "bibleName",
-        initialValue = "English",
-        defaultValue = "English",
-        getPreferencesKey = ::stringPreferencesKey,
-    )
     var bookIndex by preferenceMutableState(
         coroutineScope = viewModelScope,
         context = context,
@@ -109,14 +106,8 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         showBottomSheet = false
     }
 
-    fun setBibleName(context: Context, b: Bible) {
-        bibleName = b.name
-        loadBible(context)
-    }
-
     fun initData(p: Preferences) {
-        uiMode  = context.applicationContext.resources.configuration.uiMode
-        bibleName = p[stringPreferencesKey("bibleName")] ?: "English"
+        uiMode = context.applicationContext.resources.configuration.uiMode
         scrollState = LazyListState(
             p[intPreferencesKey("scrollIndex")] ?: 0,
             p[intPreferencesKey("scrollOffset")] ?: 0
@@ -127,17 +118,15 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         scrollState = LazyListState(0, 0)
     }
 
-    fun loadBible(context: Context) {
-        println("LoadBible")
+    fun loadBible(loc: Locale, context: Context) {
         viewModelScope.launch(Dispatchers.IO) {
             launch(Dispatchers.Main) {
                 isLoading = true
                 isOnError = false
             }
             try {
-                val b = Bible.valueOf(bibleName)
                 val buffer =
-                    context.assets.open("bibles/${b.fileName}.txt").bufferedReader()
+                    context.assets.open("bibles/${loc.getDisplayLanguage(Locale.ENGLISH)}.txt").bufferedReader()
                 val localVerses = buffer.readLines().filter { it.isNotEmpty() }.map {
                     val arr = it.split("|")
                     val bookName = arr[0]
@@ -147,7 +136,6 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
                     val heading = arr[4]
                     val verseText = arr.subList(5, arr.size).joinToString("|")
                     Verse(
-                        bible = b,
                         bookIndex = book,
                         bookName = bookName,
                         chapterIndex = chapter,
@@ -191,6 +179,18 @@ fun shareVerses(context: Context, verses: List<Verse>) {
     }
     val shareIntent = Intent.createChooser(sendIntent, null)
     context.startActivity(shareIntent)
+}
+
+fun setLocale(context: Context, loc: Locale) {
+    if (Build.VERSION.SDK_INT >= 33) {
+        val localeManager = context.getSystemService(LocaleManager::class.java)
+        localeManager.applicationLocales = LocaleList(loc)
+    } else {
+        // For this to work you need to extend MainActivity with AppCompatActivity
+        AppCompatDelegate.setApplicationLocales(
+            LocaleListCompat.forLanguageTags(loc.language)
+        )
+    }
 }
 
 private inline fun <reified T, reified NNT : T> preferenceMutableState(

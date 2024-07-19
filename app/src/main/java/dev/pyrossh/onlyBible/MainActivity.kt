@@ -1,6 +1,7 @@
 package dev.pyrossh.onlyBible
 
 import android.animation.ObjectAnimator
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.view.animation.AccelerateInterpolator
@@ -15,6 +16,11 @@ import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import java.util.Locale
+
+fun Context.getCurrentLocale(): Locale {
+    return resources.configuration.locales.get(0)
+}
 
 class MainActivity : ComponentActivity() {
 
@@ -27,7 +33,7 @@ class MainActivity : ComponentActivity() {
         lifecycleScope.launch {
             val data = applicationContext.dataStore.data.first()
             model.initData(data)
-            model.loadBible(applicationContext)
+            model.loadBible(applicationContext.getCurrentLocale(), applicationContext)
         }
         splashScreen.setKeepOnScreenCondition { model.isLoading }
         splashScreen.setOnExitAnimationListener { viewProvider ->
@@ -47,6 +53,7 @@ class MainActivity : ComponentActivity() {
                 start()
             }
         }
+
         addOnConfigurationChangedListener {
             model.uiMode = it.uiMode
         }
@@ -66,7 +73,8 @@ class MainActivity : ComponentActivity() {
             applicationContext.dataStore.edit {
                 println("saveData ${model.scrollState.firstVisibleItemIndex}")
                 it[intPreferencesKey("scrollIndex")] = model.scrollState.firstVisibleItemIndex
-                it[intPreferencesKey("scrollOffset")] = model.scrollState.firstVisibleItemScrollOffset
+                it[intPreferencesKey("scrollOffset")] =
+                    model.scrollState.firstVisibleItemScrollOffset
             }
         }
     }

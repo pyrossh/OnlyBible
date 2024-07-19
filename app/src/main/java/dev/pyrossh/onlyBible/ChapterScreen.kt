@@ -72,7 +72,6 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.microsoft.cognitiveservices.speech.SpeechSynthesisEventArgs
-import dev.pyrossh.onlyBible.domain.Bible
 import dev.pyrossh.onlyBible.domain.Verse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -162,6 +161,7 @@ fun ChapterScreen(
     var isPlaying by rememberSaveable {
         mutableStateOf(false)
     }
+    var expanded by remember { mutableStateOf(false) }
     DisposableEffect(Unit) {
         val started = { _: Any, _: SpeechSynthesisEventArgs ->
             isPlaying = true
@@ -226,7 +226,7 @@ fun ChapterScreen(
                 actions = {
                     TextButton(onClick = { openDrawer(MenuType.Bible, bookIndex) }) {
                         Text(
-                            text = Bible.valueOf(model.bibleName).code.uppercase(),
+                            text = context.getCurrentLocale().language.uppercase(),
                             style = TextStyle(
                                 fontSize = 18.sp,
                                 fontWeight = FontWeight.W500,
@@ -292,7 +292,9 @@ fun ChapterScreen(
                             } else {
                                 scope.launch(Dispatchers.IO) {
                                     for (v in selectedVerses.sortedBy { it.verseIndex }) {
-                                        model.speechService.StartSpeakingSsml(v.toSSML())
+                                        model.speechService.StartSpeakingSsml(
+                                            v.toSSML(context.getString(R.string.voice)),
+                                        )
                                     }
                                 }
                             }
@@ -344,7 +346,8 @@ fun ChapterScreen(
                         onSwipeLeft = onSwipeLeft,
                         onSwipeRight = { onSwipeRight() },
                     )
-                }) {
+                }
+        ) {
             items(chapterVerses) { v ->
                 if (v.heading.isNotEmpty()) {
                     Text(

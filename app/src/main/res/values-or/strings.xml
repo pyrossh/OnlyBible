@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Only Bible</string>
+    <string name="old_testament">ଓଲ୍ଡ ଷ୍ଟେଟାମେଣ୍ଟ</string>
+    <string name="new_testament">ନ୍ୟୁ ଷ୍ଟେଟାମେଣ୍ଟ</string>
+    <string name="settings">ସେଟିଂସମୂହ</string>
+    <string name="voice">or-IN-SubhasiniNeural</string>
+</resources>

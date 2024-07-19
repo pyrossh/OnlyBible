@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Only Bible</string>
+    <string name="old_testament">पुराना नियम</string>
+    <string name="new_testament">नया नियम</string>
+    <string name="settings">समायोजन</string>
+    <string name="voice">hi-IN-SwaraNeural</string>
+</resources>

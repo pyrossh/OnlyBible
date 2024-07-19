@@ -1,5 +1,6 @@
 package dev.pyrossh.onlyBible
 
+import android.app.LocaleConfig
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -12,7 +13,6 @@ import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyGridItemScope
 import androidx.compose.foundation.lazy.grid.LazyGridScope
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -38,10 +38,10 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import dev.pyrossh.onlyBible.domain.Bible
 import dev.pyrossh.onlyBible.domain.Verse
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.util.Locale
 
 enum class MenuType {
     Bible,
@@ -100,6 +100,7 @@ fun AppDrawer(
                         .padding(bottom = 16.dp),
                 ) {
                     if (menuType == MenuType.Bible) {
+                        val locales = LocaleConfig(context).supportedLocales!!
                         LazyVerticalGrid(
                             modifier = Modifier.fillMaxSize(),
                             verticalArrangement = Arrangement.spacedBy(10.dp),
@@ -126,11 +127,19 @@ fun AppDrawer(
                                     }
                                 }
                             }
-                            items(Bible.entries.toTypedArray()) { b ->
-                                QuickButton(b.displayName) {
-                                    model.setBibleName(context, b)
+                            items(locales.size()) {
+                                val loc = locales[it]
+                                QuickButton(
+                                    title = locales[it].getDisplayName(Locale.ENGLISH),
+                                    subtitle = if (loc.language == "en")
+                                        "KJV"
+                                    else
+                                        locales[it].getDisplayName(loc),
+                                ) {
                                     scope.launch {
                                         drawerState.close()
+                                    }.invokeOnCompletion {
+                                        setLocale(context, loc)
                                     }
                                 }
                             }
@@ -150,7 +159,7 @@ fun AppDrawer(
                                     verticalAlignment = Alignment.CenterVertically,
                                 ) {
                                     Text(
-                                        text = "Old Testament",
+                                        text = context.getString(R.string.old_testament),
                                         fontSize = 18.sp,
                                         fontWeight = FontWeight.W500,
                                     )
@@ -164,7 +173,10 @@ fun AppDrawer(
                                 }
                             }
                             items(39) { b ->
-                                QuickButton(shortName(model.bookNames[b])) {
+                                QuickButton(
+                                    title = shortName(model.bookNames[b]),
+                                    subtitle = null,
+                                ) {
                                     bookIndex = b
                                     menuType = MenuType.Chapter
                                 }
@@ -176,7 +188,7 @@ fun AppDrawer(
                                     verticalAlignment = Alignment.CenterVertically,
                                 ) {
                                     Text(
-                                        text = "New Testament",
+                                        text = context.getString(R.string.new_testament),
                                         fontSize = 18.sp,
                                         fontWeight = FontWeight.W500
                                     )
@@ -184,7 +196,10 @@ fun AppDrawer(
                             }
                             items(27) { i ->
                                 val b = 39 + i
-                                QuickButton(shortName(model.bookNames[b])) {
+                                QuickButton(
+                                    title = shortName(model.bookNames[b]),
+                                    subtitle = null,
+                                ) {
                                     bookIndex = b
                                     menuType = MenuType.Chapter
                                 }
@@ -221,7 +236,10 @@ fun AppDrawer(
                             }
 
                             items(Verse.chapterSizes[bookIndex]) { c ->
-                                QuickButton("${c + 1}") {
+                                QuickButton(
+                                    title = "${c + 1}",
+                                    subtitle = null,
+                                ) {
                                     scope.launch {
                                         navigateToChapter(
                                             ChapterScreenProps(
@@ -244,18 +262,33 @@ fun AppDrawer(
 }
 
 @Composable
-fun QuickButton(text: String, onClick: () -> Unit) {
+fun QuickButton(title: String, subtitle: String?, onClick: () -> Unit) {
     Button(
         shape = RoundedCornerShape(2.dp),
         contentPadding = PaddingValues(4.dp),
         onClick = onClick
     ) {
-        Text(
-            style = TextStyle(
-                fontSize = 18.sp,
-                fontWeight = FontWeight.W500,
-            ),
-            text = text,
-        )
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.padding(vertical = 8.dp)
+        ) {
+            Text(
+                style = TextStyle(
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.W500,
+                ),
+                text = title,
+            )
+            if (!subtitle.isNullOrEmpty()) {
+                Text(
+                    modifier = Modifier.padding(top = 8.dp),
+                    style = TextStyle(
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.W500,
+                    ),
+                    text = "($subtitle)",
+                )
+            }
+        }
     }
 }

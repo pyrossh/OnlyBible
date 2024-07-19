@@ -78,7 +78,6 @@ val engTitles = listOf(
 @Serializable
 @Parcelize
 data class Verse(
-    val bible: Bible,
     val bookIndex: Int,
     val bookName: String,
     val chapterIndex: Int,
@@ -87,10 +86,10 @@ data class Verse(
     val text: String,
 ) : Parcelable {
 
-    fun toSSML(): String {
+    fun toSSML(voice: String): String {
         return """
             <speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="en-US">
-                <voice name="${bible.voiceName}">
+                <voice name="$voice">
                     $text
                 </voice>
             </speak>

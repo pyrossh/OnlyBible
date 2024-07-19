@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Only Bible</string>
+    <string name="old_testament">പഴയ നിയമം</string>
+    <string name="new_testament">പുതിയ നിയമം</string>
+    <string name="settings">ക്രമീകരണങ്ങൾ</string>
+    <string name="voice">ml-IN-SobhanaNeural</string>
+</resources>
