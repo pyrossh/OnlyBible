@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyGridItemScope
 import androidx.compose.foundation.lazy.grid.LazyGridScope
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -100,7 +101,10 @@ fun AppDrawer(
                         .padding(bottom = 16.dp),
                 ) {
                     if (menuType == MenuType.Bible) {
-                        val locales = LocaleConfig(context).supportedLocales!!
+                        val localeList = LocaleConfig(context).supportedLocales!!
+                        val locales = arrayOfNulls<String>(localeList.size())
+                            .mapIndexed { i, _ -> localeList[i] }
+                            .sortedBy { it.getDisplayName(Locale.ENGLISH) }
                         LazyVerticalGrid(
                             modifier = Modifier.fillMaxSize(),
                             verticalArrangement = Arrangement.spacedBy(10.dp),
@@ -127,14 +131,13 @@ fun AppDrawer(
                                     }
                                 }
                             }
-                            items(locales.size()) {
-                                val loc = locales[it]
+                            items(locales) { loc ->
                                 QuickButton(
-                                    title = locales[it].getDisplayName(Locale.ENGLISH),
+                                    title = loc.getDisplayName(Locale.ENGLISH),
                                     subtitle = if (loc.language == "en")
                                         "KJV"
                                     else
-                                        locales[it].getDisplayName(loc),
+                                        loc.getDisplayName(loc),
                                 ) {
                                     scope.launch {
                                         drawerState.close()
