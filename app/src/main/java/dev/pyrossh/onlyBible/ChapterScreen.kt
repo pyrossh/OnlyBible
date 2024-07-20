@@ -15,6 +15,7 @@ import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
@@ -149,10 +150,12 @@ fun EmbeddedSearchBar(
     onClose: () -> Unit,
     content: @Composable () -> Unit
 ) {
-    ProvideTextStyle(value = TextStyle(
-        fontSize = 18.sp,
-        color = MaterialTheme.colorScheme.onSurface,
-    )) {
+    ProvideTextStyle(
+        value = TextStyle(
+            fontSize = 18.sp,
+            color = MaterialTheme.colorScheme.onSurface,
+        )
+    ) {
         SearchBar(
             query = query,
             onQueryChange = onQueryChange,
@@ -289,24 +292,30 @@ fun ChapterScreen(
                 modifier = Modifier
                     .height(72.dp),
                 title = {
+
                     Row(
                         modifier = Modifier
                             .fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Start,
-                        verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        Text(
-                            modifier = Modifier.clickable {
-                                openDrawer(MenuType.Book, bookIndex)
-                            },
-                            text = bookNames[bookIndex],
-                            style = TextStyle(
-                                fontSize = 22.sp,
-                                fontWeight = FontWeight.W500,
-                                color = headingColor,
+                        TextButton(
+                            contentPadding = PaddingValues(0.dp),
+                            onClick = { openDrawer(MenuType.Book, bookIndex) }
+                        ) {
+                            Text(
+                                text = bookNames[bookIndex] +
+                                        (if (bookNames[bookIndex].length <= 4) "\u3164" else ""),
+                                // this unicode character is to prevent Job for shifting to right
+                                style = TextStyle(
+                                    fontSize = 22.sp,
+                                    fontWeight = FontWeight.W500,
+                                    color = headingColor,
+                                )
                             )
-                        )
-                        TextButton(onClick = { openDrawer(MenuType.Chapter, bookIndex) }) {
+                        }
+                        TextButton(
+                            contentPadding = PaddingValues(0.dp),
+                            onClick = { openDrawer(MenuType.Chapter, bookIndex) }
+                        ) {
                             Text(
                                 text = "${chapterIndex + 1}",
                                 style = TextStyle(
