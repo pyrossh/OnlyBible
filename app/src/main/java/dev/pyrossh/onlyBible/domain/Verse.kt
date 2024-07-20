@@ -1,6 +1,8 @@
 package dev.pyrossh.onlyBible.domain
 
 import android.os.Parcelable
+import androidx.appsearch.annotation.Document
+import androidx.appsearch.app.AppSearchSchema
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 

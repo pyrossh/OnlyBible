@@ -75,7 +75,7 @@ fun AppHost(model: AppViewModel = viewModel()) {
                 if (model.isLoading) it.alpha(0.5f) else it
             }
     ) {
-        if (model.verses.isNotEmpty()) {
+        if (model.verses.value.isNotEmpty()) {
             AppDrawer(model = model, navigateToChapter = navigateToChapter) { openDrawer ->
                 NavHost(
                     navController = navController,

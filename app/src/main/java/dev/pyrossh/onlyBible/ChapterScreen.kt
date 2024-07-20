@@ -1,6 +1,5 @@
 package dev.pyrossh.onlyBible
 
-import android.app.Activity
 import android.graphics.Typeface
 import android.os.Parcelable
 import android.text.Html
@@ -34,12 +33,16 @@ import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.PauseCircle
 import androidx.compose.material.icons.outlined.PlayCircle
 import androidx.compose.material.icons.outlined.Share
+import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -48,6 +51,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableIntState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -62,7 +66,6 @@ import androidx.compose.ui.input.pointer.PointerInputScope
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -137,6 +140,63 @@ suspend fun PointerInputScope.detectSwipe(
     }
 )
 
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+fun EmbeddedSearchBar(
+    query: String,
+    onQueryChange: (String) -> Unit,
+    onSearch: ((String) -> Unit),
+    onClose: () -> Unit,
+    content: @Composable () -> Unit
+) {
+    ProvideTextStyle(value = TextStyle(
+        fontSize = 18.sp,
+        color = MaterialTheme.colorScheme.onSurface,
+    )) {
+        SearchBar(
+            query = query,
+            onQueryChange = onQueryChange,
+            onSearch = onSearch,
+            active = true,
+            onActiveChange = {},
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            placeholder = {
+                Text(
+                    style = TextStyle(
+                        fontSize = 18.sp,
+                    ),
+                    text = "Search"
+                )
+            },
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Rounded.Search,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurface,
+                )
+            },
+            trailingIcon = {
+                IconButton(
+                    onClick = {
+                        onClose()
+                    },
+                ) {
+                    Icon(
+                        imageVector = Icons.Rounded.Close,
+                        contentDescription = "Close",
+                        tint = MaterialTheme.colorScheme.onSurface,
+                    )
+                }
+            },
+            tonalElevation = 0.dp,
+        ) {
+            content()
+        }
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChapterScreen(
@@ -148,12 +208,8 @@ fun ChapterScreen(
     openDrawer: (MenuType, Int) -> Job,
 ) {
     val context = LocalContext.current
-    val isLight = isLightTheme(model.uiMode, isSystemInDarkTheme())
-    val fontType = FontType.valueOf(model.fontType)
-    val fontSizeDelta = model.fontSizeDelta
-    val boldWeight = if (model.fontBoldEnabled) FontWeight.W700 else FontWeight.W400
-    val chapterVerses =
-        model.verses.filter { it.bookIndex == bookIndex && it.chapterIndex == chapterIndex }
+    val verses by model.verses.collectAsState()
+    val bookNames by model.bookNames.collectAsState()
     val scope = rememberCoroutineScope()
     var selectedVerses by rememberSaveable {
         mutableStateOf(listOf<Verse>())
@@ -161,7 +217,14 @@ fun ChapterScreen(
     var isPlaying by rememberSaveable {
         mutableStateOf(false)
     }
-    var expanded by remember { mutableStateOf(false) }
+    val searchText by model.searchText.collectAsState()
+    val isSearching by model.isSearching.collectAsState()
+    val versesList by model.versesList.collectAsState()
+    val fontType = FontType.valueOf(model.fontType)
+    val fontSizeDelta = model.fontSizeDelta
+    val headingColor = MaterialTheme.colorScheme.onSurface // MaterialTheme.colorScheme.primary,
+    val chapterVerses =
+        verses.filter { it.bookIndex == bookIndex && it.chapterIndex == chapterIndex }
     DisposableEffect(Unit) {
         val started = { _: Any, _: SpeechSynthesisEventArgs ->
             isPlaying = true
@@ -180,16 +243,48 @@ fun ChapterScreen(
     LaunchedEffect(key1 = chapterVerses) {
         selectedVerses = listOf()
     }
-    val headingColor = MaterialTheme.colorScheme.onSurface // MaterialTheme.colorScheme.primary,
-    val view = LocalView.current
-    val window = (view.context as Activity).window
-//    WindowInsets.Companion.navigationBars.getBottom()
-//    WindowInsets.safeContent.getBottom()
-//    WindowCompat.getInsetsController(window, view).systemBarsBehavior
     Scaffold(
         modifier = Modifier
             .fillMaxSize(),
         topBar = {
+            if (isSearching) {
+                EmbeddedSearchBar(
+                    query = searchText,
+                    onQueryChange = model::onSearchTextChange,
+                    onSearch = model::onSearchTextChange,
+                    onClose = { model.onCloseSearch() }
+                ) {
+                    val groups = versesList.groupBy { "${it.bookName} ${it.chapterIndex + 1}" }
+                    LazyColumn {
+                        groups.forEach {
+                            item(
+                                contentType = "header"
+                            ) {
+                                Text(
+                                    modifier = Modifier.padding(
+                                        vertical = 12.dp,
+                                    ),
+                                    style = TextStyle(
+                                        fontFamily = fontType.family(),
+                                        fontSize = (16 + fontSizeDelta).sp,
+                                        fontWeight = FontWeight.W700,
+                                        color = headingColor,
+                                    ),
+                                    text = it.key,
+                                )
+                            }
+                            items(it.value) { v ->
+                                VerseView(
+                                    model = model,
+                                    verse = v,
+                                    selectedVerses = selectedVerses,
+                                    setSelectedVerses = { selectedVerses = it },
+                                )
+                            }
+                        }
+                    }
+                }
+            }
             TopAppBar(
                 modifier = Modifier
                     .height(72.dp),
@@ -204,7 +299,7 @@ fun ChapterScreen(
                             modifier = Modifier.clickable {
                                 openDrawer(MenuType.Book, bookIndex)
                             },
-                            text = model.bookNames[bookIndex],
+                            text = bookNames[bookIndex],
                             style = TextStyle(
                                 fontSize = 22.sp,
                                 fontWeight = FontWeight.W500,
@@ -224,6 +319,15 @@ fun ChapterScreen(
                     }
                 },
                 actions = {
+                    IconButton(
+                        onClick = { model.onOpenSearch() },
+                    ) {
+                        Icon(
+                            imageVector = Icons.Rounded.Search,
+                            contentDescription = "Search",
+                            tint = headingColor,
+                        )
+                    }
                     TextButton(onClick = { openDrawer(MenuType.Bible, bookIndex) }) {
                         Text(
                             text = context.getCurrentLocale().language.uppercase(),
@@ -363,87 +467,108 @@ fun ChapterScreen(
                         text = v.heading.replace("<br>", "\n")
                     )
                 }
-                val isSelected = selectedVerses.contains(v);
-                val buttonInteractionSource = remember { MutableInteractionSource() }
-                Text(
-                    modifier = Modifier
-                        .clickable(
-                            interactionSource = buttonInteractionSource,
-                            indication = null
-                        ) {
-                            selectedVerses = if (selectedVerses.contains(v)) {
-                                selectedVerses - v
-                            } else {
-                                selectedVerses + v
-                            }
-                        },
-                    style = TextStyle(
-                        background = if (isSelected)
-                            MaterialTheme.colorScheme.outline
-                        else
-                            Color.Unspecified,
-                        fontFamily = fontType.family(),
-                        color = if (isLight)
-                            Color(0xFF000104)
-                        else
-                            Color(0xFFBCBCBC),
-                        fontWeight = boldWeight,
-                        fontSize = (17 + fontSizeDelta).sp,
-                        lineHeight = (23 + fontSizeDelta).sp,
-                        letterSpacing = 0.sp,
-                    ),
-                    text = buildAnnotatedString {
-                        val spanned = Html.fromHtml(v.text, Html.FROM_HTML_MODE_COMPACT)
-                        val spans = spanned.getSpans(0, spanned.length, Any::class.java)
-                        val verseNo = "${v.verseIndex + 1} "
-                        withStyle(
-                            style = SpanStyle(
-                                fontSize = (13 + fontSizeDelta).sp,
-                                color = if (isLight)
-                                    Color(0xFFA20101)
-                                else
-                                    Color(0xFFCCCCCC),
-                                fontWeight = FontWeight.W700,
-                            )
-                        ) {
-                            append(verseNo)
-                        }
-                        append(spanned.toString())
-                        spans
-                            .filter { it !is BulletSpan }
-                            .forEach { span ->
-                                val start = spanned.getSpanStart(span)
-                                val end = spanned.getSpanEnd(span)
-                                when (span) {
-                                    is ForegroundColorSpan ->
-                                        if (isLight) SpanStyle(color = Color(0xFFFF0000))
-                                        else SpanStyle(color = Color(0xFFFF636B))
-
-                                    is StyleSpan -> when (span.style) {
-                                        Typeface.BOLD -> SpanStyle(fontWeight = FontWeight.Bold)
-                                        Typeface.ITALIC -> SpanStyle(fontStyle = FontStyle.Italic)
-                                        Typeface.BOLD_ITALIC -> SpanStyle(
-                                            fontWeight = FontWeight.Bold,
-                                            fontStyle = FontStyle.Italic,
-                                        )
-
-                                        else -> null
-                                    }
-
-                                    else -> {
-                                        null
-                                    }
-                                }?.let { spanStyle ->
-                                    addStyle(
-                                        spanStyle,
-                                        start + verseNo.length - 1,
-                                        end + verseNo.length
-                                    )
-                                }
-                            }
-                    }
+                VerseView(
+                    model = model,
+                    verse = v,
+                    selectedVerses = selectedVerses,
+                    setSelectedVerses = { selectedVerses = it },
                 )
             }
         }
     }
+}
+
+@Composable
+private fun VerseView(
+    model: AppViewModel,
+    verse: Verse,
+    selectedVerses: List<Verse>,
+    setSelectedVerses: (List<Verse>) -> Unit,
+) {
+    val isLight = isLightTheme(model.uiMode, isSystemInDarkTheme())
+    val fontType = FontType.valueOf(model.fontType)
+    val fontSizeDelta = model.fontSizeDelta
+    val boldWeight = if (model.fontBoldEnabled) FontWeight.W700 else FontWeight.W400
+    val buttonInteractionSource = remember { MutableInteractionSource() }
+    val isSelected = selectedVerses.contains(verse);
+    Text(
+        modifier = Modifier
+            .clickable(
+                interactionSource = buttonInteractionSource,
+                indication = null
+            ) {
+                setSelectedVerses(
+                    if (selectedVerses.contains(verse)) {
+                        selectedVerses - verse
+                    } else {
+                        selectedVerses + verse
+                    }
+                )
+            },
+        style = TextStyle(
+            background = if (isSelected)
+                MaterialTheme.colorScheme.outline
+            else
+                Color.Unspecified,
+            fontFamily = fontType.family(),
+            color = if (isLight)
+                Color(0xFF000104)
+            else
+                Color(0xFFBCBCBC),
+            fontWeight = boldWeight,
+            fontSize = (17 + fontSizeDelta).sp,
+            lineHeight = (23 + fontSizeDelta).sp,
+            letterSpacing = 0.sp,
+        ),
+        text = buildAnnotatedString {
+            val spanned = Html.fromHtml(verse.text, Html.FROM_HTML_MODE_COMPACT)
+            val spans = spanned.getSpans(0, spanned.length, Any::class.java)
+            val verseNo = "${verse.verseIndex + 1} "
+            withStyle(
+                style = SpanStyle(
+                    fontSize = (13 + fontSizeDelta).sp,
+                    color = if (isLight)
+                        Color(0xFFA20101)
+                    else
+                        Color(0xFFCCCCCC),
+                    fontWeight = FontWeight.W700,
+                )
+            ) {
+                append(verseNo)
+            }
+            append(spanned.toString())
+            spans
+                .filter { it !is BulletSpan }
+                .forEach { span ->
+                    val start = spanned.getSpanStart(span)
+                    val end = spanned.getSpanEnd(span)
+                    when (span) {
+                        is ForegroundColorSpan ->
+                            if (isLight) SpanStyle(color = Color(0xFFFF0000))
+                            else SpanStyle(color = Color(0xFFFF636B))
+
+                        is StyleSpan -> when (span.style) {
+                            Typeface.BOLD -> SpanStyle(fontWeight = FontWeight.Bold)
+                            Typeface.ITALIC -> SpanStyle(fontStyle = FontStyle.Italic)
+                            Typeface.BOLD_ITALIC -> SpanStyle(
+                                fontWeight = FontWeight.Bold,
+                                fontStyle = FontStyle.Italic,
+                            )
+
+                            else -> null
+                        }
+
+                        else -> {
+                            null
+                        }
+                    }?.let { spanStyle ->
+                        addStyle(
+                            spanStyle,
+                            start + verseNo.length - 1,
+                            end + verseNo.length
+                        )
+                    }
+                }
+        }
+    )
 }

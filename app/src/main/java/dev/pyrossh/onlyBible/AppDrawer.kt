@@ -26,6 +26,7 @@ import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -78,6 +79,7 @@ fun AppDrawer(
     var menuType by rememberSaveable {
         mutableStateOf(MenuType.Chapter)
     }
+    val bookNames by model.bookNames.collectAsState()
     val openDrawer = { m: MenuType, b: Int ->
         menuType = m
         bookIndex = b
@@ -177,7 +179,7 @@ fun AppDrawer(
                             }
                             items(39) { b ->
                                 QuickButton(
-                                    title = shortName(model.bookNames[b]),
+                                    title = shortName(bookNames[b]),
                                     subtitle = null,
                                 ) {
                                     bookIndex = b
@@ -200,7 +202,7 @@ fun AppDrawer(
                             items(27) { i ->
                                 val b = 39 + i
                                 QuickButton(
-                                    title = shortName(model.bookNames[b]),
+                                    title = shortName(bookNames[b]),
                                     subtitle = null,
                                 ) {
                                     bookIndex = b
@@ -224,7 +226,7 @@ fun AppDrawer(
                                     verticalAlignment = Alignment.CenterVertically,
                                 ) {
                                     Text(
-                                        text = model.bookNames[bookIndex],
+                                        text = bookNames[bookIndex],
                                         fontSize = 20.sp,
                                         fontWeight = FontWeight.W500
                                     )

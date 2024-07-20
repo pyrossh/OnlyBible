@@ -27,9 +27,16 @@ import com.microsoft.cognitiveservices.speech.SpeechSynthesizer
 import dev.pyrossh.onlyBible.domain.Verse
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.IOException
@@ -48,8 +55,8 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     )
     var isLoading by mutableStateOf(true)
     var isOnError by mutableStateOf(false)
-    var verses by mutableStateOf(listOf<Verse>())
-    var bookNames by mutableStateOf(listOf<String>())
+    val verses = MutableStateFlow(listOf<Verse>())
+    val bookNames = MutableStateFlow(listOf<String>())
     var showBottomSheet by mutableStateOf(false)
     var bookIndex by preferenceMutableState(
         coroutineScope = viewModelScope,
@@ -97,6 +104,48 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         getPreferencesKey = ::booleanPreferencesKey,
     )
 
+    private val _isSearching = MutableStateFlow(false)
+    val isSearching = _isSearching.asStateFlow()
+
+    //second state the text typed by the user
+    private val _searchText = MutableStateFlow("")
+    val searchText = _searchText.asStateFlow()
+
+    @OptIn(FlowPreview::class)
+    val versesList = _searchText.asStateFlow()
+        .debounce(300)
+        .combine(verses.asStateFlow()) { text, verses ->
+            verses.filter { verse ->
+                if (text.trim().isEmpty())
+                    false
+                else
+                    verse.text.lowercase().contains(
+                        text.trim().lowercase()
+                    )
+            }
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = listOf()
+        )
+
+    fun onSearchTextChange(text: String) {
+        _searchText.value = text
+    }
+
+    fun onOpenSearch() {
+        _isSearching.value = true
+        if (!_isSearching.value) {
+            onSearchTextChange("")
+        }
+    }
+
+    fun onCloseSearch() {
+        _isSearching.value = false
+        if (!_isSearching.value) {
+            onSearchTextChange("")
+        }
+    }
 
     fun showSheet() {
         showBottomSheet = true
@@ -126,7 +175,8 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
             }
             try {
                 val buffer =
-                    context.assets.open("bibles/${loc.getDisplayLanguage(Locale.ENGLISH)}.txt").bufferedReader()
+                    context.assets.open("bibles/${loc.getDisplayLanguage(Locale.ENGLISH)}.txt")
+                        .bufferedReader()
                 val localVerses = buffer.readLines().filter { it.isNotEmpty() }.map {
                     val arr = it.split("|")
                     val bookName = arr[0]
@@ -147,8 +197,8 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
                 launch(Dispatchers.Main) {
                     isLoading = false
                     isOnError = false
-                    verses = localVerses
-                    bookNames = localVerses.distinctBy { it.bookName }.map { it.bookName }
+                    verses.value = localVerses
+                    bookNames.value = localVerses.distinctBy { it.bookName }.map { it.bookName }
                 }
             } catch (e: IOException) {
                 e.printStackTrace()
