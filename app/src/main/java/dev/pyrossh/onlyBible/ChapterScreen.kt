@@ -1,19 +1,11 @@
 package dev.pyrossh.onlyBible
 
-import android.graphics.Typeface
 import android.os.Parcelable
-import android.text.Html
-import android.text.style.BulletSpan
-import android.text.style.ForegroundColorSpan
-import android.text.style.StyleSpan
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectDragGestures
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -49,9 +41,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableIntState
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -62,20 +54,18 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.PointerInputScope
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.microsoft.cognitiveservices.speech.SpeechSynthesisEventArgs
+import dev.pyrossh.onlyBible.composables.VerseView
 import dev.pyrossh.onlyBible.domain.Verse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -150,6 +140,10 @@ fun EmbeddedSearchBar(
     onClose: () -> Unit,
     content: @Composable () -> Unit
 ) {
+    val textFieldFocusRequester = remember { FocusRequester() }
+    SideEffect {
+        textFieldFocusRequester.requestFocus()
+    }
     ProvideTextStyle(
         value = TextStyle(
             fontSize = 18.sp,
@@ -157,14 +151,15 @@ fun EmbeddedSearchBar(
         )
     ) {
         SearchBar(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+                .focusRequester(textFieldFocusRequester),
             query = query,
             onQueryChange = onQueryChange,
             onSearch = onSearch,
             active = true,
             onActiveChange = {},
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
             placeholder = {
                 Text(
                     style = TextStyle(
@@ -228,21 +223,6 @@ fun ChapterScreen(
     val headingColor = MaterialTheme.colorScheme.onSurface // MaterialTheme.colorScheme.primary,
     val chapterVerses =
         verses.filter { it.bookIndex == bookIndex && it.chapterIndex == chapterIndex }
-    DisposableEffect(Unit) {
-        val started = { _: Any, _: SpeechSynthesisEventArgs ->
-            isPlaying = true
-        }
-        val completed = { _: Any, _: SpeechSynthesisEventArgs ->
-            isPlaying = false
-        }
-        model.speechService.SynthesisStarted.addEventListener(started)
-        model.speechService.SynthesisCompleted.addEventListener(completed)
-
-        onDispose {
-            model.speechService.SynthesisStarted.removeEventListener(started)
-            model.speechService.SynthesisCompleted.removeEventListener(completed)
-        }
-    }
     LaunchedEffect(key1 = chapterVerses) {
         selectedVerses = listOf()
     }
@@ -368,7 +348,7 @@ fun ChapterScreen(
                 modifier = Modifier
                     .height(104.dp)
                     .padding(bottom = bottomPadding),
-                visible = selectedVerses.isNotEmpty(),
+                visible = false,
                 enter = slideInVertically(initialOffsetY = { it / 2 + bottomOffset }),
                 exit = slideOutVertically(targetOffsetY = { it / 2 + bottomOffset }),
             ) {
@@ -433,14 +413,6 @@ fun ChapterScreen(
                             )
                         }
                     }
-//                        IconButton(onClick = {}) {
-//                            Icon(
-//                                Icons.Filled.Circle,
-//                                contentDescription = "",
-//                                modifier = Modifier.size(64.dp),
-//                                tint = Color.Yellow
-//                            )
-//                        }
                 }
             }
         },
@@ -485,99 +457,4 @@ fun ChapterScreen(
             }
         }
     }
-}
-
-@Composable
-private fun VerseView(
-    model: AppViewModel,
-    verse: Verse,
-    selectedVerses: List<Verse>,
-    setSelectedVerses: (List<Verse>) -> Unit,
-) {
-    val isLight = isLightTheme(model.uiMode, isSystemInDarkTheme())
-    val fontType = FontType.valueOf(model.fontType)
-    val fontSizeDelta = model.fontSizeDelta
-    val boldWeight = if (model.fontBoldEnabled) FontWeight.W700 else FontWeight.W400
-    val buttonInteractionSource = remember { MutableInteractionSource() }
-    val isSelected = selectedVerses.contains(verse);
-    Text(
-        modifier = Modifier
-            .clickable(
-                interactionSource = buttonInteractionSource,
-                indication = null
-            ) {
-                setSelectedVerses(
-                    if (selectedVerses.contains(verse)) {
-                        selectedVerses - verse
-                    } else {
-                        selectedVerses + verse
-                    }
-                )
-            },
-        style = TextStyle(
-            background = if (isSelected)
-                MaterialTheme.colorScheme.outline
-            else
-                Color.Unspecified,
-            fontFamily = fontType.family(),
-            color = if (isLight)
-                Color(0xFF000104)
-            else
-                Color(0xFFBCBCBC),
-            fontWeight = boldWeight,
-            fontSize = (17 + fontSizeDelta).sp,
-            lineHeight = (23 + fontSizeDelta).sp,
-            letterSpacing = 0.sp,
-        ),
-        text = buildAnnotatedString {
-            val spanned = Html.fromHtml(verse.text, Html.FROM_HTML_MODE_COMPACT)
-            val spans = spanned.getSpans(0, spanned.length, Any::class.java)
-            val verseNo = "${verse.verseIndex + 1} "
-            withStyle(
-                style = SpanStyle(
-                    fontSize = (13 + fontSizeDelta).sp,
-                    color = if (isLight)
-                        Color(0xFFA20101)
-                    else
-                        Color(0xFFCCCCCC),
-                    fontWeight = FontWeight.W700,
-                )
-            ) {
-                append(verseNo)
-            }
-            append(spanned.toString())
-            spans
-                .filter { it !is BulletSpan }
-                .forEach { span ->
-                    val start = spanned.getSpanStart(span)
-                    val end = spanned.getSpanEnd(span)
-                    when (span) {
-                        is ForegroundColorSpan ->
-                            if (isLight) SpanStyle(color = Color(0xFFFF0000))
-                            else SpanStyle(color = Color(0xFFFF636B))
-
-                        is StyleSpan -> when (span.style) {
-                            Typeface.BOLD -> SpanStyle(fontWeight = FontWeight.Bold)
-                            Typeface.ITALIC -> SpanStyle(fontStyle = FontStyle.Italic)
-                            Typeface.BOLD_ITALIC -> SpanStyle(
-                                fontWeight = FontWeight.Bold,
-                                fontStyle = FontStyle.Italic,
-                            )
-
-                            else -> null
-                        }
-
-                        else -> {
-                            null
-                        }
-                    }?.let { spanStyle ->
-                        addStyle(
-                            spanStyle,
-                            start + verseNo.length - 1,
-                            end + verseNo.length
-                        )
-                    }
-                }
-        }
-    )
 }

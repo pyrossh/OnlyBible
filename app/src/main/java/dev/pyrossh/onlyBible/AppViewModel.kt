@@ -23,6 +23,7 @@ import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.microsoft.cognitiveservices.speech.SpeechConfig
+import com.microsoft.cognitiveservices.speech.SpeechSynthesisEventArgs
 import com.microsoft.cognitiveservices.speech.SpeechSynthesizer
 import dev.pyrossh.onlyBible.domain.Verse
 import kotlinx.coroutines.CoroutineScope
@@ -53,7 +54,18 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
             "centralindia"
         )
     )
+    init {
+        val started = { _: Any, _: SpeechSynthesisEventArgs ->
+            isPlaying = true
+        }
+        val completed = { _: Any, _: SpeechSynthesisEventArgs ->
+            isPlaying = false
+        }
+        speechService.SynthesisStarted.addEventListener(started)
+        speechService.SynthesisCompleted.addEventListener(completed)
+    }
     var isLoading by mutableStateOf(true)
+    var isPlaying by mutableStateOf(false)
     var isOnError by mutableStateOf(false)
     val verses = MutableStateFlow(listOf<Verse>())
     val bookNames = MutableStateFlow(listOf<String>())
