@@ -167,13 +167,18 @@ fun VerseView(
             Surface(
                 modifier = Modifier
                     .width(300.dp)
-                    .height(60.dp)
+                    .height(56.dp)
                     .border(
                         width = 1.dp,
                         color = MaterialTheme.colorScheme.outline,
-                        shape = RoundedCornerShape(2.dp)
+                        shape = RoundedCornerShape(4.dp)
                     )
-                    .shadow(elevation = 2.dp, shape = RoundedCornerShape(2.dp)),
+                    .shadow(
+                        elevation = 2.dp,
+                        spotColor = MaterialTheme.colorScheme.outline,
+                        ambientColor = MaterialTheme.colorScheme.outline,
+                        shape = RoundedCornerShape(4.dp)
+                    ),
             ) {
                 Row(
                     modifier = Modifier
