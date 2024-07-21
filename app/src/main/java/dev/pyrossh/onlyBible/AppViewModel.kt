@@ -3,6 +3,7 @@ package dev.pyrossh.onlyBible
 import android.app.Application
 import android.app.LocaleManager
 import android.content.Context
+import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import android.os.Build
 import android.os.LocaleList
@@ -40,6 +41,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.json.JSONObject
 import java.io.IOException
 import java.util.Locale
 
@@ -48,12 +50,15 @@ internal val Context.dataStore by preferencesDataStore(name = "onlyBible")
 class AppViewModel(application: Application) : AndroidViewModel(application) {
     private val context
         get() = getApplication<Application>()
+    private val prefs
+        get() = context.getSharedPreferences("data", MODE_PRIVATE)
     val speechService = SpeechSynthesizer(
         SpeechConfig.fromSubscription(
             BuildConfig.subscriptionKey,
             "centralindia"
         )
     )
+
     init {
         val started = { _: Any, _: SpeechSynthesisEventArgs ->
             isPlaying = true
@@ -64,12 +69,15 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         speechService.SynthesisStarted.addEventListener(started)
         speechService.SynthesisCompleted.addEventListener(completed)
     }
+
     var isLoading by mutableStateOf(true)
     var isPlaying by mutableStateOf(false)
     var isOnError by mutableStateOf(false)
     val verses = MutableStateFlow(listOf<Verse>())
     val bookNames = MutableStateFlow(listOf<String>())
     var showBottomSheet by mutableStateOf(false)
+    var highlightedVerses = MutableStateFlow(JSONObject())
+
     var bookIndex by preferenceMutableState(
         coroutineScope = viewModelScope,
         context = context,
@@ -167,12 +175,33 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         showBottomSheet = false
     }
 
-    fun initData(p: Preferences) {
+    fun loadData(p: Preferences) {
         uiMode = context.applicationContext.resources.configuration.uiMode
+        bookIndex = prefs.getInt("bookIndex", 0)
+        chapterIndex = prefs.getInt("chapterIndex", 0)
+        fontType = prefs.getString("fontType", FontType.Sans.name) ?: FontType.Sans.name
+        fontSizeDelta = prefs.getInt("fontSizeDelta", 0)
+        fontBoldEnabled = prefs.getBoolean("fontBoldEnabled", false)
+        highlightedVerses.value = JSONObject(prefs.getString("highlightedVerses", "{}") ?: "{}")
         scrollState = LazyListState(
             p[intPreferencesKey("scrollIndex")] ?: 0,
             p[intPreferencesKey("scrollOffset")] ?: 0
         )
+    }
+
+    fun saveData() {
+        viewModelScope.launch(Dispatchers.IO) {
+            with(prefs.edit()) {
+                putInt("bookIndex", bookIndex)
+                putInt("chapterIndex", chapterIndex)
+                putString("fontType", fontType)
+                putInt("fontSizeDelta", fontSizeDelta)
+                putBoolean("fontBoldEnabled", fontBoldEnabled)
+                putString("highlightedVerses", highlightedVerses.value.toString())
+                apply()
+                commit()
+            }
+        }
     }
 
     fun resetScrollState() {
@@ -219,6 +248,25 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
                     isOnError = true
                 }
             }
+        }
+    }
+
+    fun getHighlightForVerse(v: Verse): Int? {
+        val k = "${v.bookIndex}:${v.chapterIndex}:${v.verseIndex}"
+        if (highlightedVerses.value.has(k))
+            return highlightedVerses.value.getInt(k)
+        return null
+    }
+
+    fun addHighlightedVerses(verses: List<Verse>, colorIndex: Int) {
+        verses.forEach { v ->
+            highlightedVerses.value.put("${v.bookIndex}:${v.chapterIndex}:${v.verseIndex}", colorIndex)
+        }
+    }
+
+    fun removeHighlightedVerses(verses: List<Verse>) {
+        verses.forEach { v ->
+            highlightedVerses.value.remove("${v.bookIndex}:${v.chapterIndex}:${v.verseIndex}")
         }
     }
 }

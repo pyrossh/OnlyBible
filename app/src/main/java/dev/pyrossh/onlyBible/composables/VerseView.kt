@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -27,6 +28,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
@@ -52,8 +54,10 @@ import androidx.compose.ui.window.Popup
 import dev.pyrossh.onlyBible.AppViewModel
 import dev.pyrossh.onlyBible.FontType
 import dev.pyrossh.onlyBible.R
+import dev.pyrossh.onlyBible.darkHighlights
 import dev.pyrossh.onlyBible.domain.Verse
 import dev.pyrossh.onlyBible.isLightTheme
+import dev.pyrossh.onlyBible.lightHighlights
 import dev.pyrossh.onlyBible.shareVerses
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -76,6 +80,8 @@ fun VerseView(
     val boldWeight = if (model.fontBoldEnabled) FontWeight.W700 else FontWeight.W400
     val buttonInteractionSource = remember { MutableInteractionSource() }
     val isSelected = selectedVerses.contains(verse)
+    val highlightedColorIndex = model.getHighlightForVerse(verse)
+    val currentHighlightColors = if (isLight) lightHighlights else darkHighlights
     Text(
         modifier = Modifier
             .onPlaced {
@@ -97,12 +103,18 @@ fun VerseView(
             background = if (isSelected)
                 MaterialTheme.colorScheme.outline
             else
-                Color.Unspecified,
+                if (highlightedColorIndex != null && isLight)
+                    currentHighlightColors[highlightedColorIndex]
+                else
+                    Color.Unspecified,
             fontFamily = fontType.family(),
             color = if (isLight)
                 Color(0xFF000104)
             else
-                Color(0xFFBCBCBC),
+                if (highlightedColorIndex != null)
+                    currentHighlightColors[highlightedColorIndex]
+                else
+                    Color(0xFFBCBCBC),
             fontWeight = boldWeight,
             fontSize = (17 + fontSizeDelta).sp,
             lineHeight = (23 + fontSizeDelta).sp,
@@ -187,34 +199,32 @@ fun VerseView(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     IconButton(onClick = {
+                        model.removeHighlightedVerses(selectedVerses)
                         setSelectedVerses(listOf())
                     }) {
                         Icon(
-//                            modifier = Modifier.size(36.dp),
                             imageVector = Icons.Outlined.Cancel,
                             contentDescription = "Clear",
                         )
                     }
-                    IconButton(onClick = {}) {
-                        Icon(
-                            Icons.Filled.Circle,
-                            contentDescription = "",
-                            tint = Color.Yellow
-                        )
-                    }
-                    IconButton(onClick = {}) {
-                        Icon(
-                            Icons.Filled.Circle,
-                            contentDescription = "",
-                            tint = Color.Cyan
-                        )
-                    }
-                    IconButton(onClick = {}) {
-                        Icon(
-                            Icons.Filled.Circle,
-                            contentDescription = "",
-                            tint = Color.Magenta
-                        )
+                    lightHighlights.forEachIndexed { i, tint ->
+                        IconButton(onClick = {
+                            model.addHighlightedVerses(selectedVerses, i)
+                            setSelectedVerses(listOf())
+                        }) {
+                            Icon(
+                                modifier = Modifier
+                                    .size(20.dp)
+                                    .border(
+                                        width = 1.dp,
+                                        color = MaterialTheme.colorScheme.onBackground,
+                                        shape = RoundedCornerShape(24.dp)
+                                    ),
+                                imageVector = Icons.Filled.Circle,
+                                contentDescription = "highlight",
+                                tint = tint,
+                            )
+                        }
                     }
                     IconButton(onClick = {
                         if (model.isPlaying) {

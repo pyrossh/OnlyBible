@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -36,7 +35,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -190,12 +188,8 @@ fun ChapterScreen(
     val context = LocalContext.current
     val verses by model.verses.collectAsState()
     val bookNames by model.bookNames.collectAsState()
-    val scope = rememberCoroutineScope()
     var selectedVerses by rememberSaveable {
         mutableStateOf(listOf<Verse>())
-    }
-    var isPlaying by rememberSaveable {
-        mutableStateOf(false)
     }
     val searchText by model.searchText.collectAsState()
     val isSearching by model.isSearching.collectAsState()
@@ -251,8 +245,8 @@ fun ChapterScreen(
                 }
             }
             TopAppBar(
-                modifier = Modifier
-                    .height(72.dp),
+//                modifier = Modifier
+//                    .height(72.dp),
                 title = {
 
                     Row(

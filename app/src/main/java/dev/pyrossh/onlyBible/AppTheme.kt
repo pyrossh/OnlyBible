@@ -30,6 +30,19 @@ enum class FontType {
     }
 }
 
+val lightHighlights = listOf(
+    Color(0xFFDAEFFE),
+    Color(0xFFFFFCB2),
+    Color(0xFFFFDDF3),
+)
+
+val darkHighlights = listOf(
+    Color(0xFF69A9FC),
+    Color(0xFFFFEB66),
+    Color(0xFFFF66B3),
+)
+
+
 fun isLightTheme(uiMode: Int, isSystemDark: Boolean): Boolean {
     val maskedMode = uiMode and UI_MODE_NIGHT_MASK
     return maskedMode == UI_MODE_NIGHT_NO || (maskedMode == UI_MODE_NIGHT_UNDEFINED && !isSystemDark)

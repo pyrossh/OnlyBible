@@ -32,7 +32,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         lifecycleScope.launch {
             val data = applicationContext.dataStore.data.first()
-            model.initData(data)
+            model.loadData(data)
             model.loadBible(applicationContext.getCurrentLocale(), applicationContext)
         }
         splashScreen.setKeepOnScreenCondition { model.isLoading }
@@ -70,6 +70,7 @@ class MainActivity : ComponentActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         lifecycleScope.launch {
+            model.saveData()
             applicationContext.dataStore.edit {
                 println("saveData ${model.scrollState.firstVisibleItemIndex}")
                 it[intPreferencesKey("scrollIndex")] = model.scrollState.firstVisibleItemIndex
