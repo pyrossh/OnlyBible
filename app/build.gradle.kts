@@ -24,7 +24,6 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
-        resourceConfigurations.plus(listOf("ta","en", "hi","ml","fr"))
     }
 
     buildTypes {
@@ -81,14 +80,10 @@ dependencies {
     implementation(libs.androidx.ui.text.google.fonts)
     implementation(libs.speech.client.sdk)
     implementation(libs.kotlinx.coroutines.core)
-    implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.appcompat.resources)
-    implementation(libs.androidx.appsearch)
-    implementation(libs.androidx.appsearch.local.storage)
-    implementation(libs.androidx.appsearch.platform.storage)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

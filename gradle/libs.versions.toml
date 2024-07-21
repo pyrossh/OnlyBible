@@ -2,10 +2,8 @@
 accompanistSystemuicontroller = "0.27.0"
 agp = "8.4.2"
 appcompat = "1.7.0"
-appsearch = "1.1.0-alpha03"
 speechClientSdk = "1.34.0"
 coreSplashscreen = "1.0.1"
-datastorePreferences = "1.1.1"
 foundation = "1.6.8"
 kotlin = "2.0.0"
 kotlinxCoroutinesCore = "1.9.0-RC"
@@ -28,12 +26,8 @@ uiUtilAndroid = "1.6.8"
 accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanistSystemuicontroller" }
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
 androidx-appcompat-resources = { module = "androidx.appcompat:appcompat-resources", version.ref = "appcompat" }
-androidx-appsearch = { module = "androidx.appsearch:appsearch", version.ref = "appsearch" }
-androidx-appsearch-local-storage = { module = "androidx.appsearch:appsearch-local-storage", version.ref = "appsearch" }
-androidx-appsearch-platform-storage = { module = "androidx.appsearch:appsearch-platform-storage", version.ref = "appsearch" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
-androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 androidx-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "foundation" }
 androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleViewmodelCompose" }
 androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
