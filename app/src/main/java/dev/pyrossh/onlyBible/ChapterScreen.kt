@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -194,7 +195,6 @@ fun ChapterScreen(
     val searchText by model.searchText.collectAsState()
     val isSearching by model.isSearching.collectAsState()
     val versesList by model.versesList.collectAsState()
-    val fontType = FontType.valueOf(model.fontType)
     val fontSizeDelta = model.fontSizeDelta
     val headingColor = MaterialTheme.colorScheme.onSurface // MaterialTheme.colorScheme.primary,
     val chapterVerses =
@@ -224,7 +224,7 @@ fun ChapterScreen(
                                         vertical = 12.dp,
                                     ),
                                     style = TextStyle(
-                                        fontFamily = fontType.family(),
+                                        fontFamily = model.fontType.family(),
                                         fontSize = (16 + fontSizeDelta).sp,
                                         fontWeight = FontWeight.W700,
                                         color = headingColor,
@@ -245,8 +245,8 @@ fun ChapterScreen(
                 }
             }
             TopAppBar(
-//                modifier = Modifier
-//                    .height(72.dp),
+                modifier = Modifier
+                    .height(72.dp),
                 title = {
 
                     Row(
@@ -340,7 +340,7 @@ fun ChapterScreen(
                             top = if (v.verseIndex != 0) 12.dp else 0.dp, bottom = 12.dp
                         ),
                         style = TextStyle(
-                            fontFamily = fontType.family(),
+                            fontFamily = model.fontType.family(),
                             fontSize = (16 + fontSizeDelta).sp,
                             fontWeight = FontWeight.W700,
                             color = headingColor,

@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -28,7 +29,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
@@ -52,7 +52,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import dev.pyrossh.onlyBible.AppViewModel
-import dev.pyrossh.onlyBible.FontType
 import dev.pyrossh.onlyBible.R
 import dev.pyrossh.onlyBible.darkHighlights
 import dev.pyrossh.onlyBible.domain.Verse
@@ -75,7 +74,6 @@ fun VerseView(
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
     val isLight = isLightTheme(model.uiMode, isSystemInDarkTheme())
-    val fontType = FontType.valueOf(model.fontType)
     val fontSizeDelta = model.fontSizeDelta
     val boldWeight = if (model.fontBoldEnabled) FontWeight.W700 else FontWeight.W400
     val buttonInteractionSource = remember { MutableInteractionSource() }
@@ -107,7 +105,7 @@ fun VerseView(
                     currentHighlightColors[highlightedColorIndex]
                 else
                     Color.Unspecified,
-            fontFamily = fontType.family(),
+            fontFamily = model.fontType.family(),
             color = if (isLight)
                 Color(0xFF000104)
             else
@@ -194,7 +192,8 @@ fun VerseView(
             ) {
                 Row(
                     modifier = Modifier
-                        .fillMaxSize(),
+                        .fillMaxSize()
+                        .padding(horizontal = 4.dp),
                     horizontalArrangement = Arrangement.SpaceAround,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {

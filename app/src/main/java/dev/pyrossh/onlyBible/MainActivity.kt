@@ -11,10 +11,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.util.Locale
 
@@ -31,9 +28,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         lifecycleScope.launch {
-            val data = applicationContext.dataStore.data.first()
-            model.loadData(data)
-            model.loadBible(applicationContext.getCurrentLocale(), applicationContext)
+            model.loadData()
         }
         splashScreen.setKeepOnScreenCondition { model.isLoading }
         splashScreen.setOnExitAnimationListener { viewProvider ->
@@ -59,7 +54,7 @@ class MainActivity : ComponentActivity() {
         }
         setContent {
             AppTheme {
-                AppHost()
+                AppHost(model = model)
                 if (model.showBottomSheet) {
                     TextSettingsBottomSheet(model = model)
                 }
@@ -71,12 +66,6 @@ class MainActivity : ComponentActivity() {
         super.onSaveInstanceState(outState)
         lifecycleScope.launch {
             model.saveData()
-            applicationContext.dataStore.edit {
-                println("saveData ${model.scrollState.firstVisibleItemIndex}")
-                it[intPreferencesKey("scrollIndex")] = model.scrollState.firstVisibleItemIndex
-                it[intPreferencesKey("scrollOffset")] =
-                    model.scrollState.firstVisibleItemScrollOffset
-            }
         }
     }
 }

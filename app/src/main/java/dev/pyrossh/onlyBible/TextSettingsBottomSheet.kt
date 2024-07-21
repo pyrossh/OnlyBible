@@ -51,7 +51,6 @@ fun TextSettingsBottomSheet(model: AppViewModel) {
     val uiMode = model.uiMode and Configuration.UI_MODE_NIGHT_MASK
     val scope = rememberCoroutineScope()
     val sheetState = rememberModalBottomSheetState()
-    val fontType = FontType.valueOf(model.fontType)
     return ModalBottomSheet(
         tonalElevation = 2.dp,
         sheetState = sheetState,
@@ -192,7 +191,7 @@ fun TextSettingsBottomSheet(model: AppViewModel) {
                 FontType.entries.map {
                     Surface(
                         shape = RoundedCornerShape(8.dp),
-                        border = if (fontType == it) BorderStroke(
+                        border = if (model.fontType == it) BorderStroke(
                             2.dp, MaterialTheme.colorScheme.primary
                         ) else null,
                         modifier = Modifier
@@ -201,7 +200,7 @@ fun TextSettingsBottomSheet(model: AppViewModel) {
                             .padding(end = 16.dp)
                             .weight(1f),
                         onClick = {
-                            model.fontType = it.name
+                            model.fontType = it
                         }) {
                         Column(
                             modifier = Modifier.background(
@@ -216,7 +215,7 @@ fun TextSettingsBottomSheet(model: AppViewModel) {
                                     fontFamily = it.family(),
                                     fontSize = 18.sp,
                                     fontWeight = FontWeight.W600,
-                                    color = if (fontType == it)
+                                    color = if (model.fontType == it)
                                         MaterialTheme.colorScheme.primary
                                     else
                                         MaterialTheme.colorScheme.onSurface,

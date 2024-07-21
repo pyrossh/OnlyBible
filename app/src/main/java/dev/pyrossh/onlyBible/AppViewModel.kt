@@ -9,43 +9,31 @@ import android.os.Build
 import android.os.LocaleList
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.core.os.LocaleListCompat
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.booleanPreferencesKey
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.intPreferencesKey
-import androidx.datastore.preferences.core.stringPreferencesKey
-import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.microsoft.cognitiveservices.speech.SpeechConfig
 import com.microsoft.cognitiveservices.speech.SpeechSynthesisEventArgs
 import com.microsoft.cognitiveservices.speech.SpeechSynthesizer
+import dev.pyrossh.onlyBible.domain.BOOKS_COUNT
 import dev.pyrossh.onlyBible.domain.Verse
-import kotlinx.coroutines.CoroutineScope
+import dev.pyrossh.onlyBible.domain.Verse.Companion.chapterSizes
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.io.IOException
 import java.util.Locale
-
-internal val Context.dataStore by preferencesDataStore(name = "onlyBible")
 
 class AppViewModel(application: Application) : AndroidViewModel(application) {
     private val context
@@ -78,50 +66,15 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     var showBottomSheet by mutableStateOf(false)
     var highlightedVerses = MutableStateFlow(JSONObject())
 
-    var bookIndex by preferenceMutableState(
-        coroutineScope = viewModelScope,
-        context = context,
-        keyName = "bookIndex",
-        initialValue = 0,
-        defaultValue = 0,
-        getPreferencesKey = ::intPreferencesKey,
-    )
-    var chapterIndex by preferenceMutableState(
-        coroutineScope = viewModelScope,
-        context = context,
-        keyName = "chapterIndex",
-        initialValue = 0,
-        defaultValue = 0,
-        getPreferencesKey = ::intPreferencesKey,
-    )
+    var bookIndex by mutableIntStateOf(0)
+    var chapterIndex by mutableIntStateOf(0)
+    var fontType by mutableStateOf(FontType.Sans)
+    var fontSizeDelta by mutableIntStateOf(0)
+    var fontBoldEnabled by mutableStateOf(false)
+    var uiMode by mutableIntStateOf(0)
     var scrollState = LazyListState(
         0,
         0
-    )
-    var uiMode by mutableIntStateOf(0)
-    var fontType by preferenceMutableState(
-        coroutineScope = viewModelScope,
-        context = context,
-        keyName = "fontType",
-        initialValue = FontType.Sans.name,
-        defaultValue = FontType.Sans.name,
-        getPreferencesKey = ::stringPreferencesKey,
-    )
-    var fontSizeDelta by preferenceMutableState(
-        coroutineScope = viewModelScope,
-        context = context,
-        keyName = "fontSizeDelta",
-        initialValue = 0,
-        defaultValue = 0,
-        getPreferencesKey = ::intPreferencesKey,
-    )
-    var fontBoldEnabled by preferenceMutableState(
-        coroutineScope = viewModelScope,
-        context = context,
-        keyName = "fontBoldEnabled",
-        initialValue = false,
-        defaultValue = false,
-        getPreferencesKey = ::booleanPreferencesKey,
     )
 
     private val _isSearching = MutableStateFlow(false)
@@ -175,18 +128,69 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         showBottomSheet = false
     }
 
-    fun loadData(p: Preferences) {
-        uiMode = context.applicationContext.resources.configuration.uiMode
-        bookIndex = prefs.getInt("bookIndex", 0)
-        chapterIndex = prefs.getInt("chapterIndex", 0)
-        fontType = prefs.getString("fontType", FontType.Sans.name) ?: FontType.Sans.name
-        fontSizeDelta = prefs.getInt("fontSizeDelta", 0)
-        fontBoldEnabled = prefs.getBoolean("fontBoldEnabled", false)
-        highlightedVerses.value = JSONObject(prefs.getString("highlightedVerses", "{}") ?: "{}")
-        scrollState = LazyListState(
-            p[intPreferencesKey("scrollIndex")] ?: 0,
-            p[intPreferencesKey("scrollOffset")] ?: 0
-        )
+    fun loadData() {
+        viewModelScope.launch(Dispatchers.IO) {
+            uiMode = context.applicationContext.resources.configuration.uiMode
+            bookIndex = prefs.getInt("bookIndex", 0)
+            chapterIndex = prefs.getInt("chapterIndex", 0)
+            fontType =
+                FontType.valueOf(
+                    prefs.getString("fontType", FontType.Sans.name) ?: FontType.Sans.name
+                )
+            fontSizeDelta = prefs.getInt("fontSizeDelta", 0)
+            fontBoldEnabled = prefs.getBoolean("fontBoldEnabled", false)
+            highlightedVerses.value = JSONObject(prefs.getString("highlightedVerses", "{}") ?: "{}")
+            scrollState = LazyListState(
+                prefs.getInt("scrollIndex", 0),
+                prefs.getInt("scrollOffset", 0)
+            )
+            loadBible()
+        }
+    }
+
+    fun loadBible() {
+        viewModelScope.launch(Dispatchers.Main) {
+            isLoading = true
+            isOnError = false
+        }
+        try {
+            val buffer =
+                context.assets.open(
+                    "bibles/${
+                        context.getCurrentLocale().getDisplayLanguage(Locale.ENGLISH)
+                    }.txt"
+                )
+                    .bufferedReader()
+            val localVerses = buffer.readLines().filter { it.isNotEmpty() }.map {
+                val arr = it.split("|")
+                val bookName = arr[0]
+                val book = arr[1].toInt()
+                val chapter = arr[2].toInt()
+                val verseNo = arr[3].toInt()
+                val heading = arr[4]
+                val verseText = arr.subList(5, arr.size).joinToString("|")
+                Verse(
+                    bookIndex = book,
+                    bookName = bookName,
+                    chapterIndex = chapter,
+                    verseIndex = verseNo,
+                    heading = heading,
+                    text = verseText,
+                )
+            }
+            viewModelScope.launch(Dispatchers.Main) {
+                verses.value = localVerses
+                bookNames.value = localVerses.distinctBy { it.bookName }.map { it.bookName }
+                isLoading = false
+                isOnError = false
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+            viewModelScope.launch(Dispatchers.Main) {
+                isLoading = false
+                isOnError = true
+            }
+        }
     }
 
     fun saveData() {
@@ -194,79 +198,61 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
             with(prefs.edit()) {
                 putInt("bookIndex", bookIndex)
                 putInt("chapterIndex", chapterIndex)
-                putString("fontType", fontType)
+                putString("fontType", fontType.name)
                 putInt("fontSizeDelta", fontSizeDelta)
                 putBoolean("fontBoldEnabled", fontBoldEnabled)
                 putString("highlightedVerses", highlightedVerses.value.toString())
+                putInt("scrollIndex", scrollState.firstVisibleItemIndex)
+                putInt("scrollOffset", scrollState.firstVisibleItemScrollOffset)
                 apply()
                 commit()
             }
         }
     }
 
+    fun getForwardPair(): Pair<Int, Int> {
+        val sizes = chapterSizes[bookIndex];
+        if (sizes > chapterIndex + 1) {
+            return Pair(bookIndex, chapterIndex + 1)
+        }
+        if (bookIndex + 1 < BOOKS_COUNT) {
+            return Pair(bookIndex + 1, 0)
+        }
+        return Pair(0, 0)
+    }
+
+    fun getBackwardPair(): Pair<Int, Int> {
+        if (chapterIndex - 1 >= 0) {
+            return Pair(bookIndex, chapterIndex - 1)
+        }
+        if (bookIndex - 1 >= 0) {
+            return Pair(bookIndex - 1, chapterSizes[bookIndex - 1] - 1)
+        }
+        return Pair(BOOKS_COUNT - 1, chapterSizes[BOOKS_COUNT - 1] - 1)
+    }
+
     fun resetScrollState() {
         scrollState = LazyListState(0, 0)
     }
 
-    fun loadBible(loc: Locale, context: Context) {
-        viewModelScope.launch(Dispatchers.IO) {
-            launch(Dispatchers.Main) {
-                isLoading = true
-                isOnError = false
-            }
-            try {
-                val buffer =
-                    context.assets.open("bibles/${loc.getDisplayLanguage(Locale.ENGLISH)}.txt")
-                        .bufferedReader()
-                val localVerses = buffer.readLines().filter { it.isNotEmpty() }.map {
-                    val arr = it.split("|")
-                    val bookName = arr[0]
-                    val book = arr[1].toInt()
-                    val chapter = arr[2].toInt()
-                    val verseNo = arr[3].toInt()
-                    val heading = arr[4]
-                    val verseText = arr.subList(5, arr.size).joinToString("|")
-                    Verse(
-                        bookIndex = book,
-                        bookName = bookName,
-                        chapterIndex = chapter,
-                        verseIndex = verseNo,
-                        heading = heading,
-                        text = verseText,
-                    )
-                }
-                launch(Dispatchers.Main) {
-                    isLoading = false
-                    isOnError = false
-                    verses.value = localVerses
-                    bookNames.value = localVerses.distinctBy { it.bookName }.map { it.bookName }
-                }
-            } catch (e: IOException) {
-                e.printStackTrace()
-                launch(Dispatchers.Main) {
-                    isLoading = false
-                    isOnError = true
-                }
-            }
-        }
-    }
-
     fun getHighlightForVerse(v: Verse): Int? {
-        val k = "${v.bookIndex}:${v.chapterIndex}:${v.verseIndex}"
-        if (highlightedVerses.value.has(k))
-            return highlightedVerses.value.getInt(k)
+        if (highlightedVerses.value.has(v.key()))
+            return highlightedVerses.value.getInt(v.key())
         return null
     }
 
     fun addHighlightedVerses(verses: List<Verse>, colorIndex: Int) {
         verses.forEach { v ->
-            highlightedVerses.value.put("${v.bookIndex}:${v.chapterIndex}:${v.verseIndex}", colorIndex)
+            highlightedVerses.value.put(
+                v.key(),
+                colorIndex
+            )
         }
     }
 
     fun removeHighlightedVerses(verses: List<Verse>) {
         verses.forEach { v ->
-            highlightedVerses.value.remove("${v.bookIndex}:${v.chapterIndex}:${v.verseIndex}")
+            highlightedVerses.value.remove(v.key())
         }
     }
 }
@@ -300,51 +286,5 @@ fun setLocale(context: Context, loc: Locale) {
         AppCompatDelegate.setApplicationLocales(
             LocaleListCompat.forLanguageTags(loc.language)
         )
-    }
-}
-
-private inline fun <reified T, reified NNT : T> preferenceMutableState(
-    coroutineScope: CoroutineScope,
-    context: Context,
-    keyName: String,
-    initialValue: T,
-    defaultValue: T,
-    getPreferencesKey: (keyName: String) -> Preferences.Key<NNT>,
-): MutableState<T> {
-    val snapshotMutableState: MutableState<T> = mutableStateOf(initialValue)
-    val key: Preferences.Key<NNT> = getPreferencesKey(keyName)
-    coroutineScope.launch {
-        context.dataStore.data
-            .map { if (it[key] == null) defaultValue else it[key] }
-            .distinctUntilChanged()
-            .collectLatest {
-                withContext(Dispatchers.Main) {
-                    snapshotMutableState.value = it as T
-                }
-            }
-    }
-    return object : MutableState<T> {
-        override var value: T
-            get() = snapshotMutableState.value
-            set(value) {
-                val rollbackValue = snapshotMutableState.value
-                snapshotMutableState.value = value
-                coroutineScope.launch {
-                    try {
-                        context.dataStore.edit {
-                            if (value != null) {
-                                it[key] = value as NNT
-                            } else {
-                                it.remove(key)
-                            }
-                        }
-                    } catch (e: Exception) {
-                        snapshotMutableState.value = rollbackValue
-                    }
-                }
-            }
-
-        override fun component1() = value
-        override fun component2(): (T) -> Unit = { value = it }
     }
 }

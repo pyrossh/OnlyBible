@@ -20,14 +20,14 @@ import androidx.navigation.toRoute
 import dev.pyrossh.onlyBible.domain.Verse
 
 @Composable
-fun AppHost(model: AppViewModel = viewModel()) {
+fun AppHost(model: AppViewModel) {
     val navController = rememberNavController()
     val navigateToChapter = { props: ChapterScreenProps ->
         model.resetScrollState()
         navController.navigate(props)
     }
     val onSwipeLeft = {
-        val pair = Verse.getForwardPair(model.bookIndex, model.chapterIndex)
+        val pair = model.getForwardPair()
         navigateToChapter(
             ChapterScreenProps(
                 bookIndex = pair.first,
@@ -36,19 +36,20 @@ fun AppHost(model: AppViewModel = viewModel()) {
         )
     }
     val onSwipeRight = {
-        val pair = Verse.getBackwardPair(model.bookIndex, model.chapterIndex)
+        val pair = model.getBackwardPair()
         if (navController.previousBackStackEntry != null) {
             val previousBook =
-                navController.previousBackStackEntry?.arguments?.getInt("book")
+                navController.previousBackStackEntry?.arguments?.getInt("bookIndex")
                     ?: 0
             val previousChapter =
-                navController.previousBackStackEntry?.arguments?.getInt("chapter")
+                navController.previousBackStackEntry?.arguments?.getInt("chapterIndex")
                     ?: 0
-//                                    println("currentBackStackEntry ${previousBook} ${previousChapter} || ${pair.first} ${pair.second}")
+//          println("currentBackStackEntry ${previousBook} ${previousChapter} || ${pair.first} ${pair.second}")
             if (previousBook == pair.first && previousChapter == pair.second) {
                 println("Popped")
                 navController.popBackStack()
             } else {
+                println("navigated with stack")
                 navController.navigate(
                     ChapterScreenProps(
                         bookIndex = pair.first,
@@ -58,7 +59,7 @@ fun AppHost(model: AppViewModel = viewModel()) {
                 )
             }
         } else {
-            println("navigated navigate")
+            println("navigated without stack")
             navController.navigate(
                 ChapterScreenProps(
                     bookIndex = pair.first,

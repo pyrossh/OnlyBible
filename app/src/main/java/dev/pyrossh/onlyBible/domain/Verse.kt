@@ -1,8 +1,6 @@
 package dev.pyrossh.onlyBible.domain
 
 import android.os.Parcelable
-import androidx.appsearch.annotation.Document
-import androidx.appsearch.app.AppSearchSchema
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 
@@ -88,6 +86,8 @@ data class Verse(
     val text: String,
 ) : Parcelable {
 
+    fun key() = "${bookIndex}:${chapterIndex}:${verseIndex}"
+
     fun toSSML(voice: String): String {
         return """
             <speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="en-US">
@@ -167,26 +167,5 @@ data class Verse(
             1,
             22
         )
-
-        fun getForwardPair(book: Int, chapter: Int): Pair<Int, Int> {
-            val sizes = chapterSizes[book];
-            if (sizes > chapter + 1) {
-                return Pair(book, chapter + 1)
-            }
-            if (book + 1 < BOOKS_COUNT) {
-                return Pair(book + 1, 0)
-            }
-            return Pair(0, 0)
-        }
-
-        fun getBackwardPair(book: Int, chapter: Int): Pair<Int, Int> {
-            if (chapter - 1 >= 0) {
-                return Pair(book, chapter - 1)
-            }
-            if (book - 1 >= 0) {
-                return Pair(book - 1, chapterSizes[book - 1] - 1)
-            }
-            return Pair(BOOKS_COUNT - 1, chapterSizes[BOOKS_COUNT - 1] - 1)
-        }
     }
 }
