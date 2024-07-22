@@ -1,9 +1,0 @@
-{
-  "type": "module",
-  "dependencies": {
-    "@google-cloud/translate": "^8.3.0",
-    "@vitalets/google-translate-api": "^9.2.0",
-    "axios": "^1.7.2",
-    "uuid": "^9.0.1"
-  }
-}

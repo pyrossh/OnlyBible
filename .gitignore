@@ -48,3 +48,4 @@ scripts/audio
 .firebase
 android/pc-api-6297146122987569611-934-3fe14b04a8de.json
 android/upload-keystore.jks
+node_modules

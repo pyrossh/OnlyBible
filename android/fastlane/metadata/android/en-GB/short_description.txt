@@ -1,1 +1,1 @@
-The only bible app you will ever need
+A minimalistic bible app with a simplistic design for easy reading everyday

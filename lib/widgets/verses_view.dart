@@ -57,7 +57,7 @@ class VersesView extends StatelessWidget {
                                         style:
                                             getHighlightStyle(context, v, true)
                                                 .copyWith(
-                                          fontSize: 15,
+                                          fontSize: 18,
                                           fontWeight: FontWeight.w600,
                                           height: 2,
                                         ),
