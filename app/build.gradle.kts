@@ -1,4 +1,11 @@
+
 import com.android.build.gradle.tasks.asJavaVersion
+import java.io.FileInputStream
+import java.util.Properties
+
+val keystorePropertiesFile = rootProject.file("keystore.properties")
+val keystoreProperties = Properties()
+keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 
 plugins {
     alias(libs.plugins.android.application)
@@ -15,7 +22,7 @@ android {
 
     defaultConfig {
         applicationId = "dev.pyrossh.onlyBible"
-        minSdk = 33
+        minSdk = 32
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -26,9 +33,20 @@ android {
         }
     }
 
+    signingConfigs {
+        create("release") {
+            keyAlias = keystoreProperties["keyAlias"] as String
+            keyPassword = keystoreProperties["keyPassword"] as String
+            storeFile = file(keystoreProperties["storeFile"] as String)
+            storePassword = keystoreProperties["storePassword"] as String
+        }
+    }
+
     buildTypes {
         release {
-            isMinifyEnabled = false
+            signingConfig = signingConfigs.getByName("release")
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -36,8 +54,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaLanguageVersion.of(11).asJavaVersion()
-        targetCompatibility = JavaLanguageVersion.of(11).asJavaVersion()
+        sourceCompatibility = JavaLanguageVersion.of(17).asJavaVersion()
+        targetCompatibility = JavaLanguageVersion.of(17).asJavaVersion()
     }
     buildFeatures {
         compose = true
@@ -49,7 +67,7 @@ android {
         }
     }
     kotlinOptions {
-        jvmTarget = JavaLanguageVersion.of(11).toString()
+        jvmTarget = JavaLanguageVersion.of(17).toString()
     }
     androidResources {
         generateLocaleConfig = true

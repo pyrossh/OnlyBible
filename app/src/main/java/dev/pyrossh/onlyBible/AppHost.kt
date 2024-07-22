@@ -9,19 +9,20 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import dev.pyrossh.onlyBible.domain.Verse
 
 @Composable
 fun AppHost(model: AppViewModel) {
     val navController = rememberNavController()
+    val verses by model.verses.collectAsState()
     val navigateToChapter = { props: ChapterScreenProps ->
         model.resetScrollState()
         navController.navigate(props)
@@ -76,7 +77,7 @@ fun AppHost(model: AppViewModel) {
                 if (model.isLoading) it.alpha(0.5f) else it
             }
     ) {
-        if (model.verses.value.isNotEmpty()) {
+        if (verses.isNotEmpty()) {
             AppDrawer(model = model, navigateToChapter = navigateToChapter) { openDrawer ->
                 NavHost(
                     navController = navController,
@@ -90,14 +91,13 @@ fun AppHost(model: AppViewModel) {
                                 tween(400),
                             )
                         },
-//                        exitTransition = {
-//                            fadeOut()
-//                            val props = this.targetState.toRoute<ChapterScreenProps>()
-//                            slideOutOfContainer(
-//                                Dir.valueOf(props.dir).slideDirection(),
-//                                tween(400),
-//                            )
-//                        },
+                        exitTransition = {
+                            val props = this.targetState.toRoute<ChapterScreenProps>()
+                            slideOutOfContainer(
+                                Dir.valueOf(props.dir).slideDirection(),
+                                tween(400),
+                            )
+                        },
                         popEnterTransition = {
                             slideIntoContainer(
                                 AnimatedContentTransitionScope.SlideDirection.Right,
