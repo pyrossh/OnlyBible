@@ -71,8 +71,6 @@ fun VerseView(
     var barYPosition by remember {
         mutableIntStateOf(0)
     }
-    val scope = rememberCoroutineScope()
-    val context = LocalContext.current
     val isLight = isLightTheme(model.uiMode, isSystemInDarkTheme())
     val fontSizeDelta = model.fontSizeDelta
     val boldWeight = if (model.fontBoldEnabled) FontWeight.W700 else FontWeight.W400
@@ -170,94 +168,106 @@ fun VerseView(
         }
     )
     if (isSelected && selectedVerses.last() == verse) {
-        Popup(
-            alignment = Alignment.TopCenter,
-            offset = IntOffset(0, y = barYPosition),
+        Menu(barYPosition, model, selectedVerses, setSelectedVerses)
+    }
+}
+
+@Composable
+private fun Menu(
+    barYPosition: Int,
+    model: AppViewModel,
+    selectedVerses: List<Verse>,
+    setSelectedVerses: (List<Verse>) -> Unit,
+) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    Popup(
+        alignment = Alignment.TopCenter,
+        offset = IntOffset(0, y = barYPosition),
+    ) {
+        Surface(
+            modifier = Modifier
+                .width(300.dp)
+                .height(56.dp)
+                .border(
+                    width = 1.dp,
+                    color = MaterialTheme.colorScheme.outline,
+                    shape = RoundedCornerShape(4.dp)
+                )
+                .shadow(
+                    elevation = 2.dp,
+                    spotColor = MaterialTheme.colorScheme.outline,
+                    ambientColor = MaterialTheme.colorScheme.outline,
+                    shape = RoundedCornerShape(4.dp)
+                ),
         ) {
-            Surface(
+            Row(
                 modifier = Modifier
-                    .width(300.dp)
-                    .height(56.dp)
-                    .border(
-                        width = 1.dp,
-                        color = MaterialTheme.colorScheme.outline,
-                        shape = RoundedCornerShape(4.dp)
-                    )
-                    .shadow(
-                        elevation = 2.dp,
-                        spotColor = MaterialTheme.colorScheme.outline,
-                        ambientColor = MaterialTheme.colorScheme.outline,
-                        shape = RoundedCornerShape(4.dp)
-                    ),
+                    .fillMaxSize()
+                    .padding(horizontal = 4.dp),
+                horizontalArrangement = Arrangement.SpaceAround,
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = 4.dp),
-                    horizontalArrangement = Arrangement.SpaceAround,
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
+                IconButton(onClick = {
+                    model.removeHighlightedVerses(selectedVerses)
+                    setSelectedVerses(listOf())
+                }) {
+                    Icon(
+                        imageVector = Icons.Outlined.Cancel,
+                        contentDescription = "Clear",
+                    )
+                }
+                lightHighlights.forEachIndexed { i, tint ->
                     IconButton(onClick = {
-                        model.removeHighlightedVerses(selectedVerses)
+                        model.addHighlightedVerses(selectedVerses, i)
                         setSelectedVerses(listOf())
                     }) {
                         Icon(
-                            imageVector = Icons.Outlined.Cancel,
-                            contentDescription = "Clear",
+                            modifier = Modifier
+                                .size(20.dp)
+                                .border(
+                                    width = 1.dp,
+                                    color = MaterialTheme.colorScheme.onBackground,
+                                    shape = RoundedCornerShape(24.dp)
+                                ),
+                            imageVector = Icons.Filled.Circle,
+                            contentDescription = "highlight",
+                            tint = tint,
                         )
                     }
-                    lightHighlights.forEachIndexed { i, tint ->
-                        IconButton(onClick = {
-                            model.addHighlightedVerses(selectedVerses, i)
-                            setSelectedVerses(listOf())
-                        }) {
-                            Icon(
-                                modifier = Modifier
-                                    .size(20.dp)
-                                    .border(
-                                        width = 1.dp,
-                                        color = MaterialTheme.colorScheme.onBackground,
-                                        shape = RoundedCornerShape(24.dp)
-                                    ),
-                                imageVector = Icons.Filled.Circle,
-                                contentDescription = "highlight",
-                                tint = tint,
-                            )
-                        }
-                    }
-                    IconButton(onClick = {
-                        if (model.isPlaying) {
-                            model.speechService.StopSpeakingAsync()
-                        } else {
-                            scope.launch(Dispatchers.IO) {
-                                for (v in selectedVerses.sortedBy { it.verseIndex }) {
-                                    model.speechService.StartSpeakingSsml(
-                                        v.toSSML(context.getString(R.string.voice)),
-                                    )
-                                }
+                }
+                IconButton(onClick = {
+                    if (model.isPlaying) {
+                        model.speechService.StopSpeakingAsync()
+                    } else {
+                        scope.launch(Dispatchers.IO) {
+                            for (v in selectedVerses.sortedBy { it.verseIndex }) {
+                                model.speechService.StartSpeakingSsml(
+                                    v.toSSML(context.getString(R.string.voice)),
+                                )
                             }
                         }
-                    }) {
-                        Icon(
+                    }
+                }) {
+                    Icon(
 //                            modifier = Modifier.size(36.dp),
-                            imageVector = if (model.isPlaying)
-                                Icons.Outlined.PauseCircle
-                            else
-                                Icons.Outlined.PlayCircle,
-                            contentDescription = "Audio",
-                        )
-                    }
-                    IconButton(onClick = {
-                        shareVerses(
-                            context,
-                            selectedVerses.sortedBy { it.verseIndex })
-                    }) {
-                        Icon(
+                        imageVector = if (model.isPlaying)
+                            Icons.Outlined.PauseCircle
+                        else
+                            Icons.Outlined.PlayCircle,
+                        contentDescription = "Audio",
+                    )
+                }
+                IconButton(onClick = {
+                    shareVerses(
+                        context,
+                        selectedVerses.sortedBy { it.verseIndex })
+                }) {
+                    Icon(
 //                            modifier = Modifier.size(32.dp),
-                            imageVector = Icons.Outlined.Share,
-                            contentDescription = "Share",
-                        )
-                    }
+                        imageVector = Icons.Outlined.Share,
+                        contentDescription = "Share",
+                    )
                 }
             }
         }

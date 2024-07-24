@@ -22,7 +22,7 @@ android {
 
     defaultConfig {
         applicationId = "dev.pyrossh.onlyBible"
-        minSdk = 32
+        minSdk = 31
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -60,6 +60,12 @@ android {
     buildFeatures {
         compose = true
         buildConfig = true
+
+        testOptions {
+            emulatorControl {
+                enable = true
+            }
+        }
     }
     packaging {
         resources {
@@ -108,6 +114,8 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
+    androidTestImplementation(libs.androidx.espresso.device)
+
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 }

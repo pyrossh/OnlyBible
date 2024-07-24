@@ -1,6 +1,7 @@
 package dev.pyrossh.onlyBible
 
 import android.app.Application
+import android.app.LocaleConfig
 import android.app.LocaleManager
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
@@ -22,6 +23,7 @@ import com.microsoft.cognitiveservices.speech.SpeechSynthesizer
 import dev.pyrossh.onlyBible.domain.BOOKS_COUNT
 import dev.pyrossh.onlyBible.domain.Verse
 import dev.pyrossh.onlyBible.domain.Verse.Companion.chapterSizes
+import dev.pyrossh.onlyBible.domain.engTitles
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -58,13 +60,11 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         speechService.SynthesisCompleted.addEventListener(completed)
     }
 
-    var isLoading by mutableStateOf(true)
     var isPlaying by mutableStateOf(false)
-    var isOnError by mutableStateOf(false)
     val verses = MutableStateFlow(listOf<Verse>())
-    val bookNames = MutableStateFlow(listOf<String>())
+    val bookNames = MutableStateFlow(engTitles)
     var showBottomSheet by mutableStateOf(false)
-    var highlightedVerses = MutableStateFlow(JSONObject())
+    private val highlightedVerses = MutableStateFlow(JSONObject())
 
     var bookIndex by mutableIntStateOf(0)
     var chapterIndex by mutableIntStateOf(0)
@@ -130,6 +130,16 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
 
     fun loadData() {
         viewModelScope.launch(Dispatchers.IO) {
+            // Run this only once
+//            AppCompatDelegate.setApplicationLocales(
+//                LocaleListCompat.create(
+//                    Locale("en"),
+//                    Locale("hi"),
+//                    Locale("ne"),
+//                    Locale("pa"),
+//                    Locale("ta"),
+//                )
+//            )
             uiMode = context.applicationContext.resources.configuration.uiMode
             bookIndex = prefs.getInt("bookIndex", 0)
             chapterIndex = prefs.getInt("chapterIndex", 0)
@@ -149,15 +159,11 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun loadBible() {
-        viewModelScope.launch(Dispatchers.Main) {
-            isLoading = true
-            isOnError = false
-        }
         try {
             val buffer =
                 context.assets.open(
                     "bibles/${
-                        context.getCurrentLocale().getDisplayLanguage(Locale.ENGLISH)
+                        getCurrentLocale(context).getDisplayLanguage(Locale.ENGLISH)
                     }.txt"
                 )
                     .bufferedReader()
@@ -181,15 +187,9 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
             viewModelScope.launch(Dispatchers.Main) {
                 verses.value = localVerses
                 bookNames.value = localVerses.distinctBy { it.bookName }.map { it.bookName }
-                isLoading = false
-                isOnError = false
             }
         } catch (e: IOException) {
             e.printStackTrace()
-            viewModelScope.launch(Dispatchers.Main) {
-                isLoading = false
-                isOnError = true
-            }
         }
     }
 
@@ -277,14 +277,35 @@ fun shareVerses(context: Context, verses: List<Verse>) {
     context.startActivity(shareIntent)
 }
 
+fun getCurrentLocale(context: Context): Locale {
+    return if (Build.VERSION.SDK_INT >= 33) {
+        context.resources.configuration.locales.get(0)
+    } else {
+        AppCompatDelegate.getApplicationLocales().get(0) ?: Locale("en")
+    }
+}
+
+fun getSupportedLocales(context: Context): List<Locale> {
+    if (Build.VERSION.SDK_INT >= 33) {
+        val localeList = LocaleConfig(context).supportedLocales!!
+        return arrayOfNulls<String>(localeList.size())
+            .mapIndexed { i, _ -> localeList[i] }
+            .sortedBy { it.getDisplayName(Locale.ENGLISH) }
+    } else {
+        val localeList = AppCompatDelegate.getApplicationLocales()
+        return arrayOfNulls<String>(localeList.size())
+            .mapIndexed { i, _ -> localeList[i]!! }
+            .sortedBy { it.getDisplayName(Locale.ENGLISH) }
+    }
+}
+
 fun setLocale(context: Context, loc: Locale) {
     if (Build.VERSION.SDK_INT >= 33) {
         val localeManager = context.getSystemService(LocaleManager::class.java)
         localeManager.applicationLocales = LocaleList(loc)
     } else {
-        // For this to work you need to extend MainActivity with AppCompatActivity
-        AppCompatDelegate.setApplicationLocales(
-            LocaleListCompat.forLanguageTags(loc.language)
-        )
+        val locales = (listOf(loc) + getSupportedLocales(context))
+            .joinToString(separator = ",") { it.language }
+        AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(locales))
     }
 }

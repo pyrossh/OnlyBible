@@ -12,15 +12,12 @@ Many languages supported Indian, European and Asian.
 ## Setup
 
 ```agsl
-brew install fluttter cocoapods
+brew install fastlane
 ```
 
 
 ## Release Process
-* Increment the patch/minor version in pubspec.yaml for iOS  ex: 1.0.7
-* Increment versionCode in pubspec.yaml for android  ex: +9
-* Create file android/fastlane/metadata/android/en-GB/changelogs/$versionCode.txt and add change details
-* Update file ios/fastlane/metadata/en-US/release_notes.txt
+* Create file fastlane/metadata/android/en-GB/changelogs/$versionCode.txt and add change details
 
 ### android
 

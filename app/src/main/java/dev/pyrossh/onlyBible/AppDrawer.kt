@@ -1,6 +1,5 @@
 package dev.pyrossh.onlyBible
 
-import android.app.LocaleConfig
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -103,10 +102,7 @@ fun AppDrawer(
                         .padding(bottom = 16.dp),
                 ) {
                     if (menuType == MenuType.Bible) {
-                        val localeList = LocaleConfig(context).supportedLocales!!
-                        val locales = arrayOfNulls<String>(localeList.size())
-                            .mapIndexed { i, _ -> localeList[i] }
-                            .sortedBy { it.getDisplayName(Locale.ENGLISH) }
+                        val locales = getSupportedLocales(context)
                         LazyVerticalGrid(
                             modifier = Modifier.fillMaxSize(),
                             verticalArrangement = Arrangement.spacedBy(10.dp),

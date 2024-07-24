@@ -1,6 +1,7 @@
 package dev.pyrossh.onlyBible
 
 import android.os.Parcelable
+import android.view.SoundEffectConstants
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -15,39 +16,34 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.MoreVert
-import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableIntState
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.input.pointer.PointerInputScope
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dev.pyrossh.onlyBible.composables.EmbeddedSearchBar
 import dev.pyrossh.onlyBible.composables.VerseView
 import dev.pyrossh.onlyBible.domain.Verse
 import kotlinx.coroutines.Job
@@ -112,70 +108,6 @@ suspend fun PointerInputScope.detectSwipe(
     }
 )
 
-@Composable
-@OptIn(ExperimentalMaterial3Api::class)
-fun EmbeddedSearchBar(
-    query: String,
-    onQueryChange: (String) -> Unit,
-    onSearch: ((String) -> Unit),
-    onClose: () -> Unit,
-    content: @Composable () -> Unit
-) {
-    val textFieldFocusRequester = remember { FocusRequester() }
-    SideEffect {
-        textFieldFocusRequester.requestFocus()
-    }
-    ProvideTextStyle(
-        value = TextStyle(
-            fontSize = 18.sp,
-            color = MaterialTheme.colorScheme.onSurface,
-        )
-    ) {
-        SearchBar(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .focusRequester(textFieldFocusRequester),
-            query = query,
-            onQueryChange = onQueryChange,
-            onSearch = onSearch,
-            active = true,
-            onActiveChange = {},
-            placeholder = {
-                Text(
-                    style = TextStyle(
-                        fontSize = 18.sp,
-                    ),
-                    text = "Search"
-                )
-            },
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Rounded.Search,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurface,
-                )
-            },
-            trailingIcon = {
-                IconButton(
-                    onClick = {
-                        onClose()
-                    },
-                ) {
-                    Icon(
-                        imageVector = Icons.Rounded.Close,
-                        contentDescription = "Close",
-                        tint = MaterialTheme.colorScheme.onSurface,
-                    )
-                }
-            },
-            tonalElevation = 0.dp,
-        ) {
-            content()
-        }
-    }
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChapterScreen(
@@ -186,6 +118,7 @@ fun ChapterScreen(
     chapterIndex: Int,
     openDrawer: (MenuType, Int) -> Job,
 ) {
+    val view = LocalView.current
     val context = LocalContext.current
     val verses by model.verses.collectAsState()
     val bookNames by model.bookNames.collectAsState()
@@ -201,6 +134,8 @@ fun ChapterScreen(
         verses.filter { it.bookIndex == bookIndex && it.chapterIndex == chapterIndex }
     LaunchedEffect(key1 = chapterVerses) {
         selectedVerses = listOf()
+        model.bookIndex = bookIndex
+        model.chapterIndex = chapterIndex
     }
     Scaffold(
         modifier = Modifier
@@ -248,7 +183,6 @@ fun ChapterScreen(
                 modifier = Modifier
                     .height(72.dp),
                 title = {
-
                     Row(
                         modifier = Modifier
                             .fillMaxWidth(),
@@ -295,7 +229,7 @@ fun ChapterScreen(
                     }
                     TextButton(onClick = { openDrawer(MenuType.Bible, bookIndex) }) {
                         Text(
-                            text = context.getCurrentLocale().language.uppercase(),
+                            text = getCurrentLocale(context).language.uppercase(),
                             style = TextStyle(
                                 fontSize = 18.sp,
                                 fontWeight = FontWeight.W500,
@@ -305,6 +239,7 @@ fun ChapterScreen(
                     }
                     TextButton(
                         onClick = {
+                            view.playSoundEffect(SoundEffectConstants.CLICK)
                             model.showSheet()
                         }) {
                         Icon(

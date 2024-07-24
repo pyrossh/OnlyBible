@@ -17,3 +17,4 @@
 local.properties
 keystore.properties
 upload-keystore.jks
+svc.json
