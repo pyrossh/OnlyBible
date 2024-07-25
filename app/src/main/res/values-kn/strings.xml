@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Only Bible</string>
+    <string name="old_testament">ಹಳೆಯ ಒಡಂಬಡಿಕೆ</string>
+    <string name="new_testament">ಹೊಸ ಒಡಂಬಡಿಕೆಯು</string>
+    <string name="settings">ಸಂಯೋಜನೆಗಳು</string>
+    <string name="voice">kn-IN-GaganNeural</string>
+</resources>

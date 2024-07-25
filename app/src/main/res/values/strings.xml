@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Only Bible</string>
+    <string name="old_testament">Old Testament</string>
+    <string name="new_testament">New Testament</string>
+    <string name="settings">Text Settings</string>
+    <string name="voice">en-GB-RyanNeural</string>
+</resources>

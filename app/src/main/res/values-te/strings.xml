@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Only Bible</string>
+    <string name="old_testament">పాత నిబంధన</string>
+    <string name="new_testament">కొత్త నిబంధన</string>
+    <string name="settings">సెట్టింగ్\\u200Cలు</string>
+    <string name="voice">te-IN-ShrutiNeural</string>
+</resources>
