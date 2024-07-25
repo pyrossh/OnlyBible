@@ -1,11 +1,8 @@
 package dev.pyrossh.onlyBible
 
-import android.app.UiModeManager
-import android.content.Context.UI_MODE_SERVICE
-import android.content.res.Configuration
-import android.content.res.Configuration.UI_MODE_NIGHT_NO
-import android.content.res.Configuration.UI_MODE_NIGHT_UNDEFINED
-import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import android.app.UiModeManager.MODE_NIGHT_AUTO
+import android.app.UiModeManager.MODE_NIGHT_NO
+import android.app.UiModeManager.MODE_NIGHT_YES
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -37,7 +34,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -47,8 +43,6 @@ import kotlinx.coroutines.launch
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun TextSettingsBottomSheet(model: AppViewModel) {
-    val uiModeManager = LocalContext.current.getSystemService(UI_MODE_SERVICE) as UiModeManager
-    val uiMode = model.uiMode and Configuration.UI_MODE_NIGHT_MASK
     val scope = rememberCoroutineScope()
     val sheetState = rememberModalBottomSheetState()
     return ModalBottomSheet(
@@ -168,7 +162,13 @@ fun TextSettingsBottomSheet(model: AppViewModel) {
                         .height(60.dp)
                         .padding(end = 16.dp)
                         .weight(1f),
-                    onClick = {}) {
+                    onClick = {
+                        if (model.lineSpacingDelta > 5) {
+                            model.lineSpacingDelta = 0
+                        } else {
+                            model.lineSpacingDelta += 1
+                        }
+                    }) {
                     Column(
                         modifier = Modifier.background(MaterialTheme.colorScheme.background),
                         verticalArrangement = Arrangement.Center,
@@ -232,17 +232,17 @@ fun TextSettingsBottomSheet(model: AppViewModel) {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                listOf(UI_MODE_NIGHT_NO, UI_MODE_NIGHT_YES, UI_MODE_NIGHT_UNDEFINED).map {
+                listOf(MODE_NIGHT_NO, MODE_NIGHT_YES, MODE_NIGHT_AUTO).map {
                     Surface(
                         shape = RoundedCornerShape(8.dp),
-                        border = if (uiMode == it) BorderStroke(
+                        border = if (model.nightMode == it) BorderStroke(
                             2.dp, MaterialTheme.colorScheme.primary
                         ) else null,
-                        color = if (uiMode == it)
+                        color = if (model.nightMode == it)
                             MaterialTheme.colorScheme.primary
                         else
                             MaterialTheme.colorScheme.onSurface,
-                        contentColor = if (uiMode == it)
+                        contentColor = if (model.nightMode == it)
                             MaterialTheme.colorScheme.primary
                         else
                             MaterialTheme.colorScheme.onSurface,
@@ -255,24 +255,12 @@ fun TextSettingsBottomSheet(model: AppViewModel) {
                             scope.launch {
                                 sheetState.hide()
                                 model.closeSheet()
-                                when (it) {
-                                    UI_MODE_NIGHT_NO -> uiModeManager.setApplicationNightMode(
-                                        UiModeManager.MODE_NIGHT_NO
-                                    )
-
-                                    UI_MODE_NIGHT_YES -> uiModeManager.setApplicationNightMode(
-                                        UiModeManager.MODE_NIGHT_YES
-                                    )
-
-                                    UI_MODE_NIGHT_UNDEFINED -> uiModeManager.setApplicationNightMode(
-                                        UiModeManager.MODE_NIGHT_AUTO
-                                    )
-                                }
+                                model.setApplicationNightMode(it)
                             }
                         }
                     ) {
                         when (it) {
-                            UI_MODE_NIGHT_NO -> Icon(
+                            MODE_NIGHT_NO -> Icon(
                                 imageVector = Icons.Filled.LightMode,
                                 contentDescription = "Light",
                                 modifier = Modifier
@@ -280,7 +268,7 @@ fun TextSettingsBottomSheet(model: AppViewModel) {
                                     .padding(12.dp)
                             )
 
-                            UI_MODE_NIGHT_YES -> Icon(
+                            MODE_NIGHT_YES -> Icon(
                                 imageVector = Icons.Filled.DarkMode,
                                 contentDescription = "Dark",
                                 modifier = Modifier
@@ -288,7 +276,7 @@ fun TextSettingsBottomSheet(model: AppViewModel) {
                                     .padding(12.dp)
                             )
 
-                            UI_MODE_NIGHT_UNDEFINED -> Column(
+                            MODE_NIGHT_AUTO -> Column(
                                 modifier = Modifier.background(
                                     color = MaterialTheme.colorScheme.background,
                                 ),

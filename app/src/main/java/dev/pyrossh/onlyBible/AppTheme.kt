@@ -1,8 +1,6 @@
 package dev.pyrossh.onlyBible
 
-import android.content.res.Configuration.UI_MODE_NIGHT_MASK
-import android.content.res.Configuration.UI_MODE_NIGHT_NO
-import android.content.res.Configuration.UI_MODE_NIGHT_UNDEFINED
+import android.app.UiModeManager
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.dynamicDarkColorScheme
@@ -44,8 +42,7 @@ val darkHighlights = listOf(
 
 
 fun isLightTheme(uiMode: Int, isSystemDark: Boolean): Boolean {
-    val maskedMode = uiMode and UI_MODE_NIGHT_MASK
-    return maskedMode == UI_MODE_NIGHT_NO || (maskedMode == UI_MODE_NIGHT_UNDEFINED && !isSystemDark)
+    return uiMode == UiModeManager.MODE_NIGHT_NO || (uiMode == UiModeManager.MODE_NIGHT_AUTO && !isSystemDark)
 }
 
 @Composable
@@ -55,7 +52,7 @@ fun AppTheme(
 ) {
     val context = LocalContext.current
     val systemUiController = rememberSystemUiController()
-    val colorScheme = if (isLightTheme(model.uiMode, isSystemInDarkTheme()))
+    val colorScheme = if (isLightTheme(model.nightMode, isSystemInDarkTheme()))
         dynamicLightColorScheme(context).copy(
             onSurface = Color.Black,
             outline = Color.LightGray,
@@ -66,8 +63,7 @@ fun AppTheme(
             surface = Color(0xFF090F12),
             outline = Color(0xAA5D4979),
         )
-    println("AppTheme ${model.uiMode}")
-    LaunchedEffect(key1 = model.uiMode) {
+    LaunchedEffect(key1 = model.nightMode) {
         systemUiController.setSystemBarsColor(
             color = colorScheme.background
         )

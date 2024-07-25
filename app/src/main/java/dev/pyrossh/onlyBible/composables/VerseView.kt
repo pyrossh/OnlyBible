@@ -71,7 +71,7 @@ fun VerseView(
     var barYPosition by remember {
         mutableIntStateOf(0)
     }
-    val isLight = isLightTheme(model.uiMode, isSystemInDarkTheme())
+    val isLight = isLightTheme(model.nightMode, isSystemInDarkTheme())
     val fontSizeDelta = model.fontSizeDelta
     val boldWeight = if (model.fontBoldEnabled) FontWeight.W700 else FontWeight.W400
     val buttonInteractionSource = remember { MutableInteractionSource() }

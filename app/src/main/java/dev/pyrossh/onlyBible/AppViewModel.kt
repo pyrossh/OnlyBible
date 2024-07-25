@@ -3,8 +3,10 @@ package dev.pyrossh.onlyBible
 import android.app.Application
 import android.app.LocaleConfig
 import android.app.LocaleManager
+import android.app.UiModeManager
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
+import android.content.Context.UI_MODE_SERVICE
 import android.content.Intent
 import android.os.Build
 import android.os.LocaleList
@@ -72,7 +74,8 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     var fontType by mutableStateOf(FontType.Sans)
     var fontSizeDelta by mutableIntStateOf(0)
     var fontBoldEnabled by mutableStateOf(false)
-    var uiMode by mutableIntStateOf(0)
+    var lineSpacingDelta by mutableStateOf(0)
+    var nightMode by mutableStateOf(UiModeManager.MODE_NIGHT_AUTO)
     var scrollState = LazyListState(
         0,
         0
@@ -129,9 +132,14 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         showBottomSheet = false
     }
 
+    fun setApplicationNightMode(v: Int) {
+        val uiModeManager = context.getSystemService(UI_MODE_SERVICE) as UiModeManager
+        uiModeManager.setApplicationNightMode(v)
+        nightMode = v
+    }
+
     fun loadData() {
         viewModelScope.launch(Dispatchers.IO) {
-            uiMode = context.applicationContext.resources.configuration.uiMode
             loadedOnce = prefs.getBoolean("loadedOnce", false)
             if (!loadedOnce) {
                 initLocales()
@@ -144,6 +152,8 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
                 )
             fontSizeDelta = prefs.getInt("fontSizeDelta", 0)
             fontBoldEnabled = prefs.getBoolean("fontBoldEnabled", false)
+            lineSpacingDelta = prefs.getInt("lineSpacingDelta", 0)
+            nightMode = prefs.getInt("nightMode", UiModeManager.MODE_NIGHT_AUTO)
             highlightedVerses.value = JSONObject(prefs.getString("highlightedVerses", "{}") ?: "{}")
             scrollState = LazyListState(
                 prefs.getInt("scrollIndex", 0),
@@ -197,6 +207,8 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
                 putString("fontType", fontType.name)
                 putInt("fontSizeDelta", fontSizeDelta)
                 putBoolean("fontBoldEnabled", fontBoldEnabled)
+                putInt("lineSpacingDelta", lineSpacingDelta)
+                putInt("nightMode", nightMode)
                 putString("highlightedVerses", highlightedVerses.value.toString())
                 putInt("scrollIndex", scrollState.firstVisibleItemIndex)
                 putInt("scrollOffset", scrollState.firstVisibleItemScrollOffset)

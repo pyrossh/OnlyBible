@@ -5,8 +5,8 @@ The only bible app you will ever need.
 No ads, No in-app purchases, No distractions.
 
 Optimized for reading and highlighting.
-Only Bibles which are in the public domain are available.
-Verse by verse audio is also supported for some of the languages using Azure TTS.
+Bibles which are in the public domain are supported.
+Verse by verse audio playback is supported for most of the languages using Azure TTS.
 Many languages supported Indian, European and Asian.
 
 ## Setup
@@ -37,7 +37,3 @@ fastlane supply --aab ../build/app/outputs/bundle/release/app-release.aab
 flutter build ipa --release --dart-define-from-file=.env
 fastlane deliver  --ipa "../build/ios/ipa/only-bible-app.ipa" --automatic_release --submit_for_review
 ```
-
-## TODO
-
-* Improve Paging in dark mode

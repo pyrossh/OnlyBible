@@ -123,7 +123,6 @@ fun ChapterScreen(
 ) {
     val view = LocalView.current
     val context = LocalContext.current
-    println("Locales ${LocaleList.current.localeList.joinToString { "${it}" }}")
     val verses by model.verses.collectAsState()
     val bookNames by model.bookNames.collectAsState()
     var selectedVerses by rememberSaveable {
@@ -260,7 +259,7 @@ fun ChapterScreen(
             state = rememberSaveable(saver = LazyListState.Saver) {
                 model.scrollState
             },
-            verticalArrangement = Arrangement.spacedBy(12.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp + (model.lineSpacingDelta * 2).dp),
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
