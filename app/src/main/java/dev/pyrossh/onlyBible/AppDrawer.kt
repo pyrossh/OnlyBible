@@ -102,7 +102,7 @@ fun AppDrawer(
                         .padding(bottom = 16.dp),
                 ) {
                     if (menuType == MenuType.Bible) {
-                        val locales = getSupportedLocales(context)
+                        val locales = context.getSupportedLocales()
                         LazyVerticalGrid(
                             modifier = Modifier.fillMaxSize(),
                             verticalArrangement = Arrangement.spacedBy(10.dp),
@@ -140,7 +140,7 @@ fun AppDrawer(
                                     scope.launch {
                                         drawerState.close()
                                     }.invokeOnCompletion {
-                                        setLocale(context, loc)
+                                        context.setLocale(loc)
                                     }
                                 }
                             }

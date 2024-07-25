@@ -60,6 +60,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         speechService.SynthesisCompleted.addEventListener(completed)
     }
 
+    private var loadedOnce = false;
     var isPlaying by mutableStateOf(false)
     val verses = MutableStateFlow(listOf<Verse>())
     val bookNames = MutableStateFlow(engTitles)
@@ -130,17 +131,11 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
 
     fun loadData() {
         viewModelScope.launch(Dispatchers.IO) {
-            // Run this only once
-//            AppCompatDelegate.setApplicationLocales(
-//                LocaleListCompat.create(
-//                    Locale("en"),
-//                    Locale("hi"),
-//                    Locale("ne"),
-//                    Locale("pa"),
-//                    Locale("ta"),
-//                )
-//            )
             uiMode = context.applicationContext.resources.configuration.uiMode
+            loadedOnce = prefs.getBoolean("loadedOnce", false)
+            if (!loadedOnce) {
+                initLocales()
+            }
             bookIndex = prefs.getInt("bookIndex", 0)
             chapterIndex = prefs.getInt("chapterIndex", 0)
             fontType =
@@ -163,7 +158,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
             val buffer =
                 context.assets.open(
                     "bibles/${
-                        getCurrentLocale(context).getDisplayLanguage(Locale.ENGLISH)
+                        context.getCurrentLocale().getDisplayLanguage(Locale.ENGLISH)
                     }.txt"
                 )
                     .bufferedReader()
@@ -196,6 +191,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     fun saveData() {
         viewModelScope.launch(Dispatchers.IO) {
             with(prefs.edit()) {
+                putBoolean("loadedOnce", true)
                 putInt("bookIndex", bookIndex)
                 putInt("chapterIndex", chapterIndex)
                 putString("fontType", fontType.name)
@@ -277,21 +273,44 @@ fun shareVerses(context: Context, verses: List<Verse>) {
     context.startActivity(shareIntent)
 }
 
-fun getCurrentLocale(context: Context): Locale {
+fun initLocales() {
+    if (Build.VERSION.SDK_INT >= 33) {
+        // do nothing for now
+    } else {
+        AppCompatDelegate.setApplicationLocales(
+            LocaleListCompat.create(
+                Locale("en"),
+                Locale("bn"),
+                Locale("gu"),
+                Locale("hi"),
+                Locale("kn"),
+                Locale("ml"),
+                Locale("ne"),
+                Locale("or"),
+                Locale("pa"),
+                Locale("ta"),
+                Locale("te"),
+            )
+        )
+    }
+}
+
+fun Context.getCurrentLocale(): Locale {
     return if (Build.VERSION.SDK_INT >= 33) {
-        context.resources.configuration.locales.get(0)
+        resources.configuration.locales.get(0)
     } else {
         AppCompatDelegate.getApplicationLocales().get(0) ?: Locale("en")
     }
 }
 
-fun getSupportedLocales(context: Context): List<Locale> {
+fun Context.getSupportedLocales(): List<Locale> {
     if (Build.VERSION.SDK_INT >= 33) {
-        val localeList = LocaleConfig(context).supportedLocales!!
+        val localeList = LocaleConfig(this).supportedLocales!!
         return arrayOfNulls<String>(localeList.size())
             .mapIndexed { i, _ -> localeList[i] }
             .sortedBy { it.getDisplayName(Locale.ENGLISH) }
     } else {
+        androidx.compose.ui.text.intl.LocaleList.current.localeList
         val localeList = AppCompatDelegate.getApplicationLocales()
         return arrayOfNulls<String>(localeList.size())
             .mapIndexed { i, _ -> localeList[i]!! }
@@ -299,12 +318,12 @@ fun getSupportedLocales(context: Context): List<Locale> {
     }
 }
 
-fun setLocale(context: Context, loc: Locale) {
+fun Context.setLocale(loc: Locale) {
     if (Build.VERSION.SDK_INT >= 33) {
-        val localeManager = context.getSystemService(LocaleManager::class.java)
+        val localeManager = getSystemService(LocaleManager::class.java)
         localeManager.applicationLocales = LocaleList(loc)
     } else {
-        val locales = (listOf(loc) + getSupportedLocales(context))
+        val locales = (listOf(loc) + getSupportedLocales())
             .joinToString(separator = ",") { it.language }
         AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(locales))
     }

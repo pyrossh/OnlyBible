@@ -41,6 +41,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.intl.LocaleList
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.pyrossh.onlyBible.composables.EmbeddedSearchBar
@@ -50,6 +51,7 @@ import kotlinx.coroutines.Job
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 import kotlin.math.abs
+
 
 @Serializable
 @Parcelize
@@ -108,6 +110,7 @@ suspend fun PointerInputScope.detectSwipe(
     }
 )
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChapterScreen(
@@ -120,6 +123,7 @@ fun ChapterScreen(
 ) {
     val view = LocalView.current
     val context = LocalContext.current
+    println("Locales ${LocaleList.current.localeList.joinToString { "${it}" }}")
     val verses by model.verses.collectAsState()
     val bookNames by model.bookNames.collectAsState()
     var selectedVerses by rememberSaveable {
@@ -229,7 +233,7 @@ fun ChapterScreen(
                     }
                     TextButton(onClick = { openDrawer(MenuType.Bible, bookIndex) }) {
                         Text(
-                            text = getCurrentLocale(context).language.uppercase(),
+                            text = context.getCurrentLocale().language.uppercase(),
                             style = TextStyle(
                                 fontSize = 18.sp,
                                 fontWeight = FontWeight.W500,
