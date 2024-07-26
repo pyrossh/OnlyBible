@@ -4,10 +4,11 @@ The only bible app you will ever need.
 
 No ads, No in-app purchases, No distractions.
 
-Optimized for reading and highlighting.
-Bibles which are in the public domain are supported.
-Verse by verse audio playback is supported for most of the languages using Azure TTS.
-Many languages supported Indian, European and Asian.
+Offline First
+
+Optimized reading
+
+Online Audio Playback
 
 ## Setup
 
