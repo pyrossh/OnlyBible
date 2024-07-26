@@ -80,6 +80,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         0,
         0
     )
+    val selectedVerses = MutableStateFlow(listOf<Verse>())
 
     private val _isSearching = MutableStateFlow(false)
     val isSearching = _isSearching.asStateFlow()
@@ -136,6 +137,14 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         val uiModeManager = context.getSystemService(UI_MODE_SERVICE) as UiModeManager
         uiModeManager.setApplicationNightMode(v)
         nightMode = v
+    }
+
+    fun setSelectedVerses(verses: List<Verse>) {
+        selectedVerses.value = verses
+    }
+
+    fun clearSelectedVerses() {
+        selectedVerses.value = listOf()
     }
 
     fun loadData() {

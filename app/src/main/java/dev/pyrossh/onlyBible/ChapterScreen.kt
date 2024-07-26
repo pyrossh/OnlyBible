@@ -31,9 +31,7 @@ import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.PointerInputScope
 import androidx.compose.ui.input.pointer.pointerInput
@@ -41,12 +39,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.intl.LocaleList
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.pyrossh.onlyBible.composables.EmbeddedSearchBar
 import dev.pyrossh.onlyBible.composables.VerseView
-import dev.pyrossh.onlyBible.domain.Verse
 import kotlinx.coroutines.Job
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
@@ -125,9 +121,6 @@ fun ChapterScreen(
     val context = LocalContext.current
     val verses by model.verses.collectAsState()
     val bookNames by model.bookNames.collectAsState()
-    var selectedVerses by rememberSaveable {
-        mutableStateOf(listOf<Verse>())
-    }
     val searchText by model.searchText.collectAsState()
     val isSearching by model.isSearching.collectAsState()
     val versesList by model.versesList.collectAsState()
@@ -136,7 +129,7 @@ fun ChapterScreen(
     val chapterVerses =
         verses.filter { it.bookIndex == bookIndex && it.chapterIndex == chapterIndex }
     LaunchedEffect(key1 = chapterVerses) {
-        selectedVerses = listOf()
+        model.clearSelectedVerses()
         model.bookIndex = bookIndex
         model.chapterIndex = chapterIndex
     }
@@ -174,8 +167,6 @@ fun ChapterScreen(
                                 VerseView(
                                     model = model,
                                     verse = v,
-                                    selectedVerses = selectedVerses,
-                                    setSelectedVerses = { selectedVerses = it },
                                 )
                             }
                         }
@@ -289,8 +280,6 @@ fun ChapterScreen(
                 VerseView(
                     model = model,
                     verse = v,
-                    selectedVerses = selectedVerses,
-                    setSelectedVerses = { selectedVerses = it },
                 )
             }
         }

@@ -80,6 +80,7 @@ fun AppDrawer(
     }
     val bookNames by model.bookNames.collectAsState()
     val openDrawer = { m: MenuType, b: Int ->
+        model.clearSelectedVerses()
         menuType = m
         bookIndex = b
         scope.launch {

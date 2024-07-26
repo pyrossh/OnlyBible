@@ -29,6 +29,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
@@ -65,12 +66,11 @@ import kotlinx.coroutines.launch
 fun VerseView(
     model: AppViewModel,
     verse: Verse,
-    selectedVerses: List<Verse>,
-    setSelectedVerses: (List<Verse>) -> Unit,
 ) {
     var barYPosition by remember {
         mutableIntStateOf(0)
     }
+    val selectedVerses by model.selectedVerses.collectAsState()
     val isLight = isLightTheme(model.nightMode, isSystemInDarkTheme())
     val fontSizeDelta = model.fontSizeDelta
     val boldWeight = if (model.fontBoldEnabled) FontWeight.W700 else FontWeight.W400
@@ -87,7 +87,7 @@ fun VerseView(
                 interactionSource = buttonInteractionSource,
                 indication = null
             ) {
-                setSelectedVerses(
+                model.setSelectedVerses(
                     if (selectedVerses.contains(verse)) {
                         selectedVerses - verse
                     } else {
@@ -168,7 +168,7 @@ fun VerseView(
         }
     )
     if (isSelected && selectedVerses.last() == verse) {
-        Menu(barYPosition, model, selectedVerses, setSelectedVerses)
+        Menu(barYPosition, model)
     }
 }
 
@@ -176,11 +176,10 @@ fun VerseView(
 private fun Menu(
     barYPosition: Int,
     model: AppViewModel,
-    selectedVerses: List<Verse>,
-    setSelectedVerses: (List<Verse>) -> Unit,
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
+    val selectedVerses by model.selectedVerses.collectAsState()
     Popup(
         alignment = Alignment.TopCenter,
         offset = IntOffset(0, y = barYPosition),
@@ -210,7 +209,7 @@ private fun Menu(
             ) {
                 IconButton(onClick = {
                     model.removeHighlightedVerses(selectedVerses)
-                    setSelectedVerses(listOf())
+                    model.setSelectedVerses(listOf())
                 }) {
                     Icon(
                         imageVector = Icons.Outlined.Cancel,
@@ -220,7 +219,7 @@ private fun Menu(
                 lightHighlights.forEachIndexed { i, tint ->
                     IconButton(onClick = {
                         model.addHighlightedVerses(selectedVerses, i)
-                        setSelectedVerses(listOf())
+                        model.setSelectedVerses(listOf())
                     }) {
                         Icon(
                             modifier = Modifier
