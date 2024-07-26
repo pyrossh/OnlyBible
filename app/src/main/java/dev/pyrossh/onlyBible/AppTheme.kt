@@ -40,7 +40,6 @@ val darkHighlights = listOf(
     Color(0xFFFF66B3),
 )
 
-
 fun isLightTheme(uiMode: Int, isSystemDark: Boolean): Boolean {
     return uiMode == UiModeManager.MODE_NIGHT_NO || (uiMode == UiModeManager.MODE_NIGHT_AUTO && !isSystemDark)
 }

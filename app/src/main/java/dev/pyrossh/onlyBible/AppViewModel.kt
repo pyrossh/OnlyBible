@@ -62,7 +62,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         speechService.SynthesisCompleted.addEventListener(completed)
     }
 
-    private var loadedOnce = false;
+    private var loadedOnce = false
     var isPlaying by mutableStateOf(false)
     val verses = MutableStateFlow(listOf<Verse>())
     val bookNames = MutableStateFlow(engTitles)
@@ -219,7 +219,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun getForwardPair(): Pair<Int, Int> {
-        val sizes = chapterSizes[bookIndex];
+        val sizes = chapterSizes[bookIndex]
         if (sizes > chapterIndex + 1) {
             return Pair(bookIndex, chapterIndex + 1)
         }
@@ -268,14 +268,14 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
 fun shareVerses(context: Context, verses: List<Verse>) {
     val versesThrough =
         if (verses.size >= 3) "${verses.first().verseIndex + 1}-${verses.last().verseIndex + 1}" else verses.map { it.verseIndex + 1 }
-            .joinToString(",");
+            .joinToString(",")
     val title = "${verses[0].bookName} ${verses[0].chapterIndex + 1}:${versesThrough}"
     val text = verses.joinToString("\n") {
         it.text.replace("<span style=\"color:red;\">", "")
             .replace("<em>", "")
             .replace("</span>", "")
             .replace("</em>", "")
-    };
+    }
     val sendIntent = Intent().apply {
         action = Intent.ACTION_SEND
         putExtra(Intent.EXTRA_TEXT, "${title}\n${text}")

@@ -1,2 +1,0 @@
-json_key_file("pc-api-6297146122987569611-934-3fe14b04a8de.json") # Path to the json secret file - Follow https://docs.fastlane.tools/actions/supply/#setup to get one
-package_name("sh.pyros.only_bible_app") # e.g. com.krausefx.app
