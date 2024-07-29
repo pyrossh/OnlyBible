@@ -24,7 +24,7 @@ import com.microsoft.cognitiveservices.speech.SpeechSynthesisEventArgs
 import com.microsoft.cognitiveservices.speech.SpeechSynthesizer
 import dev.pyrossh.onlyBible.domain.BOOKS_COUNT
 import dev.pyrossh.onlyBible.domain.Verse
-import dev.pyrossh.onlyBible.domain.Verse.Companion.chapterSizes
+import dev.pyrossh.onlyBible.domain.chapterSizes
 import dev.pyrossh.onlyBible.domain.engTitles
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview

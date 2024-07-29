@@ -39,7 +39,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import dev.pyrossh.onlyBible.domain.Verse
+import dev.pyrossh.onlyBible.domain.chapterSizes
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.util.Locale
@@ -237,7 +237,7 @@ fun AppDrawer(
                                 }
                             }
 
-                            items(Verse.chapterSizes[bookIndex]) { c ->
+                            items(chapterSizes[bookIndex]) { c ->
                                 QuickButton(
                                     title = "${c + 1}",
                                     subtitle = null,
