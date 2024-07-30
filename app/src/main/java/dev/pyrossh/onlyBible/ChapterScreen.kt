@@ -17,6 +17,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.rounded.Search
+import androidx.compose.material3.ButtonDefaults.ContentPadding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -31,19 +32,22 @@ import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.PointerInputScope
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dev.pyrossh.onlyBible.composables.BibleSelector
+import dev.pyrossh.onlyBible.composables.ChapterSelector
 import dev.pyrossh.onlyBible.composables.EmbeddedSearchBar
 import dev.pyrossh.onlyBible.composables.VerseView
-import kotlinx.coroutines.Job
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 import kotlin.math.abs
@@ -106,7 +110,6 @@ suspend fun PointerInputScope.detectSwipe(
     }
 )
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChapterScreen(
@@ -115,15 +118,16 @@ fun ChapterScreen(
     onSwipeRight: () -> Any,
     bookIndex: Int,
     chapterIndex: Int,
-    openDrawer: (MenuType, Int) -> Job,
+    navigateToChapter: (ChapterScreenProps) -> Unit,
 ) {
     val view = LocalView.current
-    val context = LocalContext.current
     val verses by model.verses.collectAsState()
     val bookNames by model.bookNames.collectAsState()
     val searchText by model.searchText.collectAsState()
     val isSearching by model.isSearching.collectAsState()
     val versesList by model.versesList.collectAsState()
+    var chapterSelectorShown by remember { mutableStateOf(false) }
+    var bibleSelectorShown by remember { mutableStateOf(false) }
     val fontSizeDelta = model.fontSizeDelta
     val headingColor = MaterialTheme.colorScheme.onSurface // MaterialTheme.colorScheme.primary,
     val chapterVerses =
@@ -182,26 +186,17 @@ fun ChapterScreen(
                             .fillMaxWidth(),
                     ) {
                         TextButton(
-                            contentPadding = PaddingValues(0.dp),
-                            onClick = { openDrawer(MenuType.Book, bookIndex) }
+                            contentPadding = PaddingValues(
+                                top = ContentPadding.calculateTopPadding(),
+                                end = 12.dp,
+                                bottom = ContentPadding.calculateBottomPadding()
+                            ),
+                            onClick = {
+                                chapterSelectorShown = true
+                            }
                         ) {
                             Text(
-                                text = bookNames[bookIndex] +
-                                        (if (bookNames[bookIndex].length <= 4) "\u3164" else ""),
-                                // this unicode character is to prevent Job for shifting to right
-                                style = TextStyle(
-                                    fontSize = 22.sp,
-                                    fontWeight = FontWeight.W500,
-                                    color = headingColor,
-                                )
-                            )
-                        }
-                        TextButton(
-                            contentPadding = PaddingValues(0.dp),
-                            onClick = { openDrawer(MenuType.Chapter, bookIndex) }
-                        ) {
-                            Text(
-                                text = "${chapterIndex + 1}",
+                                text = "${bookNames[bookIndex]}   ${chapterIndex + 1}",
                                 style = TextStyle(
                                     fontSize = 22.sp,
                                     fontWeight = FontWeight.W500,
@@ -221,7 +216,9 @@ fun ChapterScreen(
                             tint = headingColor,
                         )
                     }
-                    TextButton(onClick = { openDrawer(MenuType.Bible, bookIndex) }) {
+                    TextButton(onClick = {
+                        bibleSelectorShown = true
+                    }) {
                         Text(
                             text = model.getBibleName(),
                             style = TextStyle(
@@ -246,6 +243,20 @@ fun ChapterScreen(
             )
         },
     ) { innerPadding ->
+        if (bibleSelectorShown) {
+            BibleSelector(
+                model = model,
+                onClose = { bibleSelectorShown = false },
+            )
+        }
+        if (chapterSelectorShown) {
+            ChapterSelector(
+                model = model,
+                onClose = { chapterSelectorShown = false },
+                navigateToChapter = navigateToChapter,
+            )
+        }
+
         LazyColumn(
             state = rememberSaveable(saver = LazyListState.Saver) {
                 model.scrollState
