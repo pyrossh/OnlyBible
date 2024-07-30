@@ -1,6 +1,5 @@
 package dev.pyrossh.onlyBible
 
-import android.content.res.Configuration.UI_MODE_NIGHT_MASK
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -16,11 +15,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        lifecycleScope.launch {
-            model.loadData()
-        }
-        addOnConfigurationChangedListener {
-        }
         setContent {
             AppTheme {
                 AppHost(model = model)

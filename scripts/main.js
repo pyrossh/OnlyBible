@@ -34,4 +34,4 @@ try {
 
 const outputText = outputLines.join("\n")
 
-fs.writeFileSync(`../assets/bibles/${filename}2.txt`, outputText, "utf8")
+//fs.writeFileSync(`../assets/bibles/${filename}2.txt`, outputText, "utf8")

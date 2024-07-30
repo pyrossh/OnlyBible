@@ -1,7 +1,6 @@
 package dev.pyrossh.onlyBible
 
 import android.app.Application
-import android.app.LocaleConfig
 import android.app.LocaleManager
 import android.app.UiModeManager
 import android.content.Context
@@ -24,6 +23,7 @@ import com.microsoft.cognitiveservices.speech.SpeechSynthesisEventArgs
 import com.microsoft.cognitiveservices.speech.SpeechSynthesizer
 import dev.pyrossh.onlyBible.domain.BOOKS_COUNT
 import dev.pyrossh.onlyBible.domain.Verse
+import dev.pyrossh.onlyBible.domain.bibles
 import dev.pyrossh.onlyBible.domain.chapterSizes
 import dev.pyrossh.onlyBible.domain.engTitles
 import kotlinx.coroutines.Dispatchers
@@ -60,22 +60,41 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         }
         speechService.SynthesisStarted.addEventListener(started)
         speechService.SynthesisCompleted.addEventListener(completed)
+        loadData()
     }
 
-    private var loadedOnce = false
+    fun onSpeechStared(sender: Any, e: Any) {
+        viewModelScope.launch(Dispatchers.Main) {
+            isPlaying = true
+        }
+    }
+
+    fun onSpeechCompleted(sender: Any) {
+        viewModelScope.launch(Dispatchers.Main) {
+            isPlaying = false
+        }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+//        speechService.SynthesisStarted.removeEventListener()
+//        speechService.SynthesisCompleted.removeEventListener()
+    }
+
     var isPlaying by mutableStateOf(false)
     val verses = MutableStateFlow(listOf<Verse>())
     val bookNames = MutableStateFlow(engTitles)
     var showBottomSheet by mutableStateOf(false)
     private val highlightedVerses = MutableStateFlow(JSONObject())
 
+    var bible by mutableStateOf("en_kjv")
     var bookIndex by mutableIntStateOf(0)
     var chapterIndex by mutableIntStateOf(0)
     var fontType by mutableStateOf(FontType.Sans)
     var fontSizeDelta by mutableIntStateOf(0)
     var fontBoldEnabled by mutableStateOf(false)
-    var lineSpacingDelta by mutableStateOf(0)
-    var nightMode by mutableStateOf(UiModeManager.MODE_NIGHT_AUTO)
+    var lineSpacingDelta by mutableIntStateOf(0)
+    var nightMode by mutableIntStateOf(UiModeManager.MODE_NIGHT_AUTO)
     var scrollState = LazyListState(
         0,
         0
@@ -149,10 +168,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
 
     fun loadData() {
         viewModelScope.launch(Dispatchers.IO) {
-            loadedOnce = prefs.getBoolean("loadedOnce", false)
-            if (!loadedOnce) {
-                initLocales()
-            }
+            bible = prefs.getString("bible", "en_kjv") ?: "en_kjv"
             bookIndex = prefs.getInt("bookIndex", 0)
             chapterIndex = prefs.getInt("chapterIndex", 0)
             fontType =
@@ -175,12 +191,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     fun loadBible() {
         try {
             val buffer =
-                context.assets.open(
-                    "bibles/${
-                        context.getCurrentLocale().getDisplayLanguage(Locale.ENGLISH)
-                    }.txt"
-                )
-                    .bufferedReader()
+                context.assets.open("bibles/${bible}.txt").bufferedReader()
             val localVerses = buffer.readLines().filter { it.isNotEmpty() }.map {
                 val arr = it.split("|")
                 val bookName = arr[0]
@@ -210,7 +221,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     fun saveData() {
         viewModelScope.launch(Dispatchers.IO) {
             with(prefs.edit()) {
-                putBoolean("loadedOnce", true)
+                putString("bible", bible)
                 putInt("bookIndex", bookIndex)
                 putInt("chapterIndex", chapterIndex)
                 putString("fontType", fontType.name)
@@ -250,6 +261,10 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
 
     fun resetScrollState() {
         scrollState = LazyListState(0, 0)
+    }
+
+    fun getBibleName(): String {
+        return bible.split("_").last().uppercase()
     }
 
     fun getHighlightForVerse(v: Verse): Int? {
@@ -294,28 +309,6 @@ fun shareVerses(context: Context, verses: List<Verse>) {
     context.startActivity(shareIntent)
 }
 
-fun initLocales() {
-    if (Build.VERSION.SDK_INT >= 33) {
-        // do nothing for now
-    } else {
-        AppCompatDelegate.setApplicationLocales(
-            LocaleListCompat.create(
-                Locale("en"),
-                Locale("bn"),
-                Locale("gu"),
-                Locale("hi"),
-                Locale("kn"),
-                Locale("ml"),
-                Locale("ne"),
-                Locale("or"),
-                Locale("pa"),
-                Locale("ta"),
-                Locale("te"),
-            )
-        )
-    }
-}
-
 fun Context.getCurrentLocale(): Locale {
     return if (Build.VERSION.SDK_INT >= 33) {
         resources.configuration.locales.get(0)
@@ -324,27 +317,12 @@ fun Context.getCurrentLocale(): Locale {
     }
 }
 
-fun Context.getSupportedLocales(): List<Locale> {
-    if (Build.VERSION.SDK_INT >= 33) {
-        val localeList = LocaleConfig(this).supportedLocales!!
-        return arrayOfNulls<String>(localeList.size())
-            .mapIndexed { i, _ -> localeList[i] }
-            .sortedBy { it.getDisplayName(Locale.ENGLISH) }
-    } else {
-        androidx.compose.ui.text.intl.LocaleList.current.localeList
-        val localeList = AppCompatDelegate.getApplicationLocales()
-        return arrayOfNulls<String>(localeList.size())
-            .mapIndexed { i, _ -> localeList[i]!! }
-            .sortedBy { it.getDisplayName(Locale.ENGLISH) }
-    }
-}
-
 fun Context.setLocale(loc: Locale) {
     if (Build.VERSION.SDK_INT >= 33) {
         val localeManager = getSystemService(LocaleManager::class.java)
         localeManager.applicationLocales = LocaleList(loc)
     } else {
-        val locales = (listOf(loc) + getSupportedLocales())
+        val locales = (listOf(loc) + bibles.map { Locale(it.split("_")[0]) })
             .joinToString(separator = ",") { it.language }
         AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(locales))
     }

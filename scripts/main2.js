@@ -1,34 +1,31 @@
 import fs from 'node:fs/promises';
 
-const filename = 'English';
+const filename = 'en_kjv';
 const outputLines = [];
-const data = await fs.readFile(`../assets/bibles/${filename}.txt`, 'utf8');
+const data = await fs.readFile(`../app/src/main/assets/bibles/${filename}.txt`, 'utf8');
 const lines = data.split('\n');
-const outputMap = {}
-try {
-	for (const line of lines) {
-		if (line === '') {
-			break;
-		}
-		const arr = line.split('|');
-		const book = parseInt(arr[0]);
-		const chapter = parseInt(arr[1]);
-		const verseNo = parseInt(arr[2]);
-		const heading = arr[3];
-		const verseText = arr.slice(4, arr.length).join("|");
-		if (!outputMap[book]) {
-			outputMap[book] = {}
-		}
-		if (!outputMap[book][chapter]) {
-			outputMap[book][chapter] = {};
-		}
-		outputMap[book][chapter][verseNo] = 0
-		// const data = await getVerses(book, chapter);
-		// const verseText = data.verses.find((v) => v.chapter === chapter + 1 && v.verse === verseNo + 1).text;
-		// outputLines.push(`${booksNames[book].trim()}|${book}|${chapter}|${verseNo}|${heading}|${verseText}`);
-	}
-} catch (err) {
-	console.log('err', err);
+const data2 = await fs.readFile(`./bsb.txt`, 'utf8');
+const lines2 = data2.split('\n')
+
+if (lines.length !== lines2.length) {
+    throw new Error("Lines length not matching")
 }
 
-await fs.writeFile(`./outputMap.json`, JSON.stringify(outputMap, null, null), 'utf8');
+for (var i =0; i < lines.length; i++) {
+    const line = lines[i]
+    const line2 = lines2[i]
+    if (line === '' || line2 === '') {
+        break;
+    }
+    const arr = line.split('|');
+    const bookName = arr[0];
+    const book = parseInt(arr[1]);
+    const chapter = parseInt(arr[2]);
+    const verseNo = parseInt(arr[3]);
+    const heading = arr[4];
+    const verseText = arr.slice(5, arr.length).join("|");
+    const verse2Text = line2.replace(bookName, "").replace(`${chapter+1}:${verseNo+1}`, "").trim()
+    outputLines.push(`${bookName}|${book}|${chapter}|${verseNo}|${heading}|${verse2Text}`);
+}
+
+await fs.writeFile(`./out.txt`, outputLines.join("\n") , 'utf8');

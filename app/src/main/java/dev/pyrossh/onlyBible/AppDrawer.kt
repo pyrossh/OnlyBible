@@ -39,6 +39,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dev.pyrossh.onlyBible.domain.bibles
 import dev.pyrossh.onlyBible.domain.chapterSizes
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -103,7 +104,6 @@ fun AppDrawer(
                         .padding(bottom = 16.dp),
                 ) {
                     if (menuType == MenuType.Bible) {
-                        val locales = context.getSupportedLocales()
                         LazyVerticalGrid(
                             modifier = Modifier.fillMaxSize(),
                             verticalArrangement = Arrangement.spacedBy(10.dp),
@@ -130,17 +130,21 @@ fun AppDrawer(
                                     }
                                 }
                             }
-                            items(locales) { loc ->
+                            items(bibles) { b ->
+                                val arr = b.split("_")
+                                val loc = Locale(arr[0])
                                 QuickButton(
                                     title = loc.getDisplayName(Locale.ENGLISH),
-                                    subtitle = if (loc.language == "en")
-                                        "KJV"
+                                    subtitle = if (arr.size > 1)
+                                        arr[1].uppercase()
                                     else
                                         loc.getDisplayName(loc),
                                 ) {
                                     scope.launch {
                                         drawerState.close()
                                     }.invokeOnCompletion {
+                                        model.bible = b
+                                        model.loadBible()
                                         context.setLocale(loc)
                                     }
                                 }

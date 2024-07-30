@@ -223,7 +223,7 @@ fun ChapterScreen(
                     }
                     TextButton(onClick = { openDrawer(MenuType.Bible, bookIndex) }) {
                         Text(
-                            text = context.getCurrentLocale().language.uppercase(),
+                            text = model.getBibleName(),
                             style = TextStyle(
                                 fontSize = 18.sp,
                                 fontWeight = FontWeight.W500,
