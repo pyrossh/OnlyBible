@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonColors
@@ -38,8 +39,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import dev.pyrossh.onlyBible.AppViewModel
 import dev.pyrossh.onlyBible.ChapterScreenProps
-import dev.pyrossh.onlyBible.domain.BOOKS_COUNT
 import dev.pyrossh.onlyBible.domain.chapterSizes
+import dev.pyrossh.onlyBible.domain.engTitles
+import dev.pyrossh.onlyBible.getCurrentLocale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -54,6 +56,7 @@ fun ChapterSelector(
     var expanded by remember { mutableStateOf(false) }
     var bookIndex by remember { mutableIntStateOf(model.bookIndex) }
     val scrollState = rememberLazyListState()
+    val bookList = bookNames - bookNames[bookIndex]
     LaunchedEffect(key1 = bookIndex) {
         scrollState.scrollToItem(0, 0)
     }
@@ -69,6 +72,12 @@ fun ChapterSelector(
                     .clickable {
                         expanded = !expanded
                     },
+                colors = ListItemDefaults.colors(
+                    containerColor = if (expanded)
+                        MaterialTheme.colorScheme.primaryContainer
+                    else
+                        MaterialTheme.colorScheme.background
+                ),
                 headlineContent = {
                     Text(
                         modifier = Modifier.padding(start = 4.dp),
@@ -84,25 +93,27 @@ fun ChapterSelector(
                 LazyColumn(
                     state = scrollState,
                 ) {
-                    items(BOOKS_COUNT) {
+                    items(bookList) {
                         ListItem(
                             modifier = Modifier.clickable {
-                                bookIndex = it
+                                bookIndex = bookNames.indexOf(it)
                                 expanded = false
                             },
-                            colors = ListItemDefaults.colors(
-                                containerColor = if (bookIndex == it)
-                                    MaterialTheme.colorScheme.outline
-                                else
-                                    MaterialTheme.colorScheme.background
-                            ),
                             headlineContent = {
                                 Text(
                                     modifier = Modifier.padding(start = 4.dp),
                                     fontWeight = FontWeight.W600,
-                                    text = bookNames[it],
+                                    text = it,
                                 )
                             },
+                            supportingContent = {
+                                if (context.getCurrentLocale().language != "en") {
+                                    Text(
+                                        modifier = Modifier.padding(start = 4.dp),
+                                        text = engTitles[bookList.indexOf(it)],
+                                    )
+                                }
+                            }
                         )
                     }
                 }

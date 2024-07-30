@@ -16,6 +16,9 @@ Online Audio Playback
 brew install fastlane
 ```
 
+For emulators,
+1. Turn on developer options
+2. Disable HW overlays in those options
 
 ## Release Process
 * Create file fastlane/metadata/android/en-GB/changelogs/$versionCode.txt and add change details

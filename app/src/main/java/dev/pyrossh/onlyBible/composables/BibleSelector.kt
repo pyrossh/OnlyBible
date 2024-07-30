@@ -30,6 +30,7 @@ fun BibleSelector(
 ) {
     val context = LocalContext.current
     val height = context.resources.configuration.screenHeightDp.dp / 2
+    val bibleList = bibles.sortedBy { it != model.bible }
     Dialog(onDismissRequest = { onClose() }) {
         Card(
             modifier = Modifier
@@ -38,7 +39,7 @@ fun BibleSelector(
             shape = RoundedCornerShape(8.dp),
         ) {
             LazyColumn {
-                items(bibles) {
+                items(bibleList) {
                     val arr = it.split("_")
                     val loc = Locale(arr[0])
                     ListItem(
@@ -49,8 +50,8 @@ fun BibleSelector(
                             context.setLocale(loc)
                         },
                         colors = ListItemDefaults.colors(
-                            containerColor = if (model.bible == it)
-                                MaterialTheme.colorScheme.outline
+                            containerColor = if (it == model.bible)
+                                MaterialTheme.colorScheme.primaryContainer
                             else
                                 MaterialTheme.colorScheme.background
                         ),
