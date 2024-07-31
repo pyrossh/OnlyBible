@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="app_name">Only Bible</string>
-    <string name="old_testament">ਪੁਰਾਣੇ ਨੇਮ</string>
-    <string name="new_testament">ਨਵਾਂ ਨੇਮ</string>
-    <string name="settings">ਸੈਟਿੰਗਾਂ</string>
-    <string name="voice">pa-IN-OjasNeural</string>
-</resources>

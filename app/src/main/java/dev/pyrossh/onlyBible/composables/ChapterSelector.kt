@@ -41,7 +41,6 @@ import dev.pyrossh.onlyBible.AppViewModel
 import dev.pyrossh.onlyBible.ChapterScreenProps
 import dev.pyrossh.onlyBible.domain.chapterSizes
 import dev.pyrossh.onlyBible.domain.engTitles
-import dev.pyrossh.onlyBible.getCurrentLocale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -107,10 +106,10 @@ fun ChapterSelector(
                                 )
                             },
                             supportingContent = {
-                                if (context.getCurrentLocale().language != "en") {
+                                if (model.bible.languageCode != "en") {
                                     Text(
                                         modifier = Modifier.padding(start = 4.dp),
-                                        text = engTitles[bookList.indexOf(it)],
+                                        text = engTitles[bookNames.indexOf(it)],
                                     )
                                 }
                             }

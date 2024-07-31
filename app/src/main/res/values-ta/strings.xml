@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="app_name">Only Bible</string>
-    <string name="old_testament">பழைய ஏற்பாடு</string>
-    <string name="new_testament">புதிய ஏற்பாடு</string>
-    <string name="settings">அமைப்புகள்</string>
-    <string name="voice">ta-IN-PallaviNeural</string>
-</resources>

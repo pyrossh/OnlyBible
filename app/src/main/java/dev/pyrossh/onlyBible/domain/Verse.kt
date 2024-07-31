@@ -4,6 +4,31 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 
+data class Bible(
+    val languageCode: String,
+    val version: String?,
+    val voiceName: String,
+    val tSettings: String,
+) {
+    fun shortName() = (version ?: languageCode).uppercase()
+    fun filename() = if (version != null) "${languageCode}_${version}" else languageCode
+}
+
+var bibles = listOf(
+    Bible("en", "kjv", "en-GB-RyanNeural", "Text Settings"),
+    Bible("en", "bsb", "en-GB-RyanNeural", "Text Settings"),
+    Bible("bn", null, "bn-IN-TanishaaNeural", "সেটিংস"),
+    Bible("gu", null, "gu-IN-DhwaniNeural", "સેટિંગ્સ"),
+    Bible("hi", null, "hi-IN-SwaraNeural", "समायोजन"),
+    Bible("kn", null, "kn-IN-GaganNeural", "ಸಂಯೋಜನೆಗಳು"),
+    Bible("ml", null, "ml-IN-SobhanaNeural", "ക്രമീകരണങ്ങൾ"),
+    Bible("ne", null, "ne-NP-HemkalaNeural", "सेटिङहरू"),
+    Bible("or", null, "or-IN-SubhasiniNeural", "ସେଟିଂସମୂହ"),
+    Bible("pa", null, "pa-IN-OjasNeural", "ਸੈਟਿੰਗਾਂ"),
+    Bible("ta", null, "ta-IN-PallaviNeural", "அமைப்புகள்"),
+    Bible("te", null, "te-IN-ShrutiNeural", "సెట్టింగ్\\\\u200Cలు"),
+)
+
 const val BOOKS_COUNT = 66;
 
 val engTitles = listOf(

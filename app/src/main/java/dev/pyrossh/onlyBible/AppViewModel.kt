@@ -1,21 +1,16 @@
 package dev.pyrossh.onlyBible
 
 import android.app.Application
-import android.app.LocaleManager
 import android.app.UiModeManager
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.Context.UI_MODE_SERVICE
 import android.content.Intent
-import android.os.Build
-import android.os.LocaleList
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.core.os.LocaleListCompat
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.microsoft.cognitiveservices.speech.SpeechConfig
@@ -37,7 +32,6 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.io.IOException
-import java.util.Locale
 
 class AppViewModel(application: Application) : AndroidViewModel(application) {
     private val context
@@ -87,7 +81,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     var showBottomSheet by mutableStateOf(false)
     private val highlightedVerses = MutableStateFlow(JSONObject())
 
-    var bible by mutableStateOf("en_kjv")
+    var bible by mutableStateOf(bibles.first())
     var bookIndex by mutableIntStateOf(0)
     var chapterIndex by mutableIntStateOf(0)
     var fontType by mutableStateOf(FontType.Sans)
@@ -166,9 +160,10 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         selectedVerses.value = listOf()
     }
 
-    fun loadData() {
+    private fun loadData() {
         viewModelScope.launch(Dispatchers.IO) {
-            bible = prefs.getString("bible", "en_kjv") ?: "en_kjv"
+            val bibleFileName = prefs.getString("bible", "en_kjv") ?: "en_kjv"
+            bible = bibles.find { it.filename() == bibleFileName  } ?: bibles.first()
             bookIndex = prefs.getInt("bookIndex", 0)
             chapterIndex = prefs.getInt("chapterIndex", 0)
             fontType =
@@ -191,7 +186,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     fun loadBible() {
         try {
             val buffer =
-                context.assets.open("bibles/${bible}.txt").bufferedReader()
+                context.assets.open("bibles/${bible.filename()}.txt").bufferedReader()
             val localVerses = buffer.readLines().filter { it.isNotEmpty() }.map {
                 val arr = it.split("|")
                 val bookName = arr[0]
@@ -221,7 +216,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     fun saveData() {
         viewModelScope.launch(Dispatchers.IO) {
             with(prefs.edit()) {
-                putString("bible", bible)
+                putString("bible", bible.filename())
                 putInt("bookIndex", bookIndex)
                 putInt("chapterIndex", chapterIndex)
                 putString("fontType", fontType.name)
@@ -261,10 +256,6 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
 
     fun resetScrollState() {
         scrollState = LazyListState(0, 0)
-    }
-
-    fun getBibleName(): String {
-        return bible.split("_").last().uppercase()
     }
 
     fun getHighlightForVerse(v: Verse): Int? {
@@ -307,23 +298,4 @@ fun shareVerses(context: Context, verses: List<Verse>) {
     }
     val shareIntent = Intent.createChooser(sendIntent, null)
     context.startActivity(shareIntent)
-}
-
-fun Context.getCurrentLocale(): Locale {
-    return if (Build.VERSION.SDK_INT >= 33) {
-        resources.configuration.locales.get(0)
-    } else {
-        AppCompatDelegate.getApplicationLocales().get(0) ?: Locale("en")
-    }
-}
-
-fun Context.setLocale(loc: Locale) {
-    if (Build.VERSION.SDK_INT >= 33) {
-        val localeManager = getSystemService(LocaleManager::class.java)
-        localeManager.applicationLocales = LocaleList(loc)
-    } else {
-        val locales = (listOf(loc) + bibles.map { Locale(it.split("_")[0]) })
-            .joinToString(separator = ",") { it.language }
-        AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(locales))
-    }
 }

@@ -5,11 +5,11 @@ import android.view.SoundEffectConstants
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -18,14 +18,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.ButtonDefaults.ContentPadding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableIntState
@@ -110,7 +108,6 @@ suspend fun PointerInputScope.detectSwipe(
     }
 )
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChapterScreen(
     model: AppViewModel,
@@ -140,73 +137,90 @@ fun ChapterScreen(
     Scaffold(
         modifier = Modifier
             .fillMaxSize(),
-        topBar = {
-            if (isSearching) {
-                EmbeddedSearchBar(
-                    query = searchText,
-                    onQueryChange = model::onSearchTextChange,
-                    onSearch = model::onSearchTextChange,
-                    onClose = { model.onCloseSearch() }
-                ) {
-                    val groups = versesList.groupBy { "${it.bookName} ${it.chapterIndex + 1}" }
-                    LazyColumn {
-                        groups.forEach {
-                            item(
-                                contentType = "header"
-                            ) {
-                                Text(
-                                    modifier = Modifier.padding(
-                                        vertical = 12.dp,
-                                    ),
-                                    style = TextStyle(
-                                        fontFamily = model.fontType.family(),
-                                        fontSize = (16 + fontSizeDelta).sp,
-                                        fontWeight = FontWeight.W700,
-                                        color = headingColor,
-                                    ),
-                                    text = it.key,
-                                )
-                            }
-                            items(it.value) { v ->
-                                VerseView(
-                                    model = model,
-                                    verse = v,
-                                )
-                            }
+    ) { innerPadding ->
+        if (bibleSelectorShown) {
+            BibleSelector(
+                model = model,
+                onClose = { bibleSelectorShown = false },
+            )
+        }
+        if (chapterSelectorShown) {
+            ChapterSelector(
+                model = model,
+                onClose = { chapterSelectorShown = false },
+                navigateToChapter = navigateToChapter,
+            )
+        }
+        if (isSearching) {
+            EmbeddedSearchBar(
+                query = searchText,
+                onQueryChange = model::onSearchTextChange,
+                onSearch = model::onSearchTextChange,
+                onClose = { model.onCloseSearch() },
+            ) {
+                val groups = versesList.groupBy { "${it.bookName} ${it.chapterIndex + 1}" }
+                LazyColumn {
+                    groups.forEach {
+                        item(
+                            contentType = "header"
+                        ) {
+                            Text(
+                                modifier = Modifier.padding(
+                                    vertical = 12.dp,
+                                ),
+                                style = TextStyle(
+                                    fontFamily = model.fontType.family(),
+                                    fontSize = (16 + fontSizeDelta).sp,
+                                    fontWeight = FontWeight.W700,
+                                    color = headingColor,
+                                ),
+                                text = it.key,
+                            )
+                        }
+                        items(it.value) { v ->
+                            VerseView(
+                                model = model,
+                                verse = v,
+                            )
                         }
                     }
                 }
             }
-            TopAppBar(
+        }
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(horizontal = 16.dp)
+        ) {
+            Row(
                 modifier = Modifier
-                    .height(72.dp),
-                title = {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                    ) {
-                        TextButton(
-                            contentPadding = PaddingValues(
-                                top = ContentPadding.calculateTopPadding(),
-                                end = 12.dp,
-                                bottom = ContentPadding.calculateBottomPadding()
-                            ),
-                            onClick = {
-                                chapterSelectorShown = true
-                            }
-                        ) {
-                            Text(
-                                text = "${bookNames[bookIndex]}   ${chapterIndex + 1}",
-                                style = TextStyle(
-                                    fontSize = 22.sp,
-                                    fontWeight = FontWeight.W500,
-                                    color = headingColor,
-                                )
-                            )
-                        }
+                    .fillMaxWidth(),
+            ) {
+                TextButton(
+                    contentPadding = PaddingValues(
+                        top = ContentPadding.calculateTopPadding(),
+                        end = 12.dp,
+                        bottom = ContentPadding.calculateBottomPadding()
+                    ),
+                    onClick = {
+                        chapterSelectorShown = true
                     }
-                },
-                actions = {
+                ) {
+                    Text(
+                        text = "${bookNames[bookIndex]}   ${chapterIndex + 1}",
+                        style = TextStyle(
+                            fontSize = 22.sp,
+                            fontWeight = FontWeight.W500,
+                            color = headingColor,
+                        )
+                    )
+                }
+                Row(
+                    modifier = Modifier.weight(1f),
+                    horizontalArrangement = Arrangement.End,
+                ) {
                     IconButton(
                         onClick = { model.onOpenSearch() },
                     ) {
@@ -220,7 +234,7 @@ fun ChapterScreen(
                         bibleSelectorShown = true
                     }) {
                         Text(
-                            text = model.getBibleName(),
+                            text = model.bible.shortName(),
                             style = TextStyle(
                                 fontSize = 18.sp,
                                 fontWeight = FontWeight.W500,
@@ -239,59 +253,43 @@ fun ChapterScreen(
                             tint = headingColor,
                         )
                     }
-                },
-            )
-        },
-    ) { innerPadding ->
-        if (bibleSelectorShown) {
-            BibleSelector(
-                model = model,
-                onClose = { bibleSelectorShown = false },
-            )
-        }
-        if (chapterSelectorShown) {
-            ChapterSelector(
-                model = model,
-                onClose = { chapterSelectorShown = false },
-                navigateToChapter = navigateToChapter,
-            )
-        }
+                }
+            }
 
-        LazyColumn(
-            state = rememberSaveable(saver = LazyListState.Saver) {
-                model.scrollState
-            },
-            verticalArrangement = Arrangement.spacedBy(16.dp + (model.lineSpacingDelta * 2).dp),
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .padding(horizontal = 16.dp)
-                .pointerInput(Unit) {
-                    detectSwipe(
-                        onSwipeLeft = onSwipeLeft,
-                        onSwipeRight = { onSwipeRight() },
+            LazyColumn(
+                state = rememberSaveable(saver = LazyListState.Saver) {
+                    model.scrollState
+                },
+                verticalArrangement = Arrangement.spacedBy(16.dp + (model.lineSpacingDelta * 2).dp),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .pointerInput(Unit) {
+                        detectSwipe(
+                            onSwipeLeft = onSwipeLeft,
+                            onSwipeRight = { onSwipeRight() },
+                        )
+                    }
+            ) {
+                items(chapterVerses) { v ->
+                    if (v.heading.isNotEmpty()) {
+                        Text(
+                            modifier = Modifier.padding(
+                                top = if (v.verseIndex != 0) 12.dp else 0.dp, bottom = 12.dp
+                            ),
+                            style = TextStyle(
+                                fontFamily = model.fontType.family(),
+                                fontSize = (16 + fontSizeDelta).sp,
+                                fontWeight = FontWeight.W700,
+                                color = headingColor,
+                            ),
+                            text = v.heading.replace("<br>", "\n")
+                        )
+                    }
+                    VerseView(
+                        model = model,
+                        verse = v,
                     )
                 }
-        ) {
-            items(chapterVerses) { v ->
-                if (v.heading.isNotEmpty()) {
-                    Text(
-                        modifier = Modifier.padding(
-                            top = if (v.verseIndex != 0) 12.dp else 0.dp, bottom = 12.dp
-                        ),
-                        style = TextStyle(
-                            fontFamily = model.fontType.family(),
-                            fontSize = (16 + fontSizeDelta).sp,
-                            fontWeight = FontWeight.W700,
-                            color = headingColor,
-                        ),
-                        text = v.heading.replace("<br>", "\n")
-                    )
-                }
-                VerseView(
-                    model = model,
-                    verse = v,
-                )
             }
         }
     }

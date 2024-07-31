@@ -20,7 +20,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import dev.pyrossh.onlyBible.AppViewModel
 import dev.pyrossh.onlyBible.domain.bibles
-import dev.pyrossh.onlyBible.setLocale
 import java.util.Locale
 
 @Composable
@@ -40,14 +39,12 @@ fun BibleSelector(
         ) {
             LazyColumn {
                 items(bibleList) {
-                    val arr = it.split("_")
-                    val loc = Locale(arr[0])
+                    val loc = Locale(it.languageCode)
                     ListItem(
                         modifier = Modifier.clickable {
                             onClose()
                             model.bible = it
                             model.loadBible()
-                            context.setLocale(loc)
                         },
                         colors = ListItemDefaults.colors(
                             containerColor = if (it == model.bible)
@@ -65,8 +62,8 @@ fun BibleSelector(
                         supportingContent = {
                             Text(
                                 modifier = Modifier.padding(start = 4.dp),
-                                text = if (arr.size > 1)
-                                    arr[1].uppercase()
+                                text = if (it.version != null)
+                                    it.version.uppercase()
                                 else
                                     loc.getDisplayName(loc)
                             )

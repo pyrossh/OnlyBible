@@ -1,4 +1,4 @@
-package dev.pyrossh.onlyBible
+package dev.pyrossh.onlyBible.composables
 
 import android.app.UiModeManager.MODE_NIGHT_AUTO
 import android.app.UiModeManager.MODE_NIGHT_NO
@@ -38,6 +38,8 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dev.pyrossh.onlyBible.AppViewModel
+import dev.pyrossh.onlyBible.FontType
 import kotlinx.coroutines.launch
 
 @Composable
@@ -67,7 +69,7 @@ fun TextSettingsBottomSheet(model: AppViewModel) {
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    text = "Text Settings",
+                    text = model.bible.tSettings,
                     style = TextStyle(
                         fontSize = 18.sp,
                         fontWeight = FontWeight.W600,

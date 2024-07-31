@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="app_name">Only Bible</string>
-    <string name="old_testament">ઓલ્ડ ટેસ્ટામેન્ટ</string>
-    <string name="new_testament">ન્યૂ વસિયતનામું</string>
-    <string name="settings">સેટિંગ્સ</string>
-    <string name="voice">gu-IN-DhwaniNeural</string>
-</resources>

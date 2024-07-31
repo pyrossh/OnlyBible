@@ -53,7 +53,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import dev.pyrossh.onlyBible.AppViewModel
-import dev.pyrossh.onlyBible.R
 import dev.pyrossh.onlyBible.darkHighlights
 import dev.pyrossh.onlyBible.domain.Verse
 import dev.pyrossh.onlyBible.isLightTheme
@@ -242,7 +241,7 @@ private fun Menu(
                         scope.launch(Dispatchers.IO) {
                             for (v in selectedVerses.sortedBy { it.verseIndex }) {
                                 model.speechService.StartSpeakingSsml(
-                                    v.toSSML(context.getString(R.string.voice)),
+                                    v.toSSML(model.bible.voiceName),
                                 )
                             }
                         }
