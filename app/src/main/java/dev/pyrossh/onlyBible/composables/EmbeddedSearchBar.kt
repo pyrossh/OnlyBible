@@ -2,6 +2,8 @@ package dev.pyrossh.onlyBible.composables
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Search
@@ -14,23 +16,25 @@ import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dev.pyrossh.onlyBible.AppViewModel
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun EmbeddedSearchBar(
-    query: String,
-    onQueryChange: (String) -> Unit,
-    onSearch: ((String) -> Unit),
-    onClose: () -> Unit,
-    content: @Composable () -> Unit
+    model: AppViewModel,
 ) {
+    val searchText by model.searchText.collectAsState()
+    val versesList by model.versesList.collectAsState()
     val textFieldFocusRequester = remember { FocusRequester() }
     SideEffect {
         textFieldFocusRequester.requestFocus()
@@ -46,9 +50,9 @@ fun EmbeddedSearchBar(
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
                 .focusRequester(textFieldFocusRequester),
-            query = query,
-            onQueryChange = onQueryChange,
-            onSearch = onSearch,
+            query = searchText,
+            onQueryChange = model::onSearchTextChange,
+            onSearch = model::onSearchTextChange,
             active = true,
             onActiveChange = {},
             placeholder = {
@@ -69,7 +73,7 @@ fun EmbeddedSearchBar(
             trailingIcon = {
                 IconButton(
                     onClick = {
-                        onClose()
+                        model.onCloseSearch()
                     },
                 ) {
                     Icon(
@@ -81,7 +85,33 @@ fun EmbeddedSearchBar(
             },
             tonalElevation = 0.dp,
         ) {
-            content()
+            val groups = versesList.groupBy { "${it.bookName} ${it.chapterIndex + 1}" }
+            LazyColumn {
+                groups.forEach {
+                    item(
+                        contentType = "header"
+                    ) {
+                        Text(
+                            modifier = Modifier.padding(
+                                vertical = 12.dp,
+                            ),
+                            style = TextStyle(
+                                fontFamily = model.fontType.family(),
+                                fontSize = (16 + model.fontSizeDelta).sp,
+                                fontWeight = FontWeight.W700,
+                                color = MaterialTheme.colorScheme.onSurface,
+                            ),
+                            text = it.key,
+                        )
+                    }
+                    items(it.value) { v ->
+                        VerseView(
+                            model = model,
+                            verse = v,
+                        )
+                    }
+                }
+            }
         }
     }
 }

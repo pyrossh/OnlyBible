@@ -120,12 +120,9 @@ fun ChapterScreen(
     val view = LocalView.current
     val verses by model.verses.collectAsState()
     val bookNames by model.bookNames.collectAsState()
-    val searchText by model.searchText.collectAsState()
     val isSearching by model.isSearching.collectAsState()
-    val versesList by model.versesList.collectAsState()
     var chapterSelectorShown by remember { mutableStateOf(false) }
     var bibleSelectorShown by remember { mutableStateOf(false) }
-    val fontSizeDelta = model.fontSizeDelta
     val headingColor = MaterialTheme.colorScheme.onSurface // MaterialTheme.colorScheme.primary,
     val chapterVerses =
         verses.filter { it.bookIndex == bookIndex && it.chapterIndex == chapterIndex }
@@ -153,39 +150,8 @@ fun ChapterScreen(
         }
         if (isSearching) {
             EmbeddedSearchBar(
-                query = searchText,
-                onQueryChange = model::onSearchTextChange,
-                onSearch = model::onSearchTextChange,
-                onClose = { model.onCloseSearch() },
-            ) {
-                val groups = versesList.groupBy { "${it.bookName} ${it.chapterIndex + 1}" }
-                LazyColumn {
-                    groups.forEach {
-                        item(
-                            contentType = "header"
-                        ) {
-                            Text(
-                                modifier = Modifier.padding(
-                                    vertical = 12.dp,
-                                ),
-                                style = TextStyle(
-                                    fontFamily = model.fontType.family(),
-                                    fontSize = (16 + fontSizeDelta).sp,
-                                    fontWeight = FontWeight.W700,
-                                    color = headingColor,
-                                ),
-                                text = it.key,
-                            )
-                        }
-                        items(it.value) { v ->
-                            VerseView(
-                                model = model,
-                                verse = v,
-                            )
-                        }
-                    }
-                }
-            }
+                model = model,
+            )
         }
 
         Column(
@@ -278,7 +244,7 @@ fun ChapterScreen(
                             ),
                             style = TextStyle(
                                 fontFamily = model.fontType.family(),
-                                fontSize = (16 + fontSizeDelta).sp,
+                                fontSize = (16 + model.fontSizeDelta).sp,
                                 fontWeight = FontWeight.W700,
                                 color = headingColor,
                             ),
