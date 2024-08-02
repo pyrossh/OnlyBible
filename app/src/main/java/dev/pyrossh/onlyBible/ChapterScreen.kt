@@ -37,6 +37,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.PointerInputScope
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -45,7 +46,8 @@ import androidx.compose.ui.unit.sp
 import dev.pyrossh.onlyBible.composables.BibleSelector
 import dev.pyrossh.onlyBible.composables.ChapterSelector
 import dev.pyrossh.onlyBible.composables.EmbeddedSearchBar
-import dev.pyrossh.onlyBible.composables.VerseView
+import dev.pyrossh.onlyBible.composables.VerseHeading
+import dev.pyrossh.onlyBible.composables.VerseText
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 import kotlin.math.abs
@@ -111,22 +113,21 @@ suspend fun PointerInputScope.detectSwipe(
 @Composable
 fun ChapterScreen(
     model: AppViewModel,
-    onSwipeLeft: () -> Unit,
-    onSwipeRight: () -> Any,
     bookIndex: Int,
     chapterIndex: Int,
     navigateToChapter: (ChapterScreenProps) -> Unit,
 ) {
     val view = LocalView.current
-    val verses by model.verses.collectAsState()
-    val bookNames by model.bookNames.collectAsState()
+    val context = LocalContext.current
     val isSearching by model.isSearching.collectAsState()
     var chapterSelectorShown by remember { mutableStateOf(false) }
     var bibleSelectorShown by remember { mutableStateOf(false) }
-    val headingColor = MaterialTheme.colorScheme.onSurface // MaterialTheme.colorScheme.primary,
+    val headingColor = MaterialTheme.colorScheme.onSurface
+    val bookNames by model.bookNames.collectAsState()
+    val verses by model.verses.collectAsState()
     val chapterVerses =
         verses.filter { it.bookIndex == bookIndex && it.chapterIndex == chapterIndex }
-    LaunchedEffect(key1 = chapterVerses) {
+    LaunchedEffect(Unit) {
         model.clearSelectedVerses()
         model.bookIndex = bookIndex
         model.chapterIndex = chapterIndex
@@ -137,13 +138,20 @@ fun ChapterScreen(
     ) { innerPadding ->
         if (bibleSelectorShown) {
             BibleSelector(
-                model = model,
+                bible = model.bible,
+                onSelected = {
+                    view.playSoundEffect(SoundEffectConstants.CLICK)
+                    bibleSelectorShown = false
+                    model.loadBible(it, context)
+                },
                 onClose = { bibleSelectorShown = false },
             )
         }
         if (chapterSelectorShown) {
             ChapterSelector(
-                model = model,
+                bible = model.bible,
+                bookNames = bookNames,
+                startBookIndex = bookIndex,
                 onClose = { chapterSelectorShown = false },
                 navigateToChapter = navigateToChapter,
             )
@@ -166,11 +174,12 @@ fun ChapterScreen(
             ) {
                 TextButton(
                     contentPadding = PaddingValues(
-                        top = ContentPadding.calculateTopPadding(),
+                        top = ContentPadding.calculateTopPadding(), //8dp
                         end = 12.dp,
                         bottom = ContentPadding.calculateBottomPadding()
                     ),
                     onClick = {
+                        view.playSoundEffect(SoundEffectConstants.CLICK)
                         chapterSelectorShown = true
                     }
                 ) {
@@ -188,7 +197,10 @@ fun ChapterScreen(
                     horizontalArrangement = Arrangement.End,
                 ) {
                     IconButton(
-                        onClick = { model.onOpenSearch() },
+                        onClick = {
+                            view.playSoundEffect(SoundEffectConstants.CLICK)
+                            model.onOpenSearch()
+                        },
                     ) {
                         Icon(
                             imageVector = Icons.Rounded.Search,
@@ -197,6 +209,7 @@ fun ChapterScreen(
                         )
                     }
                     TextButton(onClick = {
+                        view.playSoundEffect(SoundEffectConstants.CLICK)
                         bibleSelectorShown = true
                     }) {
                         Text(
@@ -231,28 +244,42 @@ fun ChapterScreen(
                     .fillMaxSize()
                     .pointerInput(Unit) {
                         detectSwipe(
-                            onSwipeLeft = onSwipeLeft,
-                            onSwipeRight = { onSwipeRight() },
+                            onSwipeLeft = {
+                                val pair = getForwardPair(bookIndex, chapterIndex)
+                                navigateToChapter(
+                                    ChapterScreenProps(
+                                        bookIndex = pair.first,
+                                        chapterIndex = pair.second,
+                                    )
+                                )
+                            },
+                            onSwipeRight = {
+                                val pair = getBackwardPair(bookIndex, chapterIndex)
+                                navigateToChapter(
+                                    ChapterScreenProps(
+                                        bookIndex = pair.first,
+                                        chapterIndex = pair.second,
+                                        dir = Dir.Right.name,
+                                    )
+                                )
+                            },
                         )
                     }
             ) {
                 items(chapterVerses) { v ->
                     if (v.heading.isNotEmpty()) {
-                        Text(
-                            modifier = Modifier.padding(
-                                top = if (v.verseIndex != 0) 12.dp else 0.dp, bottom = 12.dp
-                            ),
-                            style = TextStyle(
-                                fontFamily = model.fontType.family(),
-                                fontSize = (16 + model.fontSizeDelta).sp,
-                                fontWeight = FontWeight.W700,
-                                color = headingColor,
-                            ),
-                            text = v.heading.replace("<br>", "\n")
+                        VerseHeading(
+                            text = v.heading,
+                            fontType = model.fontType,
+                            fontSizeDelta = model.fontSizeDelta,
+                            navigateToChapter = navigateToChapter,
                         )
                     }
-                    VerseView(
+                    VerseText(
                         model = model,
+                        fontType = model.fontType,
+                        fontSizeDelta = model.fontSizeDelta,
+                        fontBoldEnabled = model.fontBoldEnabled,
                         verse = v,
                     )
                 }

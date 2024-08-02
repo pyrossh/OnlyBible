@@ -1,5 +1,6 @@
 package dev.pyrossh.onlyBible.composables
 
+import android.view.SoundEffectConstants
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -22,6 +23,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -33,8 +35,9 @@ import dev.pyrossh.onlyBible.AppViewModel
 fun EmbeddedSearchBar(
     model: AppViewModel,
 ) {
+    val view = LocalView.current
     val searchText by model.searchText.collectAsState()
-    val versesList by model.versesList.collectAsState()
+    val searchedVerses by model.searchedVerses.collectAsState()
     val textFieldFocusRequester = remember { FocusRequester() }
     SideEffect {
         textFieldFocusRequester.requestFocus()
@@ -73,6 +76,7 @@ fun EmbeddedSearchBar(
             trailingIcon = {
                 IconButton(
                     onClick = {
+                        view.playSoundEffect(SoundEffectConstants.CLICK)
                         model.onCloseSearch()
                     },
                 ) {
@@ -85,7 +89,7 @@ fun EmbeddedSearchBar(
             },
             tonalElevation = 0.dp,
         ) {
-            val groups = versesList.groupBy { "${it.bookName} ${it.chapterIndex + 1}" }
+            val groups = searchedVerses.groupBy { "${it.bookName} ${it.chapterIndex + 1}" }
             LazyColumn {
                 groups.forEach {
                     item(
@@ -105,8 +109,11 @@ fun EmbeddedSearchBar(
                         )
                     }
                     items(it.value) { v ->
-                        VerseView(
+                        VerseText(
                             model = model,
+                            fontType = model.fontType,
+                            fontSizeDelta = model.fontSizeDelta,
+                            fontBoldEnabled = model.fontBoldEnabled,
                             verse = v,
                         )
                     }

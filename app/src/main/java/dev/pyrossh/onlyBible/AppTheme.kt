@@ -11,8 +11,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.GenericFontFamily
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+
+enum class ThemeType {
+    Light,
+    Dark,
+    Auto;
+}
 
 enum class FontType {
     Sans,
@@ -46,12 +51,12 @@ fun isLightTheme(uiMode: Int, isSystemDark: Boolean): Boolean {
 
 @Composable
 fun AppTheme(
-    model: AppViewModel = viewModel(),
+    nightMode: Int,
     content: @Composable() () -> Unit
 ) {
     val context = LocalContext.current
     val systemUiController = rememberSystemUiController()
-    val colorScheme = if (isLightTheme(model.nightMode, isSystemInDarkTheme()))
+    val colorScheme = if (isLightTheme(nightMode, isSystemInDarkTheme()))
         dynamicLightColorScheme(context).copy(
             onSurface = Color.Black,
             outline = Color.LightGray,
@@ -62,7 +67,7 @@ fun AppTheme(
             surface = Color(0xFF090F12),
             outline = Color(0xAA5D4979),
         )
-    LaunchedEffect(key1 = model.nightMode) {
+    LaunchedEffect(key1 = nightMode) {
         systemUiController.setSystemBarsColor(
             color = colorScheme.background
         )

@@ -1,5 +1,6 @@
 package dev.pyrossh.onlyBible.composables
 
+import android.view.SoundEffectConstants
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Spacer
@@ -25,7 +26,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -34,26 +34,29 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import dev.pyrossh.onlyBible.AppViewModel
 import dev.pyrossh.onlyBible.ChapterScreenProps
+import dev.pyrossh.onlyBible.domain.Bible
 import dev.pyrossh.onlyBible.domain.chapterSizes
 import dev.pyrossh.onlyBible.domain.engTitles
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChapterSelector(
-    model: AppViewModel,
+    bible: Bible,
+    bookNames: List<String>,
+    startBookIndex: Int,
     onClose: () -> Unit,
     navigateToChapter: (ChapterScreenProps) -> Unit
 ) {
+    val view = LocalView.current
     val context = LocalContext.current
     val height = context.resources.configuration.screenHeightDp.dp / 2
-    val bookNames by model.bookNames.collectAsState()
     var expanded by remember { mutableStateOf(false) }
-    var bookIndex by remember { mutableIntStateOf(model.bookIndex) }
+    var bookIndex by remember { mutableIntStateOf(startBookIndex) }
     val scrollState = rememberLazyListState()
     val bookList = bookNames - bookNames[bookIndex]
     LaunchedEffect(key1 = bookIndex) {
@@ -69,6 +72,7 @@ fun ChapterSelector(
             ListItem(
                 modifier = Modifier
                     .clickable {
+                        view.playSoundEffect(SoundEffectConstants.CLICK)
                         expanded = !expanded
                     },
                 colors = ListItemDefaults.colors(
@@ -106,7 +110,7 @@ fun ChapterSelector(
                                 )
                             },
                             supportingContent = {
-                                if (model.bible.languageCode != "en") {
+                                if (bible.languageCode != "en") {
                                     Text(
                                         modifier = Modifier.padding(start = 4.dp),
                                         text = engTitles[bookNames.indexOf(it)],
@@ -141,6 +145,7 @@ fun ChapterSelector(
                             ),
                             shape = RoundedCornerShape(8.dp),
                             onClick = {
+                                view.playSoundEffect(SoundEffectConstants.CLICK)
                                 onClose()
                                 navigateToChapter(
                                     ChapterScreenProps(

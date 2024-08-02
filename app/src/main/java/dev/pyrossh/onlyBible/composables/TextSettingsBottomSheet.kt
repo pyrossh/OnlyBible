@@ -3,6 +3,7 @@ package dev.pyrossh.onlyBible.composables
 import android.app.UiModeManager.MODE_NIGHT_AUTO
 import android.app.UiModeManager.MODE_NIGHT_NO
 import android.app.UiModeManager.MODE_NIGHT_YES
+import android.view.SoundEffectConstants
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -34,17 +35,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.pyrossh.onlyBible.AppViewModel
 import dev.pyrossh.onlyBible.FontType
 import kotlinx.coroutines.launch
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun TextSettingsBottomSheet(model: AppViewModel) {
+fun TextSettingsBottomSheet(model: AppViewModel = viewModel()) {
+    val view = LocalView.current
     val scope = rememberCoroutineScope()
     val sheetState = rememberModalBottomSheetState()
     return ModalBottomSheet(
@@ -78,6 +82,7 @@ fun TextSettingsBottomSheet(model: AppViewModel) {
                 )
                 Row(horizontalArrangement = Arrangement.End) {
                     IconButton(onClick = {
+                        view.playSoundEffect(SoundEffectConstants.CLICK)
                         scope.launch {
                             sheetState.hide()
                         }.invokeOnCompletion {
@@ -103,6 +108,7 @@ fun TextSettingsBottomSheet(model: AppViewModel) {
                         .padding(end = 16.dp)
                         .weight(1f),
                     onClick = {
+                        view.playSoundEffect(SoundEffectConstants.CLICK)
                         model.fontSizeDelta -= 1
                     }) {
                     Column(
@@ -124,6 +130,7 @@ fun TextSettingsBottomSheet(model: AppViewModel) {
                         .padding(end = 16.dp)
                         .weight(1f),
                     onClick = {
+                        view.playSoundEffect(SoundEffectConstants.CLICK)
                         model.fontSizeDelta += 1
                     }) {
                     Column(
@@ -144,6 +151,7 @@ fun TextSettingsBottomSheet(model: AppViewModel) {
                         .padding(end = 16.dp)
                         .weight(1f),
                     onClick = {
+                        view.playSoundEffect(SoundEffectConstants.CLICK)
                         model.fontBoldEnabled = !model.fontBoldEnabled
                     }) {
                     Column(
@@ -165,6 +173,7 @@ fun TextSettingsBottomSheet(model: AppViewModel) {
                         .padding(end = 16.dp)
                         .weight(1f),
                     onClick = {
+                        view.playSoundEffect(SoundEffectConstants.CLICK)
                         if (model.lineSpacingDelta > 5) {
                             model.lineSpacingDelta = 0
                         } else {
@@ -202,6 +211,7 @@ fun TextSettingsBottomSheet(model: AppViewModel) {
                             .padding(end = 16.dp)
                             .weight(1f),
                         onClick = {
+                            view.playSoundEffect(SoundEffectConstants.CLICK)
                             model.fontType = it
                         }) {
                         Column(
@@ -254,6 +264,7 @@ fun TextSettingsBottomSheet(model: AppViewModel) {
                             .padding(end = 16.dp)
                             .weight(1f),
                         onClick = {
+                            view.playSoundEffect(SoundEffectConstants.CLICK)
                             scope.launch {
                                 sheetState.hide()
                                 model.closeSheet()

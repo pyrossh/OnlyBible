@@ -18,18 +18,19 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import dev.pyrossh.onlyBible.AppViewModel
+import dev.pyrossh.onlyBible.domain.Bible
 import dev.pyrossh.onlyBible.domain.bibles
 import java.util.Locale
 
 @Composable
 fun BibleSelector(
-    model: AppViewModel,
+    bible: Bible,
+    onSelected: (Bible) -> Unit,
     onClose: () -> Unit,
 ) {
     val context = LocalContext.current
     val height = context.resources.configuration.screenHeightDp.dp / 2
-    val bibleList = bibles.sortedBy { it != model.bible }
+    val bibleList = bibles.sortedBy { it != bible }
     Dialog(onDismissRequest = { onClose() }) {
         Card(
             modifier = Modifier
@@ -42,12 +43,10 @@ fun BibleSelector(
                     val loc = Locale(it.languageCode)
                     ListItem(
                         modifier = Modifier.clickable {
-                            onClose()
-                            model.bible = it
-                            model.loadBible()
+                            onSelected(it)
                         },
                         colors = ListItemDefaults.colors(
-                            containerColor = if (it == model.bible)
+                            containerColor = if (it == bible)
                                 MaterialTheme.colorScheme.primaryContainer
                             else
                                 MaterialTheme.colorScheme.background

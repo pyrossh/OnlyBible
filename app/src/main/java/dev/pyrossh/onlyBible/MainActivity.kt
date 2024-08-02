@@ -16,11 +16,18 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        if (savedInstanceState == null) {
+            lifecycleScope.launch {
+                model.loadData(applicationContext)
+            }
+        }
         setContent {
-            AppTheme {
-                AppHost(model = model)
+            AppTheme(
+                nightMode = model.nightMode
+            ) {
+                AppHost()
                 if (model.showBottomSheet) {
-                    TextSettingsBottomSheet(model = model)
+                    TextSettingsBottomSheet()
                 }
             }
         }
@@ -29,7 +36,7 @@ class MainActivity : ComponentActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         lifecycleScope.launch {
-            model.saveData()
+            model.saveData(applicationContext)
         }
     }
 }

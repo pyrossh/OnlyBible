@@ -181,14 +181,4 @@ data class Verse(
 ) : Parcelable {
 
     fun key() = "${bookIndex}:${chapterIndex}:${verseIndex}"
-
-    fun toSSML(voice: String): String {
-        return """
-            <speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="en-US">
-                <voice name="$voice">
-                    $text
-                </voice>
-            </speak>
-            """.trimIndent()
-    }
 }
