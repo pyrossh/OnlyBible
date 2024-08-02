@@ -22,7 +22,6 @@ import dev.pyrossh.onlyBible.domain.Bible
 import dev.pyrossh.onlyBible.domain.Verse
 import dev.pyrossh.onlyBible.domain.bibles
 import dev.pyrossh.onlyBible.domain.chapterSizes
-import dev.pyrossh.onlyBible.domain.engTitles
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -44,11 +43,11 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
             "centralindia"
         )
     )
-    val started = { _: Any, _: SpeechSynthesisEventArgs ->
-        isPlaying = true
+    private val started = { _: Any, _: SpeechSynthesisEventArgs ->
+        isAudioPlaying = true
     }
-    val completed = { _: Any, _: SpeechSynthesisEventArgs ->
-        isPlaying = false
+    private val completed = { _: Any, _: SpeechSynthesisEventArgs ->
+        isAudioPlaying = false
     }
 
     init {
@@ -63,9 +62,9 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     var isLoading by mutableStateOf(true)
-    var isPlaying by mutableStateOf(false)
+    var isAudioPlaying by mutableStateOf(false)
     val verses = MutableStateFlow(listOf<Verse>())
-    val bookNames = MutableStateFlow(engTitles)
+    val bookNames = MutableStateFlow(listOf<String>())
     var showBottomSheet by mutableStateOf(false)
     private val highlightedVerses = MutableStateFlow(JSONObject())
 
@@ -185,6 +184,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
                 val heading = arr[4]
                 val verseText = arr.subList(5, arr.size).joinToString("|")
                 Verse(
+                    id = "${book}:${chapter}:${verseNo}",
                     bookIndex = book,
                     bookName = bookName,
                     chapterIndex = chapter,
@@ -229,15 +229,15 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun getHighlightForVerse(v: Verse): Int? {
-        if (highlightedVerses.value.has(v.key()))
-            return highlightedVerses.value.getInt(v.key())
+        if (highlightedVerses.value.has(v.id))
+            return highlightedVerses.value.getInt(v.id)
         return null
     }
 
     fun addHighlightedVerses(verses: List<Verse>, colorIndex: Int) {
         verses.forEach { v ->
             highlightedVerses.value.put(
-                v.key(),
+                v.id,
                 colorIndex
             )
         }
@@ -245,18 +245,20 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
 
     fun removeHighlightedVerses(verses: List<Verse>) {
         verses.forEach { v ->
-            highlightedVerses.value.remove(v.key())
+            highlightedVerses.value.remove(v.id)
         }
     }
 
     fun playAudio(text: String) {
-        speechService.StartSpeakingSsml("""
+        speechService.StartSpeakingSsml(
+            """
             <speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="en-US">
                 <voice name="${bible.voiceName}">
                     $text
                 </voice>
             </speak>
-        """)
+        """
+        )
     }
 }
 

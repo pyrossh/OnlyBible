@@ -218,7 +218,7 @@ private fun Menu(
                     }
                 }
                 IconButton(onClick = {
-                    if (model.isPlaying) {
+                    if (model.isAudioPlaying) {
                         model.speechService.StopSpeakingAsync()
                     } else {
                         scope.launch(Dispatchers.IO) {
@@ -230,7 +230,7 @@ private fun Menu(
                 }) {
                     Icon(
 //                            modifier = Modifier.size(36.dp),
-                        imageVector = if (model.isPlaying)
+                        imageVector = if (model.isAudioPlaying)
                             Icons.Outlined.PauseCircle
                         else
                             Icons.Outlined.PlayCircle,

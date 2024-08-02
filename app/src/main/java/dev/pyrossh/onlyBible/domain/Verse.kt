@@ -172,13 +172,11 @@ val chapterSizes = listOf(
 @Serializable
 @Parcelize
 data class Verse(
+    val id: String,
     val bookIndex: Int,
     val bookName: String,
     val chapterIndex: Int,
     val verseIndex: Int,
     val heading: String,
     val text: String,
-) : Parcelable {
-
-    fun key() = "${bookIndex}:${chapterIndex}:${verseIndex}"
-}
+) : Parcelable
