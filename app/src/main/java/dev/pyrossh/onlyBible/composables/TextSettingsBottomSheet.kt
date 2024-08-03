@@ -35,6 +35,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -49,6 +50,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 fun TextSettingsBottomSheet(model: AppViewModel = viewModel()) {
     val view = LocalView.current
+    val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val sheetState = rememberModalBottomSheetState()
     return ModalBottomSheet(
@@ -268,7 +270,7 @@ fun TextSettingsBottomSheet(model: AppViewModel = viewModel()) {
                             scope.launch {
                                 sheetState.hide()
                                 model.closeSheet()
-                                model.setApplicationNightMode(it)
+                                model.setApplicationNightMode(context, it)
                             }
                         }
                     ) {

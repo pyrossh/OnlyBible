@@ -30,7 +30,7 @@ fun VerseHeading(
 ) {
     val view = LocalView.current
     Text(
-        modifier = Modifier.padding(bottom = 24.dp),
+        modifier = Modifier.padding(bottom = 12.dp),
         style = TextStyle(
             fontFamily = fontType.family(),
             fontSize = (16 + fontSizeDelta).sp,

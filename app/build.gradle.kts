@@ -60,12 +60,6 @@ android {
     buildFeatures {
         compose = true
         buildConfig = true
-
-        testOptions {
-            emulatorControl {
-                enable = true
-            }
-        }
     }
     packaging {
         resources {
@@ -74,9 +68,6 @@ android {
     }
     kotlinOptions {
         jvmTarget = JavaLanguageVersion.of(17).toString()
-    }
-    androidResources {
-        generateLocaleConfig = true
     }
 }
 
