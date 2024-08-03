@@ -68,6 +68,7 @@ fun VerseText(
     fontSizeDelta: Int,
     fontBoldEnabled: Boolean,
     verse: Verse,
+    highlightWord: String?,
 ) {
     var barYPosition by remember {
         mutableIntStateOf(0)
@@ -78,6 +79,15 @@ fun VerseText(
     val isSelected = selectedVerses.contains(verse)
     val highlightedColorIndex = model.getHighlightForVerse(verse)
     val currentHighlightColors = if (isLight) lightHighlights else darkHighlights
+    val currentHighlightWordKey = if (isLight) "background" else "color"
+    val text = if (highlightWord != null)
+        verse.text.replace(
+            highlightWord,
+            "<span style=\"${currentHighlightWordKey}: yellow;\">${highlightWord}</span>",
+            true
+        )
+    else
+        verse.text
     Text(
         modifier = Modifier
             .onPlaced {
@@ -134,7 +144,7 @@ fun VerseText(
             }
             append(
                 AnnotatedString.Companion.fromHtml(
-                    htmlString = verse.text,
+                    htmlString = text,
                     linkStyles = TextLinkStyles(
                         style = SpanStyle(
                             fontSize = (14 + model.fontSizeDelta).sp,

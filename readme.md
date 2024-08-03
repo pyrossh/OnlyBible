@@ -28,8 +28,6 @@ For emulators,
 * Runner Target, Signing Tab, Release Tab, select that provisioning profile and Team and Certificate.
 
 ## TODO
-
-1. Add search text highlight in each verse in search view
-2. Add goto verse in the search view
-3. Fix Long chapter name (Thessalonians) where menu button shrinks
-4. Add locales in the resources/localeList or app definition
+1. Add goto verse in the search view
+2. Fix Long chapter name (Thessalonians) where menu button shrinks
+3. Add locales in the resources/localeList or app definition

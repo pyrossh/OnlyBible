@@ -1,4 +1,3 @@
-
 import com.android.build.gradle.tasks.asJavaVersion
 import java.io.FileInputStream
 import java.util.Properties
@@ -31,6 +30,19 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+        resourceConfigurations += listOf(
+            "en",
+            "bn",
+            "gu",
+            "hi",
+            "kn",
+            "ml",
+            "ne",
+            "or",
+            "pa",
+            "te",
+            "ta"
+        )
     }
 
     signingConfigs {

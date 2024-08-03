@@ -281,6 +281,7 @@ fun ChapterScreen(
                         fontSizeDelta = model.fontSizeDelta,
                         fontBoldEnabled = model.fontBoldEnabled,
                         verse = v,
+                        highlightWord = null,
                     )
                 }
             }
