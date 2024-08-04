@@ -3,7 +3,6 @@ package dev.pyrossh.onlyBible
 import android.os.Parcelable
 import android.view.SoundEffectConstants
 import androidx.compose.animation.AnimatedContentTransitionScope
-import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -26,16 +25,14 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.listSaver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.pointer.PointerInputScope
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
@@ -48,16 +45,16 @@ import dev.pyrossh.onlyBible.composables.ChapterSelector
 import dev.pyrossh.onlyBible.composables.EmbeddedSearchBar
 import dev.pyrossh.onlyBible.composables.VerseHeading
 import dev.pyrossh.onlyBible.composables.VerseText
+import dev.pyrossh.onlyBible.utils.detectSwipe
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
-import kotlin.math.abs
-
 
 @Serializable
 @Parcelize
 data class ChapterScreenProps(
     val bookIndex: Int,
     val chapterIndex: Int,
+    val verseIndex: Int,
     // TODO: fix this
     val dir: String = Dir.Left.name,
 ) : Parcelable
@@ -78,43 +75,13 @@ enum class Dir : Parcelable {
     }
 }
 
-suspend fun PointerInputScope.detectSwipe(
-    swipeState: MutableIntState = mutableIntStateOf(-1),
-    onSwipeLeft: () -> Unit = {},
-    onSwipeRight: () -> Unit = {},
-    onSwipeUp: () -> Unit = {},
-    onSwipeDown: () -> Unit = {},
-) = detectDragGestures(
-    onDrag = { change, dragAmount ->
-        change.consume()
-        val (x, y) = dragAmount
-        if (abs(x) > abs(y)) {
-            when {
-                x > 0 -> swipeState.intValue = 0
-                x < 0 -> swipeState.intValue = 1
-            }
-        } else {
-            when {
-                y > 0 -> swipeState.intValue = 2
-                y < 0 -> swipeState.intValue = 3
-            }
-        }
-    },
-    onDragEnd = {
-        when (swipeState.intValue) {
-            0 -> onSwipeRight()
-            1 -> onSwipeLeft()
-            2 -> onSwipeDown()
-            3 -> onSwipeUp()
-        }
-    }
-)
 
 @Composable
 fun ChapterScreen(
     model: AppViewModel,
     bookIndex: Int,
     chapterIndex: Int,
+    verseIndex: Int,
     navigateToChapter: (ChapterScreenProps) -> Unit,
 ) {
     val view = LocalView.current
@@ -122,15 +89,30 @@ fun ChapterScreen(
     val isSearching by model.isSearching.collectAsState()
     var chapterSelectorShown by remember { mutableStateOf(false) }
     var bibleSelectorShown by remember { mutableStateOf(false) }
-    val headingColor = MaterialTheme.colorScheme.onSurface
     val bookNames by model.bookNames.collectAsState()
     val verses by model.verses.collectAsState()
+    val state = rememberSaveable(saver = listSaver(
+        save = {
+            model.verseIndex = it.firstVisibleItemIndex
+            listOf(it.firstVisibleItemIndex, it.firstVisibleItemScrollOffset)
+        },
+        restore = {
+            LazyListState(
+                firstVisibleItemIndex = model.verseIndex,
+            )
+        }
+    )) {
+        LazyListState(
+            firstVisibleItemIndex = verseIndex,
+        )
+    }
     val chapterVerses =
         verses.filter { it.bookIndex == bookIndex && it.chapterIndex == chapterIndex }
     LaunchedEffect(Unit) {
         model.clearSelectedVerses()
         model.bookIndex = bookIndex
         model.chapterIndex = chapterIndex
+        model.verseIndex = verseIndex
     }
     Scaffold(
         modifier = Modifier
@@ -188,7 +170,7 @@ fun ChapterScreen(
                         style = TextStyle(
                             fontSize = 22.sp,
                             fontWeight = FontWeight.W500,
-                            color = headingColor,
+                            color = MaterialTheme.colorScheme.onSurface,
                         )
                     )
                 }
@@ -205,7 +187,7 @@ fun ChapterScreen(
                         Icon(
                             imageVector = Icons.Rounded.Search,
                             contentDescription = "Search",
-                            tint = headingColor,
+                            tint = MaterialTheme.colorScheme.onSurface,
                         )
                     }
                     TextButton(onClick = {
@@ -217,7 +199,7 @@ fun ChapterScreen(
                             style = TextStyle(
                                 fontSize = 18.sp,
                                 fontWeight = FontWeight.W500,
-                                color = headingColor,
+                                color = MaterialTheme.colorScheme.onSurface,
                             ),
                         )
                     }
@@ -229,16 +211,14 @@ fun ChapterScreen(
                         Icon(
                             imageVector = Icons.Outlined.MoreVert,
                             contentDescription = "More",
-                            tint = headingColor,
+                            tint = MaterialTheme.colorScheme.onSurface,
                         )
                     }
                 }
             }
 
             LazyColumn(
-                state = rememberSaveable(saver = LazyListState.Saver) {
-                    model.scrollState
-                },
+                state = state,
                 verticalArrangement = Arrangement.spacedBy(16.dp + (model.lineSpacingDelta * 2).dp),
                 modifier = Modifier
                     .fillMaxSize()
@@ -250,6 +230,7 @@ fun ChapterScreen(
                                     ChapterScreenProps(
                                         bookIndex = pair.first,
                                         chapterIndex = pair.second,
+                                        verseIndex = 0,
                                     )
                                 )
                             },
@@ -259,6 +240,7 @@ fun ChapterScreen(
                                     ChapterScreenProps(
                                         bookIndex = pair.first,
                                         chapterIndex = pair.second,
+                                        verseIndex = 0,
                                         dir = Dir.Right.name,
                                     )
                                 )

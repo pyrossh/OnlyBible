@@ -54,6 +54,7 @@ fun VerseHeading(
                     ChapterScreenProps(
                         bookIndex = parts[0].toInt(),
                         chapterIndex = parts[1].toInt(),
+                        verseIndex =  parts[2].toInt(),
                     )
                 )
             },

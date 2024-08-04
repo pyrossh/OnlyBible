@@ -6,7 +6,6 @@ import android.content.Context.MODE_PRIVATE
 import android.content.Context.UI_MODE_SERVICE
 import android.content.Intent
 import android.text.Html
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -68,15 +67,12 @@ class AppViewModel : ViewModel() {
     var bible by mutableStateOf(bibles.first())
     var bookIndex by mutableIntStateOf(0)
     var chapterIndex by mutableIntStateOf(0)
+    var verseIndex by mutableIntStateOf(0)
     var fontType by mutableStateOf(FontType.Sans)
     var fontSizeDelta by mutableIntStateOf(0)
     var fontBoldEnabled by mutableStateOf(false)
     var lineSpacingDelta by mutableIntStateOf(0)
     var nightMode by mutableIntStateOf(UiModeManager.MODE_NIGHT_AUTO)
-    var scrollState = LazyListState(
-        0,
-        0
-    )
     val selectedVerses = MutableStateFlow(listOf<Verse>())
     val isSearching = MutableStateFlow(false)
     val searchText = MutableStateFlow("")
@@ -148,6 +144,7 @@ class AppViewModel : ViewModel() {
             val bibleFileName = prefs.getString("bible", "en_kjv") ?: "en_kjv"
             bookIndex = prefs.getInt("bookIndex", 0)
             chapterIndex = prefs.getInt("chapterIndex", 0)
+            verseIndex = prefs.getInt("verseIndex", 0)
             fontType = FontType.valueOf(
                 prefs.getString("fontType", FontType.Sans.name) ?: FontType.Sans.name
             )
@@ -156,10 +153,6 @@ class AppViewModel : ViewModel() {
             lineSpacingDelta = prefs.getInt("lineSpacingDelta", 0)
             nightMode = prefs.getInt("nightMode", UiModeManager.MODE_NIGHT_AUTO)
             highlightedVerses.value = JSONObject(prefs.getString("highlightedVerses", "{}") ?: "{}")
-            scrollState = LazyListState(
-                prefs.getInt("scrollIndex", 0),
-                prefs.getInt("scrollOffset", 0)
-            )
             val localBible = bibles.find { it.filename() == bibleFileName } ?: bibles.first()
             loadBible(localBible, context)
             viewModelScope.launch(Dispatchers.Main) {
@@ -207,22 +200,17 @@ class AppViewModel : ViewModel() {
                 putString("bible", bible.filename())
                 putInt("bookIndex", bookIndex)
                 putInt("chapterIndex", chapterIndex)
+                putInt("verseIndex", verseIndex)
                 putString("fontType", fontType.name)
                 putInt("fontSizeDelta", fontSizeDelta)
                 putBoolean("fontBoldEnabled", fontBoldEnabled)
                 putInt("lineSpacingDelta", lineSpacingDelta)
                 putInt("nightMode", nightMode)
                 putString("highlightedVerses", highlightedVerses.value.toString())
-                putInt("scrollIndex", scrollState.firstVisibleItemIndex)
-                putInt("scrollOffset", scrollState.firstVisibleItemScrollOffset)
                 apply()
                 commit()
             }
         }
-    }
-
-    fun resetScrollState() {
-        scrollState = LazyListState(0, 0)
     }
 
     fun getHighlightForVerse(v: Verse): Int? {

@@ -14,13 +14,12 @@ import androidx.navigation.toRoute
 fun AppHost(model: AppViewModel = viewModel()) {
     val navController = rememberNavController()
     val navigateToChapter = { props: ChapterScreenProps ->
-        model.resetScrollState()
         navController.navigate(props)
     }
     if (!model.isLoading) {
         NavHost(
             navController = navController,
-            startDestination = ChapterScreenProps(model.bookIndex, model.chapterIndex)
+            startDestination = ChapterScreenProps(model.bookIndex, model.chapterIndex, model.verseIndex)
         ) {
             composable<ChapterScreenProps>(
                 enterTransition = {
@@ -49,6 +48,7 @@ fun AppHost(model: AppViewModel = viewModel()) {
                     model = model,
                     bookIndex = props.bookIndex,
                     chapterIndex = props.chapterIndex,
+                    verseIndex = props.verseIndex,
                     navigateToChapter = navigateToChapter,
                 )
             }

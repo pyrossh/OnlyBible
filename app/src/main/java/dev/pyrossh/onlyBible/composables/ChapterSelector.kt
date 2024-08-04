@@ -151,6 +151,7 @@ fun ChapterSelector(
                                     ChapterScreenProps(
                                         bookIndex = bookIndex,
                                         chapterIndex = c,
+                                        verseIndex = 0,
                                     )
                                 )
                             }
