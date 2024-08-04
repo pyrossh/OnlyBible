@@ -1,9 +1,7 @@
 package dev.pyrossh.onlyBible
 
-import android.app.UiModeManager
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
-import android.content.Context.UI_MODE_SERVICE
 import android.content.Intent
 import android.text.Html
 import androidx.compose.runtime.getValue
@@ -71,7 +69,7 @@ class AppViewModel : ViewModel() {
     var fontSizeDelta by mutableIntStateOf(0)
     var fontBoldEnabled by mutableStateOf(false)
     var lineSpacingDelta by mutableIntStateOf(0)
-    var nightMode by mutableIntStateOf(UiModeManager.MODE_NIGHT_AUTO)
+    var themeType by mutableStateOf(ThemeType.Auto)
     val selectedVerses = MutableStateFlow(listOf<Verse>())
     val searchText = MutableStateFlow("")
 
@@ -95,12 +93,6 @@ class AppViewModel : ViewModel() {
 
     fun onSearchTextChange(text: String) {
         searchText.value = text
-    }
-
-    fun setApplicationNightMode(context: Context, v: Int) {
-        val uiModeManager = context.getSystemService(UI_MODE_SERVICE) as UiModeManager
-        uiModeManager.setApplicationNightMode(v)
-        nightMode = v
     }
 
     fun setSelectedVerses(verses: List<Verse>) {
@@ -127,7 +119,9 @@ class AppViewModel : ViewModel() {
             fontSizeDelta = prefs.getInt("fontSizeDelta", 0)
             fontBoldEnabled = prefs.getBoolean("fontBoldEnabled", false)
             lineSpacingDelta = prefs.getInt("lineSpacingDelta", 0)
-            nightMode = prefs.getInt("nightMode", UiModeManager.MODE_NIGHT_AUTO)
+            themeType = ThemeType.valueOf(
+                prefs.getString("themeType", ThemeType.Auto.name) ?: ThemeType.Auto.name
+            )
             highlightedVerses.value = JSONObject(prefs.getString("highlightedVerses", "{}") ?: "{}")
             val localBible = bibles.find { it.filename() == bibleFileName } ?: bibles.first()
             loadBible(localBible, context)
@@ -181,7 +175,7 @@ class AppViewModel : ViewModel() {
                 putInt("fontSizeDelta", fontSizeDelta)
                 putBoolean("fontBoldEnabled", fontBoldEnabled)
                 putInt("lineSpacingDelta", lineSpacingDelta)
-                putInt("nightMode", nightMode)
+                putString("themeType", themeType.name)
                 putString("highlightedVerses", highlightedVerses.value.toString())
                 apply()
                 commit()

@@ -1,8 +1,5 @@
 package dev.pyrossh.onlyBible.composables
 
-import android.app.UiModeManager.MODE_NIGHT_AUTO
-import android.app.UiModeManager.MODE_NIGHT_NO
-import android.app.UiModeManager.MODE_NIGHT_YES
 import android.view.SoundEffectConstants
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -42,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.pyrossh.onlyBible.AppViewModel
 import dev.pyrossh.onlyBible.FontType
+import dev.pyrossh.onlyBible.ThemeType
 import kotlinx.coroutines.launch
 
 @Composable
@@ -237,17 +235,17 @@ fun TextSettingsBottomSheet(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                listOf(MODE_NIGHT_NO, MODE_NIGHT_YES, MODE_NIGHT_AUTO).map {
+                ThemeType.entries.map {
                     Surface(
                         shape = RoundedCornerShape(8.dp),
-                        border = if (model.nightMode == it) BorderStroke(
+                        border = if (model.themeType == it) BorderStroke(
                             2.dp, MaterialTheme.colorScheme.primary
                         ) else null,
-                        color = if (model.nightMode == it)
+                        color = if (model.themeType == it)
                             MaterialTheme.colorScheme.primary
                         else
                             MaterialTheme.colorScheme.onSurface,
-                        contentColor = if (model.nightMode == it)
+                        contentColor = if (model.themeType == it)
                             MaterialTheme.colorScheme.primary
                         else
                             MaterialTheme.colorScheme.onSurface,
@@ -260,12 +258,16 @@ fun TextSettingsBottomSheet(
                             view.playSoundEffect(SoundEffectConstants.CLICK)
                             scope.launch {
                                 onDismiss()
-                                model.setApplicationNightMode(context, it)
+                                model.themeType = it
+//                                android:configChanges="uiMode"
+//                                min API 31
+//                                val uiModeManager = context.getSystemService(UI_MODE_SERVICE) as UiModeManager
+//                                uiModeManager.setApplicationNightMode(UiModeManager.MODE_NIGHT_AUTO)
                             }
                         }
                     ) {
                         when (it) {
-                            MODE_NIGHT_NO -> Icon(
+                            ThemeType.Light -> Icon(
                                 imageVector = Icons.Filled.LightMode,
                                 contentDescription = "Light",
                                 modifier = Modifier
@@ -273,7 +275,7 @@ fun TextSettingsBottomSheet(
                                     .padding(12.dp)
                             )
 
-                            MODE_NIGHT_YES -> Icon(
+                            ThemeType.Dark -> Icon(
                                 imageVector = Icons.Filled.DarkMode,
                                 contentDescription = "Dark",
                                 modifier = Modifier
@@ -281,7 +283,7 @@ fun TextSettingsBottomSheet(
                                     .padding(12.dp)
                             )
 
-                            MODE_NIGHT_AUTO -> Column(
+                            ThemeType.Auto -> Column(
                                 modifier = Modifier.background(
                                     color = MaterialTheme.colorScheme.background,
                                 ),

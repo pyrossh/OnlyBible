@@ -21,9 +21,7 @@ class MainActivity : ComponentActivity() {
             }
         }
         setContent {
-            AppTheme(
-                nightMode = model.nightMode
-            ) {
+            AppTheme(themeType = model.themeType) {
                 AppHost(model = model)
             }
         }
