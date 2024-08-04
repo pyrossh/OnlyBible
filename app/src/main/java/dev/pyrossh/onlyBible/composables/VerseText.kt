@@ -54,6 +54,7 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
+import androidx.navigation.fragment.NavHostFragment
 import dev.pyrossh.onlyBible.AppViewModel
 import dev.pyrossh.onlyBible.ChapterScreenProps
 import dev.pyrossh.onlyBible.FontType

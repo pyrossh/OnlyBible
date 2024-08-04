@@ -43,8 +43,10 @@ import androidx.compose.ui.unit.sp
 import dev.pyrossh.onlyBible.composables.BibleSelector
 import dev.pyrossh.onlyBible.composables.ChapterSelector
 import dev.pyrossh.onlyBible.composables.EmbeddedSearchBar
+import dev.pyrossh.onlyBible.composables.TextSettingsBottomSheet
 import dev.pyrossh.onlyBible.composables.VerseHeading
 import dev.pyrossh.onlyBible.composables.VerseText
+import dev.pyrossh.onlyBible.utils.LocalNavController
 import dev.pyrossh.onlyBible.utils.detectSwipe
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
@@ -55,7 +57,6 @@ data class ChapterScreenProps(
     val bookIndex: Int,
     val chapterIndex: Int,
     val verseIndex: Int,
-    // TODO: fix this
     val dir: String = Dir.Left.name,
 ) : Parcelable
 
@@ -82,10 +83,11 @@ fun ChapterScreen(
     bookIndex: Int,
     chapterIndex: Int,
     verseIndex: Int,
-    navigateToChapter: (ChapterScreenProps) -> Unit,
 ) {
     val view = LocalView.current
     val context = LocalContext.current
+    val navController = LocalNavController.current
+    var isSettingsShown by remember { mutableStateOf(false) }
     var isSearchShown by remember { mutableStateOf(false) }
     var chapterSelectorShown by remember { mutableStateOf(false) }
     var bibleSelectorShown by remember { mutableStateOf(false) }
@@ -141,6 +143,13 @@ fun ChapterScreen(
             EmbeddedSearchBar(
                 model = model,
                 onDismiss = { isSearchShown = false },
+            )
+        }
+
+        if (isSettingsShown) {
+            TextSettingsBottomSheet(
+                model = model,
+                onDismiss = { isSettingsShown = false }
             )
         }
 
@@ -206,7 +215,7 @@ fun ChapterScreen(
                     TextButton(
                         onClick = {
                             view.playSoundEffect(SoundEffectConstants.CLICK)
-                            model.showSheet()
+                            isSettingsShown = true
                         }) {
                         Icon(
                             imageVector = Icons.Outlined.MoreVert,
@@ -226,7 +235,7 @@ fun ChapterScreen(
                         detectSwipe(
                             onSwipeLeft = {
                                 val pair = getForwardPair(bookIndex, chapterIndex)
-                                navigateToChapter(
+                                navController.navigate(
                                     ChapterScreenProps(
                                         bookIndex = pair.first,
                                         chapterIndex = pair.second,
@@ -236,7 +245,7 @@ fun ChapterScreen(
                             },
                             onSwipeRight = {
                                 val pair = getBackwardPair(bookIndex, chapterIndex)
-                                navigateToChapter(
+                                navController.navigate(
                                     ChapterScreenProps(
                                         bookIndex = pair.first,
                                         chapterIndex = pair.second,

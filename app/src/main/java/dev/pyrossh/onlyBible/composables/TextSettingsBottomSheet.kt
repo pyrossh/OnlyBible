@@ -30,7 +30,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -41,27 +40,23 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.pyrossh.onlyBible.AppViewModel
 import dev.pyrossh.onlyBible.FontType
 import kotlinx.coroutines.launch
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun TextSettingsBottomSheet(model: AppViewModel = viewModel()) {
+fun TextSettingsBottomSheet(
+    model: AppViewModel,
+    onDismiss: () -> Unit,
+) {
     val view = LocalView.current
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    val sheetState = rememberModalBottomSheetState()
     return ModalBottomSheet(
         tonalElevation = 2.dp,
-        sheetState = sheetState,
         onDismissRequest = {
-            scope.launch {
-                sheetState.hide()
-            }.invokeOnCompletion {
-                model.closeSheet()
-            }
+            onDismiss()
         },
     ) {
         Column(
@@ -85,11 +80,7 @@ fun TextSettingsBottomSheet(model: AppViewModel = viewModel()) {
                 Row(horizontalArrangement = Arrangement.End) {
                     IconButton(onClick = {
                         view.playSoundEffect(SoundEffectConstants.CLICK)
-                        scope.launch {
-                            sheetState.hide()
-                        }.invokeOnCompletion {
-                            model.closeSheet()
-                        }
+                        onDismiss()
                     }) {
                         Icon(Icons.Filled.Close, "Close")
                     }
@@ -268,8 +259,7 @@ fun TextSettingsBottomSheet(model: AppViewModel = viewModel()) {
                         onClick = {
                             view.playSoundEffect(SoundEffectConstants.CLICK)
                             scope.launch {
-                                sheetState.hide()
-                                model.closeSheet()
+                                onDismiss()
                                 model.setApplicationNightMode(context, it)
                             }
                         }

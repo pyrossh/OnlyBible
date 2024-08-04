@@ -61,7 +61,6 @@ class AppViewModel : ViewModel() {
     var isAudioPlaying by mutableStateOf(false)
     val verses = MutableStateFlow(listOf<Verse>())
     val bookNames = MutableStateFlow(listOf<String>())
-    var showBottomSheet by mutableStateOf(false)
     private val highlightedVerses = MutableStateFlow(JSONObject())
 
     var bible by mutableStateOf(bibles.first())
@@ -96,14 +95,6 @@ class AppViewModel : ViewModel() {
 
     fun onSearchTextChange(text: String) {
         searchText.value = text
-    }
-
-    fun showSheet() {
-        showBottomSheet = true
-    }
-
-    fun closeSheet() {
-        showBottomSheet = false
     }
 
     fun setApplicationNightMode(context: Context, v: Int) {
