@@ -25,7 +25,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -56,11 +55,12 @@ fun ChapterSelector(
     val height = context.resources.configuration.screenHeightDp.dp / 2
     var expanded by remember { mutableStateOf(false) }
     var bookIndex by remember { mutableIntStateOf(startBookIndex) }
-    val scrollState = rememberLazyListState()
-    val bookList = bookNames - bookNames[bookIndex]
-    LaunchedEffect(key1 = bookIndex) {
-        scrollState.scrollToItem(0, 0)
-    }
+    val scrollState = rememberLazyListState(
+        initialFirstVisibleItemIndex = if (startBookIndex - 2 >= 0)
+            startBookIndex - 2
+        else
+            0,
+    )
     Dialog(onDismissRequest = { onClose() }) {
         Card(
             modifier = Modifier
@@ -84,7 +84,10 @@ fun ChapterSelector(
                     Text(
                         modifier = Modifier.padding(start = 4.dp),
                         fontWeight = FontWeight.W600,
-                        text = bookNames[bookIndex]
+                        text = if (expanded)
+                            "Books"
+                        else
+                            bookNames[bookIndex]
                     )
                 },
                 trailingContent = {
@@ -95,7 +98,7 @@ fun ChapterSelector(
                 LazyColumn(
                     state = scrollState,
                 ) {
-                    items(bookList) {
+                    items(bookNames) {
                         ListItem(
                             modifier = Modifier.clickable {
                                 bookIndex = bookNames.indexOf(it)
