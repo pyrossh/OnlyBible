@@ -4,15 +4,16 @@ import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 
 @Composable
-fun AppHost(model: AppViewModel = viewModel()) {
-    val navController = rememberNavController()
+fun AppHost(
+    model: AppViewModel,
+    navController: NavHostController,
+) {
     val navigateToChapter = { props: ChapterScreenProps ->
         navController.navigate(props)
     }

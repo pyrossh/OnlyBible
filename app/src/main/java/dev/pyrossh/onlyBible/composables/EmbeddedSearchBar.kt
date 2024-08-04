@@ -34,6 +34,7 @@ import dev.pyrossh.onlyBible.AppViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 fun EmbeddedSearchBar(
     model: AppViewModel,
+    onDismiss: () -> Unit,
 ) {
     val view = LocalView.current
     val searchText by model.searchText.collectAsState()
@@ -77,7 +78,7 @@ fun EmbeddedSearchBar(
                 IconButton(
                     onClick = {
                         view.playSoundEffect(SoundEffectConstants.CLICK)
-                        model.onCloseSearch()
+                        onDismiss()
                     },
                 ) {
                     Icon(

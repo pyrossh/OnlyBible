@@ -20,15 +20,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.pyrossh.onlyBible.ChapterScreenProps
 import dev.pyrossh.onlyBible.FontType
+import dev.pyrossh.onlyBible.utils.LocalNavController
 
 @Composable
 fun VerseHeading(
     text: String,
     fontType: FontType,
     fontSizeDelta: Int,
-    navigateToChapter: (ChapterScreenProps) -> Unit
 ) {
     val view = LocalView.current
+    val navController = LocalNavController.current
     Text(
         modifier = Modifier.padding(bottom = 12.dp),
         style = TextStyle(
@@ -50,7 +51,7 @@ fun VerseHeading(
                 view.playSoundEffect(SoundEffectConstants.CLICK)
                 val url = (it as LinkAnnotation.Url).url
                 val parts = url.split(":")
-                navigateToChapter(
+                navController.navigate(
                     ChapterScreenProps(
                         bookIndex = parts[0].toInt(),
                         chapterIndex = parts[1].toInt(),

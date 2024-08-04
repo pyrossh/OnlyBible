@@ -86,7 +86,7 @@ fun ChapterScreen(
 ) {
     val view = LocalView.current
     val context = LocalContext.current
-    val isSearching by model.isSearching.collectAsState()
+    var isSearchShown by remember { mutableStateOf(false) }
     var chapterSelectorShown by remember { mutableStateOf(false) }
     var bibleSelectorShown by remember { mutableStateOf(false) }
     val bookNames by model.bookNames.collectAsState()
@@ -135,12 +135,12 @@ fun ChapterScreen(
                 bookNames = bookNames,
                 startBookIndex = bookIndex,
                 onClose = { chapterSelectorShown = false },
-                navigateToChapter = navigateToChapter,
             )
         }
-        if (isSearching) {
+        if (isSearchShown) {
             EmbeddedSearchBar(
                 model = model,
+                onDismiss = { isSearchShown = false },
             )
         }
 
@@ -181,7 +181,7 @@ fun ChapterScreen(
                     IconButton(
                         onClick = {
                             view.playSoundEffect(SoundEffectConstants.CLICK)
-                            model.onOpenSearch()
+                            isSearchShown = true
                         },
                     ) {
                         Icon(
@@ -254,7 +254,6 @@ fun ChapterScreen(
                             text = v.heading,
                             fontType = model.fontType,
                             fontSizeDelta = model.fontSizeDelta,
-                            navigateToChapter = navigateToChapter,
                         )
                     }
                     VerseText(

@@ -40,6 +40,7 @@ import dev.pyrossh.onlyBible.ChapterScreenProps
 import dev.pyrossh.onlyBible.domain.Bible
 import dev.pyrossh.onlyBible.domain.chapterSizes
 import dev.pyrossh.onlyBible.domain.engTitles
+import dev.pyrossh.onlyBible.utils.LocalNavController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -48,10 +49,10 @@ fun ChapterSelector(
     bookNames: List<String>,
     startBookIndex: Int,
     onClose: () -> Unit,
-    navigateToChapter: (ChapterScreenProps) -> Unit
 ) {
     val view = LocalView.current
     val context = LocalContext.current
+    val navController = LocalNavController.current
     val height = context.resources.configuration.screenHeightDp.dp / 2
     var expanded by remember { mutableStateOf(false) }
     var bookIndex by remember { mutableIntStateOf(startBookIndex) }
@@ -147,7 +148,7 @@ fun ChapterSelector(
                             onClick = {
                                 view.playSoundEffect(SoundEffectConstants.CLICK)
                                 onClose()
-                                navigateToChapter(
+                                navController.navigate(
                                     ChapterScreenProps(
                                         bookIndex = bookIndex,
                                         chapterIndex = c,

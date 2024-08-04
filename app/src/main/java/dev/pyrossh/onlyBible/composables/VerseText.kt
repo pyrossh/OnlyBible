@@ -1,5 +1,6 @@
 package dev.pyrossh.onlyBible.composables
 
+import android.view.SoundEffectConstants
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.OpenInNew
 import androidx.compose.material.icons.filled.Circle
 import androidx.compose.material.icons.outlined.Cancel
 import androidx.compose.material.icons.outlined.PauseCircle
@@ -37,6 +39,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
@@ -52,12 +55,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import dev.pyrossh.onlyBible.AppViewModel
+import dev.pyrossh.onlyBible.ChapterScreenProps
 import dev.pyrossh.onlyBible.FontType
 import dev.pyrossh.onlyBible.darkHighlights
 import dev.pyrossh.onlyBible.domain.Verse
 import dev.pyrossh.onlyBible.isLightTheme
 import dev.pyrossh.onlyBible.lightHighlights
 import dev.pyrossh.onlyBible.shareVerses
+import dev.pyrossh.onlyBible.utils.LocalNavController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -160,16 +165,25 @@ fun VerseText(
         }
     )
     if (isSelected && selectedVerses.last() == verse) {
-        Menu(barYPosition, model)
+        Menu(
+            model = model,
+            barYPosition = barYPosition,
+            verse = verse,
+            highlightWord = highlightWord,
+        )
     }
 }
 
 @Composable
 private fun Menu(
-    barYPosition: Int,
     model: AppViewModel,
+    barYPosition: Int,
+    verse: Verse,
+    highlightWord: String?,
 ) {
+    val view = LocalView.current
     val context = LocalContext.current
+    val navController = LocalNavController.current
     val scope = rememberCoroutineScope()
     val selectedVerses by model.selectedVerses.collectAsState()
     Popup(
@@ -178,7 +192,7 @@ private fun Menu(
     ) {
         Surface(
             modifier = Modifier
-                .width(300.dp)
+                .width(360.dp)
                 .height(56.dp)
                 .border(
                     width = 1.dp,
@@ -200,6 +214,7 @@ private fun Menu(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 IconButton(onClick = {
+                    view.playSoundEffect(SoundEffectConstants.CLICK)
                     model.removeHighlightedVerses(selectedVerses)
                     model.setSelectedVerses(listOf())
                 }) {
@@ -210,6 +225,7 @@ private fun Menu(
                 }
                 lightHighlights.forEachIndexed { i, tint ->
                     IconButton(onClick = {
+                        view.playSoundEffect(SoundEffectConstants.CLICK)
                         model.addHighlightedVerses(selectedVerses, i)
                         model.setSelectedVerses(listOf())
                     }) {
@@ -228,6 +244,7 @@ private fun Menu(
                     }
                 }
                 IconButton(onClick = {
+                    view.playSoundEffect(SoundEffectConstants.CLICK)
                     if (model.isAudioPlaying) {
                         model.speechService.StopSpeakingAsync()
                     } else {
@@ -248,6 +265,7 @@ private fun Menu(
                     )
                 }
                 IconButton(onClick = {
+                    view.playSoundEffect(SoundEffectConstants.CLICK)
                     shareVerses(
                         context,
                         selectedVerses.sortedBy { it.verseIndex })
@@ -257,6 +275,24 @@ private fun Menu(
                         imageVector = Icons.Outlined.Share,
                         contentDescription = "Share",
                     )
+                }
+                if (highlightWord != null) {
+                    IconButton(onClick = {
+                        view.playSoundEffect(SoundEffectConstants.CLICK)
+                        navController.navigate(
+                            ChapterScreenProps(
+                                bookIndex = verse.bookIndex,
+                                chapterIndex = verse.chapterIndex,
+                                verseIndex = verse.verseIndex,
+                            )
+                        )
+                    }) {
+                        Icon(
+//                            modifier = Modifier.size(32.dp),
+                            imageVector = Icons.AutoMirrored.Outlined.OpenInNew,
+                            contentDescription = "Goto",
+                        )
+                    }
                 }
             }
         }

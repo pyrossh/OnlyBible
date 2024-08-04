@@ -74,7 +74,6 @@ class AppViewModel : ViewModel() {
     var lineSpacingDelta by mutableIntStateOf(0)
     var nightMode by mutableIntStateOf(UiModeManager.MODE_NIGHT_AUTO)
     val selectedVerses = MutableStateFlow(listOf<Verse>())
-    val isSearching = MutableStateFlow(false)
     val searchText = MutableStateFlow("")
 
     @OptIn(FlowPreview::class)
@@ -97,20 +96,6 @@ class AppViewModel : ViewModel() {
 
     fun onSearchTextChange(text: String) {
         searchText.value = text
-    }
-
-    fun onOpenSearch() {
-        isSearching.value = true
-        if (!isSearching.value) {
-            onSearchTextChange("")
-        }
-    }
-
-    fun onCloseSearch() {
-        isSearching.value = false
-        if (!isSearching.value) {
-            onSearchTextChange("")
-        }
     }
 
     fun showSheet() {

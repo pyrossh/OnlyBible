@@ -5,8 +5,11 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.compose.rememberNavController
 import dev.pyrossh.onlyBible.composables.TextSettingsBottomSheet
+import dev.pyrossh.onlyBible.utils.LocalNavController
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
@@ -25,7 +28,10 @@ class MainActivity : ComponentActivity() {
             AppTheme(
                 nightMode = model.nightMode
             ) {
-                AppHost()
+                val navController = rememberNavController()
+                CompositionLocalProvider(LocalNavController provides navController) {
+                    AppHost(navController = navController, model = model)
+                }
                 if (model.showBottomSheet) {
                     TextSettingsBottomSheet()
                 }
