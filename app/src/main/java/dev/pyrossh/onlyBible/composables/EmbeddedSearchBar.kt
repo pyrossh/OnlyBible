@@ -1,7 +1,9 @@
 package dev.pyrossh.onlyBible.composables
 
 import android.view.SoundEffectConstants
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -33,6 +35,7 @@ import dev.pyrossh.onlyBible.AppViewModel
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun EmbeddedSearchBar(
+    modifier: Modifier = Modifier,
     model: AppViewModel,
     onDismiss: () -> Unit,
 ) {
@@ -50,9 +53,9 @@ fun EmbeddedSearchBar(
         )
     ) {
         SearchBar(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
+            modifier = modifier
+                .fillMaxSize()
+                .navigationBarsPadding()
                 .focusRequester(textFieldFocusRequester),
             query = searchText,
             onQueryChange = model::onSearchTextChange,
@@ -118,6 +121,7 @@ fun EmbeddedSearchBar(
                             verse = v,
                             highlightWord = searchText,
                         )
+                        Spacer(modifier = Modifier.padding(bottom = 8.dp))
                     }
                 }
             }

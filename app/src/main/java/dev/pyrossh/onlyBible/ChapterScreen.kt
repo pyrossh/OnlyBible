@@ -141,6 +141,7 @@ fun ChapterScreen(
         }
         if (isSearchShown) {
             EmbeddedSearchBar(
+                modifier = Modifier.padding(horizontal = 16.dp),
                 model = model,
                 onDismiss = { isSearchShown = false },
             )
@@ -190,6 +191,7 @@ fun ChapterScreen(
                     IconButton(
                         onClick = {
                             view.playSoundEffect(SoundEffectConstants.CLICK)
+                            model.clearSelectedVerses()
                             isSearchShown = true
                         },
                     ) {
