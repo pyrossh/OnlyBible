@@ -1,5 +1,8 @@
 package dev.pyrossh.onlyBible
 
+import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
+import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.dynamicDarkColorScheme
@@ -7,10 +10,10 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.GenericFontFamily
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 enum class ThemeType {
     Light,
@@ -51,11 +54,11 @@ fun isLightTheme(themeType: ThemeType, isSystemDark: Boolean): Boolean {
 @Composable
 fun AppTheme(
     themeType: ThemeType,
-    content: @Composable() () -> Unit
+    content: @Composable () -> Unit
 ) {
-    val context = LocalContext.current
-    val systemUiController = rememberSystemUiController()
-    val colorScheme = if (isLightTheme(themeType, isSystemInDarkTheme()))
+    val context = LocalContext.current as ComponentActivity
+    val isLight = isLightTheme(themeType, isSystemInDarkTheme())
+    val colorScheme = if (isLight)
         dynamicLightColorScheme(context).copy(
             onSurface = Color.Black,
             outline = Color.LightGray,
@@ -67,8 +70,27 @@ fun AppTheme(
             outline = Color(0xAA5D4979),
         )
     LaunchedEffect(key1 = themeType) {
-        systemUiController.setSystemBarsColor(
-            color = colorScheme.background
+        context.enableEdgeToEdge(
+            statusBarStyle = if (isLight) {
+                SystemBarStyle.light(
+                    colorScheme.background.toArgb(),
+                    colorScheme.onBackground.toArgb()
+                )
+            } else {
+                SystemBarStyle.dark(
+                    colorScheme.background.toArgb(),
+                )
+            },
+            navigationBarStyle = if (isLight) {
+                SystemBarStyle.light(
+                    colorScheme.background.toArgb(),
+                    colorScheme.onBackground.toArgb()
+                )
+            } else {
+                SystemBarStyle.dark(
+                    colorScheme.background.toArgb(),
+                )
+            }
         )
     }
     MaterialTheme(

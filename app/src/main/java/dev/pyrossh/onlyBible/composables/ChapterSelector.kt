@@ -84,6 +84,8 @@ fun ChapterSelector(
                 headlineContent = {
                     Text(
                         modifier = Modifier.padding(start = 4.dp),
+//                            .fillMaxWidth()
+//                            .wrapContentWidth(Alignment.CenterHorizontally),
                         fontWeight = FontWeight.W600,
                         text = if (expanded)
                             "Books"

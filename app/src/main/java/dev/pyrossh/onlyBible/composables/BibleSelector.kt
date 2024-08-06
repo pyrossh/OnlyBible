@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.ListItem
@@ -30,7 +31,13 @@ fun BibleSelector(
 ) {
     val context = LocalContext.current
     val height = context.resources.configuration.screenHeightDp.dp / 2
-    val bibleList = bibles.sortedBy { it != bible }
+    val bibleIndex = bibles.indexOf(bible)
+    val scrollState = rememberLazyListState(
+        initialFirstVisibleItemIndex = if (bibleIndex - 2 >= 0)
+            bibleIndex - 2
+        else
+            0,
+    )
     Dialog(onDismissRequest = { onClose() }) {
         Card(
             modifier = Modifier
@@ -38,19 +45,27 @@ fun BibleSelector(
                 .height(height),
             shape = RoundedCornerShape(8.dp),
         ) {
-            LazyColumn {
-                items(bibleList) {
+            ListItem(
+                colors = ListItemDefaults.colors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                ),
+                headlineContent = {
+                    Text(
+                        modifier = Modifier.padding(start = 4.dp),
+                        fontWeight = FontWeight.W600,
+                        text = "Bibles",
+                    )
+                },
+            )
+            LazyColumn(
+                state = scrollState
+            ) {
+                items(bibles) {
                     val loc = Locale(it.languageCode)
                     ListItem(
                         modifier = Modifier.clickable {
                             onSelected(it)
                         },
-                        colors = ListItemDefaults.colors(
-                            containerColor = if (it == bible)
-                                MaterialTheme.colorScheme.primaryContainer
-                            else
-                                MaterialTheme.colorScheme.background
-                        ),
                         headlineContent = {
                             Text(
                                 modifier = Modifier.padding(start = 4.dp),
