@@ -5,8 +5,6 @@ import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.graphics.Color
@@ -14,6 +12,8 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.GenericFontFamily
+import dev.pyrossh.onlyBible.ui.theme.darkScheme
+import dev.pyrossh.onlyBible.ui.theme.lightScheme
 
 enum class ThemeType {
     Light,
@@ -58,17 +58,7 @@ fun AppTheme(
 ) {
     val context = LocalContext.current as ComponentActivity
     val isLight = isLightTheme(themeType, isSystemInDarkTheme())
-    val colorScheme = if (isLight)
-        dynamicLightColorScheme(context).copy(
-            onSurface = Color.Black,
-            outline = Color.LightGray,
-        )
-    else
-        dynamicDarkColorScheme(context).copy(
-            background = Color(0xFF090F12),
-            surface = Color(0xFF090F12),
-            outline = Color(0xAA5D4979),
-        )
+    val colorScheme = if (isLight) lightScheme else darkScheme
     LaunchedEffect(key1 = themeType) {
         context.enableEdgeToEdge(
             statusBarStyle = if (isLight) {

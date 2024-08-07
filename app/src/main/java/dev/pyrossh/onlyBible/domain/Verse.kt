@@ -1,7 +1,5 @@
 package dev.pyrossh.onlyBible.domain
 
-import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 
 data class Bible(
@@ -170,7 +168,6 @@ val chapterSizes = listOf(
 )
 
 @Serializable
-@Parcelize
 data class Verse(
     val id: String,
     val bookIndex: Int,
@@ -179,4 +176,4 @@ data class Verse(
     val verseIndex: Int,
     val heading: String,
     val text: String,
-) : Parcelable
+)

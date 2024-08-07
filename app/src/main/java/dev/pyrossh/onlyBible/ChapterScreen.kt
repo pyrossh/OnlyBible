@@ -1,6 +1,5 @@
 package dev.pyrossh.onlyBible
 
-import android.os.Parcelable
 import android.view.SoundEffectConstants
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.foundation.layout.Arrangement
@@ -48,20 +47,17 @@ import dev.pyrossh.onlyBible.composables.VerseHeading
 import dev.pyrossh.onlyBible.composables.VerseText
 import dev.pyrossh.onlyBible.utils.LocalNavController
 import dev.pyrossh.onlyBible.utils.detectSwipe
-import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 
 @Serializable
-@Parcelize
 data class ChapterScreenProps(
     val bookIndex: Int,
     val chapterIndex: Int,
     val verseIndex: Int,
     val dir: String = Dir.Left.name,
-) : Parcelable
+)
 
-@Parcelize
-enum class Dir : Parcelable {
+enum class Dir {
     Left, Right;
 
     fun slideDirection(): AnimatedContentTransitionScope.SlideDirection {

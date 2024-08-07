@@ -112,7 +112,7 @@ fun VerseText(
             },
         style = TextStyle(
             background = if (isSelected)
-                MaterialTheme.colorScheme.outline
+                MaterialTheme.colorScheme.outlineVariant
             else
                 if (highlightedColorIndex != null && isLight)
                     currentHighlightColors[highlightedColorIndex]
@@ -191,8 +191,11 @@ private fun Menu(
         offset = IntOffset(0, y = barYPosition),
     ) {
         Surface(
+            color = MaterialTheme.colorScheme.surface,
+            shadowElevation = 0.5.dp,
+            tonalElevation = 0.5.dp,
             modifier = Modifier
-                .width(360.dp)
+                .width(if (highlightWord != null) 360.dp else 300.dp)
                 .height(56.dp)
                 .border(
                     width = 1.dp,
@@ -234,7 +237,7 @@ private fun Menu(
                                 .size(20.dp)
                                 .border(
                                     width = 1.dp,
-                                    color = MaterialTheme.colorScheme.onBackground,
+                                    color = MaterialTheme.colorScheme.outline,
                                     shape = RoundedCornerShape(24.dp)
                                 ),
                             imageVector = Icons.Filled.Circle,
