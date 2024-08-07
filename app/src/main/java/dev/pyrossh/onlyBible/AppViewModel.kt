@@ -104,21 +104,21 @@ class AppViewModel : ViewModel() {
             viewModelScope.launch(Dispatchers.Main) {
                 isLoading = true
             }
-            val bibleFileName = s.getString("bible", "en_kjv") ?: "en_kjv"
+            val bibleFileName = s.getString("bible", "en_kjv")
             bookIndex = s.getInt("bookIndex", 0)
             chapterIndex = s.getInt("chapterIndex", 0)
             verseIndex = s.getInt("verseIndex", 0)
             fontType = FontType.valueOf(
-                s.getString("fontType", FontType.Sans.name) ?: FontType.Sans.name
+                s.getString("fontType", FontType.Sans.name)
             )
             fontSizeDelta = s.getInt("fontSizeDelta", 0)
             fontBoldEnabled = s.getBoolean("fontBoldEnabled", false)
             lineSpacingDelta = s.getInt("lineSpacingDelta", 0)
             themeType = ThemeType.valueOf(
-                s.getString("themeType", ThemeType.Auto.name) ?: ThemeType.Auto.name
+                s.getString("themeType", ThemeType.Auto.name)
             )
             highlightedVerses.value =
-                JSONObject(s.getString("highlightedVerses", "{}") ?: "{}")
+                JSONObject(s.getString("highlightedVerses", "{}"))
             val localBible = bibles.find { it.filename() == bibleFileName } ?: bibles.first()
             loadBible(localBible)
             viewModelScope.launch(Dispatchers.Main) {
