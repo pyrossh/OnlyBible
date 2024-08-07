@@ -28,6 +28,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.listSaver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -47,15 +48,11 @@ import dev.pyrossh.onlyBible.composables.VerseHeading
 import dev.pyrossh.onlyBible.composables.VerseText
 import dev.pyrossh.onlyBible.utils.LocalNavController
 import dev.pyrossh.onlyBible.utils.detectSwipe
+import dev.pyrossh.onlyBible.utils.getBackwardPair
+import dev.pyrossh.onlyBible.utils.getForwardPair
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
-
-@Serializable
-data class ChapterScreenProps(
-    val bookIndex: Int,
-    val chapterIndex: Int,
-    val verseIndex: Int,
-    val dir: String = Dir.Left.name,
-)
 
 enum class Dir {
     Left, Right;
@@ -82,6 +79,7 @@ fun ChapterScreen(
 ) {
     val view = LocalView.current
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
     val navController = LocalNavController.current
     var isSettingsShown by remember { mutableStateOf(false) }
     var isSearchShown by remember { mutableStateOf(false) }
@@ -122,7 +120,9 @@ fun ChapterScreen(
                 onSelected = {
                     view.playSoundEffect(SoundEffectConstants.CLICK)
                     bibleSelectorShown = false
-                    model.loadBible(it, context)
+                    scope.launch(Dispatchers.IO) {
+                        model.loadBible(it)
+                    }
                 },
                 onClose = { bibleSelectorShown = false },
             )
@@ -233,24 +233,12 @@ fun ChapterScreen(
                         detectSwipe(
                             onSwipeLeft = {
                                 val pair = getForwardPair(bookIndex, chapterIndex)
-                                navController.navigate(
-                                    ChapterScreenProps(
-                                        bookIndex = pair.first,
-                                        chapterIndex = pair.second,
-                                        verseIndex = 0,
-                                    )
-                                )
+                                navController.navigate("${pair.first}:${pair.second}:0")
                             },
                             onSwipeRight = {
                                 val pair = getBackwardPair(bookIndex, chapterIndex)
-                                navController.navigate(
-                                    ChapterScreenProps(
-                                        bookIndex = pair.first,
-                                        chapterIndex = pair.second,
-                                        verseIndex = 0,
-                                        dir = Dir.Right.name,
-                                    )
-                                )
+                                navController.navigate("${pair.first}:${pair.second}:0")
+//                                Dir.Right.name,
                             },
                         )
                     }

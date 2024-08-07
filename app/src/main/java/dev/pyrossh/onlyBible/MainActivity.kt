@@ -17,7 +17,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         if (savedInstanceState == null) {
             lifecycleScope.launch {
-                model.loadData(applicationContext)
+                val prefs = applicationContext.getSharedPreferences("data", MODE_PRIVATE)
+                model.loadData(prefs)
             }
         }
         setContent {
@@ -30,7 +31,8 @@ class MainActivity : ComponentActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         lifecycleScope.launch {
-            model.saveData(applicationContext)
+            val prefs = applicationContext.getSharedPreferences("data", MODE_PRIVATE)
+            model.saveData(prefs)
         }
     }
 }

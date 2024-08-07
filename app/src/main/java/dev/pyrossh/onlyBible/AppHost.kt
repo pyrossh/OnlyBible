@@ -5,10 +5,11 @@ import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.toRoute
+import androidx.navigation.navArgument
 import dev.pyrossh.onlyBible.utils.LocalNavController
 
 @Composable
@@ -20,17 +21,13 @@ fun AppHost(
         CompositionLocalProvider(LocalNavController provides navController) {
             NavHost(
                 navController = navController,
-                startDestination = ChapterScreenProps(
-                    model.bookIndex,
-                    model.chapterIndex,
-                    model.verseIndex
-                )
+                startDestination = "{bookId}:{chapterId}:{verseId}"
             ) {
-                composable<ChapterScreenProps>(
+                composable(
                     enterTransition = {
-                        val props = this.targetState.toRoute<ChapterScreenProps>()
+//                        val props = this.targetState.toRoute<ChapterScreenProps>()
                         slideIntoContainer(
-                            Dir.valueOf(props.dir).slideDirection(),
+                            Dir.valueOf(Dir.Left.name).slideDirection(),
                             tween(400),
                         )
                     },
@@ -41,19 +38,24 @@ fun AppHost(
                         EnterTransition.None
                     },
                     popExitTransition = {
-                        val props = this.targetState.toRoute<ChapterScreenProps>()
+//                        val props = this.targetState.toRoute<ChapterScreenProps>()
                         slideOutOfContainer(
-                            Dir.valueOf(props.dir).reverse().slideDirection(),
+                            Dir.valueOf(Dir.Left.name).reverse().slideDirection(),
                             tween(400),
                         )
-                    }
+                    },
+                    route = "{bookId}:{chapterId}:{verseId}",
+                    arguments = listOf(
+                        navArgument("bookId") { type = NavType.IntType },
+                        navArgument("chapterId") { type = NavType.IntType },
+                        navArgument("verseId") { type = NavType.IntType },
+                    ),
                 ) {
-                    val props = it.toRoute<ChapterScreenProps>()
                     ChapterScreen(
                         model = model,
-                        bookIndex = props.bookIndex,
-                        chapterIndex = props.chapterIndex,
-                        verseIndex = props.verseIndex,
+                        bookIndex = it.arguments?.getInt("bookId") ?: 0,
+                        chapterIndex =  it.arguments?.getInt("chapterId") ?: 0,
+                        verseIndex =  it.arguments?.getInt("verseId") ?: 0,
                     )
                 }
             }

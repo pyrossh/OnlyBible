@@ -1,49 +1,87 @@
-import com.android.build.gradle.tasks.asJavaVersion
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.io.FileInputStream
 import java.util.Properties
 
 val keystorePropertiesFile = rootProject.file("keystore.properties")
 val keystoreProperties = Properties()
 keystoreProperties.load(FileInputStream(keystorePropertiesFile))
+val pkgName = "dev.pyrossh.onlyBible" //"dev.pyrossh.only_bible_app"
 
 plugins {
+    alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.android.application)
+    alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.kotlinx.serializer)
     alias(libs.plugins.secrets.gradle.plugin)
 }
 
+kotlin {
+    androidTarget {
+        @OptIn(ExperimentalKotlinGradlePluginApi::class)
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_11)
+        }
+    }
+
+//    listOf(
+//        iosX64(),
+//        iosArm64(),
+//        iosSimulatorArm64()
+//    ).forEach { iosTarget ->
+//        iosTarget.binaries.framework {
+//            baseName = "ComposeApp"
+//            isStatic = true
+//        }
+//    }
+
+    sourceSets {
+        androidMain.dependencies {
+            implementation(libs.androidx.activity.compose)
+            implementation(libs.androidx.lifecycle.runtime.ktx)
+
+        }
+        commonMain.dependencies {
+            implementation(compose.runtime)
+            implementation(compose.foundation)
+            implementation(compose.material3)
+            implementation(compose.materialIconsExtended)
+            implementation(compose.ui)
+            implementation(compose.components.resources)
+            implementation(libs.androidx.activity.compose)
+            implementation(libs.androidx.navigation.compose)
+            implementation(libs.androidx.lifecycle.viewmodel.compose)
+            implementation(libs.speech.client.sdk)
+            implementation(libs.kotlinx.serialization.json)
+            implementation(libs.kotlinx.coroutines.core)
+        }
+    }
+}
+
 android {
-    namespace = "dev.pyrossh.onlyBible"
+    namespace = pkgName
     compileSdk = 34
 
-    defaultConfig {
-        applicationId = "dev.pyrossh.onlyBible"
-        minSdk = 31
-        targetSdk = 34
-        versionCode = 4
-        versionName = "1.0.1"
+    sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
+    sourceSets["main"].res.srcDirs("src/androidMain/res")
+    sourceSets["main"].resources.srcDirs("src/commonMain/resources")
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    defaultConfig {
+        applicationId = pkgName
+        targetSdk = 34
+        minSdk = 31
+        versionCode = 5
+        versionName = "1.1.0"
         vectorDrawables {
             useSupportLibrary = true
         }
-        resourceConfigurations += listOf(
-            "en",
-            "bn",
-            "gu",
-            "hi",
-            "kn",
-            "ml",
-            "ne",
-            "or",
-            "pa",
-            "te",
-            "ta"
-        )
     }
-
+    packaging {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
+    }
     signingConfigs {
         create("release") {
             keyAlias = keystoreProperties["keyAlias"] as String
@@ -65,20 +103,12 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaLanguageVersion.of(17).asJavaVersion()
-        targetCompatibility = JavaLanguageVersion.of(17).asJavaVersion()
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
     buildFeatures {
         compose = true
         buildConfig = true
-    }
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
-    }
-    kotlinOptions {
-        jvmTarget = JavaLanguageVersion.of(17).toString()
     }
 }
 
@@ -86,18 +116,8 @@ composeCompiler {
     enableStrongSkippingMode = true
 }
 
-dependencies {
-    implementation(libs.androidx.activity.compose)
-    implementation(libs.androidx.foundation)
-    implementation(libs.androidx.material3)
-    implementation(libs.androidx.material.icons.extended)
-    implementation(libs.androidx.navigation.compose)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.lifecycle.viewmodel.compose)
-    implementation(libs.speech.client.sdk)
-    implementation(libs.kotlinx.serialization.json)
-    implementation(libs.kotlinx.coroutines.core)
-
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
+compose.resources {
+    publicResClass = true
+    packageOfResClass = pkgName
+    generateResClass = always
 }

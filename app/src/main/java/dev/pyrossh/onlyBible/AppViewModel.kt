@@ -1,9 +1,6 @@
 package dev.pyrossh.onlyBible
 
-import android.content.Context
-import android.content.Context.MODE_PRIVATE
-import android.content.Intent
-import android.text.Html
+import android.content.SharedPreferences
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -13,11 +10,9 @@ import androidx.lifecycle.viewModelScope
 import com.microsoft.cognitiveservices.speech.SpeechConfig
 import com.microsoft.cognitiveservices.speech.SpeechSynthesisEventArgs
 import com.microsoft.cognitiveservices.speech.SpeechSynthesizer
-import dev.pyrossh.onlyBible.domain.BOOKS_COUNT
 import dev.pyrossh.onlyBible.domain.Bible
 import dev.pyrossh.onlyBible.domain.Verse
 import dev.pyrossh.onlyBible.domain.bibles
-import dev.pyrossh.onlyBible.domain.chapterSizes
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,6 +22,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.json.JSONObject
 import java.io.IOException
 
@@ -103,12 +99,11 @@ class AppViewModel : ViewModel() {
         selectedVerses.value = listOf()
     }
 
-    fun loadData(context: Context) {
+    fun loadData(prefs: SharedPreferences) {
         viewModelScope.launch(Dispatchers.IO) {
             viewModelScope.launch(Dispatchers.Main) {
                 isLoading = true
             }
-            val prefs = context.getSharedPreferences("data", MODE_PRIVATE)
             val bibleFileName = prefs.getString("bible", "en_kjv") ?: "en_kjv"
             bookIndex = prefs.getInt("bookIndex", 0)
             chapterIndex = prefs.getInt("chapterIndex", 0)
@@ -124,18 +119,18 @@ class AppViewModel : ViewModel() {
             )
             highlightedVerses.value = JSONObject(prefs.getString("highlightedVerses", "{}") ?: "{}")
             val localBible = bibles.find { it.filename() == bibleFileName } ?: bibles.first()
-            loadBible(localBible, context)
+            loadBible(localBible)
             viewModelScope.launch(Dispatchers.Main) {
                 isLoading = false
             }
         }
     }
 
-    fun loadBible(b: Bible, context: Context) {
+    @OptIn(ExperimentalResourceApi::class)
+    suspend fun loadBible(b: Bible) {
         try {
-            val buffer =
-                context.assets.open("bibles/${b.filename()}.txt").bufferedReader()
-            val localVerses = buffer.readLines().filter { it.isNotEmpty() }.map {
+            val buffer = Res.readBytes("files/${b.filename()}.txt").decodeToString()
+            val localVerses = buffer.split("\n").filter { it.isNotEmpty() }.map {
                 val arr = it.split("|")
                 val bookName = arr[0]
                 val book = arr[1].toInt()
@@ -159,13 +154,13 @@ class AppViewModel : ViewModel() {
                 bookNames.value = localVerses.distinctBy { it.bookName }.map { it.bookName }
             }
         } catch (e: IOException) {
+            println("-----------------------COULD NOT LOAD FILE")
             e.printStackTrace()
         }
     }
 
-    fun saveData(context: Context) {
+    fun saveData(prefs: SharedPreferences) {
         viewModelScope.launch(Dispatchers.IO) {
-            val prefs = context.getSharedPreferences("data", MODE_PRIVATE)
             with(prefs.edit()) {
                 putString("bible", bible.filename())
                 putInt("bookIndex", bookIndex)
@@ -215,41 +210,4 @@ class AppViewModel : ViewModel() {
         """
         )
     }
-}
-
-fun getForwardPair(bookIndex: Int, chapterIndex: Int): Pair<Int, Int> {
-    val sizes = chapterSizes[bookIndex]
-    if (sizes > chapterIndex + 1) {
-        return Pair(bookIndex, chapterIndex + 1)
-    }
-    if (bookIndex + 1 < BOOKS_COUNT) {
-        return Pair(bookIndex + 1, 0)
-    }
-    return Pair(0, 0)
-}
-
-fun getBackwardPair(bookIndex: Int, chapterIndex: Int): Pair<Int, Int> {
-    if (chapterIndex - 1 >= 0) {
-        return Pair(bookIndex, chapterIndex - 1)
-    }
-    if (bookIndex - 1 >= 0) {
-        return Pair(bookIndex - 1, chapterSizes[bookIndex - 1] - 1)
-    }
-    return Pair(BOOKS_COUNT - 1, chapterSizes[BOOKS_COUNT - 1] - 1)
-}
-
-fun shareVerses(context: Context, verses: List<Verse>) {
-    val versesThrough =
-        if (verses.size >= 3) "${verses.first().verseIndex + 1}-${verses.last().verseIndex + 1}" else verses.map { it.verseIndex + 1 }
-            .joinToString(",")
-    val title = "${verses[0].bookName} ${verses[0].chapterIndex + 1}:${versesThrough}"
-    val text =
-        Html.fromHtml(verses.joinToString("\n") { it.text }, Html.FROM_HTML_MODE_COMPACT).toString()
-    val sendIntent = Intent().apply {
-        action = Intent.ACTION_SEND
-        putExtra(Intent.EXTRA_TEXT, "${title}\n${text}")
-        type = "text/plain"
-    }
-    val shareIntent = Intent.createChooser(sendIntent, null)
-    context.startActivity(shareIntent)
 }

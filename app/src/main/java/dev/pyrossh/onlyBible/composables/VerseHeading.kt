@@ -18,7 +18,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import dev.pyrossh.onlyBible.ChapterScreenProps
 import dev.pyrossh.onlyBible.FontType
 import dev.pyrossh.onlyBible.utils.LocalNavController
 
@@ -51,13 +50,7 @@ fun VerseHeading(
                 view.playSoundEffect(SoundEffectConstants.CLICK)
                 val url = (it as LinkAnnotation.Url).url
                 val parts = url.split(":")
-                navController.navigate(
-                    ChapterScreenProps(
-                        bookIndex = parts[0].toInt(),
-                        chapterIndex = parts[1].toInt(),
-                        verseIndex =  parts[2].toInt(),
-                    )
-                )
+                navController.navigate("${parts[0]}:${parts[1]}:${parts[2]}")
             },
         ),
     )
