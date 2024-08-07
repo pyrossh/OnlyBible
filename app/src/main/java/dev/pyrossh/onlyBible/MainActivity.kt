@@ -6,19 +6,23 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.russhwolf.settings.SharedPreferencesSettings
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
 
     private val model by viewModels<AppViewModel>()
+    private val settings by lazy {
+        val prefs = applicationContext.getSharedPreferences("data", MODE_PRIVATE)
+        SharedPreferencesSettings(prefs)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         if (savedInstanceState == null) {
             lifecycleScope.launch {
-                val prefs = applicationContext.getSharedPreferences("data", MODE_PRIVATE)
-                model.loadData(prefs)
+                model.loadData(settings)
             }
         }
         setContent {
@@ -31,8 +35,7 @@ class MainActivity : ComponentActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         lifecycleScope.launch {
-            val prefs = applicationContext.getSharedPreferences("data", MODE_PRIVATE)
-            model.saveData(prefs)
+            model.saveData(settings)
         }
     }
 }

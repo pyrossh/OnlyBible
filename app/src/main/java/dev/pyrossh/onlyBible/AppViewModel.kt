@@ -1,6 +1,5 @@
 package dev.pyrossh.onlyBible
 
-import android.content.SharedPreferences
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -10,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.microsoft.cognitiveservices.speech.SpeechConfig
 import com.microsoft.cognitiveservices.speech.SpeechSynthesisEventArgs
 import com.microsoft.cognitiveservices.speech.SpeechSynthesizer
+import com.russhwolf.settings.Settings
 import dev.pyrossh.onlyBible.domain.Bible
 import dev.pyrossh.onlyBible.domain.Verse
 import dev.pyrossh.onlyBible.domain.bibles
@@ -99,25 +99,26 @@ class AppViewModel : ViewModel() {
         selectedVerses.value = listOf()
     }
 
-    fun loadData(prefs: SharedPreferences) {
+    fun loadData(s: Settings) {
         viewModelScope.launch(Dispatchers.IO) {
             viewModelScope.launch(Dispatchers.Main) {
                 isLoading = true
             }
-            val bibleFileName = prefs.getString("bible", "en_kjv") ?: "en_kjv"
-            bookIndex = prefs.getInt("bookIndex", 0)
-            chapterIndex = prefs.getInt("chapterIndex", 0)
-            verseIndex = prefs.getInt("verseIndex", 0)
+            val bibleFileName = s.getString("bible", "en_kjv") ?: "en_kjv"
+            bookIndex = s.getInt("bookIndex", 0)
+            chapterIndex = s.getInt("chapterIndex", 0)
+            verseIndex = s.getInt("verseIndex", 0)
             fontType = FontType.valueOf(
-                prefs.getString("fontType", FontType.Sans.name) ?: FontType.Sans.name
+                s.getString("fontType", FontType.Sans.name) ?: FontType.Sans.name
             )
-            fontSizeDelta = prefs.getInt("fontSizeDelta", 0)
-            fontBoldEnabled = prefs.getBoolean("fontBoldEnabled", false)
-            lineSpacingDelta = prefs.getInt("lineSpacingDelta", 0)
+            fontSizeDelta = s.getInt("fontSizeDelta", 0)
+            fontBoldEnabled = s.getBoolean("fontBoldEnabled", false)
+            lineSpacingDelta = s.getInt("lineSpacingDelta", 0)
             themeType = ThemeType.valueOf(
-                prefs.getString("themeType", ThemeType.Auto.name) ?: ThemeType.Auto.name
+                s.getString("themeType", ThemeType.Auto.name) ?: ThemeType.Auto.name
             )
-            highlightedVerses.value = JSONObject(prefs.getString("highlightedVerses", "{}") ?: "{}")
+            highlightedVerses.value =
+                JSONObject(s.getString("highlightedVerses", "{}") ?: "{}")
             val localBible = bibles.find { it.filename() == bibleFileName } ?: bibles.first()
             loadBible(localBible)
             viewModelScope.launch(Dispatchers.Main) {
@@ -159,22 +160,18 @@ class AppViewModel : ViewModel() {
         }
     }
 
-    fun saveData(prefs: SharedPreferences) {
+    fun saveData(s: Settings) {
         viewModelScope.launch(Dispatchers.IO) {
-            with(prefs.edit()) {
-                putString("bible", bible.filename())
-                putInt("bookIndex", bookIndex)
-                putInt("chapterIndex", chapterIndex)
-                putInt("verseIndex", verseIndex)
-                putString("fontType", fontType.name)
-                putInt("fontSizeDelta", fontSizeDelta)
-                putBoolean("fontBoldEnabled", fontBoldEnabled)
-                putInt("lineSpacingDelta", lineSpacingDelta)
-                putString("themeType", themeType.name)
-                putString("highlightedVerses", highlightedVerses.value.toString())
-                apply()
-                commit()
-            }
+            s.putString("bible", bible.filename())
+            s.putInt("bookIndex", bookIndex)
+            s.putInt("chapterIndex", chapterIndex)
+            s.putInt("verseIndex", verseIndex)
+            s.putString("fontType", fontType.name)
+            s.putInt("fontSizeDelta", fontSizeDelta)
+            s.putBoolean("fontBoldEnabled", fontBoldEnabled)
+            s.putInt("lineSpacingDelta", lineSpacingDelta)
+            s.putString("themeType", themeType.name)
+            s.putString("highlightedVerses", highlightedVerses.value.toString())
         }
     }
 
