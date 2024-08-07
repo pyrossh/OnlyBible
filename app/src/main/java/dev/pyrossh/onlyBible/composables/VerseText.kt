@@ -55,6 +55,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import dev.pyrossh.onlyBible.AppViewModel
+import dev.pyrossh.onlyBible.ChapterScreenProps
 import dev.pyrossh.onlyBible.FontType
 import dev.pyrossh.onlyBible.darkHighlights
 import dev.pyrossh.onlyBible.domain.Verse
@@ -281,7 +282,13 @@ private fun Menu(
                 if (highlightWord != null) {
                     IconButton(onClick = {
                         view.playSoundEffect(SoundEffectConstants.CLICK)
-                        navController.navigate("${verse.bookIndex}:${verse.chapterIndex}:${verse.verseIndex}")
+                        navController.navigate(
+                            ChapterScreenProps(
+                                bookIndex = verse.bookIndex,
+                                chapterIndex = verse.chapterIndex,
+                                verseIndex = verse.verseIndex,
+                            )
+                        )
                     }) {
                         Icon(
 //                            modifier = Modifier.size(32.dp),

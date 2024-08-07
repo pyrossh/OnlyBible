@@ -36,6 +36,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import dev.pyrossh.onlyBible.ChapterScreenProps
 import dev.pyrossh.onlyBible.domain.Bible
 import dev.pyrossh.onlyBible.domain.chapterSizes
 import dev.pyrossh.onlyBible.domain.engTitles
@@ -149,7 +150,13 @@ fun ChapterSelector(
                             onClick = {
                                 view.playSoundEffect(SoundEffectConstants.CLICK)
                                 onClose()
-                                navController.navigate("${bookIndex}:${c}:0")
+                                navController.navigate(
+                                    ChapterScreenProps(
+                                        bookIndex = bookIndex,
+                                        chapterIndex = c,
+                                        verseIndex = 0,
+                                    )
+                                )
                             }
                         ) {
                             Text(

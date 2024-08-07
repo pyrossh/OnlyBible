@@ -54,6 +54,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 
+@Serializable
+data class ChapterScreenProps(
+    val bookIndex: Int,
+    val chapterIndex: Int,
+    val verseIndex: Int,
+    val dir: String = Dir.Left.name,
+)
+
 enum class Dir {
     Left, Right;
 
@@ -233,12 +241,24 @@ fun ChapterScreen(
                         detectSwipe(
                             onSwipeLeft = {
                                 val pair = getForwardPair(bookIndex, chapterIndex)
-                                navController.navigate("${pair.first}:${pair.second}:0")
+                                navController.navigate(
+                                    ChapterScreenProps(
+                                        bookIndex = pair.first,
+                                        chapterIndex = pair.second,
+                                        verseIndex = 0,
+                                    )
+                                )
                             },
                             onSwipeRight = {
                                 val pair = getBackwardPair(bookIndex, chapterIndex)
-                                navController.navigate("${pair.first}:${pair.second}:0")
-//                                Dir.Right.name,
+                                navController.navigate(
+                                    ChapterScreenProps(
+                                        bookIndex = pair.first,
+                                        chapterIndex = pair.second,
+                                        verseIndex = 0,
+                                        dir = Dir.Right.name,
+                                    )
+                                )
                             },
                         )
                     }
