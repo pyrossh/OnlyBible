@@ -8,15 +8,14 @@ junit = "4.13.2"
 junitVersion = "1.2.1"
 activityCompose = "1.9.1"
 navigationCompose = "2.8.0-alpha08"
-lifecycleViewmodelCompose = "2.8.4" # 2.8.0
+viewmodel = "2.8.0"
 multiplatformSettings = "1.1.1"
 composePlugin = "1.6.11"
 secretsGradlePlugin = "2.0.1"
 
 [libraries]
-#androidx-lifecycle-viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "viewmodel" }
+androidx-lifecycle-viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "viewmodel" }
 androidx-navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
-androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleViewmodelCompose" }
 multiplatform-settings = { module = "com.russhwolf:multiplatform-settings", version.ref = "multiplatformSettings" }
 speech-client-sdk = { module = "com.microsoft.cognitiveservices.speech:client-sdk", version.ref = "speechClientSdk" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }

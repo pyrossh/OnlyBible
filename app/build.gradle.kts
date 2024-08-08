@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.io.FileInputStream
-import java.util.Properties
+import java.util.*
 
 val keystorePropertiesFile = rootProject.file("keystore.properties")
 val keystoreProperties = Properties()
@@ -25,16 +25,16 @@ kotlin {
         }
     }
 
-//    listOf(
-//        iosX64(),
-//        iosArm64(),
-//        iosSimulatorArm64()
-//    ).forEach { iosTarget ->
-//        iosTarget.binaries.framework {
-//            baseName = "ComposeApp"
-//            isStatic = true
-//        }
-//    }
+    listOf(
+        iosX64(),
+        iosArm64(),
+        iosSimulatorArm64()
+    ).forEach { iosTarget ->
+        iosTarget.binaries.framework {
+            baseName = "App"
+            isStatic = true
+        }
+    }
 
     sourceSets {
         androidMain.dependencies {
