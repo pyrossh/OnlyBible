@@ -49,13 +49,14 @@ kotlin {
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(libs.multiplatform.settings)
-            implementation(libs.androidx.activity.compose)
             implementation(libs.androidx.navigation.compose)
             implementation(libs.androidx.lifecycle.viewmodel.compose)
             implementation(libs.speech.client.sdk)
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.kotlinx.coroutines.core)
-            implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.richeditor.compose)
+            implementation("io.github.bonede:tree-sitter:0.22.6.1")
+            implementation("io.github.bonede:tree-sitter-json:0.21.0a")
         }
     }
 }

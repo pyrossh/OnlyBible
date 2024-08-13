@@ -15,13 +15,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import domain.Bible
 import domain.bibles
-import java.util.Locale
 
 @Composable
 fun BibleSelector(
@@ -29,8 +28,8 @@ fun BibleSelector(
     onSelected: (Bible) -> Unit,
     onClose: () -> Unit,
 ) {
-    val context = LocalContext.current
-    val height = context.resources.configuration.screenHeightDp.dp / 2
+//    val context = LocalContext.current
+    val height = 400.dp // context.resources.configuration.screenHeightDp.dp / 2
     val bibleIndex = bibles.indexOf(bible)
     val scrollState = rememberLazyListState(
         initialFirstVisibleItemIndex = if (bibleIndex - 2 >= 0)
@@ -70,7 +69,7 @@ fun BibleSelector(
                             Text(
                                 modifier = Modifier.padding(start = 4.dp),
                                 fontWeight = FontWeight.W600,
-                                text = loc.getDisplayName(Locale.ENGLISH),
+                                text = loc.language,
                             )
                         },
                         supportingContent = {
@@ -79,7 +78,7 @@ fun BibleSelector(
                                 text = if (it.version != null)
                                     it.version.uppercase()
                                 else
-                                    loc.getDisplayName(loc)
+                                    loc.language
                             )
                         }
                     )

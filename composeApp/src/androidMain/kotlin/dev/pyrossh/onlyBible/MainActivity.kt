@@ -1,7 +1,6 @@
 package dev.pyrossh.onlyBible
 
-import AppHost
-import AppTheme
+import App
 import AppViewModel
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -29,9 +28,7 @@ class MainActivity : ComponentActivity() {
             }
         }
         setContent {
-            AppTheme(themeType = model.themeType) {
-                AppHost(model = model)
-            }
+           App(model = model)
         }
     }
 

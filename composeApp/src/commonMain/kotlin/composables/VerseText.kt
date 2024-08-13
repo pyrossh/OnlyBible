@@ -1,5 +1,6 @@
 package composables
 
+//import androidx.compose.ui.text.fromHtml
 import AppViewModel
 import ChapterScreenProps
 import FontType
@@ -40,15 +41,10 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.layout.positionInRoot
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.TextLinkStyles
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -86,7 +82,7 @@ fun VerseText(
     val text = if (highlightWord != null)
         verse.text.replace(
             highlightWord,
-            "<span style=\"${currentHighlightWordKey}: yellow;\">${highlightWord}</span>",
+            "<span style=\"${currentHighlightWordKey}: yellow;\">${highlightWord}</red>",
             true
         )
     else
@@ -146,19 +142,20 @@ fun VerseText(
                 append("${verse.verseIndex + 1} ")
             }
             append(
-                AnnotatedString.Companion.fromHtml(
-                    htmlString = text,
-                    linkStyles = TextLinkStyles(
-                        style = SpanStyle(
-                            fontSize = (14 + model.fontSizeDelta).sp,
-                            fontStyle = FontStyle.Italic,
-                            color = Color(0xFF008AE6),
-                        )
-                    ),
-                    linkInteractionListener = {
-                        println("SOUTT ${(it as LinkAnnotation.Url).url}")
-                    },
-                )
+                text
+//                AnnotatedString.fromHtml(
+//                    htmlString = text,
+//                    linkStyles = TextLinkStyles(
+//                        style = SpanStyle(
+//                            fontSize = (14 + model.fontSizeDelta).sp,
+//                            fontStyle = FontStyle.Italic,
+//                            color = Color(0xFF008AE6),
+//                        )
+//                    ),
+//                    linkInteractionListener = {
+//                        println("SOUTT ${(it as LinkAnnotation.Url).url}")
+//                    },
+//                )
             )
         }
     )

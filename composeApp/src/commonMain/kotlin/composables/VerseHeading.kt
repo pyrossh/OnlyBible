@@ -1,24 +1,22 @@
 package composables
 
+import FontType
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.LinkAnnotation
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.TextLinkStyles
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import ChapterScreenProps
-import FontType
+import org.treesitter.TSLanguage
+import org.treesitter.TSNode
+import org.treesitter.TSParser
+import org.treesitter.TSTree
+import org.treesitter.TreeSitterJson
 import utils.LocalNavController
+
 
 @Composable
 fun VerseHeading(
@@ -36,27 +34,28 @@ fun VerseHeading(
             fontWeight = FontWeight.W700,
             color = MaterialTheme.colorScheme.onSurface,
         ),
-        text = AnnotatedString.fromHtml(
-            htmlString = text,
-            linkStyles = TextLinkStyles(
-                style = SpanStyle(
-                    fontSize = (14 + fontSizeDelta).sp,
-                    fontStyle = FontStyle.Italic,
-                    color = Color(0xFF008AE6),
-                )
-            ),
-            linkInteractionListener = {
-//                view.playSoundEffect(SoundEffectConstants.CLICK)
-                val url = (it as LinkAnnotation.Url).url
-                val parts = url.split(":")
-                navController.navigate(
-                    ChapterScreenProps(
-                        bookIndex = parts[0].toInt(),
-                        chapterIndex = parts[1].toInt(),
-                        verseIndex = parts[2].toInt(),
-                    )
-                )
-            },
-        ),
+        text = text,
+//        text = AnnotatedString.fromHtml(
+//            htmlString = text,
+//            linkStyles = TextLinkStyles(
+//                style = SpanStyle(
+//                    fontSize = (14 + fontSizeDelta).sp,
+//                    fontStyle = FontStyle.Italic,
+//                    color = Color(0xFF008AE6),
+//                )
+//            ),
+//            linkInteractionListener = {
+////                view.playSoundEffect(SoundEffectConstants.CLICK)
+//                val url = (it as LinkAnnotation.Url).url
+//                val parts = url.split(":")
+//                navController.navigate(
+//                    ChapterScreenProps(
+//                        bookIndex = parts[0].toInt(),
+//                        chapterIndex = parts[1].toInt(),
+//                        verseIndex = parts[2].toInt(),
+//                    )
+//                )
+//            },
+//        ),
     )
 }

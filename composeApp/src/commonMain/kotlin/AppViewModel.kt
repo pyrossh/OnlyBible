@@ -53,6 +53,7 @@ class AppViewModel : ViewModel() {
 //    }
 
     var isLoading by mutableStateOf(true)
+    var error by mutableStateOf<Exception?>(null)
     var isAudioPlaying by mutableStateOf(false)
     val verses = MutableStateFlow(listOf<Verse>())
     val bookNames = MutableStateFlow(listOf<String>())
@@ -158,6 +159,10 @@ class AppViewModel : ViewModel() {
             }
         } catch (e: Exception) {
             println("-----------------------COULD NOT LOAD FILE")
+            viewModelScope.launch(Dispatchers.Main) {
+                isLoading = false
+                error = e
+            }
             e.printStackTrace()
         }
     }
