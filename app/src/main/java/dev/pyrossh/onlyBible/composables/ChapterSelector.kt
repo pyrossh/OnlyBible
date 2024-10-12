@@ -77,7 +77,7 @@ fun ChapterSelector(
                     },
                 colors = ListItemDefaults.colors(
                     containerColor = if (expanded)
-                        MaterialTheme.colorScheme.primaryContainer
+                        MaterialTheme.colorScheme.surfaceContainer
                     else
                         MaterialTheme.colorScheme.background
                 ),
@@ -87,10 +87,7 @@ fun ChapterSelector(
 //                            .fillMaxWidth()
 //                            .wrapContentWidth(Alignment.CenterHorizontally),
                         fontWeight = FontWeight.W600,
-                        text = if (expanded)
-                            "Books"
-                        else
-                            bookNames[bookIndex]
+                        text = bookNames[bookIndex]
                     )
                 },
                 trailingContent = {
@@ -101,7 +98,7 @@ fun ChapterSelector(
                 LazyColumn(
                     state = scrollState,
                 ) {
-                    items(bookNames) {
+                    items(bookNames.filter { it != bookNames[bookIndex] }) {
                         ListItem(
                             modifier = Modifier.clickable {
                                 bookIndex = bookNames.indexOf(it)

@@ -10,8 +10,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.ListItem
-import androidx.compose.material3.ListItemDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -45,18 +43,6 @@ fun BibleSelector(
                 .height(height),
             shape = RoundedCornerShape(8.dp),
         ) {
-            ListItem(
-                colors = ListItemDefaults.colors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                ),
-                headlineContent = {
-                    Text(
-                        modifier = Modifier.padding(start = 4.dp),
-                        fontWeight = FontWeight.W600,
-                        text = "Bibles",
-                    )
-                },
-            )
             LazyColumn(
                 state = scrollState
             ) {
