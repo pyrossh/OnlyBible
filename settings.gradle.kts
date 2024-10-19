@@ -1,4 +1,4 @@
-rootProject.name = "OnlyBibleApp"
+rootProject.name = "Example1"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
@@ -28,4 +28,4 @@ dependencyResolutionManagement {
     }
 }
 
-include(":app")
+include(":composeApp")

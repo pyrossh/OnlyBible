@@ -1,15 +1,18 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {
-    alias(libs.plugins.kotlinMultiplatform)  apply false
-    alias(libs.plugins.android.application) apply false
+    // this is necessary to avoid the plugins to be loaded multiple times
+    // in each subproject's classloader
+    alias(libs.plugins.androidApplication) apply false
+    alias(libs.plugins.androidLibrary) apply false
     alias(libs.plugins.jetbrainsCompose) apply false
     alias(libs.plugins.compose.compiler) apply false
-    alias(libs.plugins.secrets.gradle.plugin) apply false
+    alias(libs.plugins.kotlinMultiplatform) apply false
     alias(libs.plugins.kotlinx.serializer) apply false
+    alias(libs.plugins.buildkonfig) apply false
+    alias(libs.plugins.kotlinCocoapods) apply false
 }
 
 buildscript {
     dependencies {
-        classpath(libs.secrets.gradle.plugin)
+        classpath(libs.buildkonfig.gradle.plugin)
     }
 }
