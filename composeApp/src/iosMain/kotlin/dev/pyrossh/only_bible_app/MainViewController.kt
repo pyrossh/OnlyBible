@@ -1,6 +1,5 @@
-package example.one
+package dev.pyrossh.only_bible_app
 
-import androidx.compose.material.Text
 import androidx.compose.ui.window.ComposeUIViewController
 import com.russhwolf.settings.NSUserDefaultsSettings
 

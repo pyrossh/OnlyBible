@@ -1,4 +1,4 @@
-package example.one
+package dev.pyrossh.only_bible_app
 
 import android.view.SoundEffectConstants
 import androidx.compose.runtime.Composable
@@ -6,11 +6,11 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import example.one.domain.Verse
+import dev.pyrossh.only_bible_app.domain.Verse
 import com.microsoft.cognitiveservices.speech.SpeechConfig
 import com.microsoft.cognitiveservices.speech.SpeechSynthesisEventArgs
 import com.microsoft.cognitiveservices.speech.SpeechSynthesizer
-import example.one.config.BuildKonfig
+import dev.pyrossh.only_bible_app.config.BuildKonfig
 
 @Composable
 actual fun getScreenWidth(): Dp = LocalConfiguration.current.screenWidthDp.dp

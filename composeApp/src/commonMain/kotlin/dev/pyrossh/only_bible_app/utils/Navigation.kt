@@ -2,8 +2,8 @@ package utils
 
 import androidx.compose.runtime.compositionLocalOf
 import androidx.navigation.NavController
-import example.one.domain.BOOKS_COUNT
-import example.one.domain.chapterSizes
+import dev.pyrossh.only_bible_app.domain.BOOKS_COUNT
+import dev.pyrossh.only_bible_app.domain.chapterSizes
 
 val LocalNavController = compositionLocalOf<NavController> { error("No NavController found!") }
 

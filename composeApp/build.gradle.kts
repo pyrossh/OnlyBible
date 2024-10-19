@@ -3,6 +3,12 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type
 import com.codingfeline.buildkonfig.gradle.BuildKonfigExtension
 import org.jetbrains.kotlin.konan.properties.Properties
+import java.io.FileInputStream
+
+val keystorePropertiesFile = rootProject.file("keystore.properties")
+val keystoreProperties = Properties()
+keystoreProperties.load(FileInputStream(keystorePropertiesFile))
+val pkgName = "dev.pyrossh.only_bible_app" //"dev.pyrossh.onlyBible"
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -72,7 +78,7 @@ kotlin {
 }
 
 android {
-    namespace = "example.one"
+    namespace = pkgName
     compileSdk = 34
 
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
@@ -80,7 +86,7 @@ android {
     sourceSets["main"].resources.srcDirs("src/commonMain/resources")
 
     defaultConfig {
-        applicationId = "example.one"
+        applicationId = pkgName
         minSdk = 31
         targetSdk = 34
         versionCode = 1
@@ -91,9 +97,23 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    signingConfigs {
+        create("release") {
+            keyAlias = keystoreProperties["keyAlias"] as String
+            keyPassword = keystoreProperties["keyPassword"] as String
+            storeFile = file(keystoreProperties["storeFile"] as String)
+            storePassword = keystoreProperties["storePassword"] as String
+        }
+    }
     buildTypes {
-        getByName("release") {
-            isMinifyEnabled = false
+        release {
+            signingConfig = signingConfigs.getByName("release")
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
     compileOptions {
@@ -110,7 +130,7 @@ android {
 
 @Suppress("TooGenericExceptionCaught")
 configure<BuildKonfigExtension> {
-    packageName = "example.one.config"
+    packageName = "${pkgName}.config"
     val props = Properties().apply {
         load(file("../local.properties").inputStream())
     }

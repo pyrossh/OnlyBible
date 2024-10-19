@@ -1,4 +1,4 @@
-package example.one.domain
+package dev.pyrossh.only_bible_app.domain
 
 import kotlinx.serialization.Serializable
 

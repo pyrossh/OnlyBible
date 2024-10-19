@@ -1,4 +1,4 @@
-package example.one
+package dev.pyrossh.only_bible_app
 
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel

@@ -1,8 +1,8 @@
-package example.one.composables
+package dev.pyrossh.only_bible_app.composables
 
-import example.one.AppViewModel
-import example.one.FontType
-import example.one.ThemeType
+import dev.pyrossh.only_bible_app.AppViewModel
+import dev.pyrossh.only_bible_app.FontType
+import dev.pyrossh.only_bible_app.ThemeType
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

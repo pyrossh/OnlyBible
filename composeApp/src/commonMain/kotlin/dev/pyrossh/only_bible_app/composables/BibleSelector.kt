@@ -1,4 +1,4 @@
-package example.one.composables
+package dev.pyrossh.only_bible_app.composables
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,18 +10,15 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.ListItem
-import androidx.compose.material3.ListItemDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import example.one.domain.Bible
-import example.one.domain.bibles
-import example.one.getScreenHeight
-import example.one.playClickSound
+import dev.pyrossh.only_bible_app.domain.Bible
+import dev.pyrossh.only_bible_app.domain.bibles
+import dev.pyrossh.only_bible_app.getScreenHeight
 
 @Composable
 fun BibleSelector(

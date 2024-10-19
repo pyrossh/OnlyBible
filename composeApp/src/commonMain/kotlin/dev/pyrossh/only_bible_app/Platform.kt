@@ -1,8 +1,8 @@
-package example.one
+package dev.pyrossh.only_bible_app
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.Dp
-import example.one.domain.Verse
+import dev.pyrossh.only_bible_app.domain.Verse
 
 
 @Composable

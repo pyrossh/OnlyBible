@@ -1,4 +1,4 @@
-package example.one.composables
+package dev.pyrossh.only_bible_app.composables
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -33,11 +33,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import example.one.ChapterScreenProps
-import example.one.domain.Bible
-import example.one.domain.chapterSizes
-import example.one.domain.engTitles
-import example.one.getScreenHeight
+import dev.pyrossh.only_bible_app.ChapterScreenProps
+import dev.pyrossh.only_bible_app.domain.Bible
+import dev.pyrossh.only_bible_app.domain.chapterSizes
+import dev.pyrossh.only_bible_app.domain.engTitles
+import dev.pyrossh.only_bible_app.getScreenHeight
 import utils.LocalNavController
 
 @OptIn(ExperimentalMaterial3Api::class)

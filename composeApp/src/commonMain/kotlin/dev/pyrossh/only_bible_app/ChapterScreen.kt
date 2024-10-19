@@ -1,4 +1,4 @@
-package example.one
+package dev.pyrossh.only_bible_app
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -36,12 +36,12 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import example.one.composables.BibleSelector
-import example.one.composables.ChapterSelector
-import example.one.composables.EmbeddedSearchBar
-import example.one.composables.TextSettingsBottomSheet
-import example.one.composables.VerseHeading
-import example.one.composables.VerseText
+import dev.pyrossh.only_bible_app.composables.BibleSelector
+import dev.pyrossh.only_bible_app.composables.ChapterSelector
+import dev.pyrossh.only_bible_app.composables.EmbeddedSearchBar
+import dev.pyrossh.only_bible_app.composables.TextSettingsBottomSheet
+import dev.pyrossh.only_bible_app.composables.VerseHeading
+import dev.pyrossh.only_bible_app.composables.VerseText
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.launch

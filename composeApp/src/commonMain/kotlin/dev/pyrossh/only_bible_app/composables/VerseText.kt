@@ -1,8 +1,8 @@
-package example.one.composables
+package dev.pyrossh.only_bible_app.composables
 
-import example.one.AppViewModel
-import example.one.ChapterScreenProps
-import example.one.FontType
+import dev.pyrossh.only_bible_app.AppViewModel
+import dev.pyrossh.only_bible_app.ChapterScreenProps
+import dev.pyrossh.only_bible_app.FontType
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -49,15 +49,15 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
-import example.one.SpeechService
-import example.one.darkHighlights
-import example.one.domain.Verse
-import example.one.isLightTheme
+import dev.pyrossh.only_bible_app.SpeechService
+import dev.pyrossh.only_bible_app.darkHighlights
+import dev.pyrossh.only_bible_app.domain.Verse
+import dev.pyrossh.only_bible_app.isLightTheme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.launch
-import example.one.lightHighlights
-import example.one.shareVerses
+import dev.pyrossh.only_bible_app.lightHighlights
+import dev.pyrossh.only_bible_app.shareVerses
 import utils.LocalNavController
 
 @Composable

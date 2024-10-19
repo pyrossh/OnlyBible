@@ -1,6 +1,6 @@
-package example.one.composables
+package dev.pyrossh.only_bible_app.composables
 
-import example.one.AppViewModel
+import dev.pyrossh.only_bible_app.AppViewModel
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding

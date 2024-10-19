@@ -1,4 +1,4 @@
-package example.one
+package dev.pyrossh.only_bible_app
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

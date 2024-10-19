@@ -1,4 +1,4 @@
-package example.one
+package dev.pyrossh.only_bible_app
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -6,9 +6,9 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.russhwolf.settings.Settings
-import example.one.domain.Bible
-import example.one.domain.Verse
-import example.one.domain.bibles
+import dev.pyrossh.only_bible_app.domain.Bible
+import dev.pyrossh.only_bible_app.domain.Verse
+import dev.pyrossh.only_bible_app.domain.bibles
 import example1.composeapp.generated.resources.Res
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
